@@ -1,0 +1,28 @@
+@mixin button-variant-2($color, $background, $border) {
+	$active-background: darken($background, 10%);
+	$active-border: darken($border, 12%);
+
+	color: $color;
+	background-color: $background;
+	border-color: $border;
+
+  	// Hover and focus styles are shared
+  	&.hover, &:hover, &.focus, &:focus{
+  		color: $color;
+  		background-color: $active-background;
+  		border-color: $active-border;
+  	}
+
+  	// Disabled comes first so active can properly restyle
+  	&.disabled, &:disabled {
+  		background-color: $background;
+  		border-color: $border;
+  	}
+
+  	&:active, &.active, .show > &.dropdown-toggle {
+  		color: $color;
+  		background-color: $active-background;
+    	background-image: none; // Remove the gradient for the pressed/active state
+    	border-color: $active-border;
+    }
+}

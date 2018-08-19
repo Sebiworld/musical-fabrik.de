@@ -1,0 +1,28 @@
+@import "./globals/index";
+
+.breadcrumb.breadcrumb{
+	background: transparent;
+	display: flex;
+	justify-content: flex-end;
+	flex-direction: row;
+	margin-bottom: 0;
+
+	@include media-breakpoint-down(sm) {
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+
+	.breadcrumb-item{
+		color: color("gray");
+
+		&:before{
+			content: '-';
+			@include media-breakpoint-down(sm) {
+				display: none;
+			}
+		}
+		&:first-child:before{
+			display: none;
+		}
+	}
+}

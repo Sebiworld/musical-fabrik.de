@@ -1,0 +1,43 @@
+$enable-rounded: false !default;
+$enable-shadows: false !default;
+$enable-gradients: false !default;
+$enable-transitions: true !default;
+$enable-hover-media-query: false !default;
+$enable-grid-classes: true !default;
+$enable-print-styles: true !default;
+
+$body-bg: color("white") !default;
+$bg-light: #f1f4f9;
+$body-color: color("gray-dark") !default;
+$inverse-bg: theme-color("dark") !default;
+$inverse-color: color("gray-lighter") !default;
+
+$component-active-bg: theme-color("primary") !default;
+
+$link-color: theme-color("primary") !default;
+$link-decoration: none !default;
+$link-hover-color: darken($link-color, 8%) !default;
+$link-hover-decoration: none !default;
+
+$font-family-sans-serif: "Aileron Light", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$font-family-serif:      "Cardo", Georgia, "Times New Roman", Times, serif !default;
+$font-family-monospace:  Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base:       $font-family-sans-serif !default;
+$headings-font-family:   "Aileron Heavy", -apple-system, system-ui,
+BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+
+// The yiq lightness value that determines when the lightness of color changes from "dark" to "light". Acceptable values are between 0 and 255.
+$yiq-contrasted-threshold: 160;
+
+$code-color: #ff6188;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1500px
+) !default;
+
+@import "~bootstrap/scss/_variables";

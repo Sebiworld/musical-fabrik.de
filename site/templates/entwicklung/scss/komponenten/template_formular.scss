@@ -1,0 +1,189 @@
+@import "./globals/index";
+
+.template-formular {
+	$spaltenabstand: $abstand-x-sm;
+
+	.inputfelder-wrapper {
+		.inputfelder {
+			@include make-row();
+
+			& > * {
+				@include make-col(12);
+			}
+
+			& > .formular-sektion {
+				@include media-breakpoint-up(md) {
+					@include make-col(6);
+				}
+
+				&.keine-spalten {
+					@include media-breakpoint-up(md) {
+						@include make-col(12);
+					}
+				}
+
+				padding: ($abstand-y-sm / 2) ($spaltenabstand / 2);
+			}
+
+			.form-group {
+				margin-bottom: 0;
+				// margin-bottom: $abstand-y-xs;
+				// @include media-breakpoint-up(sm) {
+				// 	margin-bottom: $abstand-y-sm;
+				// }
+
+				.icon-platzhalter {
+					display: none;
+				}
+
+				&.icon-eur {
+					.icon-platzhalter {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						font-family: "Ionicons";
+						speak: none;
+						font-style: normal;
+						font-weight: normal;
+						font-variant: normal;
+						text-transform: none;
+						text-rendering: auto;
+						line-height: 1;
+						-webkit-font-smoothing: antialiased;
+						margin-left: 10px;
+
+						&:after {
+							// content: "\20AC";
+							content: "\f235";
+						}
+					}
+				}
+			}
+
+			.form-text {
+				@include font-size("form-text");
+				margin-top: 0;
+				margin-bottom: $abstand-xs * 2;
+				max-width: 100%;
+
+				p {
+					margin-bottom: $abstand-xs;
+
+					&:last-child {
+						margin-bottom: 0;
+					}
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+
+			.form-check {
+				label {
+					display: inline-block;
+					position: relative;
+					padding-left: font-px("form-text") * 1.6;
+					cursor: pointer;
+					font-size: font-px("form-text");
+
+					input {
+						position: absolute;
+						z-index: -1;
+						opacity: 0;
+
+						&:checked ~ .control__indicator {
+							background: theme-color("primary");
+
+							&:after {
+								display: block;
+							}
+						}
+					}
+
+					&:hover input ~ .control__indicator,
+					input:focus ~ .control__indicator {
+						background: darken($input-color, 10%);
+					}
+
+					&:hover input:not([disabled]):checked ~ .control__indicator,
+					input:checked:focus ~ .control__indicator {
+						background: darken(theme-color("primary"), 10%);
+					}
+				}
+
+				.control__indicator {
+					position: absolute;
+					top: 2px;
+					left: 0;
+					height: font-px("form-text");
+					width: font-px("form-text");
+					background: $input-color;
+					transition: background 0.1s ease-out;
+
+					&:after {
+						content: "";
+						position: absolute;
+						display: none;
+						left: font-px("form-text") / 3;
+						top: font-px("form-text") / 5;
+						width: font-px("form-text") / 3;
+						height: font-px("form-text") / 1.6;
+						border: solid #fff;
+						border-width: 0 2px 2px 0;
+						transform: rotate(45deg);
+					}
+				}
+			}
+
+			.form-group.required label {
+				&:after {
+					content: " *";
+					@include font-size(0.75);
+					position: relative;
+					vertical-align: top;
+					display: inline-block;
+					color: $brand-primary;
+				}
+			}
+
+			label {
+				font-weight: bold;
+
+				&.form-check-label {
+					font-weight: normal;
+				}
+			}
+		}
+	}
+
+	.formular-reihe {
+		@include make-row();
+		display: flex;
+		flex-wrap: wrap;
+		margin-right: -5px;
+		margin-left: -5px;
+
+		> .col,
+		> [class*="col-"] {
+			padding-right: 5px;
+			padding-left: 5px;
+		}
+	}
+
+	// .formular-feld-smaller{
+	// 	display: inline-block;
+	// 	padding: 5px;
+
+	// 	&:first-child{
+	// 		padding-left: 0;
+
+	// 	}
+	// }
+
+	.btn-formular-senden {
+		margin: 0.5rem;
+		cursor: pointer;
+		margin-left: 0;
+	}
+}

@@ -1,0 +1,312 @@
+// $color-1: #3e585f; // green dark
+// $color-2: #f82f53; // crimson
+// $color-3: #47374e; // purple
+// $color-4: #ffffff; // white
+
+// .portrait-trigger {
+// 	position: absolute;
+// 	height: 50px;
+// 	line-height: 50px;
+// 	width: 100%;
+// 	bottom: 0;
+// 	left: 0;
+// 	background: rgba(#000, .1);
+// 	text-align: center;
+// 	color: $color-4;
+// 	opacity: 0;
+// 	visibility: hidden;
+// 	transition: opacity, background-color;
+// 	@include transition(opacity .2s, background-color .2s);
+
+// 	.no-touch &:hover {
+// 		background: rgba(#000, .2);
+// 	}
+
+// 	@include media-breakpoint-up('lg') {
+// 		/* always visible on small devices */
+// 		visibility: visible;
+// 		opacity: 1;
+// 	}
+
+// 	@include media-breakpoint-up('xl') {
+// 		/* only visible on hover on big devices */
+// 		opacity: 0;
+// 	}
+// }
+
+// @include media-breakpoint-up('xl') {
+// 	.no-touch .portrait-item:hover .portrait-trigger {
+// 		opacity: 1;
+// 	}
+
+// 	.touch .portrait-item .portrait-trigger {
+// 		opacity: 1;
+// 	}
+// }
+
+// .portrait-quick-view {
+// 	/* quick view non available on small devices */
+// 	display: none;
+
+// 	@include media-breakpoint-up('lg') {
+// 		display: block;
+// 		position: fixed;
+// 		max-width: 900px;
+// 		visibility: hidden;
+
+// 		/* Force Hardware Acceleration in WebKit */
+// 		@include transform(translateZ(0));
+// 		-webkit-backface-visibility: hidden;
+// 		backface-visibility: hidden;
+// 		will-change: left, top, width;
+
+// 		@include clearfix;
+// 		z-index: 1;
+
+// 		&.is-visible {
+// 			/* class added when user clicks on .portrait-trigger */
+// 			visibility: visible;
+// 		}
+
+// 		&.animate-width {
+// 			/* class added at the end of the first zoom-in animation */
+// 			background-color: $color-4;
+// 			box-shadow: 0 0 30px rgba(#000, .2);
+// 			@include transition(box-shadow .3s);
+// 		}
+// 	}
+// }
+
+// .portrait-slider-wrapper {
+// 	position: relative;
+// 	display: inline-block;
+// 	float: left;
+// 	@include clearfix;
+// }
+
+// .portrait-slider {
+// 	float: left;
+
+// 	li {
+// 		position: absolute;
+// 		top: 0;
+// 		left: 0;
+// 		z-index: 1;
+
+// 		img {
+// 			display: block;
+// 			width: 100%;
+// 			max-width: 400px;
+// 		}
+
+// 		&.selected {
+// 			position: relative;
+// 			z-index: 3;
+// 		}
+// 	}
+
+// 	.add-content & {
+// 		margin-right: 3em;
+// 	}
+// }
+
+// .portrait-slider-navigation {
+// 	opacity: 0;
+
+// 	.add-content & {
+// 		opacity: 1;
+// 	}
+// }
+
+// .portrait-slider-navigation li {
+// 	position: absolute;
+// 	@include center(y); // mixins inside partials > _mixins.scss
+// 	z-index: 3;
+
+// 	&:first-child {
+// 		left: 0;
+// 	}
+
+// 	&:last-child {
+// 		/* equal to the .portrait-slider-wrapper margin-right */
+// 		right: 3em;
+// 	}
+
+// 	a {
+// 		display: block;
+// 		width: 40px;
+// 		height: 50px;
+// 		overflow: hidden;
+// 		text-indent: 100%;
+// 		white-space: nowrap;
+// 		opacity: 0;
+// 		/* Force Hardware Acceleration in WebKit */
+// 		@include transform(translateZ(0));
+// 		-webkit-backface-visibility: hidden;
+// 		backface-visibility: hidden;
+// 		@include transition(opacity .2s, background .2s);
+
+// 		&::before, &::after {
+// 			/* create arrows in CSS */
+// 			position: absolute;
+// 			top: 18px;
+// 			left: 14px;
+// 			display: inline-block;
+// 			background: $color-4;
+// 			height: 3px;
+// 			width: 12px;
+// 		}
+
+// 		&::before {
+// 			@include transform(rotate(45deg));
+// 		}
+
+// 		&::after {
+// 			@include transform(translateY(7px) rotate(-45deg));
+// 		}
+
+// 		.add-content & {
+// 			opacity: .2;
+// 		}
+
+// 		.no-touch &:hover {
+// 			background: rgba($color-3, .8);
+// 			opacity: 1;
+// 		}
+
+// 		.touch & {
+// 			opacity: 1;
+// 		}
+// 	}
+
+// 	&:first-child a::before {
+// 		@include transform(rotate(-45deg));
+// 	}
+
+// 	&:first-child a::after {
+// 		@include transform(translateY(7px) rotate(45deg));
+// 	}
+// }
+
+// .portrait-item-info {
+// 	position: absolute;
+// 	padding: 3em 3em 3em 0;
+// 	visibility: hidden;
+// 	opacity: 0;
+// 	-webkit-transition: opacity .3s, visibility 0s;
+// 	-moz-transition: opacity .3s, visibility 0s;
+// 	transition: opacity .3s, visibility 0s;
+
+// 	h2 {
+// 		@include font-size(28px);
+// 	}
+
+// 	p {
+// 		line-height: 1.6;
+// 		margin: 1em 0;
+// 		color: lighten($color-1, 20%);
+// 	}
+
+// 	.portrait-item-action li {
+// 		display: inline-block;
+// 		margin-right: 1em;
+
+// 		&:first-child {
+// 			margin-left: -4px;
+// 		}
+// 	}
+
+// 	.add-to-cart {
+// 		@include appearance(none);
+// 		@include border-radius;
+// 		border: none;
+// 		padding: .6em 1.2em;
+// 		background-color: $color-2;
+// 		color: $color-4;
+// 		@include font-smoothing;
+// 		font-family: $primary-font;
+// 		@include font-size(16px);
+// 		cursor: pointer;
+// 	}
+
+// 	.add-content & {
+// 		/* class added at the end of the width animation, used to show the content */
+// 		position: relative;
+// 		visibility: visible;
+// 		opacity: 1;
+
+// 		h2 {
+// 			@include animation(portrait-slide-in .3s);
+// 		}
+
+// 		p {
+// 			@include animation(portrait-slide-in .4s);
+// 		}
+
+// 		.cd-item-action {
+// 			@include animation(portrait-slide-in .5s);
+// 		}
+// 	}
+// }
+
+// @include keyframes(portrait-slide-in) {
+// 	0% {
+// 		@include transform(translate3d(-40px, 0, 0));
+// 	}
+
+// 	100% {
+// 		@include transform(translate3d(0, 0, 0));
+// 	}
+// }
+
+// .portrait-close {
+// 	position: absolute;
+// 	top: 10px;
+// 	right: 10px;
+// 	display: inline-block;
+// 	width: 30px;
+// 	height: 30px;
+
+// 	/* image replacement */
+// 	overflow: hidden;
+// 	text-indent: 100%;
+// 	white-space: nowrap;
+// 	visibility: hidden;
+// 	@include transform(scale(0));
+// 	-webkit-transition: -webkit-transform .3s 0s, visibility 0s .3s;
+// 	-moz-transition: -moz-transform .3s 0s, visibility 0s .3s;
+// 	transition: transform .3s 0s, visibility 0s .3s;
+
+// 	&::before, &::after {
+// 		/* close icon in css */
+// 		position: absolute;
+// 		top: 12px;
+// 		left: 5px;
+// 		display: inline-block;
+// 		height: 4px;
+// 		width: 20px;
+// 		background: $color-3;
+// 		-webkit-backface-visibility: hidden;
+// 		backface-visibility: hidden;
+// 	}
+
+// 	&::before {
+// 		@include transform(rotate(45deg));
+// 	}
+
+// 	&::after {
+// 		@include transform(rotate(135deg));
+// 	}
+
+// 	.no-touch &:hover {
+// 		@include transform(scale(1.2));
+// 	}
+
+// 	.add-content & {
+// 		visibility: visible;
+// 		@include transform(scale(1));
+// 		-webkit-transition: -webkit-transform .3s 0s, visibility 0s 0s;
+// 		-moz-transition: -moz-transform .3s 0s, visibility 0s 0s;
+// 		transition: transform .3s 0s, visibility 0s 0s;
+// 	}
+// }

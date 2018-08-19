@@ -1,0 +1,13 @@
+$lg-border-radius-base: 0px;
+
+@import "~lightgallery/src/sass/lightgallery";
+@import "~lightslider/dist/css/lightslider.min.css";
+
+.lg-outer .lg-thumb-item{
+	border-radius: 0px;
+	border-width: 0px;
+
+	&.active, &:hover, &:focus{
+		border-width: 2px;
+	}
+}

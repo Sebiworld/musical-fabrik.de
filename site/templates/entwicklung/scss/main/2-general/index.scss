@@ -1,0 +1,104 @@
+html, body{
+	min-height: 100%;
+	height: 100%;
+}
+
+html{
+	font-size: $font-factor-base * 1px;
+}
+
+body{
+	// padding-top: 90px;
+	position: relative;
+	background: $body-bg;
+
+	&>header{
+		position: relative;
+	}
+	&>.haupt-inhaltsbereich{
+		position: relative;
+		overflow: scroll;
+	}
+
+	.back-to-top{
+		display: none;
+		position: fixed;
+		bottom: $abstand-y-md + 0.5rem;
+		right: $abstand-x-sm;
+		z-index: 100;
+		// border-radius: 50%;
+		width: 50px;
+		height: 50px;
+		text-align: center;
+		padding: 4px 0;
+		vertical-align: middle;
+		@include font-size(2.5, 1);
+		background-color: rgba(#fff, 0.65);
+		border-width: 2px;
+		transition: background-color 0.5s;
+	}
+
+	&::after {
+		/* dark overlay layer - visible when we fire .cd-quick-view */
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(71, 55, 78, 0.8);
+		visibility: hidden;
+		opacity: 0;
+		transition: opacity .3s 0s, visibility 0s .3s;
+	}
+
+	@media only screen and (min-width: 1024px) {
+		&.overlay-layer::after {
+			visibility: visible;
+			opacity: 1;
+			transition: opacity .3s 0s, visibility 0s 0s;
+		}
+	}
+}
+
+b,strong{
+	font-weight: bold;
+}
+
+a{
+	transition: color 0.2s;
+}
+
+.titel-link{
+	color: $body-color;
+	display: block;
+
+	&:hover, &:focus{
+		color: $brand-primary;
+	}
+}
+
+.bild-caption-top{
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 5px;
+	@include font-size(0.65, 1);
+}
+
+@each $color, $value in $theme-colors {
+	.btn-#{$color}, input.btn-#{$color}, button.btn-#{$color} {
+		&[type="submit"], &[type="button"], &[type="reset"]{
+			@include button-variant($value, $value);
+		}
+	}
+}
+
+.form-control{
+	background-clip: unset;
+}
+
+.passwort-form{
+	max-width: 600px;
+}
+
+@import "./fonts";

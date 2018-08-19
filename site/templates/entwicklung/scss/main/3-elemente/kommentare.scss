@@ -1,0 +1,46 @@
+.kommentare{
+	margin-top: $abstand-y-lg;
+	max-width: 1000px;
+
+	.CommentList{
+		list-style: none;
+		padding-left: 0;
+		margin-bottom: $abstand-y-md;
+
+		&>.CommentListItem{
+			position: relative;
+			display: block;
+			margin-bottom: $abstand-y-xs;
+			padding: $abstand-xs $abstand-xs;
+			background: $bg-light;
+			overflow: auto;
+
+			&>.CommentGravatar{
+				position: relative;
+				display: inline-block;
+				float: left;
+				height: 100%;
+				width: auto;
+				margin-right: $abstand-xs;
+
+				&:after {
+					content: "";
+					display: block;
+					clear: both;
+				}
+			}
+
+			&>.CommentHeader, &>.CommentText, &>.CommentFooter{
+				display: block;
+			}
+
+			&>.CommentHeader{
+				margin-bottom: $abstand-xs;
+
+				&>.CommentCite{
+					font-weight: bold;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,17 @@
+@import "./globals/index";
+
+.onepage-sektion.sektion-seiten-grid{
+	$grid-abstand: $abstand-sm;
+
+	.seiten-reihe{
+		padding: 0 0;
+
+		.seite{
+			padding: ($grid-abstand / 2) ($grid-abstand / 2);
+
+			.titelbild{
+				margin-bottom: 0;
+			}
+		}
+	}
+}

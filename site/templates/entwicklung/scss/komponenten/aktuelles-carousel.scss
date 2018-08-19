@@ -1,0 +1,38 @@
+@import "./globals/index";
+
+.aktuelles-carousel{
+	margin-top: $abstand-md;
+	margin-bottom: $abstand-md;
+
+	&>h1, &>h2, &>h3, &>h4, &>h5, &>h6, &>.titel{
+		margin-bottom: $abstand-sm;
+	}
+	.swiper-wrapper{
+		display: flex;
+	}
+	.swiper-slide {
+		margin-right: 10px;
+
+		width: 350px;
+		max-width: 100%;
+
+		display: flex;
+		height: auto;
+		align-items: center; //optional
+		justify-content: center; //optional
+
+		.card{
+			position: relative;
+			display: flex;
+			height: 100%;
+			width: 100%;
+
+			.card-img-top{
+				flex-grow: 0;
+			}
+			.card-block{
+				flex-grow: 1;
+			}
+		}
+	}
+}

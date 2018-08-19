@@ -1,0 +1,15 @@
+.akkordeon{
+	&>.card{
+		&>.card-header, &>.card-header>h1, &>.card-header>h2, &>.card-header>h3, &>.card-header>h4, &>.card-header>h5, &>.card-header>h6 {
+			padding: 0;
+			display: block;
+			margin-top: 0;
+
+			&>a{
+				display: block;
+				padding: .75rem 1.25rem;
+				color: #fff;
+			}
+		}
+	}
+}

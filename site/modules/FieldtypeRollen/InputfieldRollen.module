@@ -1,0 +1,182 @@
+<?php namespace ProcessWire;
+
+class InputfieldRollen extends Inputfield {
+
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'Rollen',
+			'version' => '0.1.0',
+			'summary' => 'InputField für den Rollen Fieldtype.',
+			'requires' => 'FieldtypeRollen'
+			);
+	}
+
+	protected $rollen;
+	protected $besetzungen;
+
+	public function __construct(){
+		require_once(dirname(__FILE__) . '/Rolle.class.php');
+		require_once(dirname(__FILE__) . '/RollenArray.class.php');
+
+		$this->set('defaultRolle', new NullPage());
+		$this->set('defaultBesetzungen', new PageArray());
+
+		parent::__construct();
+	}
+
+	/**
+	 * Setzt die möglichen, zur Auswahl stehenden Rollen
+	 */
+	public function setRollen(PageArray $rollen) {
+		$this->rollen = $rollen;
+	}
+
+	/**
+	 * Setzt die möglichen, zur Auswahl stehenden Besetzungen
+	 */
+	public function setBesetzungen(PageArray $besetzungen) {
+		$this->besetzungen = $besetzungen;
+	}
+
+	public function setAttribute($key, $value) {
+		if($key == 'value' && !$value instanceof RollenArray && !is_null($value)) {
+			throw new WireException("This input only accepts a RollenArray for it's value");
+		}
+
+		return parent::setAttribute($key, $value);
+	}
+
+	public function isEmpty() {
+		return (!$this->value || !$this->value->rolle || !$this->value->rolle->id);
+	}
+
+	public function renderReady(Inputfield $parent = null, $renderValueMode = false) {
+		return parent::renderReady($parent, $renderValueMode);
+	}
+
+	/**
+	 * Render the entire input area for Events
+	 *
+	 */
+	public function ___render() {
+
+		$feldname = $this->attr('name');
+		if(empty($feldname)) return;
+
+		$werte = $this->attr('value');
+
+		$thead = '<tr>';
+		$thead .= '<th class="beschriftungs-zelle">&nbsp;</th>';
+		$thead .= '<th data-spalte="0" class="checkbox-zelle spalte-0 alle">Alle Besetzungen</th>';
+		foreach($this->besetzungen as $index => $besetzung){
+			$thead .= '<th data-spalte="'.($index + 1).'" class="checkbox-zelle spalte-'.($index + 1).'">'.$besetzung->title.'</th>';
+		}
+		$thead .= '</tr>';
+
+		$tbody = '';
+		foreach($this->rollen as $rolle) {
+			$tbody .= $this->renderRolleRow($feldname, $rolle, $werte);
+		}
+
+		$ausgabe = '<table class="'.$feldname.' rollen-tabelle">';
+		$ausgabe .='<thead>';
+		$ausgabe .= $thead;
+		$ausgabe .= '</thead>';
+		$ausgabe .= '<tbody>';
+		$ausgabe .= $tbody;
+		$ausgabe .= '</tbody>';
+		$ausgabe .= '</table>';
+
+		return $ausgabe;
+	}
+
+	protected function renderRolleRow($feldname, Page $rolle, RollenArray $werte, $ebene = 0){
+		$rollenInput = $werte->get('rolle.id='.$rolle->id);
+
+		$ausgabe = '<tr data-ebene="'.$ebene.'" class="reihe ebene-'.$ebene.'">';
+		$ausgabe .= '<td class="beschriftungs-zelle"><span>'.$rolle->title.'</span></td>';
+		$ausgabe .= '<td data-spalte="0" class="checkbox-zelle alle spalte-0">'.$this->renderCheckbox($feldname, $rolle->id . '_a').'</td>';
+
+		foreach($this->besetzungen as $index => $besetzung){
+			$checked = $rollenInput && $rollenInput->besetzungen->get('id='.$besetzung->id);
+
+			$ausgabe .= '<td data-spalte="'.($index + 1).'" class="checkbox-zelle spalte-'.($index + 1).'">';
+			$ausgabe .= $this->renderCheckbox($feldname, $rolle->id . '_' . $besetzung->id, $checked);
+			$ausgabe .= '</td>';
+		}
+
+		$ausgabe .= '</tr>';
+
+		$kindrollen = $rolle->children('template.name=rolle');
+		if($kindrollen->count > 0){
+			foreach($kindrollen as $kindrolle){
+				$ausgabe .= $this->renderRolleRow($feldname, $kindrolle, $werte, $ebene + 1);
+			}
+		}
+
+		return $ausgabe;
+	}
+
+	protected function renderCheckbox($name, $value = 'on', $checked = false, $label = ''){
+		$ausgabe = '<label class="control control--checkbox">'.$label;
+		$ausgabe .='<input type="checkbox" name="'.$name.'[]" value="'.$value.'" '.($checked ? 'checked="checked"' : '').'/>';
+		$ausgabe .='<div class="control__indicator"></div>';
+		$ausgabe .='</label>';
+		return $ausgabe;
+	}
+
+	/**
+	 * Process the input after a form submission
+	 *
+	 * @param WireInputData $input
+	 * @return $this
+	 */
+	public function ___processInput(WireInputData $input) {
+
+		$feldname = $this->attr('name');
+
+		// Rollen-IDs und zugehörige Besetzungen sammeln und sortieren:
+		$rollensammlung = array();
+		foreach($input->{$feldname} as $cnt => $inputstring) {
+			if(!is_string($inputstring)) continue;
+
+			$rolleUndBesetzung = explode('_', $inputstring);
+			if(count($rolleUndBesetzung) != 2) continue;
+			if(empty($rolleUndBesetzung[0]) || empty($rolleUndBesetzung[1])) continue;
+
+			$rollenSeite = wire('pages')->get($rolleUndBesetzung[0]);
+			if(!$rollenSeite->id) continue;
+
+			if(!isset($rollensammlung[$rollenSeite->id]) || !is_array($rollensammlung[$rollenSeite->id]) || !isset($rollensammlung[$rollenSeite->id]['rolle'])){
+				$rollensammlung[$rollenSeite->id] = array(
+					'rolle' => $rollenSeite,
+					'besetzungen' => new PageArray()
+					);
+			}
+
+			if($rolleUndBesetzung[1] == 'a'){
+				$rollensammlung[$rollenSeite->id]['besetzungen'] = $this->besetzungen;
+			}else{
+				$besetzungsSeite = wire('pages')->get($rolleUndBesetzung[1]);
+				if(!$besetzungsSeite->id) continue;
+
+				$rollensammlung[$rollenSeite->id]['besetzungen']->add($besetzungsSeite);
+			}
+		}
+
+		$rollen = new RollenArray();;
+		foreach($rollensammlung as $rolleArray){
+			if(!isset($rolleArray['rolle']) || !isset($rolleArray['besetzungen'])) continue;
+
+			$neueRolle = new Rolle($rolleArray['rolle']);
+			$neueRolle->besetzungen = $rolleArray['besetzungen'];
+			$rollen->add($neueRolle);
+		}
+
+		if(!$this->value->istGleich($rollen)) {
+			$this->attr('value', $rollen);
+			$this->trackChange('value');
+		}
+	}
+}
+

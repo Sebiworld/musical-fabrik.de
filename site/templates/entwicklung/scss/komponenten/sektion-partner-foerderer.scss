@@ -1,0 +1,127 @@
+@import "./globals/index";
+
+.sektion-partner-foerderer {
+	$grid-abstand: $abstand-xs * 2;
+	padding-left: 0;
+	padding-right: 0;
+
+	.liste {
+		padding-left: $abstand-sm;
+		padding-right: $abstand-sm;
+
+		@include media-breakpoint-up(sm) {
+			padding-left: $abstand-md;
+			padding-right: $abstand-md;
+		}
+		// padding: 0 ($grid-abstand / 2);
+
+		.kachel {
+			padding: $grid-abstand;
+		}
+	}
+
+	.inhalte > .inhalt-block {
+		max-width: 30em;
+	}
+
+	.sub-titel {
+		padding-left: $abstand-sm;
+		padding-right: $abstand-sm;
+
+		@include media-breakpoint-up(sm) {
+			padding-left: $abstand-md;
+			padding-right: $abstand-md;
+		}
+	}
+
+	.kachel {
+		text-align: center;
+		font-weight: bold;
+		@include font-size(0.9, 1.2);
+
+		.inhalt-wrapper {
+			// display: inline-block;
+			height: 100%;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			& > span {
+			}
+
+			& > img {
+				filter: grayscale(100%);
+				transition: filter 1s;
+			}
+
+			&:hover,
+			&:focus {
+				& > img {
+					filter: none;
+				}
+			}
+		}
+	}
+
+	.hervorgehoben {
+		padding: $abstand-sm;
+		padding-left: $abstand-sm;
+		padding-right: $abstand-sm;
+
+		@include media-breakpoint-up(sm) {
+			padding-left: $abstand-md;
+			padding-right: $abstand-md;
+		}
+
+		.sub-titel {
+			padding-left: $grid-abstand;
+			padding-right: $grid-abstand;
+		}
+
+		&.text-block {
+			text-align: center;
+			padding: $abstand-md;
+
+			.inhalt-block {
+				margin: 0 auto;
+
+				p:last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+
+	.partner {
+		// @include angle('before', true);
+		// @include angle('after', false);
+		padding: $abstand-sm;
+		margin-bottom: $abstand-sm;
+		padding-left: $abstand-sm;
+		padding-right: $abstand-sm;
+
+		@include media-breakpoint-up(sm) {
+			padding-left: $abstand-md;
+			padding-right: $abstand-md;
+		}
+
+		// padding-bottom: $abstand-sm;
+		// padding-top: $abstand-sm;
+
+		.inhalt-wrapper {
+			padding: $abstand-xs;
+			background: #fff;
+
+			& > img {
+				filter: none;
+			}
+		}
+
+		.row {
+			padding: 0 $grid-abstand;
+			margin-right: -1 * $grid-abstand;
+			margin-left: -1 * $grid-abstand;
+		}
+	}
+}

@@ -1,0 +1,32 @@
+@import "./globals/index";
+
+.sektion-aktuelles-carousel{
+	padding-top: $abstand-sm;
+	padding-bottom: $abstand-sm;
+	@include angle('before', true);
+	@include angle('after', false);
+
+	.sektion-titel.sektion-titel{
+		margin-bottom: $abstand-xs;
+	}
+
+	.carousel{
+		margin-top: $abstand-sm;
+		margin-bottom: $abstand-xs;
+
+		.carousel-cell {
+			margin-right: 10px;
+
+			width: 20%;
+			@include media-breakpoint-down(lg) {
+				width: 30%;
+			}
+			@include media-breakpoint-down(md) {
+				width: 45%;
+			}
+			@include media-breakpoint-down(sm) {
+				width: 100%;
+			}
+		}
+	}
+}

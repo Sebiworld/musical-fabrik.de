@@ -1,0 +1,12 @@
+@import "./globals/index";
+
+.bilder-gitter{
+	margin-top: $abstand-md;
+	margin-left: $grid-gutter-width / -2;
+	margin-right: $grid-gutter-width / -2;
+
+	.gitter{
+		margin-top: $abstand-xs;
+		margin-bottom: $abstand-md;
+	}
+}

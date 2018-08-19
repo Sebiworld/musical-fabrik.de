@@ -1,0 +1,220 @@
+.btn,
+.btn[type="button"],
+.btn[type="reset"],
+.btn[type="submit"],
+button.btn[type="button"],
+button.btn[type="reset"],
+button.btn[type="submit"],
+input.btn[type="button"],
+input.btn[type="reset"],
+input.btn[type="submit"] {
+	white-space: normal;
+	@include grow();
+	border: 0 none;
+	border-radius: 0;
+	box-shadow: none;
+
+	&.btn-inlinecolor{
+		&:focus, &:hover, &:visited, &:active{
+			box-shadow: none;
+		}
+	}
+}
+
+.input-group-btn {
+	.btn {
+		border-right-width: 0;
+	}
+}
+
+input[type="submit"],
+button[type="submit"] {
+	@include button-variant(
+		text-color-over(theme-color("primary")),
+		theme-color("primary"),
+		transparent
+	);
+	padding: 10px 20px;
+	@include font-size("button-lg", 1.1);
+	cursor: pointer;
+	@include grow();
+	box-shadow: none;
+}
+
+.hamburger-inner,
+.hamburger-inner::before,
+.hamburger-inner::after {
+	border-radius: 0;
+	height: 3px;
+}
+
+a.social-button, .container-fluid.hervorgehoben.hervorgehoben a.social-button {
+	@include font-size("social-button", 1);
+	color: $body-color;
+	transition: color 0.5s;
+	margin-right: $abstand-xs;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	@include grow();
+
+	.icon {
+		transition: color 0.5s;
+		color: $body-color;
+	}
+
+	& > img {
+		width: 40px;
+		height: 40px;
+	}
+
+	&:not(.btn):hover,
+	&:not(.btn):focus {
+		text-decoration: none;
+
+		.icon {
+			color: theme-color("primary");
+		}
+
+		.ion-logo-twitter,
+		.ion-logo-twitter-outline {
+			color: color('twitter');
+		}
+		.ion-logo-facebook,
+		.ion-logo-facebook-outline {
+			color: color('facebook');
+		}
+		.ion-logo-googleplus,
+		.ion-logo-googleplus-outline {
+			color: color('googleplus');
+		}
+		.ion-logo-google,
+		.ion-logo-google-outline {
+			color: color('google');
+		}
+		.ion-logo-dribbble,
+		.ion-logo-dribbble-outline {
+			color: color('dribbble');
+		}
+		.ion-logo-octocat {
+			color: color('octocat');
+		}
+		.ion-logo-github,
+		.ion-logo-github-outline {
+			color: color('github');
+		}
+		.ion-logo-instagram,
+		.ion-logo-instagram-outline {
+			color: color('instagram');
+		}
+		.ion-logo-whatsapp,
+		.ion-logo-whatsapp-outline {
+			color: color('whatsapp');
+		}
+		.ion-logo-snapchat,
+		.ion-logo-snapchat-outline {
+			color: color('snapchat');
+		}
+		.ion-logo-foursquare,
+		.ion-logo-foursquare-outline {
+			color: color('foursquare');
+		}
+		.ion-logo-pinterest,
+		.ion-logo-pinterest-outline {
+			color: color('pinterest');
+		}
+		.ion-logo-rss,
+		.ion-logo-rss-outline {
+			color: color('rss');
+		}
+		.ion-logo-tumblr,
+		.ion-logo-tumblr-outline {
+			color: color('tumblr');
+		}
+		.ion-logo-wordpress,
+		.ion-logo-wordpress-outline {
+			color: color('wordpress');
+		}
+		.ion-logo-reddit,
+		.ion-logo-reddit-outline {
+			color: color('reddit');
+		}
+		.ion-logo-youtube,
+		.ion-logo-youtube-outline {
+			color: color('youtube');
+		}
+		.ion-logo-linkedin,
+		.ion-logo-linkedin-outline {
+			color: color('linkedin');
+		}
+		.ion-logo-steam {
+			color: color('steam');
+		}
+
+		@each $color, $value in $colors {
+			&.#{$color} {
+				color: $value;
+			}
+		}
+
+		@each $color, $value in $theme-colors {
+			&.#{$color} {
+				color: $value;
+			}
+		}
+	}
+
+	&.hintergrund {
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
+		transition: 0.5s ease-in-out;
+	}
+}
+
+.btn.hintergrund {
+	color: #fff;
+	background-color: theme-color("secondary");
+	transition: 0.5s ease-in-out;
+
+	&:hover,
+	&:focus {
+		color: #fff;
+	}
+
+	& > .icon {
+		color: #fff;
+	}
+
+	// Alle Farben, die in $colors definiert sind, sind als Hintergrundfarbe wählbar.
+	@each $color, $value in $colors {
+		&.#{$color} {
+			background-color: $value;
+			color: text-color-over($value);
+			&:hover,
+			&:focus {
+				background-color: darken($value, 10%);
+				color: text-color-over(darken($value, 10%));
+			}
+		}
+	}
+
+	// Alle Farben, die in $theme-colors definiert sind, sind ebenfalls als Hintergrundfarbe wählbar.
+	@each $color, $value in $theme-colors {
+		&.#{$color} {
+			background-color: $value;
+			color: text-color-over($value);
+			&:hover,
+			&:focus {
+				background-color: darken($value, 10%);
+				color: text-color-over(darken($value, 10%));
+			}
+		}
+	}
+}
+
+.hervorgehoben {
+	.social-button .icon {
+		color: theme-color("dark");
+	}
+}

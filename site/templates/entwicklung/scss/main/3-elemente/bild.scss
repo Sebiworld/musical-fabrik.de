@@ -1,0 +1,44 @@
+.bild-small img {
+	max-width: 200px;
+}
+.bild-medium img {
+	max-width: 400px;
+}
+
+.bild-caption {
+	z-index: 10;
+	position: relative;
+	// background: $inverse-bg;
+	// color: $inverse-color;
+	padding: $abstand-y-xs $abstand-x-xs;
+	font-style: italic;
+	border-top: 2px solid $inverse-bg;
+	@include font-size(0.95, 1);
+}
+
+.bilder-modal-link {
+	display: block;
+	position: relative;
+}
+
+.parallax-hintergrund {
+	position: absolute;
+	display: block;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow: hidden;
+
+	& > .image-container {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		background-size: cover;
+		z-index: 1;
+	}
+}

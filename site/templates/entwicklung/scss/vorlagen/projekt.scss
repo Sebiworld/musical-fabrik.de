@@ -1,0 +1,235 @@
+$projekt-primary-bg: theme-color("primary");
+$projekt-primary-color: text-color-over(theme-color("primary"));
+$projekt-primary-inverse-bg: #000;
+$projekt-primary-inverse-color: #fff;
+$projekt-titelbild-color: #fff !default;
+
+body {
+	a {
+		color: $projekt-primary-bg;
+	}
+
+	.titel-link,
+	.btn-link,
+	.rahmendaten-box .datensatz-link {
+		&:hover,
+		&:focus {
+			color: $projekt-primary-bg;
+		}
+
+		&:focus {
+			box-shadow: 0 0 0 0px rgba($projekt-primary-bg, 0.25);
+		}
+	}
+
+	.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+		background: $projekt-primary-bg;
+		color: $projekt-primary-color;
+	}
+
+	.projekt-titel {
+		text-align: center;
+
+		.projekt-titel-link {
+			&:hover {
+				text-decoration: none;
+			}
+
+			h1 {
+				color: $projekt-primary-bg;
+			}
+			.lead {
+				color: $text-muted;
+			}
+		}
+
+		.titel-text {
+			padding: $abstand-sm;
+		}
+
+		&.titelbild {
+			position: relative;
+			padding-left: 0;
+			padding-right: 0;
+			padding-top: 0;
+
+			margin-bottom: $abstand-md;
+			@include media-breakpoint-down(md) {
+				margin-bottom: $abstand-sm;
+			}
+		}
+
+		.info-overlay {
+			position: absolute;
+			bottom: (-0.5 * (font-rem("info-overlay") * 1.1 + ($abstand-y-sm * 2)));
+			left: 0;
+			@include font-size("info-overlay", 1.1);
+			font-weight: lighter;
+			padding: $abstand-y-sm $abstand-x-sm;
+			background: $projekt-primary-bg;
+			color: $projekt-primary-color;
+
+			@include media-breakpoint-down(sm) {
+				position: relative;
+				bottom: 0;
+			}
+		}
+	}
+
+	.breadcrumb > .breadcrumb-item > a {
+		color: $projekt-primary-bg;
+	}
+
+	.btn-projekt-primary, .CommentFormSubmit>button {
+		@include button-variant($projekt-primary-bg, $projekt-primary-bg);
+	}
+
+	.bg-projekt-primary {
+		background-color: $projekt-primary-bg;
+		color: $projekt-primary-color;
+	}
+
+	.text-projekt-primary {
+		color: $projekt-primary-bg;
+	}
+
+	.seitenleiste,
+	.seitenleiste .box .titel {
+		border-color: $projekt-primary-inverse-bg;
+	}
+
+	.projekt-titel {
+		.projekt-titel-link h1 {
+			color: $projekt-primary-bg;
+		}
+		.info-overlay {
+			background: $projekt-primary-bg;
+			color: $projekt-primary-color;
+		}
+	}
+
+	.rolle-container > .titel {
+		color: $projekt-primary-bg;
+	}
+
+	.mitwirkenden-portrait {
+		.seitenverhaeltnis:before {
+			padding-top: 133.33%;
+		}
+	}
+
+	.portrait-bild {
+		border: 3px solid #fff;
+	}
+
+	.breadcrumb > .breadcrumb-item > a {
+		color: $projekt-primary-bg;
+
+		&:focus {
+			box-shadow: 0 0 0 2px rgba($projekt-primary-bg, 0.25);
+		}
+	}
+
+	.badge-primary {
+		background: $projekt-primary-bg;
+		color: $projekt-primary-color;
+	}
+
+	.seitenleiste.seitenleiste .box a {
+		&:hover,
+		&:focus {
+			color: theme-color("primary");
+		}
+	}
+
+	.btn-projekt-primary-inverse, .seitenleiste.seitenleiste .box .btn-projekt-primary-inverse{
+		// @include button-variant($projekt-primary-inverse-color, $projekt-primary-inverse-bg, $projekt-primary-inverse-bg);
+		border-width: 1px;
+		border-style: solid;
+
+		&:hover,
+		&:focus {
+			background-color: $projekt-primary-bg;
+			color: $projekt-primary-color;
+			border-color: $projekt-primary-bg;
+		}
+
+		&:focus {
+			box-shadow: 0 0 0 2px rgba($projekt-primary-bg, 0.25);
+		}
+	}
+
+	.bild-caption {
+		border-color: $projekt-primary-bg;
+	}
+
+	.bild-caption-top {
+		background-color: rgba($projekt-titelbild-color, 0.5);
+		color: text-color-over($projekt-titelbild-color);
+	}
+
+	blockquote {
+		&:before {
+			color: $projekt-primary-bg;
+		}
+	}
+
+	header {
+		.navbar-nav a.nav-link.nav-link,
+		.dropdown-menu .dropdown-item {
+			&.active,
+			&:active {
+				color: contrast($projekt-primary-bg, theme-color("dark"));
+			}
+		}
+
+		.nav-item {
+			&.active,
+			&:active {
+				color: contrast($projekt-primary-bg, theme-color("dark"));
+				& > a.nav-link.nav-link {
+					color: contrast($projekt-primary-bg, theme-color("dark"));
+				}
+			}
+		}
+	}
+
+	footer .nav-link.nav-link,
+	footer .hervorgehoben .nav-link.nav-link {
+		&:hover,
+		&:focus {
+			color: contrast($projekt-primary-bg, theme-color("dark"));
+		}
+	}
+
+	.swiper-pagination-progress .swiper-pagination-progressbar {
+		background: $projekt-primary-bg;
+	}
+
+	.rollen-seite .titel-link {
+		&:hover {
+			.titel {
+				color: $projekt-primary-bg;
+			}
+		}
+	}
+
+	.lSSlideOuter .lSPager.lSGallery li.active,
+	.lSSlideOuter .lSPager.lSGallery li:hover {
+		border-bottom-color: $projekt-primary-bg;
+	}
+
+	.teilen-box .social-button .icon {
+		color: $projekt-primary-inverse-bg;
+	}
+
+	.swiper-pagination-progress .swiper-pagination-progressbar {
+		background: $projekt-primary-bg;
+	}
+	.nav-link {
+		&:hover,
+		&:focus {
+			color: $projekt-primary-bg;
+		}
+	}
+}

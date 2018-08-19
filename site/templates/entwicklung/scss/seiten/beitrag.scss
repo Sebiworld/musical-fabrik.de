@@ -1,0 +1,16 @@
+@import "./globals/index";
+
+.t-beitrag{
+	.inhaltsbereich{
+		.inhalte-container{
+			.titelbild{
+				margin-bottom: $abstand-y-lg;
+			}
+			.titel{
+				border-style: solid;
+				border-width: 0;
+				border-color: $body-color;
+			}
+		}
+	}
+}

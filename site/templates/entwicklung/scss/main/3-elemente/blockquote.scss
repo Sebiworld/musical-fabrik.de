@@ -1,0 +1,29 @@
+blockquote, blockquote.blockquote{
+	border: 0;
+	margin: 0;
+	padding: 0;
+
+	background: none;
+	color: $body-color;
+	font-family: $font-family-serif;
+	font-size: 1.4em;
+	font-style: italic;
+	line-height: 1.4 !important;
+	margin: 0;
+	position: relative;
+	// text-shadow: 0 1px white;
+	z-index: 10;
+
+	&:before {
+		content: '\201C';
+		color: lighten($brand-primary, 30%);
+		font-size: 7.5em;
+		font-weight: 700;
+		// opacity: .4;
+		position: absolute;
+		top: -.4em;
+		left: -.2em;
+		text-shadow: none;
+		z-index: -300;
+	}
+}
