@@ -1,15 +1,16 @@
 import { trigger, ready } from "./classes/hilfsfunktionen.js";
+import { throttle } from "lodash";
 
 var headerElement = $("body>header");
 var didScroll = false;
 var changeHeaderOn = 300;
 
 function init() {
-  if (typeof _ === "function" && typeof _.throttle === "function") {
+  if (typeof throttle === "function") {
     // wenn lodash verfügbar ist, wird die throttle-Funktion genutzt (spart Rechenleistung)
     $(window).on(
       "scroll",
-      _.throttle(function() {
+      throttle(function() {
         if (!didScroll) {
           didScroll = true;
           setTimeout(scrollPage, 250);

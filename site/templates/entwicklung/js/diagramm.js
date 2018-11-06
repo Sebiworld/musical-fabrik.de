@@ -1,4 +1,5 @@
 import AjaxAnfrage from './classes/AjaxAnfrage.js';
+import { isEmpty, isNumber, startsWith } from "lodash";
 
 (async () => {
 	const chartjs = await import(/* webpackChunkName: "chartjs" */ 'chart.js/src/chart.js');
@@ -101,7 +102,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 				enabled: false
 			};
 
-			if(!_.isEmpty(werte)){
+			if(!isEmpty(werte)){
 				chartConfig.data = {
 					xLabels: [],
 					datasets: []
@@ -123,7 +124,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 
 					let data = 0;
 					if(wert.wert !== undefined){
-						data = _.toNumber(wert.wert);
+						data = toNumber(wert.wert);
 					}
 					dataset.data.push(data);
 
@@ -131,7 +132,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 					if(typeof wert.farbe === 'string'){
 						farbe = wert.farbe;
 					}
-					if(!_.startsWith(farbe, '#')){
+					if(!startsWith(farbe, '#')){
 						farbe = '#' + farbe;
 					}
 
@@ -141,7 +142,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 				chartConfig.data.datasets.push(dataset);
 			}
 
-			if(!_.isEmpty(labels)){
+			if(!isEmpty(labels)){
 				chartConfig.options.scales.yAxes = [{
 					ticks: {
 						stepSize: 1,
@@ -150,10 +151,10 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 						callback: function(value, index, values) {
 							var label = value;
 							labels.every(function(element, labelIndex, _arr) {
-								if(_.isNumber(element.wert_minimum) && element.wert_minimum > value){
+								if(isNumber(element.wert_minimum) && element.wert_minimum > value){
 									return true;
 								}
-								if(_.isNumber(element.wert_maximum) && element.wert_maximum < value){
+								if(isNumber(element.wert_maximum) && element.wert_maximum < value){
 									return true;
 								}
 								label = element.label
@@ -179,7 +180,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 				position: 'bottom'
 			};
 
-			if(!_.isEmpty(werte)){
+			if(!isEmpty(werte)){
 				chartConfig.data = {
 					labels: [],
 					datasets: []
@@ -201,7 +202,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 
 					let data = 0;
 					if(wert.wert !== undefined){
-						data = _.toNumber(wert.wert);
+						data = toNumber(wert.wert);
 					}
 					dataset.data.push(data);
 
@@ -209,7 +210,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 					if(typeof wert.farbe === 'string'){
 						farbe = wert.farbe;
 					}
-					if(!_.startsWith(farbe, '#')){
+					if(!startsWith(farbe, '#')){
 						farbe = '#' + farbe;
 					}
 
@@ -220,7 +221,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 			}
 		}
 
-		if(typeof chartConfig !== 'object' || _.isEmpty(chartConfig)){
+		if(typeof chartConfig !== 'object' || isEmpty(chartConfig)){
 			return false;
 		}
 

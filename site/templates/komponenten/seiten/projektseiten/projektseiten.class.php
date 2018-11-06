@@ -9,6 +9,7 @@ class Projektseiten extends TwackComponent {
 	public function __construct($args) {
 		parent::__construct($args);
 
+		$this->isProjektseite = false;
 		$this->projektseite = $this->page;
 		if ($this->projektseite->template->name != 'projekt') {
 			$this->projektseite = $this->page->closest('template^=projekt');
@@ -85,5 +86,25 @@ class Projektseiten extends TwackComponent {
 			return true;
 		}
 		return false;
+	}
+
+	public function getAjax() {
+		$output = array(
+			'isProjektseite' => $this->isProjektseite
+		);
+
+		if($this->isProjektseite){
+			$output['projekt'] = $this->getAjaxOf($this->projektseite);
+
+			if($this->projektseite->titelbild){
+				$output['projekt']['titelbild'] = $this->getAjaxOf($this->projektseite->titelbild);
+			}
+
+			if($this->projektseite->farbe){
+				$output['farbe'] = $this->projektseite->farbe;
+			}
+		}
+
+		return $output;
 	}
 }

@@ -147,6 +147,10 @@ class AktuellesProvider extends TwackComponent {
 			$args['freitextsuche'] = wire('input')->get('freitextsuche');
 		}
 
+		if (wire('input')->get('limit')) {
+			$args['limit'] = wire('input')->get('limit');
+		}
+
 		if (wire('input')->get('start')) {
 			$args['start'] = wire('input')->get('start');
 		} elseif (wire('input')->get('offset')) {
@@ -158,25 +162,17 @@ class AktuellesProvider extends TwackComponent {
 		$ajaxOutput['gesamtAnzahl'] = $aktuelles->gesamtAnzahl;
 		$ajaxOutput['hatMehr'] = $aktuelles->hatMehr;
 		$ajaxOutput['letztesElementIndex'] = $aktuelles->letztesElementIndex;
-		// $ajaxOutput['beitraege'] = $beitraege->explode(['id', 'name', 'title', 'zeitpunkt_von']);
 
 		// HTML-Card für jeden Beitrag mit ausliefern:
 		$ajaxOutput['beitraege'] = array();
 		foreach ($aktuelles->beitraege as $beitrag) {
-			$beitragOutput = array(
-				'id' => $beitrag->id,
-				'name' => $beitrag->name,
-				'title' => $beitrag->title,
-				'zeitpunkt_von' => $beitrag->zeitpunkt_von
-			);
 
 			$komponente = $this->addComponent('BeitragCard', ['directory' => 'bauteile', 'page' => $beitrag]);
 			if ($komponente instanceof TwackNullComponent) {
 				continue;
 			}
-			$beitragOutput['html'] = (string) $komponente;
 
-			$ajaxOutput['beitraege'][] = $beitragOutput;
+			$ajaxOutput['beitraege'][] = $komponente->getAjax();
 		}
 
 		return $ajaxOutput;

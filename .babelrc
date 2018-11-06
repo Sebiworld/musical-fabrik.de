@@ -1,17 +1,13 @@
 {
 	"presets": [
-	  [
-		"@babel/preset-env",
-		{
-		  "targets": {
-			"browsers": ["last 2 versions", "> 2%"]
-		  },
-		}
-	  ]
+		[
+			"@babel/preset-env",
+			{
+				"targets": {
+					"browsers": ["last 2 versions", "> 2%"]
+				}
+			}
+		]
 	],
-	"plugins": [
-	  "transform-regenerator",
-	  "transform-react-jsx",
-	  "@babel/plugin-syntax-dynamic-import"
-	]
-  }
+	"plugins": ["@babel/plugin-syntax-dynamic-import", "@babel/plugin-transform-react-jsx", "@babel/plugin-transform-regenerator"]
+}

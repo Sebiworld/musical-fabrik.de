@@ -1,4 +1,6 @@
-exports.ready = function(fn) {
+import {indexOf} from "lodash";
+
+export const ready = function(fn) {
 	if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading"){
 		fn();
 	} else {
@@ -6,11 +8,11 @@ exports.ready = function(fn) {
 	}
 }
 
-exports.matches = function(el, selector) {
+export const matches = function(el, selector) {
 	return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
 };
 
-exports.addClass = function(el, className){
+export const addClass = function(el, className){
 	if (el.classList){
 		el.classList.add(className);
 	}else if(el.className !== undefined){
@@ -20,14 +22,14 @@ exports.addClass = function(el, className){
 	}
 }
 
-exports.hasClass = function(el, className){
+export const hasClass = function(el, className){
 	if (el.classList){
 		return el.classList.contains(className);
 	}
 	return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
 }
 
-exports.removeClass = function(el, className){
+export const removeClass = function(el, className){
 	if (el.classList){
 		el.classList.remove(className);
 	}else if(el.className !== undefined){
@@ -35,7 +37,7 @@ exports.removeClass = function(el, className){
 	}
 }
 
-exports.trigger = function(el, eventName, data){
+export const trigger = function(el, eventName, data){
 	if(typeof data !== 'Object'){
 		data = {};
 	}
@@ -43,7 +45,7 @@ exports.trigger = function(el, eventName, data){
 	const nativeEvents = ['change', 'resize', 'scroll'];
 
 	let event;
-	if(_.indexOf(nativeEvents, eventName) >= 0){
+	if(indexOf(nativeEvents, eventName) >= 0){
 		// NativesEvent
 		event = document.createEvent('HTMLEvents');
 		event.initEvent(eventName, true, false, data);
@@ -61,7 +63,7 @@ exports.trigger = function(el, eventName, data){
 	return el;
 }
 
-exports.createElementFromHTML = function(htmlString) {
+export const createElementFromHTML = function(htmlString) {
 	var div = document.createElement('div');
 	div.innerHTML = htmlString.trim();
 
@@ -69,7 +71,8 @@ exports.createElementFromHTML = function(htmlString) {
 	return div.firstChild;
 };
 
-exports.removeElements = function(elements){
+// export const propertyA = "A";
+export const removeElements = function(elements){
 	if(elements.length < 1){
 		return false;
 	}
@@ -86,7 +89,7 @@ exports.removeElements = function(elements){
 /**
  * https://github.com/cferdinandi/nextUntil
  */
- exports.nextUntil = function (elem, selector, filter) {
+ export const nextUntil = function (elem, selector, filter) {
 	// matches() polyfill
 	if (!Element.prototype.matches) {
 		Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;

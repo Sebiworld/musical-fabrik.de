@@ -28,7 +28,12 @@ class AuffuehrungenBox extends TwackComponent {
 		}
 
 		$termineProvider = $this->getProvider('TermineProvider');
-		$termine = $termineProvider->getTermine('fuer_gaeste_freigegeben=1, termin_kategorien='.$auffuehrungskategorie->id);
+		$termine = $termineProvider->getTermine(array(
+			'gastnutzer' => true,
+			'kategorien' => array($auffuehrungskategorie->id)
+		));
+
+		// $termine = $termineProvider->getTermine('fuer_gaeste_freigegeben=1, termin_kategorien='.$auffuehrungskategorie->id);
 
 		$this->titel = 'Aufführungen';
 		if (isset($args['titel']) && !empty($args['titel'])) {
@@ -37,8 +42,8 @@ class AuffuehrungenBox extends TwackComponent {
 
 		$auffuehrungen = array();
 		$auffuehrungenAlt = array();
-		foreach ($termine as $auffuehrung) {
-			foreach ($auffuehrung->zeitraeume as $zeitraum) {
+		foreach ($termine->termine as $auffuehrung) {
+			foreach ($auffuehrung->zeitraeume->sort('-zeitpunkt_von') as $zeitraum) {
 				if (!$zeitraum->template->hasField($args['nutzeFeld']) || $zeitraum->getUnformatted($args['nutzeFeld']) == 0) {
 					continue;
 				}

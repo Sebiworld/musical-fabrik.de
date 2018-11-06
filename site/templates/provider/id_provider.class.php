@@ -10,7 +10,6 @@ class IdProvider extends TwackComponent {
 
 	public function __construct($args) {
 		parent::__construct($args);
-
 		$this->ids = array();
 	}
 
@@ -25,13 +24,13 @@ class IdProvider extends TwackComponent {
 			return $this->ids[$forderung];
 		}
 
-		$counter = 0;
-		$wert = $forderung . '-' . $counter;
+		$counterChar = 'a';
+		$wert = $forderung . '-' . $counterChar;
 		while (isset($this->ids[$wert])) {
-			$counter = $counter + 1;
-			$wert = $forderung . '-' . $counter;
+			// Erhöht auf den nächsten Buchstaben im Alphabet: Wenn bei z angekommen, folgt aa.
+			$wert = $forderung . '-' . (++$counterChar);
 		}
-		
+
 		$ids = $this->ids;
 		$ids[$wert] = $wert;
 		$this->ids = $ids;

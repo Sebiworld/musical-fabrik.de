@@ -1,5 +1,6 @@
 import {ready, hasClass, addClass, removeClass, createElementFromHTML, removeElements, trigger, nextUntil} from './classes/hilfsfunktionen.js';
 import AjaxAnfrage from './classes/AjaxAnfrage.js';
+import {debounce, uniq, remove} from 'lodash';
 
 (async () => {
 	const elemente = document.querySelectorAll('.aktuelles-kacheln');
@@ -46,6 +47,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 			getParams.action = 'getComponent',
 			getParams.component = "AktuellesProvider";
 			getParams.type = "provider";
+			getParams.htmlAusgabe = true;
 			getParams.vorhandeneIDs = vorhandeneIDs;
 			ajaxAnfrage.getParams = getParams;
 
@@ -332,7 +334,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 				const mehrButton = kachelElement.querySelector('[data-aktion="weitere_laden"]');
 				if(typeof mehrButton === 'object' && mehrButton instanceof Element){
 
-					mehrButton.addEventListener("click", _.debounce(function(event){
+					mehrButton.addEventListener("click", debounce(function(event){
 						event.preventDefault();
 
 						let getParameter = ajaxAnfrage.getParams;
@@ -389,12 +391,12 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 									if(!hasClass(schlagwort, 'aktiv')){
 										getParameter.schlagwoerter.push(schlagwortID);
 									}else{
-										_.remove(getParameter.schlagwoerter, function(s) {
+										remove(getParameter.schlagwoerter, function(s) {
 											return s == schlagwortID;
 										});
 									}
 
-									getParameter.schlagwoerter = _.uniq(getParameter.schlagwoerter);
+									getParameter.schlagwoerter = uniq(getParameter.schlagwoerter);
 									if(getParameter.schlagwoerter.length <= 0){
 										// Keine Schlagworter: Schlagwoerter-Parameter löschen
 										delete getParameter.schlagwoerter;
@@ -415,7 +417,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 								if(typeof freitextsuche !== 'object' || !(freitextsuche instanceof Element)){
 									continue;
 								}
-								freitextsuche.addEventListener("keydown", _.debounce(function(event){
+								freitextsuche.addEventListener("keydown", debounce(function(event){
 									event.preventDefault();
 
 									let getParameter = ajaxAnfrage.getParams;

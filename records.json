@@ -1160,7 +1160,43 @@
       "node_modules/file-loader/dist/cjs.js??ref--10!node_modules/lightgallery/src/img/video-play.png": 589,
       "node_modules/file-loader/dist/cjs.js??ref--10!node_modules/lightgallery/src/img/loading.gif": 590,
       "node_modules/babel-loader/lib/index.js!site/templates/entwicklung/js/portraits.js": 623,
-      "node_modules/extract-text-webpack-plugin/dist/loader.js??ref--8-0!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/portrait-quickview.scss": 624
+      "node_modules/extract-text-webpack-plugin/dist/loader.js??ref--8-0!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/portrait-quickview.scss": 624,
+      "node_modules/chart.js/src/core/core.animations.js": 625,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/cke.scss": 11,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/der-medicus.scss": 51,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/der-zauberer-von-oz.scss": 146,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/die-paepstin.scss": 154,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/die-schoene-und-das-biest.scss": 359,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/main.scss": 496,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/oliver.scss": 497,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/the-voice-company.scss": 498,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/aktuelles-carousel.scss": 499,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/aktuelles-kacheln.scss": 500,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/auffuehrungen-box.scss": 501,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/bilder-gitter.scss": 558,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/bildergalerie.scss": 559,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/breadcrumb.scss": 560,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/cookies.scss": 561,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/filtereinstellungen.scss": 562,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/inhalt.scss": 563,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/inhalte-dateien.scss": 564,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/inhalte-diagramm.scss": 565,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/portrait-quickview.scss": 566,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/schlagwoerter-box.scss": 567,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/seitenleiste.scss": 568,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-aktuelles-carousel.scss": 569,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-formular.scss": 570,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-hero-bild.scss": 571,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-partner-foerderer.scss": 572,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-seiten-grid.scss": 573,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-standardseite.scss": 574,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-trenner.scss": 575,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/template_formular.scss": 576,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/beitraege-uebersicht.scss": 577,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/beitrag.scss": 578,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/home.scss": 579,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/rolle-seite.scss": 580,
+      "node_modules/mini-css-extract-plugin/dist/loader.js!node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/standardseite.scss": 581
     },
     "usedIds": {
       "0": 0,
@@ -1787,7 +1823,8 @@
       "621": 621,
       "622": 622,
       "623": 623,
-      "624": 624
+      "624": 624,
+      "625": 625
     }
   },
   "chunks": {
@@ -2323,6 +2360,863 @@
         "bySource": {},
         "usedIds": [
           1
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/cke.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/cke.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/der-medicus.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/der-medicus.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/die-paepstin.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/die-paepstin.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/der-zauberer-von-oz.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/der-zauberer-von-oz.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/die-schoene-und-das-biest.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/die-schoene-und-das-biest.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/main.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/lib/url/escape.js": 0,
+          "node_modules/css-loader/lib/css-base.js": 1,
+          "node_modules/file-loader/dist/cjs.js??ref--11!node_modules/ionicons/dist/fonts/ionicons.eot": 2,
+          "node_modules/file-loader/dist/cjs.js??ref--11!node_modules/lightgallery/src/fonts/lg.eot": 3,
+          "node_modules/file-loader/dist/cjs.js??ref--10!node_modules/lightgallery/src/img/vimeo-play.png": 4,
+          "node_modules/file-loader/dist/cjs.js??ref--10!node_modules/lightgallery/src/img/youtube-play.png": 5,
+          "node_modules/file-loader/dist/cjs.js??ref--11!site/templates/entwicklung/fonts/aileron/Aileron-Bold.otf": 6,
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/main.scss": 7,
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!node_modules/lightslider/dist/css/lightslider.min.css": 8,
+          "node_modules/file-loader/dist/cjs.js??ref--10!node_modules/lightslider/dist/img/controls.png": 9,
+          "node_modules/file-loader/dist/cjs.js??ref--11!node_modules/ionicons/dist/fonts/ionicons.woff2": 10,
+          "node_modules/file-loader/dist/cjs.js??ref--11!node_modules/ionicons/dist/fonts/ionicons.woff": 11,
+          "node_modules/file-loader/dist/cjs.js??ref--11!node_modules/ionicons/dist/fonts/ionicons.ttf": 12,
+          "node_modules/file-loader/dist/cjs.js??ref--10!node_modules/ionicons/dist/fonts/ionicons.svg": 13,
+          "node_modules/file-loader/dist/cjs.js??ref--11!node_modules/lightgallery/src/fonts/lg.woff": 14,
+          "node_modules/file-loader/dist/cjs.js??ref--11!node_modules/lightgallery/src/fonts/lg.ttf": 15,
+          "node_modules/file-loader/dist/cjs.js??ref--10!node_modules/lightgallery/src/fonts/lg.svg": 16,
+          "node_modules/file-loader/dist/cjs.js??ref--10!node_modules/lightgallery/src/img/video-play.png": 17,
+          "node_modules/file-loader/dist/cjs.js??ref--10!node_modules/lightgallery/src/img/loading.gif": 18,
+          "node_modules/file-loader/dist/cjs.js??ref--11!site/templates/entwicklung/fonts/aileron/Aileron-Regular.otf": 19,
+          "node_modules/file-loader/dist/cjs.js??ref--11!site/templates/entwicklung/fonts/aileron/Aileron-Italic.otf": 20,
+          "node_modules/file-loader/dist/cjs.js??ref--11!site/templates/entwicklung/fonts/aileron/Aileron-Heavy.otf": 21,
+          "node_modules/file-loader/dist/cjs.js??ref--11!site/templates/entwicklung/fonts/aileron/Aileron-Light.otf": 22,
+          "node_modules/file-loader/dist/cjs.js??ref--11!site/templates/entwicklung/fonts/aileron/Aileron-LightItalic.otf": 23
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "5": 5,
+          "6": 6,
+          "7": 7,
+          "8": 8,
+          "9": 9,
+          "10": 10,
+          "11": 11,
+          "12": 12,
+          "13": 13,
+          "14": 14,
+          "15": 15,
+          "16": 16,
+          "17": 17,
+          "18": 18,
+          "19": 19,
+          "20": 20,
+          "21": 21,
+          "22": 22,
+          "23": 23
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/oliver.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/oliver.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/the-voice-company.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/the-voice-company.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/aktuelles-carousel.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/aktuelles-carousel.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/aktuelles-kacheln.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/aktuelles-kacheln.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/auffuehrungen-box.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/auffuehrungen-box.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/bilder-gitter.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/bilder-gitter.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/bildergalerie.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/bildergalerie.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/breadcrumb.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/breadcrumb.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/cookies.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/lib/css-base.js": 0,
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/cookies.scss": 1,
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!node_modules/cookieconsent/build/cookieconsent.min.css": 2
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1,
+          "2": 2
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/filtereinstellungen.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/filtereinstellungen.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/inhalt.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/inhalt.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/inhalte-dateien.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/file-loader/dist/cjs.js??ref--10!node_modules/mediaelement/build/mejs-controls.svg": 0,
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/inhalte-dateien.scss": 1,
+          "node_modules/css-loader/lib/url/escape.js": 2,
+          "node_modules/css-loader/lib/css-base.js": 3,
+          "node_modules/file-loader/dist/cjs.js??ref--10!site/templates/entwicklung/img/mejs-controls.svg": 4
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/inhalte-diagramm.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/inhalte-diagramm.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/portrait-quickview.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/portrait-quickview.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/schlagwoerter-box.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/schlagwoerter-box.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/seitenleiste.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/seitenleiste.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-aktuelles-carousel.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-aktuelles-carousel.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-formular.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-formular.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-hero-bild.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-hero-bild.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-partner-foerderer.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-partner-foerderer.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-seiten-grid.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-seiten-grid.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-standardseite.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-standardseite.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-trenner.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/sektion-trenner.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/template_formular.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/komponenten/template_formular.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/beitraege-uebersicht.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/beitraege-uebersicht.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/beitrag.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/beitrag.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/home.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/home.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/rolle-seite.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/rolle-seite.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
+        ]
+      }
+    }
+  ],
+  "mini-css-extract-plugin node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/standardseite.scss": [
+    {
+      "modules": {
+        "byIdentifier": {
+          "node_modules/css-loader/index.js??ref--8-1!node_modules/postcss-loader/lib/index.js??postcss!node_modules/resolve-url-loader/index.js??ref--8-3!node_modules/sass-loader/lib/loader.js??ref--8-4!node_modules/import-glob-loader/index.js!site/templates/entwicklung/scss/seiten/standardseite.scss": 0,
+          "node_modules/css-loader/lib/css-base.js": 1
+        },
+        "usedIds": {
+          "0": 0,
+          "1": 1
+        }
+      },
+      "chunks": {
+        "byName": {
+          "mini-css-extract-plugin": 0
+        },
+        "bySource": {},
+        "usedIds": [
+          0
         ]
       }
     }

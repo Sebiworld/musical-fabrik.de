@@ -101,4 +101,9 @@ a{
 	max-width: 600px;
 }
 
+.normal-weight{
+	font-weight: normal;
+	font-family: $font-family-sans-serif;
+}
+
 @import "./fonts";

@@ -7,7 +7,7 @@ import {ready} from './classes/hilfsfunktionen.js';
 	const lightsliderElemente = document.querySelectorAll('.lightslider');
 	if(lightsliderElemente.length > 0){
 		await import(/* webpackChunkName: "lightslider" */ 'lightslider/src/js/lightslider.js');
-		
+
 		await import(/* webpackChunkName: "lightgallery" */ 'lightgallery/dist/js/lightgallery.js');
 		await import(/* webpackChunkName: "lightgallery" */ 'lg-autoplay/dist/lg-autoplay.js');
 		await import(/* webpackChunkName: "lightgallery" */ 'lg-fullscreen/dist/lg-fullscreen.js');
@@ -18,6 +18,7 @@ import {ready} from './classes/hilfsfunktionen.js';
 		await import(/* webpackChunkName: "lightgallery" */ 'lg-video/dist/lg-video.js');
 		await import(/* webpackChunkName: "lightgallery" */ 'lg-zoom/dist/lg-zoom.js');
 
+		console.log("Bildergalerie geladen.");
 		ready(function(){
 			for(let index in lightsliderElemente){
 				const element = lightsliderElemente[index];

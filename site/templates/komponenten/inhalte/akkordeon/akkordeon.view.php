@@ -17,21 +17,21 @@ if ($this->tabs && count($this->tabs) > 0) {
 			<?php
 		}
 		?>
-		<div class="akkordeon" id="<?= $this->id; ?>" role="tablist" aria-multiselectable="true">
+		<div class="akkordeon" id="<?= $this->id; ?>">
 			<?php
 			// Einzelne Akkordeon-Tabs darstellen:
 			foreach ($this->tabs as $tab) {
 				?>
 				<div class="card">
-					<div class="card-header bg-dark" role="tab" id="heading-<?= $tab->id; ?>">
+					<div class="card-header bg-dark" id="heading-<?= $tab->id; ?>">
 						<h2 class="mb-0">
-							<a class="collapsed" data-toggle="collapse" data-parent="#<?= $this->id; ?>" href="#<?= $tab->id; ?>" aria-expanded="true" aria-controls="<?= $tab->id; ?>">
+							<a data-toggle="collapse" data-target="#<?= $tab->id; ?>" data-parent="#<?= $this->id; ?>" href="#<?= $tab->id; ?>" aria-controls="<?= $tab->id; ?>" data-expanded="false">
 								<?= $tab->titel; ?>
 							</a>
 						</h2>
 					</div>
 
-					<div id="<?= $tab->id; ?>" class="collapse" role="tabpanel" aria-labelledby="heading-<?= $tab->id; ?>">
+					<div id="<?= $tab->id; ?>" class="collapse" role="tabpanel" aria-labelledby="heading-<?= $tab->id; ?>" data-parent="#<?= $this->id; ?>">
 						<div class="card-block">
 							<?= $tab->inhalt; ?>
 						</div>

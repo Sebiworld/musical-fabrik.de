@@ -26,7 +26,7 @@ class General extends TwackComponent {
 		$this->addStyle(wire('config')->urls->FieldtypeComments . 'comments.css', true);
 		$this->addScript(wire('config')->urls->FieldtypeComments . 'comments.min.js', true);
 
-		// Eigene Dev
+		// Eigene Dev-Ausgabe
 		$devAusgabe = $this->addComponent('DevAusgabe', ['globalName' => 'dev_ausgabe']);
 		$this->twack->registerDevEchoComponent($devAusgabe);
 
@@ -42,7 +42,6 @@ class General extends TwackComponent {
 			'einzelbild' => true
 			]);
 		$this->addGlobalParameter(['einzelbildModalID' => $bildModal->getID()]);
-		// wire('config')->js('einzelbildModalID', $bildModal->getID());
 
 		$this->addComponent('Formulare', ['globalName' => 'formulare', 'directory' => '']);
 
@@ -172,5 +171,19 @@ class General extends TwackComponent {
 		if (is_string($metaname) && !empty($metaname) && is_string($metatag) && !empty($metatag)) {
 			$this->metaangaben->{$metaname} = $metatag;
 		}
+	}
+
+	public function getAjax() {
+		$output = $this->getAjaxOf($this->page);
+
+		if ($this->childComponents) {
+			foreach ($this->childComponents as $component) {
+				$ajax = $component->getAjax();
+				if(empty($ajax)) continue;
+				$output = array_merge($output, $ajax);
+			}
+		}
+
+		return $output;
 	}
 }

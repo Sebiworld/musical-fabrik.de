@@ -48,7 +48,7 @@
 		content: {
 			header: "Auf dieser Website werden Cookies benutzt.",
 			message:
-				"Wir verwenden Cookies, um den Websitebesuch für Sie so angenehm wie möglich zu gestalten.",
+				"Um unsere Webseite für Sie optimal zu gestalten und fortlaufend verbessern zu können, verwenden wir Cookies. Durch die weitere Nutzung der Webseite stimmen Sie der Verwendung von Cookies zu.",
 			dismiss: "Ok",
 			allow: "Das ist ok.",
 			deny: "Ich möchte das nicht.",

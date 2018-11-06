@@ -33,7 +33,7 @@ class Akkordeon extends TwackComponent {
 		}
 
 		$tab = new WireData();
-		$tab->id = $this->idProvider->getID($this->id);
+		$tab->id = $this->idProvider->getID($this->id . '-' . $this->tabs->count);
 		$tab->titel = $titel;
 		$tab->inhalt = $inhalt;
 

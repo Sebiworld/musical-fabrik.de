@@ -43,4 +43,23 @@ class Inhalte extends TwackComponent {
 			}
 		}
 	}
+
+	public function getAjax() {
+		$output = array(
+			'inhalte' => []
+		);
+
+		if ($this->childComponents) {
+			foreach ($this->childComponents as $component) {
+				$ajax = $component->getAjax();
+				if(empty($ajax)) continue;
+
+				$seite = $component->getPage();
+				$ajax['depth'] = $seite->depth;
+				$output['inhalte'][] = $ajax;
+			}
+		}
+
+		return $output;
+	}
 }

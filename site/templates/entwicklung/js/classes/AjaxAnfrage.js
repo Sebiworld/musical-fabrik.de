@@ -1,3 +1,5 @@
+import { merge } from "lodash";
+
 class AjaxAnfrage {
 	constructor(wert) {
 		this.url = window.location.origin;
@@ -40,7 +42,7 @@ class AjaxAnfrage {
 	}
 
 	addGetParams(params){
-		_.merge(this._getParams, params);
+		merge(this._getParams, params);
 	}
 
 	/*
@@ -139,7 +141,7 @@ class AjaxAnfrage {
 	}
 
 	addPostParams(params){
-		_.merge(this._postParams, params);
+		merge(this._postParams, params);
 	}
 
 	/**

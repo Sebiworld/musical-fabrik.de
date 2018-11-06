@@ -88,9 +88,9 @@ class SebiMusicalFabrikFunktionen extends WireData implements Module {
 			if ($seite->children('template.name=staffeln_container')->count > 0) {
 				$staffelnSeite = $seite->children('template.name=staffeln_container')->first;
 
-				$patch->createPageWithParent('staffel-1', 'staffel', $staffelnSeite, [
+				$patch->createPageWithParent('spielzeit-1', 'staffel', $staffelnSeite, [
 					'published' => true,
-					'title' => 'Staffel 1'
+					'title' => 'Spielzeit 1'
 					]);
 			}
 		} elseif ($seite->template->name == 'zeitraum') {

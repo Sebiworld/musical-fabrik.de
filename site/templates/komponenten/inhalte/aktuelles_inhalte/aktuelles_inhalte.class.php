@@ -27,4 +27,18 @@ class AktuellesInhalte extends TwackComponent {
 			$this->titel = $this->page->title;
 		}
 	}
+
+	public function getAjax() {
+		$output = array();
+
+		if ($this->childComponents) {
+			foreach ($this->childComponents as $component) {
+				$ajax = $component->getAjax();
+				if(empty($ajax)) continue;
+				$output = array_merge($output, $ajax);
+			}
+		}
+
+		return $output;
+	}
 }

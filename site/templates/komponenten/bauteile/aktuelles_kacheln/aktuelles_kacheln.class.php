@@ -24,8 +24,8 @@ class AktuellesKacheln extends TwackComponent {
 			$this->addComponent('Filtereinstellungen', ['directory' => 'bauteile', 'name' => 'filtereinstellungen', 'filtereinstellungen' => $filtereinstellungen]);
 		}
 
-		$aktuellesProvider = $this->getProvider('AktuellesProvider');
-		$aktuelles = $aktuellesProvider->getBeitraege($filtereinstellungen);
+		$this->aktuellesProvider = $this->getProvider('AktuellesProvider');
+		$aktuelles = $this->aktuellesProvider->getBeitraege($filtereinstellungen);
 		$this->hatMehr = $aktuelles->hatMehr;
 		$this->letztesElementIndex = $aktuelles->letztesElementIndex;
 		$this->gesamtAnzahl = $aktuelles->gesamtAnzahl;
@@ -35,8 +35,12 @@ class AktuellesKacheln extends TwackComponent {
 			$this->addComponent('BeitragCard', ['directory' => 'bauteile', 'page' => $seite]);
 		}
 
-		$this->aktuellesSeite = $aktuellesProvider->getAktuellesSeite();
+		$this->aktuellesSeite = $this->aktuellesProvider->getAktuellesSeite();
 		$this->addStyle(wire('config')->urls->templates . 'assets/css/aktuelles-kacheln.min.css', true);
 		$this->addScript(wire('config')->urls->templates . 'assets/js/ajaxmasonry.min.js', true);
+	}
+
+	public function getAjax(){
+		return $this->aktuellesProvider->getAjax();
 	}
 }

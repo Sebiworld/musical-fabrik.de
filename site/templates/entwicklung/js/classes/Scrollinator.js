@@ -7,6 +7,7 @@ import {
 	hasClass,
 	closest,
 } from "./hilfsfunktionen.js";
+import { throttle, remove } from "lodash";
 
 let s = function() {
 	"use strict";
@@ -43,7 +44,7 @@ let s = function() {
 				return window.scrollinatorInstanz;
 			}
 			window.scrollinatorInstanz = this;
-			
+
 			let obj = this;
 			if (typeof options !== "object") {
 				options = {};
@@ -472,11 +473,11 @@ let s = function() {
 			document.removeEventListener("scroll", obj.positionPruefen.bind(obj));
 
 			// document.addEventListener('click', this.hashListener.bind(this));
-			if (typeof _ === "function" && typeof _.throttle === "function") {
+			if (typeof throttle === "function") {
 				// wenn lodash verfügbar ist, wird die throttle-Funktion genutzt (spart Rechenleistung)
 				document.addEventListener(
 					"scroll",
-					_.throttle(obj.positionPruefen.bind(obj), 100)
+					throttle(obj.positionPruefen.bind(obj), 100)
 				);
 			} else {
 				document.addEventListener("scroll", obj.positionPruefen.bind(obj));
@@ -592,7 +593,7 @@ let s = function() {
 				// Die Sektion existiert schon. Es muss also nur der Navlink hinzugefügt werden.
 
 				// Wenn das Linkelement schon existiert, wird es zuerst gelöscht.
-				_.remove(obj.sektionen[hashWert], function(n) {
+				remove(obj.sektionen[hashWert], function(n) {
 					if (typeof n !== "object") return true;
 					if (n.element === linkelement) return true;
 					return false;

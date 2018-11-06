@@ -34,36 +34,38 @@ if ($this->titelbild) {
 						?>
 						<figure class="progressive">
 							<?php
-							echo $this->bildProvider->getBildTag(array(
-								'bild' => $this->titelbild,
-								'ausgabeAls' => 'image',
-								'classes' => 'titelbild',
-								'normal' => array(
-									'width' => 1400
-								),
-								'sm' => array(
-									'width' => 600
-								),
-								'xs' => array(
-									'width' => 300
+							echo $this->bildProvider->getBildTag(
+								array(
+									'bild' => $this->titelbild,
+									'ausgabeAls' => 'image',
+									'classes' => 'titelbild',
+									'normal' => array(
+										'width' => 1400
+									),
+									'sm' => array(
+										'width' => 600
+									),
+									'xs' => array(
+										'width' => 300
+									)
 								)
-							));
-						?>
-					</figure>
-					<?php
+							);
+							?>
+						</figure>
+						<?php
 					}
-				?>
+					?>
+				</div>
+			</div>
+
+			<div class="beschreibung-wrapper parallax-element" data-parallax-speed="0">
+				<div class="beschreibung">
+					<?= $this->inhalte; ?>
+				</div>
 			</div>
 		</div>
+	</section>
 
-		<div class="beschreibung-wrapper parallax-element" data-parallax-speed="0">
-			<div class="beschreibung">
-				<?= $this->inhalte; ?>
-			</div>
-		</div>
-	</div>
-</section>
-
-<?php
+	<?php
 }
 ?>

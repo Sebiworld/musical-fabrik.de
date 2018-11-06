@@ -11,4 +11,20 @@ class SchlagwoerterFeld extends TwackComponent {
 			$this->schlagwoerter = $this->page->get($nutzeFeld);
 		}
 	}
+
+	public function getAjax(){
+		$output = array();
+
+		if($this->schlagwoerter instanceof PageArray){
+			foreach($this->schlagwoerter as $schlagwort){
+				$output[] = array(
+					'id' => $schlagwort->id,
+					'title' => $schlagwort->title,
+					'name' => $schlagwort->name
+				);
+			}
+		}
+
+		return $output;
+	}
 }

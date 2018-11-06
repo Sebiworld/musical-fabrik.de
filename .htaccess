@@ -225,6 +225,10 @@ DirectoryIndex index.php index.html index.htm
   # -----------------------------------------------------------------------------------------------
   # RewriteRule ^(.*)$ /index.php?it=$1 [L,QSA]
 
+  # RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+  # SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
+
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 </IfModule>
 
 #################################################################################################

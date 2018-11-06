@@ -1,4 +1,4 @@
-import "babel-polyfill";
+import "@babel/polyfill";
 import { trigger, ready } from "./classes/hilfsfunktionen.js";
 import Scrollinator from "./classes/Scrollinator.js";
 

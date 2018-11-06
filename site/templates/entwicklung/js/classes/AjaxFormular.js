@@ -1,4 +1,5 @@
 import {matches, removeClass, addClass} from './hilfsfunktionen.js';
+import {values, join} from "lodash";
 import AjaxAnfrage from './AjaxAnfrage.js';
 import Scrollinator from './Scrollinator.js';
 
@@ -271,9 +272,9 @@ export default class AjaxFormular {
 		}else if(typeof hinweis.text === 'object'){
 			if(!Array.isArray(hinweis.text)){
 				// Der Text kann als Objekt angegeben werden. Die Keys werden bei der Ausgabe aber nicht berücksichtigt.
-				hinweis.text = _.values(hinweis.text);
+				hinweis.text = values(hinweis.text);
 			}
-			hinweistext = _.join(hinweis.text, '<br/>');
+			hinweistext = join(hinweis.text, '<br/>');
 		}
 
 		// Feedback-Container suchen oder erstellen:
@@ -324,11 +325,11 @@ export default class AjaxFormular {
 	/**
 	 * Sperrt das Formular für weitere Eingaben
 	 */
-	formularSperren(){
-		let formularFieldsets = this.element.querySelectorAll('.alle-formularelemente');
-		Array.prototype.forEach.call(formularFieldsets, function(el, i){
-			el.setAttribute('disabled', 'disabled');
-		});
+	 formularSperren(){
+	 	let formularFieldsets = this.element.querySelectorAll('.alle-formularelemente');
+	 	Array.prototype.forEach.call(formularFieldsets, function(el, i){
+	 		el.setAttribute('disabled', 'disabled');
+	 	});
 
 		// TODO: Optional Cookie speichern, um erneutes abschicken zu verhinden?
 	}
