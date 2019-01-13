@@ -22,6 +22,17 @@
 			}
 		}
 
+		.inhalte{
+			margin-bottom: 40px;
+		}
+
+		.inhalt-text{
+			&>p{
+				margin-left: auto;
+				margin-right: auto;
+			}
+		}
+
 		.titel{
 			margin-left: auto;
 			margin-right: auto;

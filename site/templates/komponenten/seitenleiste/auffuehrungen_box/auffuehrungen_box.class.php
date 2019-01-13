@@ -12,19 +12,19 @@ class AuffuehrungenBox extends TwackComponent {
 			$projektseite = $args['projektseite'];
 		}
 		if (!($projektseite instanceof Page) || !$projektseite->id) {
-			throw new ComponentNotInitialisedException('AuffuehrungenBox', 'Es wurde keine Projektseite gefunden.');
+			throw new ComponentNotInitializedException('AuffuehrungenBox', 'Es wurde keine Projektseite gefunden.');
 		}
 
 		if (!isset($args['nutzeFeld']) || !is_string($args['nutzeFeld']) || empty($args['nutzeFeld'])) {
 			$args['nutzeFeld'] = 'zeitpunkt_von';
 		}
 		if (!wire('fields')->get($args['nutzeFeld'])) {
-			throw new ComponentNotInitialisedException('AuffuehrungenBox', 'Es existiert kein Feld mit dem Namen "'.$args['nutzeFeld'].'". ');
+			throw new ComponentNotInitializedException('AuffuehrungenBox', 'Es existiert kein Feld mit dem Namen "'.$args['nutzeFeld'].'". ');
 		}
 
 		$auffuehrungskategorie = wire('pages')->get('template.name=termin_kategorie, name=auffuehrung, include=all');
 		if (!($auffuehrungskategorie->id.'')) {
-			throw new ComponentNotInitialisedException('AuffuehrungenBox', 'Es wurde keine Aufführungskategorie-Seite gefunden.');
+			throw new ComponentNotInitializedException('AuffuehrungenBox', 'Es wurde keine Aufführungskategorie-Seite gefunden.');
 		}
 
 		$termineProvider = $this->getProvider('TermineProvider');

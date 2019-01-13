@@ -86,7 +86,7 @@ namespace ProcessWire;
 					<?php
 					foreach ($this->socialmedia_links as $mediaitem) {
 						?>
-						<a href="<?= $mediaitem->link; ?>" target="_blank" title="<?= $mediaitem->title; ?>" class="social-button <?= $mediaitem->klassen; ?>">
+						<a href="<?= $mediaitem->link; ?>" target="_blank" title="<?= $mediaitem->title; ?>" class="social-button <?= $mediaitem->klassen; ?>" rel="noopener">
 							<?php
 							if ($mediaitem->type === 'ionicon') {
 								?>

@@ -1,10 +1,9 @@
 <?php
 namespace ProcessWire;
 
-if ($this->childComponents) {
+if (wireCount($this->childComponents) > 0) {
 	?>
 	<div class="inhalte">
-
 		<div class="inhalt-block">
 			<?php
 			$firstFlag = true;

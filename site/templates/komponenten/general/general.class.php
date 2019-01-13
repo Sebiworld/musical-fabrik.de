@@ -15,6 +15,12 @@ class General extends TwackComponent {
 		$this->twack->makeComponentGlobal($this, 'general');
 
 		// Main-Scripte für alle Seiten hinzufügen:
+		$this->addStyle(wire('config')->urls->templates . 'assets/css/bootstrap.min.css', true);
+		$this->addStyle(wire('config')->urls->templates . 'assets/css/swiper.min.css', true);
+		$this->addStyle(wire('config')->urls->templates . 'assets/css/lightgallery.min.css', true);
+		$this->addStyle(wire('config')->urls->templates . 'assets/css/starability.min.css', true);
+		$this->addStyle(wire('config')->urls->templates . 'assets/css/ionicons.min.css', true);
+		$this->addStyle(wire('config')->urls->templates . 'assets/css/hamburgers.min.css', true);
 		$this->addStyle(wire('config')->urls->templates . 'assets/css/main.min.css', true);
 		$this->addScript(wire('config')->urls->templates . 'assets/js/general.min.js', true);
 

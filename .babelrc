@@ -4,10 +4,10 @@
 			"@babel/preset-env",
 			{
 				"targets": {
-					"browsers": ["last 2 versions", "> 2%"]
+					"browsers": ["last 2 versions", "> 1%"]
 				}
 			}
 		]
 	],
-	"plugins": ["@babel/plugin-syntax-dynamic-import", "@babel/plugin-transform-react-jsx", "@babel/plugin-transform-regenerator"]
+	"plugins": ["@babel/plugin-syntax-dynamic-import", "@babel/plugin-transform-react-jsx", "@babel/plugin-transform-regenerator", "@babel/plugin-transform-runtime", "@babel/plugin-transform-object-assign"]
 }

@@ -16,7 +16,7 @@ if ($this->dateien && count($this->dateien) > 0) {
 			foreach ($this->dateien as $datei) {
 				?>
 				<li>
-					<a target="_blank" href="<?= $datei->url; ?>" title="Datei herunterladen">
+					<a target="_blank" href="<?= $datei->url; ?>" title="Datei herunterladen" rel="noopener">
 						<h4 class="titel"><?= $datei->description ? $datei->description : $datei->name; ?></h4>
 					</a>
 				</li>

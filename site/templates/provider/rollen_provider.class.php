@@ -212,6 +212,7 @@ class RollenProvider extends TwackComponent {
 			$rolleSeite = wire('pages')->get('/');
 		}
 
+		// Von allen Rollen, bei denen keine feste Anzahl vorgegeben wurde, werden die zugehörigen Portraits gezählt:
 		$unterrollenOhneAnzahl = $rolleSeite->find('template.name=rolle, anzahl=""');
 		$anzahl = wire('pages')->find('template.name=portrait, rollen.rolle.parent='.$unterrollenOhneAnzahl->implode('|', 'id'))->count;
 

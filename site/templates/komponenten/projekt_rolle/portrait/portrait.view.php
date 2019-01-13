@@ -27,10 +27,10 @@ Einzelnes Darstellerportrait anzeigen
 				'ausgabeAls' => 'bg-image',
 				'classes' => 'bg-bild portrait-bild sv-inhalt',
 				'normal' => array(
-					'height' => 800
+					'height' => 400
 				),
 				'sm' => array(
-					'height' => 600
+					'height' => 200
 				)
 			));
 		} else {

@@ -58,7 +58,7 @@ class SebiFreischaltungsZeitpunkt extends WireData implements Module {
 		$field->dateInputFormat = 'd.m.Y';
 		$field->timeInputFormat = 'H:i:s';
 		$field->datepicker = true;
-		$field->showIf = 'freischaltungszeitpunkt_zeitpunkt_ab_aktivieren=1';
+		$field->showIf = 'freischaltungszeitpunkt_zeitpunkt_bis_aktivieren=1';
 		$field->save();
 
 		$permission = wire('permissions')->add('page-view-nicht-freigeschaltet');

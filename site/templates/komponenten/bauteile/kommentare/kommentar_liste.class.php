@@ -157,7 +157,7 @@ class KommentarListe extends CommentList {
 			$website = $comment->getFormatted('website');
 		}
 		if ($website) {
-			$cite = "<a href='$website' rel='nofollow' target='_blank'>$cite</a>";
+			$cite = "<a href='$website' rel='noreferrer' target='_blank'>$cite</a>";
 		}
 		$created = wireDate($this->options['dateFormat'], $comment->created);
 

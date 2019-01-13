@@ -7,7 +7,7 @@ class DateienBox extends TwackComponent {
 		parent::__construct($args);
 
 		if (!isset($args['nutzefeld']) || empty($args['nutzefeld'])) {
-			throw new ComponentNotInitialisedException('DateienBox', 'Bitte übergeben Sie den Namen des Datei-Feldes, aus dem die Download-Dateien gezogen werden sollen.');
+			throw new ComponentNotInitializedException('DateienBox', 'Bitte übergeben Sie den Namen des Datei-Feldes, aus dem die Download-Dateien gezogen werden sollen.');
 		}
 
 		$this->dateien = $this->page->get($args['nutzefeld']);

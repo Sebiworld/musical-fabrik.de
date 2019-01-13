@@ -45,7 +45,7 @@ class TemplateFormular extends TwackComponent {
 		}
 
 		if (!($this->containerSeite instanceof Page) || !$this->containerSeite->id) {
-			throw new ComponentNotInitialisedException('TemplateFormular', 'An das Formular wurde keine valide Containerseite übergeben.');
+			throw new ComponentNotInitializedException('TemplateFormular', 'An das Formular wurde keine valide Containerseite übergeben.');
 		}
 
 		// Platzhalter-Sammlung befüllen. {{Platzhalter}} werden durch die angegebene Entsprechung ersetzt.

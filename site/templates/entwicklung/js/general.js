@@ -1,4 +1,4 @@
-import "@babel/polyfill";
+// import "@babel/polyfill";
 import { trigger, ready } from "./classes/hilfsfunktionen.js";
 import Scrollinator from "./classes/Scrollinator.js";
 
@@ -14,9 +14,9 @@ const scrollinator = new Scrollinator({
 
 // Bootstrap wird nachgeladen:
 (async () => {
-	const progressively = await import(/* webpackChunkName: "bildtools" */ "progressively");
-	const popper = await import(/* webpackChunkName: "bootstrap" */ "popper.js");
-	const bootstrap = await import(/* webpackChunkName: "bootstrap" */ "bootstrap");
+	const progressively = await import("progressively");
+	const popper = await import("popper.js");
+	const bootstrap = await import("bootstrap");
 
 	ready(function() {
 		// Progressively zum Nachladen von Bildern:
@@ -43,7 +43,7 @@ const scrollinator = new Scrollinator({
 				.removeClass("is-active");
 		});
 
-		// // Collapse:
+		// Collapse:
 		$(".collapse.has-hamburger[id]").on("show.bs.collapse", function() {
 			$(
 				'.hamburger[data-toggle="collapse"][data-target="#' +

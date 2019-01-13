@@ -13,7 +13,7 @@ class RahmendatenBox extends TwackComponent {
 			$projektseite = $args['projektseite'];
 		}
 		if (!($projektseite instanceof Page) || !$projektseite->id) {
-			throw new ComponentNotInitialisedException('RahmendatenBox', 'Es wurde keine Projektseite gefunden.');
+			throw new ComponentNotInitializedException('RahmendatenBox', 'Es wurde keine Projektseite gefunden.');
 		}
 
 		$this->titel = 'Projektdaten';
@@ -21,15 +21,33 @@ class RahmendatenBox extends TwackComponent {
 			$this->titel = str_replace(array("\n", "\r"), '', $args['titel']);
 		}
 
-		$rollenProvider = $this->getProvider('RollenProvider');
-
 		// Anzahl der Mitwirkenden:
 		$rollenSeite = $projektseite->get('template.name=rollen_container');
-		if ($rollenSeite->id) {
-			// Gesamtanzahl:
-			$this->gesamtanzahl = 10 * floor($rollenProvider->getMitwirkendenAnzahl($rollenSeite) / 10);
-			if ($this->gesamtanzahl > 0) {
-				$rollenText = 'Mehr als ' . $this->gesamtanzahl . ' Mitwirkende!';
+
+		if ($rollenSeite->id && $rollenSeite->viewable()) {
+			// Von allen Rollen, bei denen keine feste Anzahl vorgegeben wurde, werden die zugehörigen Portraits gezählt:
+			$this->gesamtanzahl = 0;
+			$portraits = new PageArray();
+			foreach($rollenSeite->find('template.name=rolle') as $rolle){
+				if(!empty($rolle->anzahl)){
+					$this->gesamtanzahl += $rolle->anzahl;
+					continue;
+				}
+
+				foreach($rolle->darsteller as $darstelleritem){
+					$portraits->add($darstelleritem->portraits);
+				}
+			}
+
+			$this->gesamtanzahl += wireCount($portraits);
+
+			if($this->gesamtanzahl > 0){
+				$rollenText = $this->gesamtanzahl . ' Mitwirkende!';
+				if (10 * floor($this->gesamtanzahl / 10) > 0) {
+					// Gesamtanzahl, auf 10er abgerundet:
+					$this->gesamtanzahl = 10 * floor($this->gesamtanzahl / 10);
+					$rollenText = 'Mehr als ' . $this->gesamtanzahl . ' Mitwirkende!';
+				}
 				$this->addDatensatz('', $rollenText);
 
 				foreach ($rollenSeite->children('template.name=rolle') as $rolle) {

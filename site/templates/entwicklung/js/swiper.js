@@ -1,9 +1,12 @@
 import {ready} from './classes/hilfsfunktionen.js';
+// import Swiper from 'swiper';
 
 (async () => {
 	const elemente = document.querySelectorAll('.swiper-container');
 	if(elemente.length > 0){
-		const swiperLoad = await import(/* webpackChunkName: "swiper-slider" */ 'swiper');
+
+		// const swiperLoad = await import('swiper');
+		const swiperLoad = await import(/* webpackChunkName: "swiper-slider" */ 'swiper/dist/js/swiper.js');
 		const Swiper = swiperLoad.default;
 
 		ready(function(){

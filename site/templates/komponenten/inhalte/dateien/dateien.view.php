@@ -33,7 +33,7 @@ if ($this->dateien && !empty($this->dateien)) {
 					// Audio-Datei, Player anzeigen:
 					?>
 					<li class="media datei audiodatei">
-						<a href="<?= $datei->url; ?>" target="_blank" class="icon-wrapper" data-audioplayer-aktion="play">
+						<a href="<?= $datei->url; ?>" target="_blank" class="icon-wrapper" data-audioplayer-aktion="play" rel="noopener">
 							<i class="icon ion-ios-musical-note"></i>
 						</a>
 						<div class="media-body">
@@ -51,11 +51,11 @@ if ($this->dateien && !empty($this->dateien)) {
 					// Normaler Datei-Download
 					?>
 					<li class="media datei">
-						<a href="<?= $datei->url; ?>" target="_blank" class="icon-wrapper">
+						<a href="<?= $datei->url; ?>" target="_blank" class="icon-wrapper" rel="noopener">
 							<i class="icon ion-ios-cloud-download-outline"></i>
 						</a>
 						<div class="media-body">
-							<a href="<?= $datei->url; ?>" target="_blank">
+							<a href="<?= $datei->url; ?>" target="_blank" rel="noopener">
 								<h<?= $headingDepth + 1; ?> class="dateiname"><?= $dateiname; ?></h<?= $headingDepth + 1; ?>>
 								<small class="datei-meta"><?= $datei->filesizeStr; ?></small>
 							</a>

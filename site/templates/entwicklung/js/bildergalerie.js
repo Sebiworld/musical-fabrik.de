@@ -6,19 +6,18 @@ import {ready} from './classes/hilfsfunktionen.js';
 	// Lightslider laden:
 	const lightsliderElemente = document.querySelectorAll('.lightslider');
 	if(lightsliderElemente.length > 0){
-		await import(/* webpackChunkName: "lightslider" */ 'lightslider/src/js/lightslider.js');
+		await import('lightslider/src/js/lightslider.js');
 
-		await import(/* webpackChunkName: "lightgallery" */ 'lightgallery/dist/js/lightgallery.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-autoplay/dist/lg-autoplay.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-fullscreen/dist/lg-fullscreen.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-hash/dist/lg-hash.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-pager/dist/lg-pager.js');
-		// await import(/* webpackChunkName: "lightgallery" */ 'lg-share/dist/lg-share.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-thumbnail/dist/lg-thumbnail.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-video/dist/lg-video.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-zoom/dist/lg-zoom.js');
+		await import('lightgallery/dist/js/lightgallery.js');
+		await import('lg-autoplay/dist/lg-autoplay.js');
+		await import('lg-fullscreen/dist/lg-fullscreen.js');
+		await import('lg-hash/dist/lg-hash.js');
+		await import('lg-pager/dist/lg-pager.js');
+		// await import('lg-share/dist/lg-share.js');
+		await import('lg-thumbnail/dist/lg-thumbnail.js');
+		await import('lg-video/dist/lg-video.js');
+		await import('lg-zoom/dist/lg-zoom.js');
 
-		console.log("Bildergalerie geladen.");
 		ready(function(){
 			for(let index in lightsliderElemente){
 				const element = lightsliderElemente[index];
@@ -45,15 +44,15 @@ import {ready} from './classes/hilfsfunktionen.js';
 	// Lightgallery laden [jQuery-Version]:
 	const lightgalleryElemente = document.querySelectorAll('.lightgallery');
 	if(lightgalleryElemente.length > 0){
-		await import(/* webpackChunkName: "lightgallery" */ 'lightgallery/dist/js/lightgallery.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-autoplay/dist/lg-autoplay.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-fullscreen/dist/lg-fullscreen.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-hash/dist/lg-hash.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-pager/dist/lg-pager.js');
-		// await import(/* webpackChunkName: "lightgallery" */ 'lg-share/dist/lg-share.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-thumbnail/dist/lg-thumbnail.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-video/dist/lg-video.js');
-		await import(/* webpackChunkName: "lightgallery" */ 'lg-zoom/dist/lg-zoom.js');
+		await import('lightgallery/dist/js/lightgallery.js');
+		await import('lg-autoplay/dist/lg-autoplay.js');
+		await import('lg-fullscreen/dist/lg-fullscreen.js');
+		await import('lg-hash/dist/lg-hash.js');
+		await import('lg-pager/dist/lg-pager.js');
+		// await import('lg-share/dist/lg-share.js');
+		await import('lg-thumbnail/dist/lg-thumbnail.js');
+		await import('lg-video/dist/lg-video.js');
+		await import('lg-zoom/dist/lg-zoom.js');
 
 		ready(function(){
 			for(let index in lightgalleryElemente){

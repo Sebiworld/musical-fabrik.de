@@ -7,7 +7,7 @@ class SeitenleistenKarte extends TwackComponent {
 		parent::__construct($args);
 
 		if (!isset($args['nutzefeld']) || empty($args['nutzefeld'])) {
-			throw new ComponentNotInitialisedException('SeitenleistenKarte', 'Bitte übergeben Sie den Namen des Kartenfeldes, das genutzt werden soll.');
+			throw new ComponentNotInitializedException('SeitenleistenKarte', 'Bitte übergeben Sie den Namen des Kartenfeldes, das genutzt werden soll.');
 		}
 
 		$this->karte = $this->page->get($args['nutzefeld']);

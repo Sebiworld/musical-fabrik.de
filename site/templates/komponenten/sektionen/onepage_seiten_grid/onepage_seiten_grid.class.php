@@ -31,7 +31,7 @@ class OnepageSeitenGrid extends TwackComponent {
 		}
 
 		if (!$this->page->template->hasField($args['nutzeFeld'])) {
-			throw new ComponentNotInitialisedException("OnepageSeitenGrid", "Es wurde kein benutzbares Seiten-Feld übergeben.");
+			throw new ComponentNotInitializedException("OnepageSeitenGrid", "Es wurde kein benutzbares Seiten-Feld übergeben.");
 		}
 
 		$this->seiten = new PageArray();

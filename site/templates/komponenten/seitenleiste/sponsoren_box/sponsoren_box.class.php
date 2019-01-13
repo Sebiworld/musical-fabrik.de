@@ -11,7 +11,7 @@ class SponsorenBox extends TwackComponent {
 			$projektseite = $args['projektseite'];
 		}
 		if (!($projektseite instanceof Page) || !$projektseite->id) {
-			throw new ComponentNotInitialisedException('SponsorenBox', 'Es wurde keine Projektseite gefunden.');
+			throw new ComponentNotInitializedException('SponsorenBox', 'Es wurde keine Projektseite gefunden.');
 		}
 
 		$this->titel = 'Sponsoren';
@@ -25,7 +25,7 @@ class SponsorenBox extends TwackComponent {
 		}
 
 		if (!$projektseite->template->hasField($nutzefeld)) {
-			throw new ComponentNotInitialisedException('SponsorenBox', 'Das geforderte Feld wurde auf der Projektseite nicht gefunden.');
+			throw new ComponentNotInitializedException('SponsorenBox', 'Das geforderte Feld wurde auf der Projektseite nicht gefunden.');
 		}
 
 		$sponsoren = array();
