@@ -45,8 +45,8 @@ import {debounce, uniq, remove} from 'lodash';
 
 			getParams['twack-ajax'] = 1;
 			getParams.action = 'getComponent',
-			getParams.component = "AktuellesProvider";
-			getParams.type = "provider";
+			getParams.component = "AktuellesService";
+			getParams.type = "service";
 			getParams.htmlAusgabe = true;
 			getParams.vorhandeneIDs = vorhandeneIDs;
 			ajaxAnfrage.getParams = getParams;
