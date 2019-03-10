@@ -59,7 +59,7 @@ $font-factors: (
 /**
 * Die Schriftgröße in Rem und Px sowie die Lineheight ausgeben
 */
-@mixin font-size($fontsize: 1.0, $lineheight: 1.5){
+@mixin fontsize($fontsize: 1.0, $lineheight: 1.5){
 	font-size: font-px($fontsize);
 	line-height: round(get-font-factor($fontsize) * $lineheight * $font-factor-base) * 1px;
 	font-size: get-font-factor($fontsize) * 1rem;

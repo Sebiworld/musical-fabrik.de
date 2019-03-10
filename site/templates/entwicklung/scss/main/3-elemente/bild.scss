@@ -13,7 +13,7 @@
 	padding: $abstand-y-xs $abstand-x-xs;
 	font-style: italic;
 	border-top: 2px solid $inverse-bg;
-	@include font-size(0.95, 1);
+	@include fontsize(0.95, 1);
 }
 
 .bilder-modal-link {

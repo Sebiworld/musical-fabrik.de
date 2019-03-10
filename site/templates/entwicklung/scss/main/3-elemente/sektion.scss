@@ -26,7 +26,7 @@
 	.sektion-titel {
 		margin-top: $abstand-y-md;
 		margin-bottom: $abstand-y-sm;
-		@include font-size("sektion-titel", 1.2);
+		@include fontsize("sektion-titel", 1.2);
 		display: block;
 		position: relative;
 		margin-left: auto;
@@ -51,7 +51,7 @@
 		}
 
 		@include media-breakpoint-down(xs) {
-			@include font-size("sektion-titel-xs", 1.4);
+			@include fontsize("sektion-titel-xs", 1.4);
 		}
 	}
 

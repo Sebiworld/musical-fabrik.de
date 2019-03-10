@@ -10,7 +10,7 @@
 
 	.subtitel{
 		margin-top: $abstand-sm;
-		@include font-size("box-subtitel", 1.2);
+		@include fontsize("box-subtitel", 1.2);
 		font-family: $font-family-sans-serif;
 		font-style: italic;
 	}
@@ -19,11 +19,11 @@
 		margin-bottom: $abstand-y-sm;
 
 		.auffuehrung-titel{
-			@include font-size("box-auffuehrung-titel", 1.2);
+			@include fontsize("box-auffuehrung-titel", 1.2);
 			margin-bottom: 0;
 		}
 		.auffuehrung-besetzung{
-			@include font-size("box-auffuehrung-besetzung", 1.2);
+			@include fontsize("box-auffuehrung-besetzung", 1.2);
 		}
 	}
 

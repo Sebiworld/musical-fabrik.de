@@ -63,7 +63,7 @@ body {
 			position: absolute;
 			bottom: (-0.5 * (font-rem("info-overlay") * 1.1 + ($abstand-y-sm * 2)));
 			left: 0;
-			@include font-size("info-overlay", 1.1);
+			@include fontsize("info-overlay", 1.1);
 			font-weight: lighter;
 			padding: $abstand-y-sm $abstand-x-sm;
 			background: $projekt-primary-bg;

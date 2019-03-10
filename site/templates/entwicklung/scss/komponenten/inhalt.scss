@@ -8,15 +8,15 @@
 	}
 
 	.riesig {
-		@include font-size(10, 1.1);
+		@include fontsize(10, 1.1);
 	}
 
 	.gross {
-		@include font-size(5, 1.1);
+		@include fontsize(5, 1.1);
 	}
 
 	.etwas-gross {
-		@include font-size(2, 1.1);
+		@include fontsize(2, 1.1);
 	}
 
 	.inhalt-block {
@@ -55,7 +55,7 @@
 	}
 
 	h2 {
-		@include font-size("inhalt-h2", 1.1);
+		@include fontsize("inhalt-h2", 1.1);
 		margin-top: font-px("inhalt-h2") * 2;
 		margin-bottom: font-px("inhalt-h2");
 
@@ -64,22 +64,22 @@
 		}
 	}
 	h3 {
-		@include font-size("inhalt-h3", 1.1);
+		@include fontsize("inhalt-h3", 1.1);
 		margin-top: font-px("inhalt-h3") * 2;
 		margin-bottom: font-px("inhalt-h3");
 	}
 	h4 {
-		@include font-size("inhalt-h4", 1.1);
+		@include fontsize("inhalt-h4", 1.1);
 		margin-top: font-px("inhalt-h4") * 2;
 		margin-bottom: font-px("inhalt-h4");
 	}
 	h5 {
-		@include font-size("inhalt-h5", 1.1);
+		@include fontsize("inhalt-h5", 1.1);
 		margin-top: font-px("inhalt-h5") * 2;
 		margin-bottom: font-px("inhalt-h5");
 	}
 	h6 {
-		@include font-size("inhalt-h6", 1.1);
+		@include fontsize("inhalt-h6", 1.1);
 		margin-top: font-px("inhalt-h6") * 2;
 		margin-bottom: font-px("inhalt-h6");
 	}
