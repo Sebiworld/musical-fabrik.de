@@ -9,6 +9,12 @@ if ($this->schlagwoerter) {
 			$aktuelleURL = $this->aktuellesSeite->url;
 
 			foreach ($this->schlagwoerter as $schlagwort) {
+
+				$schlagwortseite = wire('pages')->get($schlagwort['id']);
+				if(!($schlagwortseite instanceof Page) || !$schlagwortseite->id || !$schlagwortseite->listable()){
+					continue;
+				}
+
 				$params = $_GET;
 				if (isset($schlagwort['schlagwoerter_on_klick']) && !empty($schlagwort['schlagwoerter_on_klick'])) {
 					$params['schlagwoerter'] = $schlagwort['schlagwoerter_on_klick'];
