@@ -2,14 +2,14 @@
 namespace ProcessWire;
 
 if ($this->dateien && !empty($this->dateien)) {
+	$headingDepth = 2;
+	if ($this->page->depth && intval($this->page->depth)) {
+		$headingDepth = $headingDepth + intval($this->page->depth);
+	}
 	?>
 	<div class="inhalte-dateien <?= !empty($this->page->klassen.'') ? $this->page->klassen : ''; ?>" <?= $this->page->depth ? 'data-tiefe="' . $this->page->depth . '"' : ''; ?>>
 		<?php
 		if (!empty($this->titel)) {
-			$headingDepth = 2;
-			if ($this->page->depth && intval($this->page->depth)) {
-				$headingDepth = $headingDepth + intval($this->page->depth);
-			}
 			?>
 			<h<?= $headingDepth; ?> class="block-titel <?= $this->page->titel_verstecken ? 'sr-only sr-only-focusable' : ''; ?>">
 				<?= $this->titel; ?>
@@ -52,7 +52,7 @@ if ($this->dateien && !empty($this->dateien)) {
 					?>
 					<li class="media datei">
 						<a href="<?= $datei->url; ?>" target="_blank" class="icon-wrapper" rel="noopener">
-							<i class="icon ion-ios-cloud-download-outline"></i>
+							<i class="icon ion-ios-cloud-download"></i>
 						</a>
 						<div class="media-body">
 							<a href="<?= $datei->url; ?>" target="_blank" rel="noopener">
