@@ -1,4 +1,5 @@
-<?php namespace ProcessWire;
+<?php
+namespace ProcessWire;
 
 class SebiMusicalFabrikFunktionen extends WireData implements Module {
 
@@ -10,89 +11,103 @@ class SebiMusicalFabrikFunktionen extends WireData implements Module {
 			'singular' => true,
 			'autoload' => true,
 			'icon' => 'anchor',
-			'requires' => array('Authenticator', 'IncognitoPatchHelper', 'PHP>=5.5.0', 'ProcessWire>=3.0.0'),
-			);
+			'requires' => array('PHP>=5.5.0', 'ProcessWire>=3.0.0'),
+		);
 	}
 
 	public function init() {
-		$this->pages->addHookAfter('save', $this, 'hookPageSave');
+		// Fügt automatisch Unterseiten hinzu:
+		$this->pages->addHookAfter('added', $this, 'hookPagesAfterAdded');
+
+		// Felder vorm Speichern ergänzen:
 		$this->pages->addHookAfter('saveReady', $this, 'hookPageSaveReady');
+
+		// Schlagwort mit Projekt synchronisieren:
+		$this->pages->addHookAfter('save', $this, 'hookPagesAfterSave');
+
+		// Backend-JS nachladen:
 		$this->addHookBefore('Page::render', $this, 'hookPageRender');
 	}
 
-	public function hookPageSave(HookEvent $event) {
+	public function hookPagesAfterAdded(HookEvent $event) {
 		$seite = $event->arguments[0];
 		if (!$seite instanceof Page || !$seite->id) {
 			return;
 		}
 
 		if ($this->startsWith($seite->template->name, 'projekt')) {
-			// if ($seite->children('template.name=staffeln_container')->count <= 0) {
-			// 	$patchHelperModul = wire('modules')->get('IncognitoPatchHelper');
-			// 	$patch = $patchHelperModul->getNewPatchHelper('musicalfabrik_funktionen', 'skip', true);
-
-			// 	$patch->createPageWithParent('staffeln', 'staffeln_container', $seite, [
-			// 		'published' => true,
-			// 		'title' => 'Staffeln'
-			// 		]);
-
-			// 	$staffelnSeite = $seite->children('template.name=staffeln_container')->first;
-
-			// 	$patch->createPageWithParent('staffel-1', 'staffel', $staffelnSeite, [
-			// 		'published' => true,
-			// 		'title' => 'Staffel 1'
-			// 		]);
-			// 	$patch->createPageWithParent('staffel-2', 'staffel', $staffelnSeite, [
-			// 		'published' => true,
-			// 		'title' => 'Staffel 2'
-			// 		]);
-			// }
-
 			if ($seite->numChildren > 0) {
+				// Die Seite hat schon Kindseiten (vlt. andere Seite dupliziert?)
 				return;
 			}
 
-			$patchHelperModul = wire('modules')->get('IncognitoPatchHelper');
-			$patch = $patchHelperModul->getNewPatchHelper('musicalfabrik_funktionen', 'skip', true);
+			// Tickets & Infos Seite anlegen:
+			$page = $this->wire(new Page());
+			$p->template = 'standardseite';
+			$p->parent = $seite;
+			$p->name = 'tickets-und-infos';
+			$p->title = 'Tickets & Infos';
+			$p->published = true;
+			$p->save();
 
-			$patch->createPageWithParent('tickets-und-infos', 'standardseite', $seite, [
-				'published' => true,
-				'title' => 'Tickets & Infos'
-				]);
+			// Aktuelles-Übersicht anlegen:
+			$page = $this->wire(new Page());
+			$p->template = 'beitraege_uebersicht';
+			$p->parent = $seite;
+			$p->name = 'aktuelles';
+			$p->title = 'Aktuelles';
+			$p->published = true;
+			$p->save();
 
-			$patch->createPageWithParent('aktuelles', 'beitraege_uebersicht', $seite, [
-				'published' => true,
-				'title' => 'Aktuelles'
-				]);
+			// Portraits-Container anlegen:
+			$page = $this->wire(new Page());
+			$p->template = 'portraits_container';
+			$p->parent = $seite;
+			$p->name = 'mitwirkenden_portraits';
+			$p->title = 'Mitwirkenden-Portraits';
+			$p->published = true;
+			$p->save();
 
-			$patch->createPageWithParent('mitwirkenden_portraits', 'portraits_container', $seite, [
-				'published' => true,
-				'title' => 'Mitwirkenden-Portraits'
-				]);
+			// Rollen-Container anlegen:
+			$page = $this->wire(new Page());
+			$p->template = 'rollen_container';
+			$p->parent = $seite;
+			$p->name = 'rollen';
+			$p->title = 'Rollen';
+			$p->published = true;
+			$p->save();
 
-			$patch->createPageWithParent('rollen', 'rollen_container', $seite, [
-				'published' => true,
-				'title' => 'Rollen'
-				]);
+			// Besetzungen-Container anlegen:
+			$page = $this->wire(new Page());
+			$p->template = 'besetzungen_container';
+			$p->parent = $seite;
+			$p->name = 'besetzungen';
+			$p->title = 'Besetzungen';
+			$p->published = true;
+			$p->save();
 
-			$patch->createPageWithParent('besetzungen', 'besetzungen_container', $seite, [
-				'published' => true,
-				'title' => 'Besetzungen'
-				]);
+			// Staffeln-Container anlegen:
+			$page = $this->wire(new Page());
+			$p->template = 'staffeln_container';
+			$p->parent = $seite;
+			$p->name = 'staffeln';
+			$p->title = 'Staffeln';
+			$p->published = true;
+			$p->save();
 
-			$patch->createPageWithParent('staffeln', 'staffeln_container', $seite, [
-				'published' => true,
-				'title' => 'Staffeln'
-				]);
+			// Erste Staffel automatisch anlegen:
+			$staffelnSeite = $seite->children('template.name=staffeln_container')->first;
 
-			if ($seite->children('template.name=staffeln_container')->count > 0) {
-				$staffelnSeite = $seite->children('template.name=staffeln_container')->first;
-
-				$patch->createPageWithParent('spielzeit-1', 'staffel', $staffelnSeite, [
-					'published' => true,
-					'title' => 'Spielzeit 1'
-					]);
+			if($staffelnSeite instanceof Page && $staffelnSeite->id){
+				$page = $this->wire(new Page());
+				$p->template = 'staffel';
+				$p->parent = $staffelnSeite;
+				$p->name = 'spielzeit-1';
+				$p->title = 'Spielzeit 1';
+				$p->published = true;
+				$p->save();
 			}
+
 		} elseif ($seite->template->name == 'zeitraum') {
 			$elternseiten = wire('pages')->find('zeitraeume='.$seite->id);
 			foreach ($elternseiten as $elternseite) {
@@ -139,7 +154,6 @@ class SebiMusicalFabrikFunktionen extends WireData implements Module {
 			}
 
 			$schlagwortTitel = 'Verein';
-			$schlagwortFarbe = false;
 			if ($projektseite instanceof Page && $projektseite->id) {
 				$schlagwortTitel = $projektseite->title;
 			}
@@ -161,25 +175,53 @@ class SebiMusicalFabrikFunktionen extends WireData implements Module {
 						$schlagwortSeite->farbe = $projektseite->farbe;
 					}
 
-					// Freischaltungszeitpunkte übernehmen, wenn gesetzt:
-					if ($projektseite->freischaltungszeitpunkt_zeitpunkt_ab_aktivieren) {
-						$schlagwortSeite->freischaltungszeitpunkt_zeitpunkt_ab_aktivieren = $projektseite->freischaltungszeitpunkt_zeitpunkt_ab_aktivieren;
-						$schlagwortSeite->freischaltungszeitpunkt_zeitpunkt_ab = $projektseite->freischaltungszeitpunkt_zeitpunkt_ab;
-					}
-					if ($projektseite->freischaltungszeitpunkt_zeitpunkt_bis_aktivieren) {
-						$schlagwortSeite->freischaltungszeitpunkt_zeitpunkt_bis_aktivieren = $projektseite->freischaltungszeitpunkt_zeitpunkt_bis_aktivieren;
-						$schlagwortSeite->freischaltungszeitpunkt_zeitpunkt_bis = $projektseite->freischaltungszeitpunkt_zeitpunkt_bis;
-					}
-				}
+					// Freischaltungszeitpunkte von der Projektseite zum Schlagwort übernehmen, wenn gesetzt:
+					$schlagwortSeite->releasetime_start_activate = $projektseite->releasetime_start_activate;
+					$schlagwortSeite->releasetime_start = $projektseite->getUnformatted('releasetime_start');
 
-				if ($schlagwortFarbe) {
-					$schlagwortSeite->farbe = $schlagwortFarbe;
+					$schlagwortSeite->releasetime_end_activate = $projektseite->releasetime_end_activate;
+					$schlagwortSeite->releasetime_end = $projektseite->getUnformatted('releasetime_end');
 				}
 
 				$schlagwortSeite->save(null, ['adjustName' => true]);
 
 				if (!$seite->schlagwoerter->has('id='.$schlagwortSeite)) {
 					$seite->schlagwoerter->add($schlagwortSeite);
+				}
+			}
+		}
+	}
+
+	public function hookPagesAfterSave(HookEvent $event) {
+		$seite = $event->arguments[0];
+		if (!$seite instanceof Page || !$seite->id) {
+			return;
+		}
+
+		if ($this->startsWith($seite->template->name, 'projekt')) {
+			$schlagwortContainer = wire('pages')->get('template.name=schlagwoerter_container');
+			if ($schlagwortContainer instanceof Page && $schlagwortContainer->id) {
+				$schlagwortSeite = $schlagwortContainer->get('title='.$seite->title);
+				if($schlagwortSeite instanceof Page && $schlagwortSeite->id){
+					// Es gibt ein Schlagwort passend zum Projekt
+
+					$of = $schlagwortSeite->of();
+					$schlagwortSeite->of(false);
+
+					// Farbe ins Schlagwort übernehmen, wenn gesetzt:
+					if ($seite->farbe) {
+						$schlagwortSeite->farbe = $seite->farbe;
+					}
+
+					// Freischaltungszeitpunkte von der Projektseite zum Schlagwort übernehmen, wenn gesetzt:
+					$schlagwortSeite->releasetime_start_activate = $seite->releasetime_start_activate;
+					$schlagwortSeite->releasetime_start = $seite->getUnformatted('releasetime_start');
+
+					$schlagwortSeite->releasetime_end_activate = $seite->releasetime_end_activate;
+					$schlagwortSeite->releasetime_end = $seite->getUnformatted('releasetime_end');
+
+					$schlagwortSeite->save();
+					$schlagwortSeite->of($of);
 				}
 			}
 		}
@@ -200,7 +242,7 @@ class SebiMusicalFabrikFunktionen extends WireData implements Module {
 	}
 
 	protected function startsWith($haystack, $needle) {
-		 $length = strlen($needle);
-		 return (substr($haystack, 0, $length) === $needle);
+		$length = strlen($needle);
+		return (substr($haystack, 0, $length) === $needle);
 	}
 }
