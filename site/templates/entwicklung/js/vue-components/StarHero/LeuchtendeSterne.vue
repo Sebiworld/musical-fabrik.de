@@ -91,8 +91,8 @@ import {
 export default {
   data() {
     return {
-      frequenzMin: 20,
-      frequenzMax: 100
+      frequenzMin: 10,
+      frequenzMax: 60
     };
   },
   computed: {},

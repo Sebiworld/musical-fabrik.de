@@ -33,8 +33,8 @@ const possibleAngles = [200, 220, 240, 300, 320, 340];
 export default {
   data() {
     return {
-      frequenzMin: 100,
-      frequenzMax: 5000,
+      frequenzMin: 50,
+      frequenzMax: 4000,
       sternschnuppen: []
     };
   },
