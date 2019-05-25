@@ -36,8 +36,9 @@ class AktuellesKacheln extends TwackComponent {
 		}
 
 		$this->aktuellesSeite = $this->aktuellesService->getAktuellesSeite();
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/aktuelles-kacheln.min.css', true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/aktuelles-kacheln.min.css', true);
 		$this->addScript(wire('config')->urls->templates . 'assets/js/ajaxmasonry.min.js', true);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/ajaxmasonry.legacy.min.js', true);
 	}
 
 	public function getAjax(){

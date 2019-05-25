@@ -14,9 +14,20 @@ const scrollinator = new Scrollinator({
 
 // Bootstrap wird nachgeladen:
 (async () => {
-	const progressively = await import("progressively");
-	const popper = await import("popper.js");
-	const bootstrap = await import("bootstrap");
+	const progressively = await import(/* webpackChunkName: "progressively" */ "progressively");
+	
+	await import (/* webpackChunkName: "bs-util" */ 'bootstrap/js/src/util');
+	await import (/* webpackChunkName: "bs-alert" */ 'bootstrap/js/src/alert');
+	await import (/* webpackChunkName: "bs-button" */ 'bootstrap/js/src/button');
+	// await import (/* webpackChunkName: "bs-carousel" */ 'bootstrap/js/src/carousel');
+	await import (/* webpackChunkName: "bs-collapse" */ 'bootstrap/js/src/collapse');
+	await import (/* webpackChunkName: "bs-dropdown" */ 'bootstrap/js/src/dropdown');
+	await import (/* webpackChunkName: "bs-modal" */ 'bootstrap/js/src/modal');
+	await import (/* webpackChunkName: "bs-popover" */ 'bootstrap/js/src/popover');
+	// await import (/* webpackChunkName: "bs-scrollspy" */ 'bootstrap/js/src/scrollspy');
+	await import (/* webpackChunkName: "bs-tab" */ 'bootstrap/js/src/tab');
+	// await import (/* webpackChunkName: "bs-toast" */ 'bootstrap/js/src/toast');
+	await import (/* webpackChunkName: "bs-tooltip" */ 'bootstrap/js/src/tooltip');
 
 	ready(function() {
 		// Progressively zum Nachladen von Bildern:

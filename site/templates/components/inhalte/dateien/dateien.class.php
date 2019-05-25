@@ -27,6 +27,7 @@ class Dateien extends TwackComponent {
 		}
 
 		$this->addScript(wire('config')->urls->templates . 'assets/js/mediaplayer.min.js', true);
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/inhalte-dateien.min.css', true, true);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/mediaplayer.legacy.min.js', true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/inhalte-dateien.min.css', true, true);
 	}
 }

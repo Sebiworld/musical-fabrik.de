@@ -1,18 +1,19 @@
-import {ready} from './classes/hilfsfunktionen.js';
-// import Swiper from 'swiper';
+import { ready } from './classes/hilfsfunktionen.js';
 
 (async () => {
 	const elemente = document.querySelectorAll('.swiper-container');
-	if(elemente.length > 0){
+	if (elemente.length > 0) {
 
-		// const swiperLoad = await import('swiper');
-		const swiperLoad = await import(/* webpackChunkName: "swiper-slider" */ 'swiper/dist/js/swiper.js');
-		const Swiper = swiperLoad.default;
+		const swiperLoad = await import(/* webpackChunkName: "swiper-slider" */ 'swiper/dist/js/swiper.esm.js');
+		const Swiper = swiperLoad.Swiper;
 
-		ready(function(){
-			for(let index in elemente){
+		// Install modules
+		Swiper.use([swiperLoad.Navigation, swiperLoad.Virtual, swiperLoad.Keyboard, swiperLoad.Pagination, swiperLoad.Lazy, swiperLoad.HashNavigation, swiperLoad.History, swiperLoad.Autoplay, swiperLoad.EffectFade, swiperLoad.A11y]);
+
+		ready(function () {
+			for (let index in elemente) {
 				const element = elemente[index];
-				if(typeof element !== 'object' || !(element instanceof Element)){
+				if (typeof element !== 'object' || !(element instanceof Element)) {
 					continue;
 				}
 

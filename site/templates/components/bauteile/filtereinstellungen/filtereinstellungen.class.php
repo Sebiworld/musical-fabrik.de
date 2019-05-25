@@ -23,6 +23,6 @@ class Filtereinstellungen extends TwackComponent {
 
 		// Schlagwort-Auswahl hinzufügen:
 		$this->addComponent('SchlagwoerterBox', ['directory' => 'bauteile', 'name' => 'schlagwoerter', 'aktiv' => $this->schlagwoerter, 'selektierbar' => true]);
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/filtereinstellungen.min.css', true, true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/filtereinstellungen.min.css', true, true);
 	}
 }

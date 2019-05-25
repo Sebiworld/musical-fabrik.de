@@ -9,7 +9,7 @@ import {
 } from "./hilfsfunktionen.js";
 import { throttle, remove } from "lodash";
 
-let s = function() {
+let s = function () {
 	"use strict";
 
 	let staticDefaults = {
@@ -63,7 +63,7 @@ let s = function() {
 			this._sektionen = {};
 			this._aktiverHash = "";
 
-			ready(function() {
+			ready(function () {
 				// Wenn NavigationHighlighting aktiviert ist, soll es hier noch einmal explizit getriggert werden, da jetzt alle anderen Parameter zur Verfügung stehen:
 				if (obj.navigationHighlighting) {
 					obj.navigationHighlighting = true;
@@ -97,7 +97,7 @@ let s = function() {
 			// console.log("getInstance", options, scrollinatorInstanz);
 			// debugger;
 			// if (!scrollinatorInstanz) {
-				scrollinatorInstanz = new Scrollinator(options);
+			scrollinatorInstanz = new Scrollinator(options);
 			// 	console.log("Instanz gesetzt.", scrollinatorInstanz);
 			// } else {
 			// 	scrollinatorInstanz.importiere(options);
@@ -350,7 +350,7 @@ let s = function() {
 
 			let element = event.target;
 			if (!matches(element, "a")) {
-				element = element.closest("a");
+				element = closest(element, "a");
 			}
 
 			if (
@@ -387,17 +387,17 @@ let s = function() {
 				options = {};
 			}
 
-			if (element.length < 1) {
+			if (!element || element.length < 1) {
 				return false;
 			}
 
 			let animeOptions = {
 				targets: "html, body",
-				scrollTop: function(el) {
+				scrollTop: function (el) {
 					return scrollPosition;
 				},
-				easing: [0.42, 0.1, 0.3, 1],
-				duration: function(el, i, l) {
+				easing: 'spring(1, 80, 10, 0)',
+				duration: function (el, i, l) {
 					return 1000 + i * 1000;
 				},
 			};
@@ -421,11 +421,11 @@ let s = function() {
 				"keyup",
 				"touchmove",
 			];
-			const scrollEventHandler = function(evt) {
+			const scrollEventHandler = function (evt) {
 				anime.remove("html, body");
 				removeScrollEventHandler();
 			};
-			const removeScrollEventHandler = function() {
+			const removeScrollEventHandler = function () {
 				for (let evtname of scrollEvents) {
 					window.removeEventListener(evtname, scrollEventHandler);
 				}
@@ -434,11 +434,11 @@ let s = function() {
 				window.addEventListener(evtname, scrollEventHandler, false);
 			}
 
-			var finishedPromise = anime(animeOptions).finished.then(function() {
+			var finishedPromise = anime(animeOptions).finished.then(function () {
 				removeScrollEventHandler();
 			});
 
-			finishedPromise.update = function(anim) {
+			finishedPromise.update = function (anim) {
 				if (!anim.completed) {
 					// Die Scroll-Potition muss ständig neu berechnet werden, falls sich die Position des Zielelements ändert:
 					scrollPosition = obj.getPositionTop(element) - obj.scrollOffset;
@@ -593,7 +593,7 @@ let s = function() {
 				// Die Sektion existiert schon. Es muss also nur der Navlink hinzugefügt werden.
 
 				// Wenn das Linkelement schon existiert, wird es zuerst gelöscht.
-				remove(obj.sektionen[hashWert], function(n) {
+				remove(obj.sektionen[hashWert], function (n) {
 					if (typeof n !== "object") return true;
 					if (n.element === linkelement) return true;
 					return false;
@@ -658,9 +658,9 @@ let s = function() {
 
 				if (
 					aktuellePosition >=
-						obj.getPositionTop(sektion.element) - obj.scrollOffset - 1 &&
+					obj.getPositionTop(sektion.element) - obj.scrollOffset - 1 &&
 					aktuellePosition <=
-						obj.getPositionBottom(sektion.element) - obj.scrollOffset
+					obj.getPositionBottom(sektion.element) - obj.scrollOffset
 				) {
 					obj.aktiviereSektion(sektion);
 					etwasGefunden = true;
@@ -724,7 +724,7 @@ let s = function() {
 						typeof navLink.aktiviereParentSelector === "string" &&
 						navLink.aktiviereParentSelector.length > 0
 					) {
-						elementZumAktivieren = navLink.element.closest(
+						elementZumAktivieren = closest(navLink.element,
 							navLink.aktiviereParentSelector
 						);
 					}
@@ -734,8 +734,7 @@ let s = function() {
 				// In Dropdowns: Dropdown-Parent ebenfalls als Aktiv markieren
 				if (hasClass(elementZumAktivieren, "dropdown-item")) {
 					addClass(
-						elementZumAktivieren
-							.closest(".dropdown")
+						closest(elementZumAktivieren, ".dropdown")
 							.querySelector(".nav-link.dropdown-toggle"),
 						navLink.aktivKlasse
 					);
@@ -763,7 +762,7 @@ let s = function() {
 							typeof navLink.aktiviereParentSelector === "string" &&
 							navLink.aktiviereParentSelector.length > 0
 						) {
-							elementZumDeaktivieren = navLink.element.closest(
+							elementZumDeaktivieren = closest(navLink.element,
 								navLink.aktiviereParentSelector
 							);
 						}
@@ -773,8 +772,7 @@ let s = function() {
 					// In Dropdowns: Dropdown-Parent ebenfalls als Aktiv entfernen
 					if (hasClass(elementZumDeaktivieren, "dropdown-item")) {
 						removeClass(
-							elementZumDeaktivieren
-								.closest(".dropdown")
+							closest(elementZumDeaktivieren, ".dropdown")
 								.querySelector(".nav-link.dropdown-toggle"),
 							navLink.aktivKlasse
 						);

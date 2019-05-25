@@ -10,6 +10,6 @@ class Seitenleiste extends TwackComponent {
 			$this->klassen = $args['klassen'];
 		}
 
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/seitenleiste.min.css', true, true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/seitenleiste.min.css', true, true);
 	}
 }

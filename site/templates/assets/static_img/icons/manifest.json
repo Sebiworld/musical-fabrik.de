@@ -1,38 +1,43 @@
 {
-	"name": "pollo",
+	"name": "mf",
+	"short_name": "Musical-Fabrik",
+	"start_url": ".",
+	"display": "standalone",
+	"background_color" : "#fff" ,
+	"description": "Die Website der Musical-Fabrik Rheda",
 	"icons": [
 		{
-			"src": "\/favicon-36.png",
+			"src": "\/site\/templates\/assets\/static_img\/icons\/favicon-36.png",
 			"sizes": "36x36",
 			"type": "image\/png",
 			"density": 0.75
 		},
 		{
-			"src": "\/favicon-48.png",
+			"src": "\/site\/templates\/assets\/static_img\/icons\/favicon-48.png",
 			"sizes": "48x48",
 			"type": "image\/png",
 			"density": 1
 		},
 		{
-			"src": "\/favicon-72.png",
+			"src": "\/site\/templates\/assets\/static_img\/icons\/favicon-72.png",
 			"sizes": "72x72",
 			"type": "image\/png",
 			"density": 1.5
 		},
 		{
-			"src": "\/favicon-96.png",
+			"src": "\/site\/templates\/assets\/static_img\/icons\/favicon-96.png",
 			"sizes": "96x96",
 			"type": "image\/png",
 			"density": 2
 		},
 		{
-			"src": "\/favicon-144.png",
+			"src": "\/site\/templates\/assets\/static_img\/icons\/favicon-144.png",
 			"sizes": "144x144",
 			"type": "image\/png",
 			"density": 3
 		},
 		{
-			"src": "\/favicon-192.png",
+			"src": "\/site\/templates\/assets\/static_img\/icons\/favicon-192.png",
 			"sizes": "192x192",
 			"type": "image\/png",
 			"density": 4

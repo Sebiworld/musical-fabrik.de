@@ -97,6 +97,7 @@ class SeitenHeader extends TwackComponent {
 		}
 
 		$this->addScript(wire('config')->urls->templates . 'assets/js/animated-header.min.js', true);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/animated-header.legacy.min.js', true);
 	}
 
 	public function getLogo() {

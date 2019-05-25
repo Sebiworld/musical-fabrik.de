@@ -49,7 +49,7 @@
 			href: "/datenschutz",
 			close: "&#x274c;",
 		},
-		revokeBtn: '<div class="cc-revoke {{classes}}">Cookie-Handhabung</div>',
+		revokeBtn: '<div class="cc-revoke {{classes}}">Cookies</div>',
 		// onInitialise: function(status) {
 		// 	let type = this.options.type;
 		// 	let didConsent = this.hasConsented();

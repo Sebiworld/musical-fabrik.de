@@ -27,7 +27,8 @@ class Bildergalerie extends TwackComponent {
 		}
 
 		$this->addScript(wire('config')->urls->templates . 'assets/js/bildergalerie.min.js', true);
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/bildergalerie.min.css', true, true);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/bildergalerie.legacy.min.js', true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/bildergalerie.min.css', true, true);
 
 		$this->typ = 'masonry';
 		if ($this->page->template->hasField('bildergalerie_typ') && $this->page->bildergalerie_typ->id === 2) {
@@ -45,13 +46,15 @@ class Bildergalerie extends TwackComponent {
 		} elseif ($this->page->template->hasField('bildergalerie_typ') && $this->page->bildergalerie_typ->id === 3) {
 			// Gitter-Ansicht
 			$this->typ = 'gitter';
-			$this->addStyle(wire('config')->urls->templates . 'assets/css/bilder-gitter.min.css', true, true);
+			// $this->addStyle(wire('config')->urls->templates . 'assets/css/bilder-gitter.min.css', true, true);
 			$this->addScript(wire('config')->urls->templates . 'assets/js/masonry.min.js', true);
+			$this->addScript(wire('config')->urls->templates . 'assets/js/masonry.legacy.min.js', true);
 			$this->setView('BildergalerieGitter');
 		} else {
 			// Standard: Masonry-Ansicht
 			$this->setView('BildergalerieMasonry');
 			$this->addScript(wire('config')->urls->templates . 'assets/js/masonry.min.js', true);
+			$this->addScript(wire('config')->urls->templates . 'assets/js/masonry.legacy.min.js', true);
 		}
 	}
 }

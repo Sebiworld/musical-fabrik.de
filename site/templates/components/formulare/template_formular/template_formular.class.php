@@ -100,7 +100,8 @@ class TemplateFormular extends TwackComponent {
 
 		// Das Formular-Skript macht das Formular Ajax-fähig. Eine Auswertung ohne Ajax ist nicht vorgesehen.
 		$this->addScript(wire('config')->urls->templates . 'assets/js/formular.min.js', true);
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/template_formular.min.css', true, true);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/formular.legacy.min.js', true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/template_formular.min.css', true, true);
 	}
 
 	public function getAjax() {

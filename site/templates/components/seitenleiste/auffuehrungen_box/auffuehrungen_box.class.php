@@ -85,8 +85,9 @@ class AuffuehrungenBox extends TwackComponent {
 		}
 
 		if (($this->auffuehrungen && count($this->auffuehrungen) > 0) || ($this->auffuehrungenAlt && count($this->auffuehrungenAlt) > 0)) {
-			$this->addStyle(wire('config')->urls->templates . 'assets/css/auffuehrungen-box.min.css', true, true);
+			// $this->addStyle(wire('config')->urls->templates . 'assets/css/auffuehrungen-box.min.css', true, true);
 			$this->addScript(wire('config')->urls->templates . 'assets/js/auffuehrungen-box.min.js', true, true);
+			$this->addScript(wire('config')->urls->templates . 'assets/js/auffuehrungen-box.legacy.min.js', true, true);
 		}
 	}
 }

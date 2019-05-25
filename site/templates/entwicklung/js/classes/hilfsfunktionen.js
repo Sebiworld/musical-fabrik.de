@@ -1,51 +1,62 @@
-import {indexOf} from "lodash";
+import { indexOf, random } from "lodash";
 
-export const ready = function(fn) {
-	if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading"){
+export const ready = function (fn) {
+	if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
 		fn();
 	} else {
 		document.addEventListener('DOMContentLoaded', fn);
 	}
 }
 
-export const matches = function(el, selector) {
+export const matches = function (el, selector) {
 	return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
 };
 
-export const addClass = function(el, className){
-	if (el.classList){
+export const closest = function (el, selector) {
+    if (Element.prototype.closest) {
+        return el.closest(selector);
+    }
+    do {
+        if (matches(el, selector)) return el;
+        el = el.parentElement || el.parentNode;
+    } while (el !== null && el.nodeType === 1);
+    return null;
+};
+
+export const addClass = function (el, className) {
+	if (el.classList) {
 		el.classList.add(className);
-	}else if(el.className !== undefined){
+	} else if (el.className !== undefined) {
 		el.className += ' ' + className;
-	}else{
+	} else {
 		el.className = className;
 	}
 }
 
-export const hasClass = function(el, className){
-	if (el.classList){
+export const hasClass = function (el, className) {
+	if (el.classList) {
 		return el.classList.contains(className);
 	}
 	return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
 }
 
-export const removeClass = function(el, className){
-	if (el.classList){
+export const removeClass = function (el, className) {
+	if (el.classList) {
 		el.classList.remove(className);
-	}else if(el.className !== undefined){
+	} else if (el.className !== undefined) {
 		el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
 	}
 }
 
-export const trigger = function(el, eventName, data){
-	if(typeof data !== 'Object'){
+export const trigger = function (el, eventName, data) {
+	if (typeof data !== 'Object') {
 		data = {};
 	}
 
 	const nativeEvents = ['change', 'resize', 'scroll'];
 
 	let event;
-	if(indexOf(nativeEvents, eventName) >= 0){
+	if (indexOf(nativeEvents, eventName) >= 0) {
 		// NativesEvent
 		event = document.createEvent('HTMLEvents');
 		event.initEvent(eventName, true, false, data);
@@ -53,7 +64,7 @@ export const trigger = function(el, eventName, data){
 		// // Hier funktioniert das Event-Bubbling irgendwie nicht richtig...
 		// 	console.log("new Custom Event!");
 		// 	event = new CustomEvent(eventName, data);
-	}else{
+	} else {
 		event = document.createEvent('CustomEvent');
 		event.initCustomEvent(eventName, true, true, data);
 	}
@@ -63,7 +74,7 @@ export const trigger = function(el, eventName, data){
 	return el;
 }
 
-export const createElementFromHTML = function(htmlString) {
+export const createElementFromHTML = function (htmlString) {
 	var div = document.createElement('div');
 	div.innerHTML = htmlString.trim();
 
@@ -72,13 +83,13 @@ export const createElementFromHTML = function(htmlString) {
 };
 
 // export const propertyA = "A";
-export const removeElements = function(elements){
-	if(elements.length < 1){
+export const removeElements = function (elements) {
+	if (elements.length < 1) {
 		return false;
 	}
-	for(let index in elements){
+	for (let index in elements) {
 		const item = elements[index];
-		if(typeof item !== 'object' || !(item instanceof Element)){
+		if (typeof item !== 'object' || !(item instanceof Element)) {
 			continue;
 		}
 		item.parentNode.removeChild(item);
@@ -89,7 +100,7 @@ export const removeElements = function(elements){
 /**
  * https://github.com/cferdinandi/nextUntil
  */
- export const nextUntil = function (elem, selector, filter) {
+export const nextUntil = function (elem, selector, filter) {
 	// matches() polyfill
 	if (!Element.prototype.matches) {
 		Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
@@ -120,4 +131,12 @@ export const removeElements = function(elements){
 	}
 
 	return siblings;
+};
+
+export const setIntervalAsync = (fn, msmin, msmax) => {
+	fn().then(() => {
+		let ms = msmin;
+		if(typeof msmin === 'number' && typeof msmax === 'number') ms = random(ms, msmax);
+		setTimeout(() => setIntervalAsync(fn, msmin, msmax), ms);
+	});
 };

@@ -19,6 +19,6 @@ class BreadcrumbKomponente extends TwackComponent {
 			}
 		}
 
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/breadcrumb.min.css', true, true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/breadcrumb.min.css', true, true);
 	}
 }

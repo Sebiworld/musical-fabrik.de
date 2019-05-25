@@ -7,6 +7,7 @@ class Diagramm extends TwackComponent {
 		parent::__construct($args);
 
 		$this->addScript(wire('config')->urls->templates . 'assets/js/diagramm.min.js', true);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/diagramm.legacy.min.js', true);
 
 		// Der Titel kann per $args oder per Feld "title" gesetzt werden:
 		if (isset($args['titel'])) {
@@ -20,7 +21,7 @@ class Diagramm extends TwackComponent {
 		}
 
 		$this->diagramm = $this->page->diagramm->first();
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/inhalte-diagramm.min.css', true, true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/inhalte-diagramm.min.css', true, true);
 	}
 
 	/**

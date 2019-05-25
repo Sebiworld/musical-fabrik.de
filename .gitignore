@@ -36,7 +36,6 @@ yarn.lock
 # !/site/modules/CustomModul
 !/site/modules/SebiMusicalFabrikFunktionen
 !/site/modules/FieldtypeRollen
-!/site/modules/SebiFreischaltungsZeitpunkt
 
 /kommandos.md
 /*.html

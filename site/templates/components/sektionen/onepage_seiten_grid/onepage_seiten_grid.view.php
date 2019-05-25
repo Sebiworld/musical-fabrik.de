@@ -28,7 +28,7 @@ namespace ProcessWire;
 								echo $this->bildService->getBildTag(array(
 									'bild' => $seite->gridbild,
 									'ausgabeAls' => 'bg-image',
-									'styles' => 'bg-color: #'.$seite->farbe.';',
+									'styles' => $seite->farbe ? 'background-color: #'.$seite->farbe.';' : '',
 									'classes' => 'titelbild sv-inhalt',
 									'normal' => array(
 										'width' => 1000

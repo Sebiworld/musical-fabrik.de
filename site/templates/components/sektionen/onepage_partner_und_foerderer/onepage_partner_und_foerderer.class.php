@@ -32,6 +32,6 @@ class OnepagePartnerUndFoerderer extends TwackComponent {
 			$this->foerderer = $this->page->foerderer->sort('random');
 		}
 
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-partner-foerderer.min.css', true, true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-partner-foerderer.min.css', true, true);
 	}
 }

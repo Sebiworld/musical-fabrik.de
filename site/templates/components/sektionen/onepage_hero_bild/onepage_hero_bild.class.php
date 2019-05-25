@@ -36,7 +36,8 @@ class OnepageHeroBild extends TwackComponent {
 			$this->hintergrundbild = $this->page->hintergrundbild;
 		}
 
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-hero-bild.min.css', true, true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-hero-bild.min.css', true, true);
 		$this->addScript(wire('config')->urls->templates . 'assets/js/parallax.min.js', true, true);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/parallax.legacy.min.js', true, true);
 	}
 }

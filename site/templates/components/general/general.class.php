@@ -23,14 +23,20 @@ class General extends TwackComponent {
 		$this->addStyle(wire('config')->urls->templates . 'assets/css/hamburgers.min.css', true);
 		$this->addStyle(wire('config')->urls->templates . 'assets/css/main.min.css', true);
 		$this->addScript(wire('config')->urls->templates . 'assets/js/general.min.js', true);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/general.legacy.min.js', true);
 
 		// Cookie-Skripte hinzufügen:
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/cookies.min.css', true, false);
 		$this->addScript(wire('config')->urls->templates . 'assets/js/cookies.min.js', true);
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/cookies.min.css', true, false);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/cookies.legacy.min.js', true);
 
 		// Kommentar-Javascripts:
-		$this->addStyle(wire('config')->urls->FieldtypeComments . 'comments.css', true);
-		$this->addScript(wire('config')->urls->FieldtypeComments . 'comments.min.js', true);
+		$this->addStyle(wire('config')->urls->templates . 'assets/css/comments.min.css', true, false);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/comments.min.js', true);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/comments.legacy.min.js', true);
+		// $this->addStyle(wire('config')->urls->FieldtypeComments . 'comments.css', true);
+		// $this->addScript(wire('config')->urls->FieldtypeComments . 'comments.min.js', true);
+		// $this->addScript(wire('config')->urls->FieldtypeComments . 'comments.legacy.min.js', true);
 
 		// Eigene Dev-Ausgabe
 		$devAusgabe = $this->addComponent('DevAusgabe', ['globalName' => 'dev_ausgabe']);

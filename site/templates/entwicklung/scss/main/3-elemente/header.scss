@@ -34,6 +34,10 @@ header{
 		@include media-breakpoint-down(sm) {
 			background-color: theme-color("dark");
 		}
+
+		&>.hamburger{
+			max-height: 100%;
+		}
 	}
 
 	.navbar-nav{

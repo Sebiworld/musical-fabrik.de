@@ -49,7 +49,7 @@ class OnepageSeitenGrid extends TwackComponent {
 		$this->gridKlassenBestimmen();
 		$this->feldEinlesen($this->page->fields->get($args['nutzeFeld']));
 
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-seiten-grid.min.css', true, true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-seiten-grid.min.css', true, true);
 	}
 
 	protected function feldEinlesen(Field $feld) {

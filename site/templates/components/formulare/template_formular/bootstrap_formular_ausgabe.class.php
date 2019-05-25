@@ -114,7 +114,7 @@ class BootstrapFormularAusgabe extends FormularAusgabeTyp{
 			$feldHTML .= '<label class="form-check-label" for="'.$attribute['id'].'">';
 			$feldHTML .= '<input class="form-check-input ' . implode(' ', $inputKlassen) . '" type="checkbox" ' . $this->getAttributeString($attribute) . ' />';
 			$feldHTML .= '<div class="control__indicator"></div>';
-			$feldHTML .= '<span class="label">'.$feld->label.'</span></span>';
+			$feldHTML .= '<span class="label">'.$feld->label.'</span>';
 			$feldHTML .= '</label>';
 
 			if (!empty('' . $feld->description)) {
@@ -144,7 +144,7 @@ class BootstrapFormularAusgabe extends FormularAusgabeTyp{
 					$feldHTML .= '<label class="form-check-label" for="' . $id . '">';
 					$feldHTML .= '<input class="form-check-input ' . implode(' ', $inputKlassen) . '" type="checkbox" ' . $this->getAttributeString($attribute) . ' value="' . $option->id . '" /> ';
 					$feldHTML .= '<div class="control__indicator"></div>';
-					$feldHTML .= '<span class="label">'.$option->title.'</span></span>';
+					$feldHTML .= '<span class="label">'.$option->title.'</span>';
 					$feldHTML .= '</label>';
 					$feldHTML .= '</div>';
 				} else {

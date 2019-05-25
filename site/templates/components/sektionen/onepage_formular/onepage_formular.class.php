@@ -38,6 +38,6 @@ class OnepageFormular extends TwackComponent {
 				]);
 		}
 
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-formular.min.css', true, true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-formular.min.css', true, true);
 	}
 }

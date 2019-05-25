@@ -54,10 +54,11 @@ class ProjektRolle extends RolleBasis {
 			);
 		}
 
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/rolle-seite.min.css', true, true);
+		// $this->addStyle(wire('config')->urls->templates . 'assets/css/rolle-seite.min.css', true, true);
 
 		// $this->addStyle(wire('config')->urls->templates . 'assets/css/portraits-quickview.min.css', true, true);
 		// $this->addScript(wire('config')->urls->templates . 'assets/js/portraits.min.js', true, true);
+		// $this->addScript(wire('config')->urls->templates . 'assets/js/portraits.legacy.min.js', true, true);
 	}
 
 	/**

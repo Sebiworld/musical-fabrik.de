@@ -2,7 +2,7 @@ import AjaxAnfrage from './classes/AjaxAnfrage.js';
 import { isEmpty, isNumber, startsWith } from "lodash";
 
 (async () => {
-	const chartjs = await import(/* webpackChunkName: "chartjs" */ 'chart.js/src/chart.js');
+	const chartjs = await import(/* webpackChunkName: "chartjs" */ 'chart.js/dist/chart.js');
 	const chartjsPluginDeferred = await import(/* webpackChunkName: "chartjs" */ 'chartjs-plugin-deferred/src/plugin.js');
 
 	Chart.plugins.register({

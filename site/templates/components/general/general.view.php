@@ -6,6 +6,7 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,7 +14,7 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 	<?php
 	if ($this->metaangaben) {
 		foreach ($this->metaangaben->getArray() as $meta) {
-			echo $meta." \n";
+			echo $meta . " \n";
 		}
 	}
 	?>
@@ -35,7 +36,7 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 	<meta name="theme-color" content="#ffffff">
 
 	<!-- Chrome for Android -->
-	<link rel="manifest" href="manifest.json">
+	<!-- <link rel="manifest" href="<?= wire('config')->urls->templates; ?>assets/static_img/icons/manifest.json"> -->
 	<link rel="icon" sizes="192x192" href="<?= wire('config')->urls->templates; ?>assets/static_img/icons/favicon-192.png">
 
 	<?php
@@ -54,19 +55,18 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 			<?= $konfigurationsseite->logo_quadrat ? '"logo": "' . $konfigurationsseite->logo_quadrat->httpUrl . '",' : ''; ?>
 			<?php
 			if (($konfigurationsseite->telefonnummer && !empty($konfigurationsseite->telefonnummer)) || ($konfigurationsseite->emailadresse && !empty($konfigurationsseite->emailadresse))) {
-				?>
-				"contactPoint": {
+				?> "contactPoint": {
 					"@type": "ContactPoint",
-					<?= $konfigurationsseite->telefonnummer ? '"telephone": "'.$konfigurationsseite->telefonnummer.'",' : ''; ?>
-					<?= $konfigurationsseite->emailadresse ? '"email": "'.$konfigurationsseite->emailadresse.'",' : ''; ?>
-					"contactType": "Customer service"
+					<?= $konfigurationsseite->telefonnummer ? '"telephone": "' . $konfigurationsseite->telefonnummer . '",' : ''; ?>
+					<?= $konfigurationsseite->emailadresse ? '"email": "' . $konfigurationsseite->emailadresse . '",' : ''; ?> "contactType": "Customer service"
 				}
-				<?php
-			}
-			?>
+			<?php
+		}
+		?>
 		}
 	</script>
 </head>
+
 <body class="t-<?= $this->page->template->name; ?>">
 	<?= $this->component->getGlobalComponent('header'); ?>
 	<a href="#top" class="back-to-top btn btn-outline-dark">
@@ -89,7 +89,9 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 	<?= $this->component->getGlobalComponent('modals'); ?>
 	<?= $this->component->getInlineStyles(); ?>
 
-	<script type="text/javascript">
+	<script src="<?= wire('config')->urls->templates; ?>assets/js/polyfills.min.js"></script>
+
+	<script>
 		<?php
 		$jsConfig = wire('config')->js();
 		$jsConfig['debug']  = wire('config')->debug;
@@ -106,10 +108,16 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 	<?php
 	// Alle Scripts werden über die addScript()-Methode der Komponente hinzugefügt:
 	foreach (wire('config')->scripts as $file) {
-		echo "\n\t<script type='text/javascript' src='$file'></script>";
+		if (strpos($file, '.legacy.') !== false) {
+			echo "\n\t<script async nomodule src='$file'></script>";
+		} else {
+			echo "\n\t<script async type='module' src='$file'></script>";
+		}
 	}
 	?>
 
+	<?php
+	/*
 	<script>
 		var modernBrowser = (
 			'fetch' in window &&
@@ -121,8 +129,11 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 
 			scriptElement.async = false;
 			scriptElement.src = '<?= wire('config')->urls->templates; ?>/assets/js/polyfills.min.js';
-			document.head.appendChild(scriptElement);
-		}
+	document.head.appendChild(scriptElement);
+	}
 	</script>
+	*/
+	?>
 </body>
+
 </html>

@@ -27,5 +27,6 @@ class Audiodateien extends TwackComponent {
 		}
 
 		$this->addScript(wire('config')->urls->templates . 'assets/js/mediaplayer.min.js', true);
+		$this->addScript(wire('config')->urls->templates . 'assets/js/mediaplayer.legacy.min.js', true);
 	}
 }
