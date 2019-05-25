@@ -1,5 +1,5 @@
 import { ready, hasClass, addClass, removeClass, createElementFromHTML, removeElements, trigger, nextUntil } from './classes/hilfsfunktionen.js';
-import AjaxAnfrage from './classes/AjaxAnfrage.js';
+import AjaxCall from './classes/AjaxCall.js';
 import { debounce, uniq, remove } from 'lodash';
 
 (async () => {
@@ -18,9 +18,9 @@ import { debounce, uniq, remove } from 'lodash';
 		* Schickt die aktuellen Filtereinstellungen ab
 		
 		*/
-		function filterAbschicken(kachelElement, grid, ajaxAnfrage) {
-			ajaxAnfrage = ajaxAnfrage.clone();
-			let getParams = ajaxAnfrage.getParams;
+		function filterAbschicken(kachelElement, grid, ajaxCall) {
+			ajaxCall = ajaxCall.clone();
+			let getParams = ajaxCall.getParams;
 			let historyParams = Object.assign({}, getParams);
 
 			delete historyParams.start;
@@ -30,7 +30,7 @@ import { debounce, uniq, remove } from 'lodash';
 			window.history.pushState(
 				{},
 				document.title,
-				'?' + ajaxAnfrage.objectToQueryString(historyParams)
+				'?' + ajaxCall.objectToQueryString(historyParams)
 			);
 
 			let vorhandeneIDs = [];
@@ -53,9 +53,9 @@ import { debounce, uniq, remove } from 'lodash';
 			getParams.type = "service";
 			getParams.htmlAusgabe = true;
 			getParams.vorhandeneIDs = vorhandeneIDs;
-			ajaxAnfrage.getParams = getParams;
+			ajaxCall.getParams = getParams;
 
-			ajaxAnfrage.fetch({ method: 'GET' })
+			ajaxCall.fetch({ method: 'GET' })
 				.then(function (response) {
 					let json = response.json();
 					if (response.status >= 200 && response.status < 300) {
@@ -333,7 +333,7 @@ import { debounce, uniq, remove } from 'lodash';
 					});
 				});
 
-				const ajaxAnfrage = new AjaxAnfrage();
+				const ajaxCall = new AjaxCall();
 
 				const mehrButton = kachelElement.querySelector('[data-aktion="weitere_laden"]');
 				if (typeof mehrButton === 'object' && mehrButton instanceof Element) {
@@ -341,7 +341,7 @@ import { debounce, uniq, remove } from 'lodash';
 					mehrButton.addEventListener("click", debounce(function (event) {
 						event.preventDefault();
 
-						let getParameter = ajaxAnfrage.getParams;
+						let getParameter = ajaxCall.getParams;
 						let offset = mehrButton.getAttribute('data-offset');
 						if (typeof offset === 'string' && offset.length > 0) {
 							getParameter.start = offset;
@@ -349,8 +349,8 @@ import { debounce, uniq, remove } from 'lodash';
 							delete getParameter.start;
 						}
 
-						ajaxAnfrage.getParams = getParameter;
-						filterAbschicken(kachelElement, grid, ajaxAnfrage);
+						ajaxCall.getParams = getParameter;
+						filterAbschicken(kachelElement, grid, ajaxCall);
 						return true;
 					}, 300));
 				}
@@ -382,7 +382,7 @@ import { debounce, uniq, remove } from 'lodash';
 										return false;
 									}
 
-									let getParameter = ajaxAnfrage.getParams;
+									let getParameter = ajaxCall.getParams;
 									delete getParameter.start;
 
 									if (typeof getParameter.schlagwoerter === 'string' && getParameter.schlagwoerter.length > 0) {
@@ -406,8 +406,8 @@ import { debounce, uniq, remove } from 'lodash';
 										delete getParameter.schlagwoerter;
 									}
 
-									ajaxAnfrage.getParams = getParameter;
-									filterAbschicken(kachelElement, grid, ajaxAnfrage);
+									ajaxCall.getParams = getParameter;
+									filterAbschicken(kachelElement, grid, ajaxCall);
 
 									return false;
 								});
@@ -424,7 +424,7 @@ import { debounce, uniq, remove } from 'lodash';
 								freitextsuche.addEventListener("keydown", debounce(function (event) {
 									event.preventDefault();
 
-									let getParameter = ajaxAnfrage.getParams;
+									let getParameter = ajaxCall.getParams;
 									delete getParameter.start;
 
 									let eingabe = freitextsuche.value;
@@ -435,8 +435,8 @@ import { debounce, uniq, remove } from 'lodash';
 										delete getParameter.freitextsuche;
 									}
 
-									ajaxAnfrage.getParams = getParameter;
-									filterAbschicken(kachelElement, grid, ajaxAnfrage);
+									ajaxCall.getParams = getParameter;
+									filterAbschicken(kachelElement, grid, ajaxCall);
 									return true;
 								}, 300));
 

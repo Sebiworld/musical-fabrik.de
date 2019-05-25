@@ -1,4 +1,4 @@
-import AjaxAnfrage from './classes/AjaxAnfrage.js';
+import AjaxCall from './classes/AjaxCall.js';
 import { isEmpty, isNumber, startsWith } from "lodash";
 
 (async () => {
@@ -19,8 +19,8 @@ import { isEmpty, isNumber, startsWith } from "lodash";
 			return;
 		}
 
-		let ajaxAnfrage = new AjaxAnfrage();
-		ajaxAnfrage.getParams['twack-ajax'] = 1;
+		let ajaxCall = new AjaxCall();
+		ajaxCall.getParams['twack-ajax'] = 1;
 
 		let payload = {
 			action: "getComponent",
@@ -28,9 +28,9 @@ import { isEmpty, isNumber, startsWith } from "lodash";
 			page: diagramm.getAttribute('data-page'),
 			directory: "inhalte"
 		};
-		ajaxAnfrage.postParams = payload;
+		ajaxCall.postParams = payload;
 
-		ajaxAnfrage.fetch()
+		ajaxCall.fetch()
 		.then(function(response){
 			let json = response.json();
 			if (response.status >= 200 && response.status < 300) {

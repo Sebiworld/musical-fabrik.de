@@ -1,6 +1,6 @@
 import {matches, removeClass, addClass} from './hilfsfunktionen.js';
 import {values, join} from "lodash";
-import AjaxAnfrage from './AjaxAnfrage.js';
+import AjaxCall from './AjaxCall.js';
 import Scrollinator from './Scrollinator.js';
 
 export default class AjaxFormular {
@@ -11,10 +11,11 @@ export default class AjaxFormular {
 
 		this.element = formularElement;
 
-		this.ajaxAnfrage = new AjaxAnfrage();
+		this.ajaxCall = new AjaxCall();
+		this.ajaxCall.method = 'POST';
 		if(typeof options === 'object'){
 			if(typeof options.payload === 'object'){
-				this.ajaxAnfrage.addPostParams(options.payload);
+				this.ajaxCall.addPostParams(options.payload);
 			}
 		}
 
@@ -32,30 +33,30 @@ export default class AjaxFormular {
 	* POST-Parameter setzen
 	*/
 	get payload(){
-		return this.ajaxAnfrage.postParams;
+		return this.ajaxCall.postParams;
 	}
 
 	set payload(params){
-		this.ajaxAnfrage.postParams = params;
+		this.ajaxCall.postParams = params;
 	}
 
 	addPayload(params){
-		this.ajaxAnfrage.addPostParams(params);
+		this.ajaxCall.addPostParams(params);
 	}
 
 	/*
 	* GET-Parameter setzen
 	*/
 	get getParams(){
-		return this.ajaxAnfrage.getParams;
+		return this.ajaxCall.getParams;
 	}
 
 	set getParams(params){
-		this.ajaxAnfrage.getParams = params;
+		this.ajaxCall.getParams = params;
 	}
 
 	addGetParams(params){
-		this.ajaxAnfrage.addGetParams(params);
+		this.ajaxCall.addGetParams(params);
 	}
 
 	/**
@@ -345,12 +346,12 @@ export default class AjaxFormular {
 		formular.querySelector('.hinweise').innerHTML = '';
 
 		// Ajax-Anfrage-Objekt klonen:
-		let ajaxAnfrage = ajaxFormular.ajaxAnfrage.clone();
+		let ajaxCall = ajaxFormular.ajaxCall.clone();
 
 		// Eingegebene Werte zur Anfrage hinzufügen:
-		ajaxAnfrage.addPostParams(ajaxFormular.getValues());
+		ajaxCall.addPostParams(ajaxFormular.getValues());
 
-		ajaxAnfrage.fetch()
+		ajaxCall.fetch()
 		.then(function(response){
 			let json = response.json();
 			if (response.status >= 200 && response.status < 300) {

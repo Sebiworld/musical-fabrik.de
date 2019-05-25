@@ -6,46 +6,6 @@
         <img src="./Sterne.svg" class="image-part">
         <leuchtende-sterne ref="sterne"></leuchtende-sterne>
         <sternschnuppen ref="sternschnuppen"></sternschnuppen>
-        <!-- <img src="./Himmelsleuchten.svg" class="image-part"> -->
-        <!-- <img src="./Stadt.svg" class="image-part"> -->
-        <!-- <img src="./Wüste hinten.svg" class="image-part"> -->
-        <!-- <img src="./Wüste Mitte.svg" class="image-part"> -->
-        <!-- <img src="./Karawane.svg" class="image-part"> -->
-        <!-- <img src="./Wüste Vorne.svg" class="image-part"> -->
-        <!-- <div class="events">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="100%"
-            height="100%"
-            style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421"
-            version="1.1"
-            viewBox="0 0 5120 2883"
-            xml:space="preserve"
-          >
-            <g id="kamelpopo">
-              <rect
-                width="130"
-                height="300"
-                x="4550"
-                y="1250"
-                style="fill:transparent"
-                @click="arschklick"
-              ></rect>
-            </g>
-
-            <g id="stadt">
-              <rect
-                width="1400"
-                height="600"
-                x="170"
-                y="1450"
-                style="fill:transparent"
-                @click="stadtklick"
-              ></rect>
-            </g>
-          </svg>
-        </div> -->
       </div>
     </div>
   </div>
