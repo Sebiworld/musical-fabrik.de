@@ -1,787 +1,885 @@
-import anime from "animejs";
 import {
-	matches,
-	ready,
-	addClass,
-	removeClass,
-	hasClass,
-	closest,
+    matches,
+    ready,
+    addClass,
+    removeClass,
+    hasClass,
+    closest,
 } from "./hilfsfunktionen.js";
-import { throttle, remove } from "lodash";
+import { throttle, remove, find, some } from "lodash";
 
 let s = function () {
-	"use strict";
+    "use strict";
 
-	let staticDefaults = {
-		scrollOffset: 0,
+    const staticDefaults = {
+        // If set, scrollinator will scroll to get the target into view plus the amount of pixels set:
+        scrollOffset: 0,
 
-		// Link-Klicks abfangen und bearbeiten, sofern es sich um einen lokalen Link handelt:
-		activateLinkListener: true,
+        // Set to your DOMElement to watch for its height as scrolloffset. Can be set to an absolute amount of pixels, too:
+        headerOffset: false,
 
-		// Soll die Header-Höhe automatisch als Offset berücksichtigt werden?
-		ermittleHeaderHoehe: true,
-		headerHoeheSelector: "header>nav",
+        // Intercept every local link click and scroll to the position instead:
+        activateLinkListener: true,
 
-		// Sollen Menüelemente, deren Zielelement sichtbar ist, gekennzeichnet werden?
-		navigationHighlighting: true,
+        alternativeTargetAttribute: "data-scrolltarget",
 
-		// Zu überwachende Link-Elemente:
-		highlightSelektor:
-			".highlight-navigation ul.nav a.nav-link, .highlight-navigation .dropdown-menu .dropdown-item",
+        // Classname which will be added to observed links in viewport:
+        activeClass: "active",
 
-		// Die Klassse, die aktiven Elementen hinzugefügt wird:
-		aktivKlasse: "active",
+        // Classname which will be added to active links:
+        activeLinkClass: "active",
 
-		// Soll das Parent-Element des Links mit der Aktiv-Klasse versehen werden?
-		aktiviereParent: false,
-		aktiviereParentSelector: false,
-	};
+        // Classname which is added to sections which are currently in view.
+        sectionInViewClass: "section-in-view",
 
-	class Scrollinator {
-		constructor(options) {
-			if (window.scrollinatorInstanz) {
-				window.scrollinatorInstanz.importiere(options);
-				return window.scrollinatorInstanz;
-			}
-			window.scrollinatorInstanz = this;
+        // Set to true to only allow a single section to be marked at active:
+        onlySingleSectionActive: true,
 
-			let obj = this;
-			if (typeof options !== "object") {
-				options = {};
-			}
+        sectionSelector: 'section',
 
-			// Wenn nicht in options vorhanden: Standardwerte benutzen:
-			for (let option in staticDefaults) {
-				if (options[option] !== undefined) {
-					this[option] = options[option];
-				} else {
-					this[option] = staticDefaults[option];
-				}
-			}
+        // Writes the ID of the active section to the url:
+        sectionToUrl: true,
 
-			// Speicherung aller auf dieser Seite behandelten Sektions-Hashwerte:
-			this._sektionen = {};
-			this._aktiverHash = "";
+        // Normally Scrollinator will check at browserwindow's top border for active elements (plus headerheight if set). 
+        highlightOffsetTop: 40,
 
-			ready(function () {
-				// Wenn NavigationHighlighting aktiviert ist, soll es hier noch einmal explizit getriggert werden, da jetzt alle anderen Parameter zur Verfügung stehen:
-				if (obj.navigationHighlighting) {
-					obj.navigationHighlighting = true;
-				}
+        observedLinkElements: {},
 
-				// Wird aufgerufen, wenn beim Seitenaufruf ein Ankerlink in der URL steht:
-				if (window.location.hash) {
-					if (window.location.hash.indexOf("=") >= 0) return true;
-					if (window.location.hash.indexOf("&") >= 0) {
-						return true;
-					}
+        observedElements: []
+    };
 
-					// Wenn der User sich schon irgendwo auf der Seite befindet, soll initial nicht zum Hashwert gescrollt werden.
-					const aktuellePosition =
-						window.pageYOffset || document.documentElement.scrollTop;
-					if (aktuellePosition > 10) {
-						return true;
-					}
+    const easings = {
+        linear(t) {
+            return t;
+        },
+        easeInQuad(t) {
+            return t * t;
+        },
+        easeOutQuad(t) {
+            return t * (2 - t);
+        },
+        easeInOutQuad(t) {
+            return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+        },
+        easeInCubic(t) {
+            return t * t * t;
+        },
+        easeOutCubic(t) {
+            return (--t) * t * t + 1;
+        },
+        easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+        },
+        easeInQuart(t) {
+            return t * t * t * t;
+        },
+        easeOutQuart(t) {
+            return 1 - (--t) * t * t * t;
+        },
+        easeInOutQuart(t) {
+            return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t;
+        },
+        easeInQuint(t) {
+            return t * t * t * t * t;
+        },
+        easeOutQuint(t) {
+            return 1 + (--t) * t * t * t * t;
+        },
+        easeInOutQuint(t) {
+            return t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t;
+        }
+    };
 
-					const zielElement = document.querySelector(window.location.hash);
-					if (typeof zielElement === "object" && zielElement) {
-						obj.hinscrollen(zielElement);
-					}
-				}
-			});
+    class Scrollinator {
+        constructor(options) {
+            const obj = this;
+            if (window.scrollinator) {
+                window.scrollinator.importOptions(options);
+                return window.scrollinator;
+            }
 
-			this._initialisiert = true;
-		}
+            // Set Default-Values:
+            for (let option in staticDefaults) {
+                obj['_' + option] = staticDefaults[option];
+            }
+            obj.importOptions(options);
 
-		static getInstance(options) {
-			// console.log("getInstance", options, scrollinatorInstanz);
-			// debugger;
-			// if (!scrollinatorInstanz) {
-			scrollinatorInstanz = new Scrollinator(options);
-			// 	console.log("Instanz gesetzt.", scrollinatorInstanz);
-			// } else {
-			// 	scrollinatorInstanz.importiere(options);
-			// }
-			return scrollinatorInstanz;
-		}
+            ready(function () {
+                // Check if a hash-anchor is set initially in the url:
+                // if (window.location.hash) {
+                //     if (window.location.hash.indexOf("=") >= 0) return true;
+                //     if (window.location.hash.indexOf("&") >= 0) {
+                //         return true;
+                //     }
 
-		importiere(options) {
-			if (typeof options !== "object") {
-				return false;
-			}
+                //     // Don't scroll if the user is already somewhere else on the page:
+                //     const currentPosition =
+                //         window.pageYOffset || document.documentElement.scrollTop;
+                //     if (currentPosition > 10) {
+                //         return true;
+                //     }
 
-			// Wenn nicht in options vorhanden: Standardwerte benutzen:
-			for (let option in staticDefaults) {
-				if (options[option] !== undefined) {
-					this[option] = options[option];
-				} else {
-					this[option] = staticDefaults[option];
-				}
-			}
-		}
+                //     const target = document.querySelector(window.location.hash);
+                //     if (target instanceof Element) {
+                //         obj.scrollTo(target);
+                //     }
+                // }
+            });
 
-		get scrollOffset() {
-			if (this._scrollOffset === undefined) {
-				this._scrollOffset = staticDefaults.scrollOffset;
-			}
+            obj._initialized = true;
 
-			if (typeof this._headerHoehe !== "number") {
-				this._headerHoehe = 0;
-			}
+            this._activateHashListener(this._activateLinkListener);
+            this._refreshObservers();
 
-			return this._scrollOffset + this._headerHoehe;
-		}
+            window.scrollinator = obj;
+            return obj;
+        }
 
-		set scrollOffset(wert) {
-			if (typeof wert !== "number") {
-				return false;
-			}
-			this._scrollOffset = wert;
-		}
+        importOptions(options) {
+            if (typeof options !== "object") {
+                return false;
+            }
 
-		get ermittleHeaderHoehe() {
-			if (this._ermittleHeaderHoehe === undefined) {
-				this.ermittleHeaderHoehe = staticDefaults.ermittleHeaderHoehe;
-			}
-			return this._ermittleHeaderHoehe;
-		}
+            // Only import values which are definied in staticDefaults:
+            for (let option in staticDefaults) {
+                if (options[option] !== undefined) {
+                    this[option] = options[option];
+                }
+            }
+        }
 
-		set ermittleHeaderHoehe(wert) {
-			this._ermittleHeaderHoehe = wert;
-			this.refreshHeaderHoehe();
-		}
+        get scrollOffset() {
+            return this._scrollOffset;
+        }
 
-		get headerHoeheSelector() {
-			if (this._headerHoeheSelector === undefined) {
-				this.headerHoeheSelector = staticDefaults.headerHoeheSelector;
-			}
-			return this._headerSelector;
-		}
+        set scrollOffset(value) {
+            if (typeof value !== "number") {
+                return false;
+            }
+            this._scrollOffset = value;
+            return this._scrollOffset;
+        }
 
-		set headerHoeheSelector(wert) {
-			if (typeof wert !== "string") {
-				return false;
-			}
-			this._headerSelector = wert;
-			this.refreshHeaderHoehe();
+        get headerOffset() {
+            return this._headerOffset;
+        }
 
-			return this._headerSelector;
-		}
+        set headerOffset(value) {
+            if (value !== false && typeof value !== 'number' && !(value instanceof Element)) {
+                return false;
+            }
+            this._headerOffset = value;
 
-		set activateLinkListener(wert) {
-			if (wert) {
-				this.aktiviereHashListener();
-			} else {
-				this.deaktiviereHashListener();
-			}
-		}
+            if (this._linktargetObserver instanceof IntersectionObserver) {
+                this._refreshObservers();
+            }
 
-		/**
-		 * Liest die Höhe des angegebenen Header-Elements aus, und setzt sie als Offset ein.
-		 */
-		refreshHeaderHoehe() {
-			const obj = this;
-			// TODO automatischer Refresh funktioniert noch nicht...
-			return true;
-			obj._headerHoehe = 0;
+            return this._headerOffset;
+        }
 
-			if (!obj.ermittleHeaderHoehe) {
-				return false;
-			}
+        _getHeaderOffsetValue() {
+            if (typeof this.headerOffset === 'number') {
+                return this.headerOffset;
+            }
+            if (!this.headerOffset || !(this.headerOffset instanceof Element)) {
+                return 0;
+            }
 
-			if (
-				typeof obj.headerHoeheSelector !== "string" ||
-				obj.headerHoeheSelector.length < 1
-			) {
-				return false;
-			}
+            return this.headerOffset.offsetHeight;
+        }
 
-			let headerElement = document.querySelector(obj.headerHoeheSelector);
-			if (!headerElement) {
-				return false;
-			}
+        _getLinktargetObserverMargin() {
+            return '-' + (this.scrollOffset + this._getHeaderOffsetValue()) + 'px 0px 0px 0px';
+        }
 
-			obj._headerHoehe = headerElement.offsetHeight;
+        get activateLinkListener() {
+            return this._activateLinkListener;
+        }
 
-			return true;
-		}
+        set activateLinkListener(value) {
+            if (typeof value !== "boolean") {
+                return false;
+            }
+            this._activateHashListener(!!value);
+            this._activateLinkListener = !!value;
+            return this._activateLinkListener;
+        }
 
-		getPosition(element) {
-			return this.getPositionTop(element);
-		}
+        getPositionTop(element) {
+            let rect = element.getBoundingClientRect();
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            let position = rect.top + scrollTop;
+            if (typeof position !== "number" || position < 0) {
+                position = 0;
+            }
+            return position;
+        }
 
-		/**
-		 * Liefert die Position des oberen Randes des Elements.
-		 * @param  DOMElement element
-		 * @return number
-		 */
-		getPositionTop(element) {
-			let rect = element.getBoundingClientRect();
-			let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-			let position = rect.top + scrollTop;
-			if (typeof position !== "number" || position < 0) {
-				position = 0;
-			}
-			return position;
-		}
-
-		getPositionBottom(element) {
-			let rect = element.getBoundingClientRect();
-			let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-			let position = rect.top + scrollTop + element.offsetHeight;
-			if (typeof position !== "number" || position < 0) {
-				position = 0;
-			}
-			return position;
-		}
+        getPositionBottom(element) {
+            let rect = element.getBoundingClientRect();
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            let position = rect.top + scrollTop + element.offsetHeight;
+            if (typeof position !== "number" || position < 0) {
+                position = 0;
+            }
+            return position;
+        }
 
 		/**
-		 * Prüft, ob ein übergeber Link zur aktuellen Seite führt.
+		 * Checks if a link leads to a target on the current page
 		 */
-		isLokalerLink(link) {
-			if (link.charAt(0) == "#") return true;
-
-			var geteilterLink = link.split("#");
-			if (geteilterLink.length > 0) {
-				var linkAdresse = geteilterLink[0];
-
-				if (window.location.pathname == linkAdresse) return true;
-				if (
-					linkAdresse.charAt(linkAdresse.length - 1) == "/" &&
-					linkAdresse.length > 1
-				)
-					linkAdresse = linkAdresse.substring(0, linkAdresse.length - 1);
-				if (linkAdresse.length === 0) return true;
-
-				var aktuelleAdresse = window.location.href;
-				aktuelleAdresse = aktuelleAdresse.split("#");
-				if (aktuelleAdresse.length < 1) return false;
-				aktuelleAdresse = aktuelleAdresse[0];
-				if (aktuelleAdresse.charAt(aktuelleAdresse.length - 1) == "/")
-					aktuelleAdresse = aktuelleAdresse.substring(
-						0,
-						aktuelleAdresse.length - 1
-					);
-				if (linkAdresse == aktuelleAdresse) return true;
-
-				var hrefOhneProtokoll = aktuelleAdresse.split("://");
-				if (
-					hrefOhneProtokoll.length >= 2 &&
-					linkAdresse == hrefOhneProtokoll[1]
-				)
-					return true;
-			}
-
-			return false;
-		}
-
-		/**
-		 * Initialisiert die Listener, die Klicks auf Hash-Links auswerten und den Reload (wenn nötig) verhindern.
-		 */
-		aktiviereHashListener() {
-			document.addEventListener("click", this.hashListener.bind(this));
-		}
-		deaktiviereHashListener() {
-			document.removeEventListener("click", this.hashListener.bind(this));
-		}
-
-		getHashFromLink(linkelement) {
-			let obj = this;
-			let hashWert = "";
-			if (typeof linkelement === "string") {
-				if (!isLokalerLink(linkelement)) {
-					throw "Es handelt sich um keinen lokalen Link.";
-				}
-				var geteilterLink = link.split("#");
-				if (geteilterLink.length < 2) {
-					throw "Im Link-String wurde kein Hash-Wert gefunden.";
-				}
-				hashWert = geteilterLink[geteilterLink.length - 1];
-			} else if (linkelement instanceof Element) {
-				if (
-					!linkelement ||
-					!matches(
-						linkelement,
-						'a[href*="#"]:not([href="#"]):not([data-toggle])'
-					)
-				) {
-					throw "Das übergebene Element ist kein auswertbares Link-Element.";
-				}
-
-				if (!obj.isLokalerLink(linkelement.getAttribute("href"))) {
-					throw "Es handelt sich um keinen lokalen Link.";
-				}
-
-				if (linkelement.hash.includes("=") || linkelement.hash.includes("&")) {
-					throw "Der ermittelte Hash-Wert ist nicht valide.";
-				}
-
-				hashWert = linkelement.hash;
-			} else {
-				throw "Es wurde kein valides Link-Element übergeben.";
-			}
-
-			return hashWert;
-		}
-
-		/**
-		 * Liefert zu einem übergebenen Link(-String) oder einem href-Element das Zielelement, zu dem gescrollt würde.
-		 * @param  string|Element linkelement
-		 * @return Element
-		 */
-		getZielElement(linkelement) {
-			let obj = this;
-			let hashWert = obj.getHashFromLink(linkelement);
-
-			// Sucht das Zielelement anhand der ID:
-			const zielElement = document.querySelector(hashWert);
-			if (!(zielElement instanceof Element)) {
-				throw "Es wurde kein valides Ziel-Element gefunden.";
-			}
-			return zielElement;
-		}
-
-		hashListener(event) {
-			const obj = this;
-
-			if (!event.target) {
-				return true;
-			}
-
-			let element = event.target;
-			if (!matches(element, "a")) {
-				element = closest(element, "a");
-			}
-
-			if (
-				!element ||
-				!matches(element, 'a[href*="#"]:not([href="#"]):not([data-toggle])')
-			) {
-				return true;
-			}
-
-			let zielElement = false;
-			try {
-				zielElement = obj.getZielElement(element);
-			} catch (err) {
-				return true;
-			}
-			if (!(zielElement instanceof Element)) {
-				return true;
-			}
-
-			event.preventDefault();
-			obj.hinscrollen(zielElement);
-
-			return false;
-		}
-
-		/**
-		 * Scrollt zu einem Element. Optional können scrollOffset, animationsDatuer oder animationsTyp angegeben werden.
-		 * @param  DOMElement  element
-		 * @param  object  options
-		 */
-		hinscrollen(element, options) {
-			const obj = this;
-			if (typeof options !== "object") {
-				options = {};
-			}
-
-			if (!element || element.length < 1) {
-				return false;
-			}
-
-			let animeOptions = {
-				targets: "html, body",
-				scrollTop: function (el) {
-					return scrollPosition;
-				},
-				easing: 'spring(1, 80, 10, 0)',
-				duration: function (el, i, l) {
-					return 1000 + i * 1000;
-				},
-			};
-
-			// Die Parameter für die Anime-Funktion können überschrieben werden:
-			for (optionkey in options) {
-				animeOptions[optionkey] = options[optionkey];
-			}
-
-			// Bereits laufende Animationen stoppen:
-			anime.remove("html, body");
-
-			let scrollPosition = obj.getPositionTop(element) - obj.scrollOffset;
-
-			// Scrollen stoppen, wenn der User scrollt:
-			const scrollEvents = [
-				"mousedown",
-				"wheel",
-				"DOMMouseScroll",
-				"mousewheel",
-				"keyup",
-				"touchmove",
-			];
-			const scrollEventHandler = function (evt) {
-				anime.remove("html, body");
-				removeScrollEventHandler();
-			};
-			const removeScrollEventHandler = function () {
-				for (let evtname of scrollEvents) {
-					window.removeEventListener(evtname, scrollEventHandler);
-				}
-			};
-			for (let evtname of scrollEvents) {
-				window.addEventListener(evtname, scrollEventHandler, false);
-			}
-
-			var finishedPromise = anime(animeOptions).finished.then(function () {
-				removeScrollEventHandler();
-			});
-
-			finishedPromise.update = function (anim) {
-				if (!anim.completed) {
-					// Die Scroll-Potition muss ständig neu berechnet werden, falls sich die Position des Zielelements ändert:
-					scrollPosition = obj.getPositionTop(element) - obj.scrollOffset;
-				}
-			};
-		}
-
-		get navigationHighlighting() {
-			return this._navigationHighlighting;
-		}
-		set navigationHighlighting(wert) {
-			this._navigationHighlighting = !!wert;
-			if (this._navigationHighlighting) {
-				// Navigations-Highlighting aktivieren, Menü-Link-Elemente neu einlesen:
-				if (
-					typeof this.highlightSelektor === "string" &&
-					this.highlightSelektor.length > 0
-				) {
-					this.ueberwacheSelektor(this.highlightSelektor);
-				}
-				this.aktiviereHighlightListener();
-			} else {
-				this.deaktiviereHighlightListener();
-			}
-		}
-
-		/**
-		 * Initialisiert die Listener, die Klicks auf Hash-Links auswerten und den Reload (wenn nötig) verhindern.
-		 */
-		aktiviereHighlightListener() {
-			const obj = this;
-			document.removeEventListener("scroll", obj.positionPruefen.bind(obj));
-
-			// document.addEventListener('click', this.hashListener.bind(this));
-			if (typeof throttle === "function") {
-				// wenn lodash verfügbar ist, wird die throttle-Funktion genutzt (spart Rechenleistung)
-				document.addEventListener(
-					"scroll",
-					throttle(obj.positionPruefen.bind(obj), 100)
-				);
-			} else {
-				document.addEventListener("scroll", obj.positionPruefen.bind(obj));
-			}
-		}
-		deaktiviereHighlightListener() {
-			document.removeEventListener("scroll", obj.positionPruefen.bind(obj));
-		}
-
-		/**
-		 * Überwache einen übergebenen Selektor. Mögliche Options sind:
-		 * 	- sektion: Das Sektionselement, das den Link aktivieren soll, wenn es in den Viewport kommt. Wenn nicht gesetzt, wird der Link nach einem Hash-Wert durchsucht.
-		 * 	- aktivKlasse: Die Klasse, die dem Link angehängt wird, wenn er aktiviert wird.
-		 * 	- aktiviereParent: Soll stattdessen das Parent-Element die Aktiv-Klasse bekommen?
-		 * 	- aktiviereParentSelektor: Hier kann ein Selektor für das Parent-Element angegeben werden, das die Aktiv-Klasse erhalten soll.
-		 *
-		 * @param  String selektorString
-		 * @param  object options
-		 */
-		ueberwacheSelektor(selektorString, options) {
-			const obj = this;
-			const elemente = document.querySelectorAll(selektorString);
-			for (let index in elemente) {
-				const element = elemente[index];
-
-				if (typeof element !== "object" || !(element instanceof Element)) {
-					continue;
-				}
-
-				try {
-					obj.ueberwacheLink(element, options);
-				} catch (err) {
-					// console.log(err, selektorString, typeof element, element);
-				}
-			}
-
-			return true;
-		}
-
-		/**
-		 * Überwache das übergebene Link-Element. Mögliche Options sind:
-		 * 	- sektion: Das Sektionselement, das den Link aktivieren soll, wenn es in den Viewport kommt. Wenn nicht gesetzt, wird der Link nach einem Hash-Wert durchsucht.
-		 * 	- aktivKlasse: Die Klasse, die dem Link angehängt wird, wenn er aktiviert wird.
-		 * 	- aktiviereParent: Soll stattdessen das Parent-Element die Aktiv-Klasse bekommen?
-		 * 	- aktiviereParentSelektor: Hier kann ein Selektor für das Parent-Element angegeben werden, das die Aktiv-Klasse erhalten soll.
-		 *
-		 * @param  DOMElement linkelement
-		 * @param  object options
-		 */
-		ueberwacheLink(linkelement, options) {
-			const obj = this;
-			if (!(linkelement instanceof Element)) {
-				throw "Es wurde kein valides Link-Element übergeben.";
-			}
-			if (typeof options !== "object") {
-				options = {};
-			}
-
-			let sektionsElement = obj.getZielElement(linkelement);
-			if (options.sektion instanceof Element) {
-				sektionsElement = options.sektion;
-			} else if (typeof options.sektion === "string") {
-				sektionsElement = document.querySelector("#" + options.sektion);
-			}
-
-			if (!(sektionsElement instanceof Element)) {
-				throw "Es wurde kein Sektions-Element gefunden.";
-			}
-
-			let hashWert = sektionsElement.getAttribute("id");
-			if (typeof options.hashWert === "string" && options.hashWert.length > 0) {
-				hashWert = options.hashWert;
-			}
-
-			if (typeof hashWert !== "string" || hashWert.length < 1) {
-				throw "Es konnte kein Hash-Wert ermittelt werden.";
-			}
-
-			let aktivKlasse = "active";
-			if (
-				typeof options.aktivKlasse === "string" &&
-				options.aktivKlasse.length > 0
-			) {
-				aktivKlasse = options.aktivKlasse;
-			} else if (
-				typeof obj.aktivKlasse === "string" &&
-				obj.aktivKlasse.length > 0
-			) {
-				aktivKlasse = obj.aktivKlasse;
-			}
-
-			let aktiviereParent = false;
-			if (options.aktiviereParent !== undefined) {
-				aktiviereParent = !!options.aktiviereParent;
-			} else if (obj.aktiviereParent !== undefined) {
-				aktiviereParent = !!obj.aktiviereParent;
-			}
-
-			let aktiviereParentSelektor = "";
-			if (
-				typeof options.aktiviereParentSelektor === "string" &&
-				options.aktiviereParentSelektor.length > 0
-			) {
-				aktiviereParentSelektor = options.aktiviereParentSelektor;
-			} else if (
-				typeof obj.aktiviereParentSelektor === "string" &&
-				obj.aktiviereParentSelektor.length > 0
-			) {
-				aktiviereParentSelektor = obj.aktiviereParentSelektor;
-			}
-
-			if (typeof obj.sektionen[hashWert] === "object") {
-				// Die Sektion existiert schon. Es muss also nur der Navlink hinzugefügt werden.
-
-				// Wenn das Linkelement schon existiert, wird es zuerst gelöscht.
-				remove(obj.sektionen[hashWert], function (n) {
-					if (typeof n !== "object") return true;
-					if (n.element === linkelement) return true;
-					return false;
-				});
-
-				obj.sektionen[hashWert].navLinks.push({
-					element: linkelement,
-					aktivKlasse: aktivKlasse,
-					aktiviereParent: aktiviereParent,
-					aktiviereParentSelektor: aktiviereParentSelektor,
-				});
-			} else {
-				obj.sektionen[hashWert] = {
-					// Das Element, bei dem die Menüpunkte aktiv werden sollen, sobald es in den Viewport kommt:
-					element: sektionsElement,
-
-					// Die Menüpunkte:
-					navLinks: [
-						{
-							element: linkelement,
-							aktivKlasse: aktivKlasse,
-							aktiviereParent: aktiviereParent,
-							aktiviereParentSelektor: aktiviereParentSelektor,
-						},
-					],
-
-					// Der Hash-Wert (ID) des Elements:
-					hashWert: hashWert,
-				};
-			}
-
-			return true;
-		}
-
-		get sektionen() {
-			if (
-				this._sektionen === undefined ||
-				typeof this._sektionen !== "object"
-			) {
-				this.sektionen = {};
-			}
-			return this._sektionen;
-		}
-
-		set sektionen(wert) {
-			if (typeof wert !== "object") {
-				return false;
-			}
-			this._sektionen = wert;
-			return true;
-		}
-
-		positionPruefen() {
-			const obj = this;
-			const aktuellePosition =
-				window.pageYOffset || document.documentElement.scrollTop;
-
-			let etwasGefunden = false;
-			// Pro Sektion wird geprüft, ob diese gerade aufgrund der Scrollposition aktiv ist:
-			for (const hashWert in obj.sektionen) {
-				const sektion = obj.sektionen[hashWert];
-
-				if (
-					aktuellePosition >=
-					obj.getPositionTop(sektion.element) - obj.scrollOffset - 1 &&
-					aktuellePosition <=
-					obj.getPositionBottom(sektion.element) - obj.scrollOffset
-				) {
-					obj.aktiviereSektion(sektion);
-					etwasGefunden = true;
-					break;
-				}
-			}
-
-			if (!etwasGefunden) {
-				obj.deaktiviereAlleSektionen(true);
-			}
-		}
-
-		/**
-		 * Aktiviert den Hash-Wert und highlightet verknüpfte Menüelemente
-		 * @param  string  hashWert
-		 */
-		set aktiverHash(hashWert) {
-			if (this._aktiverHash != hashWert) {
-				if (history.pushState) {
-					if (typeof hashWert === "string" && hashWert.length > 0) {
-						history.pushState(
-							null,
-							document.title,
-							window.location.pathname + "#" + hashWert + window.location.search
-						);
-					} else {
-						history.pushState(
-							"",
-							document.title,
-							window.location.pathname + window.location.search
-						);
-					}
-				} else {
-					document.location.hash = "#" + hashWert;
-				}
-				this._aktiverHash = hashWert;
-			}
-		}
-
-		get aktiverHash() {
-			return this._aktiverHash;
-		}
-
-		aktiviereSektion(sektion) {
-			const obj = this;
-			if (sektion.hashWert === obj.aktiverHash) {
-				return true;
-			}
-
-			obj.deaktiviereAlleSektionen(false);
-			obj.aktiverHash = sektion.hashWert;
-
-			for (const index in sektion.navLinks) {
-				const navLink = sektion.navLinks[index];
-
-				let elementZumAktivieren = navLink.element;
-				if (navLink.aktiviereParent) {
-					// Ein Parent-Element soll mit der Aktiv-Klasse versehen werden.
-					elementZumAktivieren = navLink.element.parentNode;
-					if (
-						typeof navLink.aktiviereParentSelector === "string" &&
-						navLink.aktiviereParentSelector.length > 0
-					) {
-						elementZumAktivieren = closest(navLink.element,
-							navLink.aktiviereParentSelector
-						);
-					}
-				}
-				addClass(elementZumAktivieren, navLink.aktivKlasse);
-
-				// In Dropdowns: Dropdown-Parent ebenfalls als Aktiv markieren
-				if (hasClass(elementZumAktivieren, "dropdown-item")) {
-					addClass(
-						closest(elementZumAktivieren, ".dropdown")
-							.querySelector(".nav-link.dropdown-toggle"),
-						navLink.aktivKlasse
-					);
-				}
-			}
-		}
-
-		deaktiviereAlleSektionen(hashLoeschen) {
-			let obj = this;
-			if (hashLoeschen) {
-				obj.aktiverHash = "";
-			}
-
-			for (let hashWert in obj.sektionen) {
-				let sektion = obj.sektionen[hashWert];
-
-				for (let index in sektion.navLinks) {
-					let navLink = sektion.navLinks[index];
-
-					let elementZumDeaktivieren = navLink.element;
-					if (navLink.aktiviereParent) {
-						// Ein Parent-Element sollte mit der Aktiv-Klasse versehen werden.
-						elementZumDeaktivieren = navLink.element.parentNode;
-						if (
-							typeof navLink.aktiviereParentSelector === "string" &&
-							navLink.aktiviereParentSelector.length > 0
-						) {
-							elementZumDeaktivieren = closest(navLink.element,
-								navLink.aktiviereParentSelector
-							);
-						}
-					}
-					removeClass(elementZumDeaktivieren, navLink.aktivKlasse);
-
-					// In Dropdowns: Dropdown-Parent ebenfalls als Aktiv entfernen
-					if (hasClass(elementZumDeaktivieren, "dropdown-item")) {
-						removeClass(
-							closest(elementZumDeaktivieren, ".dropdown")
-								.querySelector(".nav-link.dropdown-toggle"),
-							navLink.aktivKlasse
-						);
-					}
-				}
-			}
-		}
-	}
-
-	return Scrollinator;
+        _isLocalLink(link) {
+            if (typeof link !== 'string') {
+                return false;
+            }
+
+            if (link.charAt(0) == "#") return true;
+
+            const splittedLink = link.split("#");
+            if (splittedLink.length > 0) {
+                let linkAddress = splittedLink[0];
+
+                if (window.location.pathname == linkAddress) {
+                    return true;
+                }
+                if (linkAddress.charAt(linkAddress.length - 1) == "/" && linkAddress.length > 1) {
+                    linkAddress = linkAddress.substring(0, linkAddress.length - 1);
+                }
+                if (linkAddress.length === 0) {
+                    return true;
+                }
+
+                let currentAddress = (window.location.href + "").split("#")[0];
+                if (typeof currentAddress !== 'string' || currentAddress.length < 1) {
+                    return false;
+                }
+
+                if (currentAddress.charAt(aktuelleAdresse.length - 1) == "/") {
+                    currentAddress = currentAddress.substring(0, currentAddress.length - 1);
+                }
+
+                if (linkAddress === currentAddress) {
+                    return true;
+                }
+
+                const hrefWithoutProtocol = currentAddress.split("://");
+                if (hrefWithoutProtocol.length >= 2 && linkAddress == hrefWithoutProtocol[1]) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Start listening for click-events on local links
+         * @param {boolean} activate 
+         */
+        _activateHashListener(activate) {
+            if (!this._initialized) {
+                return false;
+            }
+            document.removeEventListener("click", this.hashListener.bind(this));
+            if (activate !== false) {
+                document.addEventListener("click", this.hashListener.bind(this));
+            }
+            return true;
+        }
+
+        /**
+         * Listener-function for clicks on links
+         */
+        hashListener(event) {
+            const obj = this;
+
+            if (!event.target || !(event.target instanceof Element)) {
+                return true;
+            }
+
+            let element = event.target;
+            if (!matches(element, '[href*="#"]:not([href="#"]):not([data-toggle])')) {
+                element = closest(element, '[href*="#"]:not([href="#"]):not([data-toggle])');
+
+                if (!element || !(element instanceof Element) || !matches(element, '[href*="#"]:not([href="#"]):not([data-toggle])')) {
+                    return true;
+                }
+            }
+
+            try {
+                const targetElement = document.querySelector('#' + obj._getHashFromLink(element));
+                obj.scrollTo(targetElement);
+                event.preventDefault();
+                return false;
+            } catch (err) {
+
+            }
+            return true;
+        }
+
+        /**
+         * Returns the linked hash-value of an element
+         * @throws error if no valid local target found
+         */
+        _getHashFromLink(linkelement) {
+            let obj = this;
+            if (typeof linkelement === "string") {
+                if (!obj._isLocalLink(linkelement)) {
+                    throw "The url's target is not local";
+                }
+
+                const splittedLink = linkelement.split("#");
+                if (splittedLink.length >= 2) {
+                    return splittedLink[splittedLink.length - 1];
+                }
+            } else if (linkelement instanceof Element) {
+                if (matches(linkelement, '[href*="#"]:not([href="#"]):not([data-toggle])')) {
+                    return obj._getHashFromLink("" + linkelement.getAttribute("href"));
+                } else if (matches(linkelement, '[' + obj.alternativeTargetAttribute + '*="#"]:not([' + obj.alternativeTargetAttribute + '="#"]):not([data-toggle])')) {
+                    return obj._getHashFromLink("" + linkelement.getAttribute(obj.alternativeTargetAttribute));
+                }
+            }
+            throw "No valid link-element found";
+        }
+
+        _calculateScrollPosition(targetElement) {
+            return this.getPositionTop(targetElement) - this.scrollOffset - this._getHeaderOffsetValue();
+        }
+
+        /**
+         * Scrolls smoothly to a specified Ttrget-element
+         * @param {Element} targetElement
+         * @param {number} duration 
+         * @param {string} easing 
+         */
+        scrollTo(targetElement, duration = 500, easing = 'easeOutCubic') {
+            const obj = this;
+
+            return new Promise(function (resolve, reject) {
+                if (!(targetElement instanceof Element) || typeof duration !== 'number' || typeof easing !== 'string' || typeof easings[easing] !== 'function') {
+                    reject();
+                    return false;
+                }
+
+                const start = window.pageYOffset || document.documentElement.scrollTop;
+                const startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
+
+                const documentHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+                const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+                let destinationOffset = obj._calculateScrollPosition(targetElement);
+                let destinationOffsetToScroll = Math.round(documentHeight - destinationOffset < windowHeight ? documentHeight - windowHeight : destinationOffset);
+
+                if ('requestAnimationFrame' in window === false) {
+                    // No animation possible.
+                    window.scroll(0, destinationOffsetToScroll);
+                    resolve();
+                    return;
+                }
+
+                let aborted = false;
+
+                // Stop automatic scrolling when the user starts scrolling:
+                const scrollEvents = [
+                    "mousedown",
+                    "wheel",
+                    "DOMMouseScroll",
+                    "mousewheel",
+                    "keyup",
+                    "touchmove",
+                ];
+                const scrollEventHandler = function (evt) {
+                    removeScrollEventHandler();
+                    aborted = true;
+                };
+                const removeScrollEventHandler = function () {
+                    for (let evtname of scrollEvents) {
+                        window.removeEventListener(evtname, scrollEventHandler);
+                    }
+                };
+
+                for (let evtname of scrollEvents) {
+                    window.addEventListener(evtname, scrollEventHandler, false);
+                }
+
+                function scroll() {
+                    if (aborted) {
+                        resolve();
+                        return;
+                    }
+
+                    const now = 'now' in window.performance ? performance.now() : new Date().getTime();
+                    const time = Math.min(1, ((now - startTime) / duration));
+                    const timeFunction = easings[easing](time);
+
+                    if (destinationOffset !== obj._calculateScrollPosition(targetElement)) {
+                        destinationOffset = obj._calculateScrollPosition(targetElement);
+                        destinationOffsetToScroll = Math.round(documentHeight - destinationOffset < windowHeight ? documentHeight - windowHeight : destinationOffset);
+                    }
+
+                    window.scroll(0, Math.ceil((timeFunction * (destinationOffsetToScroll - start)) + start));
+
+                    if (window.pageYOffset === destinationOffsetToScroll) {
+                        removeScrollEventHandler();
+                        resolve()
+                        return;
+                    }
+
+                    requestAnimationFrame(scroll);
+                }
+
+                scroll();
+            });
+        }
+
+        // Highlighting of active links:
+        get activeClass() {
+            return this._activeClass;
+        }
+
+        set activeClass(value) {
+            if (typeof value !== "string") {
+                return false;
+            }
+            this._activeClass = value;
+            this._refreshObservers();
+            return this._activeClass;
+        }
+
+        get activeLinkClass() {
+            return this._activeLinkClass;
+        }
+
+        set activeLinkClass(value) {
+            if (typeof value !== "string") {
+                return false;
+            }
+            this._activeLinkClass = value;
+            this._refreshObservers();
+            return this._activeLinkClass;
+        }
+
+        get sectionInViewClass() {
+            return this._sectionInViewClass;
+        }
+
+        set sectionInViewClass(value) {
+            if (typeof value !== "string") {
+                return false;
+            }
+            this._sectionInViewClass = value;
+            this._refreshObservers();
+            return this._sectionInViewClass;
+        }
+
+
+        get alternativeTargetAttribute() {
+            return this._alternativeTargetAttribute;
+        }
+
+        set alternativeTargetAttribute(value) {
+            if (typeof value !== "string") {
+                return false;
+            }
+            this._alternativeTargetAttribute = value;
+            this._refreshObservers();
+            return this._alternativeTargetAttribute;
+        }
+
+        _getLinkSelector() {
+            return '[href*="#"]:not([href="#"]):not([data-toggle]), [' + this.alternativeTargetAttribute + '*="#"]:not([' + this.alternativeTargetAttribute + '="#"]):not([data-toggle])';
+        }
+
+        get sectionSelector() {
+            return this._sectionSelector;
+        }
+
+        set sectionSelector(value) {
+            if (typeof value !== "string") {
+                return false;
+            }
+            this._sectionSelector = value;
+            this._refreshObservers();
+            return this._sectionSelector;
+        }
+
+        get onlySingleSectionActive() {
+            return this._onlySingleSectionActive;
+        }
+
+        set onlySingleSectionActive(value) {
+            if (typeof value !== "boolean") {
+                return false;
+            }
+            this._onlySingleSectionActive = !!value;
+            this._refreshObservers();
+            return this._onlySingleSectionActive;
+        }
+
+        get sectionToUrl() {
+            return this._sectionToUrl;
+        }
+
+        set sectionToUrl(value) {
+            if (typeof value !== "boolean") {
+                return false;
+            }
+            this._sectionToUrl = !!value;
+            this._refreshUrlHash();
+            return this._sectionToUrl;
+        }
+
+        get highlightOffset() {
+            return this._highlightOffset;
+        }
+
+        set highlightOffset(value) {
+            if (typeof value !== "number") {
+                return false;
+            }
+            this._highlightOffset = value;
+            return this._highlightOffset;
+        }
+
+        get observedElements() {
+            return this._observedElements;
+        }
+
+        set observedElements(elements) {
+            const obj = this;
+            obj._observedElements = [];
+            obj.addObservedElements(elements);
+        }
+
+        addObservedElements(elements) {
+            const obj = this;
+            if (typeof elements === 'string') {
+                elements = document.querySelectorAll(elements);
+            }
+
+            if (elements instanceof NodeList || Array.isArray(elements)) {
+                for (const index in elements) {
+                    const element = elements[index];
+                    if (!(element instanceof Element)) {
+                        continue;
+                    }
+                    obj.addObservedElement(element);
+                }
+            }
+        }
+
+        addObservedElement(element) {
+            const obj = this;
+
+            if (typeof element === 'string') {
+                element = document.querySelector(element);
+            }
+            if (!(element instanceof Element)) {
+                return false;
+            }
+
+
+            if (!Array.isArray(obj._observedElements)) {
+                obj._observedElements = [];
+            }
+
+            if (obj._observedElements.indexOf(element) >= 0) {
+                // Element is already observed
+                return true;
+            }
+
+            obj._observedElements.push(element);
+
+            if (obj._linktargetObserver instanceof IntersectionObserver) {
+                obj._linktargetObserver.observe(element);
+            } else {
+                obj._refreshObservers();
+            }
+        }
+
+        removeObservedElement(element) {
+            const obj = this;
+            if (typeof element === 'string') {
+                element = document.querySelector(element);
+            }
+            if (!(element instanceof Element)) {
+                return false;
+            }
+
+            if (!Array.isArray(obj._observedElements)) {
+                return true;
+            }
+
+            const elementIndex = obj._observedElements.indexOf(element);
+            if (elementIndex < 0) {
+                // Element is not observed
+                return true;
+            }
+
+            obj._observedElements.splice(elementIndex, 1);
+            if (obj._linktargetObserver instanceof IntersectionObserver) {
+                obj._linktargetObserver.unobserve(element);
+            } else {
+                obj._refreshObservers();
+            }
+        }
+
+        get observedLinkElements() {
+            return this._observedLinkElements;
+        }
+
+        set observedLinkElements(elements) {
+            const obj = this;
+            obj._observedLinkElements = {};
+            obj.addObservedLinkElements(elements);
+        }
+
+        addObservedLinkElements(elements) {
+            const obj = this;
+            if (typeof elements === 'string') {
+                elements = document.querySelectorAll(elements);
+            }
+
+            if (elements instanceof NodeList || Array.isArray(elements)) {
+                for (const index in elements) {
+                    const linkElement = elements[index];
+                    if (!(linkElement instanceof Element)) {
+                        continue;
+                    }
+                    obj.addObservedLinkElement(linkElement);
+                }
+            }
+        }
+
+        addObservedLinkElement(element, targetSelector) {
+            const obj = this;
+
+            if (typeof element === 'string') {
+                element = document.querySelector(element);
+            }
+            if (!(element instanceof Element)) {
+                return false;
+            }
+
+            if (typeof targetSelector !== 'string') {
+                try {
+                    targetSelector = '#' + obj._getHashFromLink(element);
+                } catch (err) {
+                    return false;
+                }
+            }
+
+            if (!Array.isArray(obj._observedLinkElements[targetSelector])) {
+                obj._observedLinkElements[targetSelector] = [];
+            }
+
+            if (obj._observedLinkElements[targetSelector].indexOf(element) >= 0) {
+                // Element is already observed
+                return true;
+            }
+
+            obj._observedLinkElements[targetSelector].push(element);
+
+            if (obj._linktargetObserver instanceof IntersectionObserver) {
+                const targetElement = document.querySelector(targetSelector);
+                if (targetElement instanceof Element) {
+                    targetElement.setAttribute('data-scrollinator-selector', targetSelector);
+                    obj._linktargetObserver.observe(targetElement);
+                }
+            } else {
+                obj._refreshObservers();
+            }
+        }
+
+        removeObservedLinkElement(element) {
+            const obj = this;
+            if (typeof element === 'string') {
+                element = document.querySelector(element);
+            }
+            if (!(element instanceof Element)) {
+                return false;
+            }
+
+            try {
+                const targetSelector = '#' + obj._getHashFromLink(element);
+            } catch (err) {
+                return false;
+            }
+
+            if (!Array.isArray(obj._observedLinkElements[targetSelector])) {
+                return true;
+            }
+
+            const elementIndex = obj._observedLinkElements[targetSelector].indexOf(element);
+            if (elementIndex < 0) {
+                // Element is not observed
+                return true;
+            }
+
+            obj._observedLinkElements[targetSelector].splice(elementIndex, 1);
+            if (obj._observedLinkElements[targetSelector].length < 1) {
+                delete obj._observedLinkElements[targetSelector];
+            }
+
+            if (obj._linktargetObserver instanceof IntersectionObserver) {
+                try {
+                    const targetElement = document.querySelector(targetSelector);
+                    if (targetElement instanceof Element) {
+                        targetElement.removeAttribute('data-scrollinator-selector');
+                        obj._linktargetObserver.unobserve(targetElement);
+                    }
+                } catch (err) { }
+            } else {
+                obj._refreshObservers();
+            }
+        }
+
+        _refreshObservers() {
+            const obj = this;
+            if (!obj._initialized) {
+                return false;
+            }
+
+            if (obj._linktargetObserver instanceof IntersectionObserver) {
+                // Disable old observer instance
+                obj._linktargetObserver.disconnect();
+            }
+
+            obj._linktargetObserver = new IntersectionObserver((entries, observer) => {
+                // This function is called every time an observed element changes its visibility
+                for (const index in entries) {
+                    const entry = entries[index];
+                    if (!(entry.target instanceof Element)) {
+                        continue;
+                    }
+
+                    const selector = entry.target.getAttribute('data-scrollinator-selector');
+                    const linkElements = obj._observedLinkElements[selector];
+
+                    if (entry.intersectionRatio > 0) {
+                        // element is in viewport
+
+                        if (matches(entry.target, obj.sectionSelector)) {
+                            addClass(entry.target, obj.sectionInViewClass);
+                        }
+
+                        if (!matches(entry.target, obj.sectionSelector) || !obj.onlySingleSectionActive) {
+                            addClass(entry.target, obj.activeClass);
+                            if (Array.isArray(linkElements)) {
+                                for (const linkElement of linkElements) {
+                                    addClass(linkElement, obj.activeLinkClass);
+                                }
+                            }
+                        }
+                        continue;
+                    }
+
+                    // element is not in viewport
+                    removeClass(entry.target, obj.activeClass);
+                    removeClass(entry.target, obj.sectionInViewClass);
+                    if (Array.isArray(linkElements)) {
+                        for (const linkElement of linkElements) {
+                            removeClass(linkElement, obj.activeLinkClass);
+                        }
+                    }
+                }
+
+                if (obj.onlySingleSectionActive) {
+                    obj._refreshActiveSection();
+                }
+
+                if (obj.sectionToUrl) {
+                    obj._refreshUrlHash();
+                }
+
+            }, {
+                    root: null,
+                    rootMargin: obj._getLinktargetObserverMargin()
+                }
+            );
+
+            for (const selector in obj._observedLinkElements) {
+                const targetElement = document.querySelector(selector);
+                if (targetElement instanceof Element) {
+                    targetElement.setAttribute('data-scrollinator-selector', selector);
+                    obj._linktargetObserver.observe(targetElement);
+                }
+            }
+
+            for (const index in obj._observedElements) {
+                const element = obj._observedElements[index];
+                if (element instanceof Element) {
+                    obj._linktargetObserver.observe(element);
+                }
+            }
+
+        }
+
+        _refreshActiveSection() {
+            const obj = this;
+            const sections = document.querySelectorAll('.' + obj.sectionInViewClass);
+
+            let firstFlag = true;
+            for (const si in sections) {
+                const section = sections[si];
+                if (!(section instanceof Element)) {
+                    continue;
+                }
+                const selector = section.getAttribute('data-scrollinator-selector');
+                const linkElements = obj._observedLinkElements[selector];
+
+                if (firstFlag) {
+                    firstFlag = false;
+                    addClass(section, obj.activeClass);
+                    if (Array.isArray(linkElements)) {
+                        for (const linkElement of linkElements) {
+                            addClass(linkElement, obj.activeLinkClass);
+                        }
+                    }
+                    continue;
+                }
+
+                removeClass(section, obj.activeClass);
+                if (Array.isArray(linkElements)) {
+                    for (const linkElement of linkElements) {
+                        removeClass(linkElement, obj.activeLinkClass);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Looks for the first active <section> and writes its hash into url
+         */
+        _refreshUrlHash() {
+            const obj = this;
+
+            if (obj.sectionToUrl) {
+                const activeSection = document.querySelector(obj.sectionSelector + '.' + obj.activeClass);
+                const activeHash = window.location.hash;
+                if (activeSection instanceof Element) {
+                    const sectionSelector = activeSection.getAttribute('data-scrollinator-selector');
+                    if (typeof sectionSelector === 'string' && sectionSelector.charAt(0) === '#') {
+                        if (sectionSelector !== activeHash) {
+                            window.history.replaceState(
+                                {},
+                                document.title,
+                                window.location.pathname + window.location.search + sectionSelector
+                            );
+                        }
+                        return true;
+                    }
+                }
+            }
+
+            // Else: Remove Hash from url
+            window.history.replaceState(
+                {},
+                document.title,
+                window.location.pathname + window.location.search
+            );
+        }
+
+    }
+
+    return Scrollinator;
 };
 export default s();

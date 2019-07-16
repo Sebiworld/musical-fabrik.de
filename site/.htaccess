@@ -1,0 +1,12 @@
+# Start ProcessWire:pwbrifc (update 17)
+# block some PHP files (optional fallback if root .htaccess missing)
+<FilesMatch "^(ready|init|finished|config)\.php$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+# End ProcessWire:pwbrifc

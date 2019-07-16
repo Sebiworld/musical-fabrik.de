@@ -236,7 +236,7 @@ export default class AjaxFormular {
 		}
 
 		if(obj.scrollinator){
-			obj.scrollinator.hinscrollen(obj.element);
+			obj.scrollinator.scrollTo(obj.element);
 		}
 	}
 

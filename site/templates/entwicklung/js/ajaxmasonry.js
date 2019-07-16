@@ -16,7 +16,6 @@ import { debounce, uniq, remove } from 'lodash';
 
 		/**
 		* Schickt die aktuellen Filtereinstellungen ab
-		
 		*/
 		function filterAbschicken(kachelElement, grid, ajaxCall) {
 			ajaxCall = ajaxCall.clone();
@@ -48,8 +47,8 @@ import { debounce, uniq, remove } from 'lodash';
 			}
 
 			getParams['twack-ajax'] = 1;
-			getParams.action = 'getComponent',
-				getParams.component = "AktuellesService";
+			getParams.action = 'getComponent';
+			getParams.component = "AktuellesService";
 			getParams.type = "service";
 			getParams.htmlAusgabe = true;
 			getParams.vorhandeneIDs = vorhandeneIDs;

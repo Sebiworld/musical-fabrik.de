@@ -1,4 +1,4 @@
-import { trigger, ready } from "./classes/hilfsfunktionen.js";
+import { ready } from "./classes/hilfsfunktionen.js";
 import { throttle } from "lodash";
 
 var headerElement = $("body>header");

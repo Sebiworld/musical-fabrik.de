@@ -2,15 +2,13 @@
 import { trigger, ready } from "./classes/hilfsfunktionen.js";
 import Scrollinator from "./classes/Scrollinator.js";
 
-// Scrollinator.getInstance({
-// 	ermittleHeaderHoehe: false,
-// 	scrollOffset: 90,
-// });
-
 const scrollinator = new Scrollinator({
-	ermittleHeaderHoehe: false,
-	scrollOffset: 90,
+	scrollOffset: 40,
+	headerOffset: document.querySelector('header>nav')
 });
+
+scrollinator.addObservedLinkElements(".highlight-navigation .nav-item, .highlight-navigation .dropdown-menu .dropdown-item");
+scrollinator.addObservedElements('section');
 
 // Bootstrap wird nachgeladen:
 (async () => {

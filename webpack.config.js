@@ -7,10 +7,11 @@ const moment = require('moment');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
+const CleanCSS = require('clean-css');
 
 const PATHS = {
 	source: path.join(__dirname, "./site/templates/entwicklung/"),
@@ -148,11 +149,7 @@ module.exports = (env, options) => {
 										removeAll: true,
 									}),
 									require("postcss-preset-env")(),
-									require("postcss-short"),
-									require("cssnano")({
-										autoprefixer: false,
-										safe: true,
-									}),
+									require("postcss-short")
 								],
 							},
 						},
@@ -310,11 +307,14 @@ module.exports = (env, options) => {
 				Vuex: ["vuex/dist/vuex.esm", 'default']
 			}),
 			new OptimizeCSSAssetsPlugin({
-				cssProcessorPluginOptions: {
-					preset: ['default', { discardComments: { removeAll: true } }],
-				},
-				canPrint: true
-			}),
+                cssProcessor: CleanCSS,
+                cssProcessorPluginOptions: {
+                    format: isProduction ? 'beautify' : 'keep-breaks',
+                    sourceMap: !isProduction,
+                    level: 2
+                },
+                canPrint: true
+            }),
 			new CompressionPlugin(),
 			new VueLoaderPlugin(),
 			new LiveReloadPlugin()

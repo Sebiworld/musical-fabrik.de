@@ -81,21 +81,21 @@ class AjaxCall {
 		return this._path;
 	}
 
-	get getParams() {
-		return this._getParams;
-	}
-
 	get method() {
 		return this._method;
 	}
 
 	set method(value) {
-		if (!value) value = 'GET';
+		if (!value) value = '';
 		else if (typeof value !== 'string') {
 			value = '' + value;
 		}
 		this._method = value;
 		return this._method;
+	}
+
+	get getParams() {
+		return this._getParams;
 	}
 
 	/**
@@ -352,6 +352,16 @@ class AjaxCall {
 			body: this.exportPost()
 		};
 
+		if(this._controller !== undefined){
+			this._controller.abort();
+		}
+		
+		// Feature detect
+        if ("AbortController" in window) {
+            this._controller = new AbortController();
+            fetchOptions.signal = this._controller.signal;
+		}
+		
 		for (let key in options) {
 			if (key === "body" && typeof options[key] === 'object') {
 				fetchOptions.body = this.objectToQueryString(options[key]);

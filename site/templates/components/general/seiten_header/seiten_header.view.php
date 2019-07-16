@@ -21,7 +21,7 @@ namespace ProcessWire;
 				if ($this->navigation && count($this->navigation) > 0) {
 					foreach ($this->navigation as $navigationsitem) {
 						?>
-						<li class="nav-item <?= $navigationsitem->aktiv ? 'active' : ''; ?>">
+						<li class="nav-item <?= $navigationsitem->aktiv ? 'active' : ''; ?>" data-scrolltarget="<?= $navigationsitem->link; ?>">
 							<a class="nav-link" href="<?= $navigationsitem->link; ?>"><?= $navigationsitem->title; ?></a>
 						</li>
 						<?php

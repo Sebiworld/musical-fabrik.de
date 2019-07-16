@@ -31,10 +31,10 @@ namespace ProcessWire;
 									'styles' => $seite->farbe ? 'background-color: #'.$seite->farbe.';' : '',
 									'classes' => 'titelbild sv-inhalt',
 									'normal' => array(
-										'width' => 1000
+										'width' => 600
 										),
 									'sm' => array(
-										'width' => 500
+										'width' => 400
 									)
 								));
 								?>
