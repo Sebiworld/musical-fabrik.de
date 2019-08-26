@@ -215,6 +215,15 @@ class AjaxCall {
 		return this.objectToQueryString(this.getParams);
 	}
 
+	toBrowserUrl() {
+		// Adressleiste umschreiben:
+		window.history.replaceState(
+			{},
+			document.title,
+			"?" + this.exportGet() + (window.location.hash ? window.location.hash : '')
+		);
+	}
+
 	get postParams() {
 		return this._postParams;
 	}
@@ -352,16 +361,16 @@ class AjaxCall {
 			body: this.exportPost()
 		};
 
-		if(this._controller !== undefined){
+		if (this._controller !== undefined) {
 			this._controller.abort();
 		}
-		
+
 		// Feature detect
-        if ("AbortController" in window) {
-            this._controller = new AbortController();
-            fetchOptions.signal = this._controller.signal;
+		if ("AbortController" in window) {
+			this._controller = new AbortController();
+			fetchOptions.signal = this._controller.signal;
 		}
-		
+
 		for (let key in options) {
 			if (key === "body" && typeof options[key] === 'object') {
 				fetchOptions.body = this.objectToQueryString(options[key]);
@@ -376,6 +385,100 @@ class AjaxCall {
 		}
 
 		return fetch(this.getUrl(), fetchOptions);
+	}
+
+	fetchJSON(options) {
+		const obj = this;
+		return new Promise(function (resolve, reject) {
+			obj.fetch(options)
+				.then((response) => {
+					// console.log(typeof response, response);
+
+					if (response.status === 204) {
+						resolve({});
+						return;
+					}
+
+					if (!response.ok) {
+						throw {
+							code: response.status,
+							response: response
+						};
+					}
+
+					return response.json();
+				})
+				.then((response) => {
+					// console.log("Ergebnis:", response);
+					if (typeof response !== 'object') {
+						throw {
+							code: 500,
+							message: "Keine valide Antwort vom Server erhalten."
+						};
+					}
+					resolve(response);
+				}).catch((error) => {
+					let code = 500;
+					if (error.code) {
+						code = error.code;
+					} else if (error.status) {
+						code = error.status;
+					}
+
+					let message = 'Ein unbekannter Fehler ist aufgetreten.';
+					if (error.message) {
+						message = error.message;
+					} else if (error.error) {
+						message = error.error;
+					}
+
+					if (typeof error.response === 'object') {
+						try {
+							error.response.json().then((json) => {
+								let code = 500;
+								if (json.code) {
+									code = json.code;
+								} else if (json.status) {
+									code = json.status;
+								}
+								json.code = code;
+
+								let message = 'Ein unbekannter Fehler ist aufgetreten.';
+								if (json.message) {
+									message = json.message;
+								} else if (json.error) {
+									message = json.error;
+								}
+								json.message = message;
+
+								reject(json);
+							}).catch((e) => {
+								error.response.text().then((text) => {
+									reject({
+										code: code,
+										message: text
+									});
+								}).catch((e) => {
+									reject({
+										code: code,
+										message: message
+									});
+								});
+							});
+						} catch (e) {
+							reject({
+								code: code,
+								message: message
+							});
+						}
+					} else {
+						reject({
+							code: code,
+							message: message
+						});
+					}
+				});
+		});
 	}
 }
 

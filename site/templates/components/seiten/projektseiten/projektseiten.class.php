@@ -79,10 +79,13 @@ class Projektseiten extends TwackComponent {
 	 * Bindet eine CSS-Datei ein (wenn vorhanden)
 	 */
 	public function ladeProjektCSS($cssName) {
-		$cssPfad = 'assets/css/'.$cssName.'.min.css';
-
+		$cssPfad = 'assets/css/'. Twack::getManifestFilename($cssName.'.css');
+		
 		if (file_exists(wire('config')->paths->templates . $cssPfad)) {
-			$this->addStyle(wire('config')->urls->templates . $cssPfad, true);
+			$this->addStyle($cssName.'.css', array(
+				'path'     => wire('config')->urls->templates . 'assets/css/',
+				'absolute' => true
+			));
 			return true;
 		}
 		return false;

@@ -89,7 +89,7 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 	<?= $this->component->getGlobalComponent('modals'); ?>
 	<?= $this->component->getInlineStyles(); ?>
 
-	<script src="<?= wire('config')->urls->templates; ?>assets/js/polyfills.min.js"></script>
+	<script src="<?= wire('config')->urls->templates; ?>assets/js/<?= Twack::getManifestFilename('polyfills.js'); ?>"></script>
 
 	<script>
 		<?php

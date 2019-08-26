@@ -28,7 +28,5 @@ class OnepageStandardseite extends TwackComponent {
 				'parameter' => ['sektion' => true]
 				]);
 		}
-
-		// $this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-standardseite.min.css', true, true);
 	}
 }

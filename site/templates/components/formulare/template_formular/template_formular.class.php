@@ -48,6 +48,8 @@ class TemplateFormular extends TwackComponent {
 			throw new ComponentNotInitializedException('TemplateFormular', 'An das Formular wurde keine valide Containerseite übergeben.');
 		}
 
+		$this->formAction = $this->containerSeite->url;
+
 		// Platzhalter-Sammlung befüllen. {{Platzhalter}} werden durch die angegebene Entsprechung ersetzt.
 		$this->platzhaltertexte = array();
 		if (isset($args['platzhaltertexte']) && is_array($args['platzhaltertexte'])) {
@@ -99,9 +101,14 @@ class TemplateFormular extends TwackComponent {
 		}
 
 		// Das Formular-Skript macht das Formular Ajax-fähig. Eine Auswertung ohne Ajax ist nicht vorgesehen.
-		$this->addScript(wire('config')->urls->templates . 'assets/js/formular.min.js', true);
-		$this->addScript(wire('config')->urls->templates . 'assets/js/formular.legacy.min.js', true);
-		// $this->addStyle(wire('config')->urls->templates . 'assets/css/template_formular.min.css', true, true);
+		$this->addScript('formular.js', array(
+            'path'     => wire('config')->urls->templates . 'assets/js/',
+            'absolute' => true
+        ));
+        $this->addScript('legacy/formular.js', array(
+            'path'     => wire('config')->urls->templates . 'assets/js/',
+            'absolute' => true
+        ));
 	}
 
 	public function getAjax() {

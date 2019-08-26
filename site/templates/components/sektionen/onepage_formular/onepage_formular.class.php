@@ -37,7 +37,21 @@ class OnepageFormular extends TwackComponent {
 				'parameters' => ['sektion' => true]
 				]);
 		}
-
-		// $this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-formular.min.css', true, true);
 	}
+
+	// public function getAjax() {
+	// 	$output = array();
+		
+	// 	$output = $this->formular->getAjax();
+
+	// 	if ($this->childComponents) {
+	// 		foreach ($this->childComponents as $component) {
+	// 			$ajax = $component->getAjax();
+	// 			if(empty($ajax)) continue;
+	// 			$output = array_merge($output, $ajax);
+	// 		}
+	// 	}
+
+	// 	return $output;
+	// }
 }

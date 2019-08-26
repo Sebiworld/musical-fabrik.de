@@ -37,8 +37,6 @@ class SchlagwoerterBox extends TwackComponent {
 
 		$this->anzahl_anzeigen = isset($args['anzahl_anzeigen']) && !!$args['anzahl_anzeigen'];
 		$this->css_anzahl_klasse_hinzufuegen = !isset($args['css_anzahl_klasse_hinzufuegen']) || !!$args['css_anzahl_klasse_hinzufuegen'];
-
-		// $this->addStyle(wire('config')->urls->templates . 'assets/css/schlagwoerter-box.min.css', true, true);
 	}
 
 	public function getAjax() {

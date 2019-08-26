@@ -18,7 +18,5 @@ class BreadcrumbKomponente extends TwackComponent {
 				$b->title_kurz = Twack::wordLimiter($b->title, $limit, $endstr);
 			}
 		}
-
-		// $this->addStyle(wire('config')->urls->templates . 'assets/css/breadcrumb.min.css', true, true);
 	}
 }

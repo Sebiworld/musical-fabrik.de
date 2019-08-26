@@ -46,10 +46,10 @@ import { debounce, uniq, remove } from 'lodash';
 				}
 			}
 
-			getParams['twack-ajax'] = 1;
-			getParams.action = 'getComponent';
-			getParams.component = "AktuellesService";
-			getParams.type = "service";
+			// getParams['twack-ajax'] = 1;
+			// getParams.action = 'getComponent';
+			// getParams.component = "AktuellesService";
+			// getParams.type = "service";
 			getParams.htmlAusgabe = true;
 			getParams.vorhandeneIDs = vorhandeneIDs;
 			ajaxCall.getParams = getParams;
@@ -332,7 +332,12 @@ import { debounce, uniq, remove } from 'lodash';
 					});
 				});
 
-				const ajaxCall = new AjaxCall();
+				const ajaxCall = new AjaxCall({
+					path: '/api/page' + window.location.pathname,
+					headers: {
+						'X-API-KEY': 'SEawMksSM8AAKnbAroSyU'
+					}
+				});
 
 				const mehrButton = kachelElement.querySelector('[data-aktion="weitere_laden"]');
 				if (typeof mehrButton === 'object' && mehrButton instanceof Element) {

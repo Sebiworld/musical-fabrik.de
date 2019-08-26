@@ -7,11 +7,12 @@ const moment = require('moment');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 const CleanCSS = require('clean-css');
+const WebpackAssetsManifest = require('webpack-assets-manifest');
 
 const PATHS = {
 	source: path.join(__dirname, "./site/templates/entwicklung/"),
@@ -61,7 +62,7 @@ module.exports = (env, options) => {
 		output: {
 			path: PATHS.build,
 			publicPath: PATHS.public,
-			filename: "js/[name]" + (options.browser_env && options.browser_env !== 'modern' ? '.' + options.browser_env : '') + ".min.js",
+			filename: "js/[name]-[hash:8]" + (options.browser_env && options.browser_env !== 'modern' ? '.' + options.browser_env : '') + ".min.js",
 			chunkFilename: "js/chunk-[name]-[chunkhash]" + (options.browser_env && options.browser_env !== 'modern' ? '.' + options.browser_env : '') + ".min.js",
 		},
 		module: {
@@ -266,6 +267,16 @@ module.exports = (env, options) => {
 			],
 		},
 		plugins: [
+			new WebpackAssetsManifest({
+				merge: true,
+				customize(entry, original, manifest, asset) {
+					if (options.browser_env !== 'modern' && options.browser_env !== undefined) {
+						entry.key = options.browser_env + '/' + entry.key;
+					}
+					return entry;
+				},
+				writeToDisk: true
+			}),
 			(options.clear !== 'false' && isProduction ?
 				new CleanWebpackPlugin({
 					cleanOnceBeforeBuildPatterns: [
@@ -279,8 +290,8 @@ module.exports = (env, options) => {
 			),
 			new webpack.ProgressPlugin(),
 			new MiniCssExtractPlugin({
-				filename: "css/[name].min.css",
-				chunkFilename: "css/[id].min.css",
+				filename: "css/[name]-[hash:8].min.css",
+				chunkFilename: "css/[id]-[chunkhash].min.css",
 			}),
 			new webpack.BannerPlugin(
 				{
@@ -307,14 +318,14 @@ module.exports = (env, options) => {
 				Vuex: ["vuex/dist/vuex.esm", 'default']
 			}),
 			new OptimizeCSSAssetsPlugin({
-                cssProcessor: CleanCSS,
-                cssProcessorPluginOptions: {
-                    format: isProduction ? 'beautify' : 'keep-breaks',
-                    sourceMap: !isProduction,
-                    level: 2
-                },
-                canPrint: true
-            }),
+				cssProcessor: CleanCSS,
+				cssProcessorPluginOptions: {
+					format: isProduction ? 'beautify' : 'keep-breaks',
+					sourceMap: !isProduction,
+					level: 2
+				},
+				canPrint: true
+			}),
 			new CompressionPlugin(),
 			new VueLoaderPlugin(),
 			new LiveReloadPlugin()

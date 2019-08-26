@@ -13,7 +13,11 @@ class Inhalte extends TwackComponent {
 		}
 
 		$this->nutzeFeld($this->nutzefeld);
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/inhalte.min.css', true, true);
+		$this->addStyle('inhalte.css', array(
+            'path'     => wire('config')->urls->templates . 'assets/css/',
+			'absolute' => true,
+			'inline' => true
+        ));
 	}
 
 	/**

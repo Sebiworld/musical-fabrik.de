@@ -165,10 +165,15 @@ let s = function () {
         }
 
         set headerOffset(value) {
+            const obj = this;
             if (value !== false && typeof value !== 'number' && !(value instanceof Element)) {
                 return false;
             }
             this._headerOffset = value;
+
+            if(!obj._isIntersectionObserverSupported()){
+                return false;
+            }
 
             if (this._linktargetObserver instanceof IntersectionObserver) {
                 this._refreshObservers();
@@ -356,7 +361,7 @@ let s = function () {
 
             return new Promise(function (resolve, reject) {
                 if (!(targetElement instanceof Element) || typeof duration !== 'number' || typeof easing !== 'string' || typeof easings[easing] !== 'function') {
-                    reject();
+                    resolve(false);
                     return false;
                 }
 
@@ -402,7 +407,7 @@ let s = function () {
 
                 function scroll() {
                     if (aborted) {
-                        resolve();
+                        resolve(true);
                         return;
                     }
 
@@ -419,7 +424,7 @@ let s = function () {
 
                     if (window.pageYOffset === destinationOffsetToScroll) {
                         removeScrollEventHandler();
-                        resolve()
+                        resolve(true)
                         return;
                     }
 
@@ -551,6 +556,11 @@ let s = function () {
 
         addObservedElements(elements) {
             const obj = this;
+
+            if(!obj._isIntersectionObserverSupported()){
+                return false;
+            }
+            
             if (typeof elements === 'string') {
                 elements = document.querySelectorAll(elements);
             }
@@ -568,6 +578,10 @@ let s = function () {
 
         addObservedElement(element) {
             const obj = this;
+
+            if(!obj._isIntersectionObserverSupported()){
+                return false;
+            }
 
             if (typeof element === 'string') {
                 element = document.querySelector(element);
@@ -597,6 +611,11 @@ let s = function () {
 
         removeObservedElement(element) {
             const obj = this;
+
+            if(!obj._isIntersectionObserverSupported()){
+                return false;
+            }
+
             if (typeof element === 'string') {
                 element = document.querySelector(element);
             }
@@ -634,6 +653,11 @@ let s = function () {
 
         addObservedLinkElements(elements) {
             const obj = this;
+
+            if(!obj._isIntersectionObserverSupported()){
+                return false;
+            }
+            
             if (typeof elements === 'string') {
                 elements = document.querySelectorAll(elements);
             }
@@ -651,6 +675,10 @@ let s = function () {
 
         addObservedLinkElement(element, targetSelector) {
             const obj = this;
+
+            if(!obj._isIntersectionObserverSupported()){
+                return false;
+            }
 
             if (typeof element === 'string') {
                 element = document.querySelector(element);
@@ -691,6 +719,11 @@ let s = function () {
 
         removeObservedLinkElement(element) {
             const obj = this;
+
+            if(!obj._isIntersectionObserverSupported()){
+                return false;
+            }
+
             if (typeof element === 'string') {
                 element = document.querySelector(element);
             }
@@ -735,6 +768,10 @@ let s = function () {
         _refreshObservers() {
             const obj = this;
             if (!obj._initialized) {
+                return false;
+            }
+
+            if(!obj._isIntersectionObserverSupported()){
                 return false;
             }
 
@@ -876,6 +913,10 @@ let s = function () {
                 document.title,
                 window.location.pathname + window.location.search
             );
+        }
+
+        _isIntersectionObserverSupported() {
+            return 'IntersectionObserver' in window && 'IntersectionObserverEntry' in window && 'intersectionRatio' in window.IntersectionObserverEntry.prototype;
         }
 
     }

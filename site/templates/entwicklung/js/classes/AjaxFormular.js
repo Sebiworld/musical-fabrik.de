@@ -1,27 +1,40 @@
-import {matches, removeClass, addClass} from './hilfsfunktionen.js';
-import {values, join} from "lodash";
+import { matches, removeClass, addClass } from './hilfsfunktionen.js';
+import { values, join } from "lodash";
 import AjaxCall from './AjaxCall.js';
 import Scrollinator from './Scrollinator.js';
 
 export default class AjaxFormular {
 	constructor(formularElement, options) {
-		if(!matches(formularElement, 'form')){
+		if (!matches(formularElement, 'form')) {
 			throw new Error('Es wurde kein Formular-Element übergeben.');
 		}
 
 		this.element = formularElement;
 
-		this.ajaxCall = new AjaxCall();
-		this.ajaxCall.method = 'POST';
-		if(typeof options === 'object'){
-			if(typeof options.payload === 'object'){
+		let parser = document.createElement('a');
+		parser.href = formularElement.action;
+		let pathname = parser.pathname;
+
+		if (pathname[0] != '/') {
+			pathname = '/' + pathname // Fix IE11
+		}
+
+		this.ajaxCall = new AjaxCall({
+			method: 'POST',
+			path: '/api/page' + pathname,
+			headers: {
+				'X-API-KEY': 'SEawMksSM8AAKnbAroSyU'
+			}
+		});
+		if (typeof options === 'object') {
+			if (typeof options.payload === 'object') {
 				this.ajaxCall.addPostParams(options.payload);
 			}
 		}
 
 		// Scrollinator holen, wenn vorhanden:
 		this.scrollinator = false;
-		if (typeof Scrollinator === 'function'){
+		if (typeof Scrollinator === 'function') {
 			this.scrollinator = new Scrollinator();
 		}
 
@@ -32,30 +45,30 @@ export default class AjaxFormular {
 	/*
 	* POST-Parameter setzen
 	*/
-	get payload(){
+	get payload() {
 		return this.ajaxCall.postParams;
 	}
 
-	set payload(params){
+	set payload(params) {
 		this.ajaxCall.postParams = params;
 	}
 
-	addPayload(params){
+	addPayload(params) {
 		this.ajaxCall.addPostParams(params);
 	}
 
 	/*
 	* GET-Parameter setzen
 	*/
-	get getParams(){
+	get getParams() {
 		return this.ajaxCall.getParams;
 	}
 
-	set getParams(params){
+	set getParams(params) {
 		this.ajaxCall.getParams = params;
 	}
 
-	addGetParams(params){
+	addGetParams(params) {
 		this.ajaxCall.addGetParams(params);
 	}
 
@@ -64,7 +77,7 @@ export default class AjaxFormular {
 	* @param  DOMElement  element
 	* @return Boolean
 	*/
-	isValidElement(element){
+	isValidElement(element) {
 		return element.name && element.value;
 	}
 
@@ -73,7 +86,7 @@ export default class AjaxFormular {
 	* @param  DOMElement  element
 	* @return Boolean
 	*/
-	isValidValue(element){
+	isValidValue(element) {
 		return (!['checkbox', 'radio'].includes(element.type) || element.checked);
 	}
 
@@ -82,7 +95,7 @@ export default class AjaxFormular {
 	* @param  DOMElement  element
 	* @return Boolean
 	*/
-	isCheckbox(element){
+	isCheckbox(element) {
 		return element.type === 'checkbox';
 	}
 
@@ -91,7 +104,7 @@ export default class AjaxFormular {
 	* @param  DOMElement  element
 	* @return Boolean
 	*/
-	isMultiSelect(element){
+	isMultiSelect(element) {
 		return element.options && element.multiple;
 	}
 
@@ -100,10 +113,10 @@ export default class AjaxFormular {
 	* @param  DOMElmements options
 	* @return array<bool>
 	*/
-	getSelectValues(options){
+	getSelectValues(options) {
 		let werte = [];
-		for(let option of options){
-			if(option.selected){
+		for (let option of options) {
+			if (option.selected) {
 				werte.push(option.value);
 			}
 		}
@@ -114,9 +127,9 @@ export default class AjaxFormular {
 	* Liest alle Werte aus dem Formular aus und bildet daraus ein JSON-Objekt.
 	* @return object
 	*/
-	getValues(){
+	getValues() {
 		let formularwerte = {};
-		for(let inputElement of this.element.elements){
+		for (let inputElement of this.element.elements) {
 			// Make sure the element has the required properties and should be added.
 			if (this.isValidElement(inputElement) && this.isValidValue(inputElement)) {
 				// Some fields allow for more than one value, so we need to check if this
@@ -133,70 +146,70 @@ export default class AjaxFormular {
 		return formularwerte;
 	}
 
-	formularHinweiseAktualisieren(hinweise){
+	formularHinweiseAktualisieren(hinweise) {
 		const obj = this;
-		if(typeof hinweise !== 'object'){
+		if (typeof hinweise !== 'object') {
 			return false;
 		}
 
-		if(typeof hinweise.felder === 'object'){
-			for(let index in hinweise.felder){
+		if (typeof hinweise.felder === 'object') {
+			for (let index in hinweise.felder) {
 				let feldHinweis = hinweise.felder[index];
-				if(typeof feldHinweis.name !== 'string'){
+				if (typeof feldHinweis.name !== 'string') {
 					continue;
 				}
 				let inputElement = this.element.querySelector("[name='" + feldHinweis.name + "']");
 
-				if(!inputElement){
-					if((feldHinweis.fehler && feldHinweis.fehler.length > 0) || (feldHinweis.erfolg && feldHinweis.erfolg.length > 0)){
+				if (!inputElement) {
+					if ((feldHinweis.fehler && feldHinweis.fehler.length > 0) || (feldHinweis.erfolg && feldHinweis.erfolg.length > 0)) {
 						console.log("Ein Input-Element mit Hinweisen wurde nicht gefunden: ", feldHinweis);
 					}
 					continue;
 				}
 
-				if(feldHinweis.fehler !== undefined && feldHinweis.fehler && feldHinweis.fehler.length > 0){
+				if (feldHinweis.fehler !== undefined && feldHinweis.fehler && feldHinweis.fehler.length > 0) {
 					addClass(inputElement, 'is-invalid');
 
-					if(typeof feldHinweis.fehler === 'string'){
+					if (typeof feldHinweis.fehler === 'string') {
 						// Der Fehler wurde direkt als String angegeben
-						this.feldHinweisAnzeigen(inputElement, {typ: 'fehler', text: feldHinweis.fehler});
-					}else if(typeof feldHinweis.fehler === 'object'){
-						if(Array.isArray(feldHinweis.fehler)){
-							this.feldHinweisAnzeigen(inputElement, {typ: 'fehler', text: feldHinweis.fehler});
-						}else{
+						this.feldHinweisAnzeigen(inputElement, { typ: 'fehler', text: feldHinweis.fehler });
+					} else if (typeof feldHinweis.fehler === 'object') {
+						if (Array.isArray(feldHinweis.fehler)) {
+							this.feldHinweisAnzeigen(inputElement, { typ: 'fehler', text: feldHinweis.fehler });
+						} else {
 							feldHinweis.typ = 'fehler';
 							this.feldHinweisAnzeigen(inputElement, feldHinweis);
 						}
 					}
-				}else{
+				} else {
 					removeClass(inputElement, 'is-invalid');
 					let elements = inputElement.querySelector('.invalid-feedback');
-					if(typeof elements === 'object' && Array.isArray(elements)){
-						Array.prototype.forEach.call(elements, function(el, i){
+					if (typeof elements === 'object' && Array.isArray(elements)) {
+						Array.prototype.forEach.call(elements, function (el, i) {
 							el.parentNode.removeChild(el);
 						});
 					}
 				}
 
-				if(feldHinweis.erfolg !== undefined && feldHinweis.erfolg && feldHinweis.erfolg.length > 0){
+				if (feldHinweis.erfolg !== undefined && feldHinweis.erfolg && feldHinweis.erfolg.length > 0) {
 					addClass(inputElement, 'is-valid');
 
-					if(typeof feldHinweis.erfolg === 'string'){
+					if (typeof feldHinweis.erfolg === 'string') {
 						// Der Fehler wurde direkt als String angegeben
-						this.feldHinweisAnzeigen(inputElement, {typ: 'erfolg', text: feldHinweis.erfolg});
-					}else if(typeof feldHinweis.erfolg === 'object'){
-						if(Array.isArray(feldHinweis.erfolg)){
-							this.feldHinweisAnzeigen(inputElement, {typ: 'erfolg', text: feldHinweis.erfolg});
-						}else{
+						this.feldHinweisAnzeigen(inputElement, { typ: 'erfolg', text: feldHinweis.erfolg });
+					} else if (typeof feldHinweis.erfolg === 'object') {
+						if (Array.isArray(feldHinweis.erfolg)) {
+							this.feldHinweisAnzeigen(inputElement, { typ: 'erfolg', text: feldHinweis.erfolg });
+						} else {
 							feldHinweis.typ = 'erfolg';
 							this.feldHinweisAnzeigen(inputElement, feldHinweis);
 						}
 					}
-				}else{
+				} else {
 					removeClass(inputElement, 'is-valid');
 					let elements = inputElement.querySelector('.valid-feedback');
-					if(typeof elements === 'object' && Array.isArray(elements)){
-						Array.prototype.forEach.call(elements, function(el, i){
+					if (typeof elements === 'object' && Array.isArray(elements)) {
+						Array.prototype.forEach.call(elements, function (el, i) {
 							el.parentNode.removeChild(el);
 						});
 					}
@@ -206,13 +219,13 @@ export default class AjaxFormular {
 
 		// Allgemeine Hinweise werden über und unter dem Formular im dafür anzulegenden Container ".hinweise" angezeigt:
 		let hinweisContainer = this.element.querySelector('.hinweise');
-		if(hinweisContainer){
+		if (hinweisContainer) {
 			// Hinweiscontainer leeren:
 			hinweisContainer.innerHTML = '';
 
 			// Neue Erfolg-Hinweise anzeigen:
-			if(typeof hinweise.erfolg === 'object'){
-				for(let index in hinweise.erfolg){
+			if (typeof hinweise.erfolg === 'object') {
+				for (let index in hinweise.erfolg) {
 					let hinweis = hinweise.erfolg[index];
 					let alertbox = document.createElement('div');
 					alertbox.setAttribute('class', 'alert alert-success');
@@ -223,8 +236,8 @@ export default class AjaxFormular {
 			}
 
 			// Neue Fehler-Hinweise anzeigen:
-			if(typeof hinweise.fehler === 'object'){
-				for(let index in hinweise.fehler){
+			if (typeof hinweise.fehler === 'object') {
+				for (let index in hinweise.fehler) {
 					let hinweis = hinweise.fehler[index];
 					let alertbox = document.createElement('div');
 					alertbox.setAttribute('class', 'alert alert-danger');
@@ -235,7 +248,7 @@ export default class AjaxFormular {
 			}
 		}
 
-		if(obj.scrollinator){
+		if (obj.scrollinator) {
 			obj.scrollinator.scrollTo(obj.element);
 		}
 	}
@@ -246,32 +259,32 @@ export default class AjaxFormular {
 	* @param  object hinweis
 	* @return boolean
 	*/
-	feldHinweisAnzeigen(element, hinweis){
-		if(!element){
+	feldHinweisAnzeigen(element, hinweis) {
+		if (!element) {
 			return false;
 		}
 
 		let inputContainer = element.closest('.input-container');
-		if(!inputContainer){
+		if (!inputContainer) {
 			inputContainer = element.parentNode;
 		}
 
-		if(typeof hinweis !== 'object'){
+		if (typeof hinweis !== 'object') {
 			return false;
 		}
 
 		// Typ des Hinweises auslesen (typischerweise entweder "fehler" oder "erfolg"):
 		let typ = 'fehler';
-		if(typeof hinweis.typ === 'string'){
+		if (typeof hinweis.typ === 'string') {
 			typ = hinweis.typ;
 		}
 
 		// Hinweistext auslesen:
 		let hinweistext = '';
-		if(typeof hinweis.text === 'string'){
+		if (typeof hinweis.text === 'string') {
 			hinweistext = hinweis.text;
-		}else if(typeof hinweis.text === 'object'){
-			if(!Array.isArray(hinweis.text)){
+		} else if (typeof hinweis.text === 'object') {
+			if (!Array.isArray(hinweis.text)) {
 				// Der Text kann als Objekt angegeben werden. Die Keys werden bei der Ausgabe aber nicht berücksichtigt.
 				hinweis.text = values(hinweis.text);
 			}
@@ -280,32 +293,32 @@ export default class AjaxFormular {
 
 		// Feedback-Container suchen oder erstellen:
 		let feedbackContainer;
-		if(typ === 'fehler'){
+		if (typ === 'fehler') {
 			// addClass(element, 'is-invalid');
 
 			// Im Container-Element des Inputs wird nach einem Feedback-Container gesucht, in den die Hinweis-Meldung eingefügt werden kann:
 			feedbackContainer = inputContainer.querySelector('.invalid-feedback');
-			if(!feedbackContainer){
+			if (!feedbackContainer) {
 				// Noch kein Feedback-Container vorhanden - neu anlegen!
 				feedbackContainer = document.createElement('div');
 				feedbackContainer.setAttribute('class', 'invalid-feedback');
 				inputContainer.appendChild(feedbackContainer);
 			}
-		}else if(typ === 'erfolg'){
+		} else if (typ === 'erfolg') {
 			// addClass(element, 'is-valid');
 
 			// Im Container-Element des Inputs wird nach einem Feedback-Container gesucht, in den die Hinweis-Meldung eingefügt werden kann:
 			feedbackContainer = inputContainer.querySelector('.valid-feedback');
-			if(!feedbackContainer){
+			if (!feedbackContainer) {
 				// Noch kein Feedback-Container vorhanden - neu anlegen!
 				feedbackContainer = document.createElement('div');
 				feedbackContainer.setAttribute('class', 'valid-feedback');
 				inputContainer.appendChild(feedbackContainer);
 			}
-		}else{
+		} else {
 			// Im Container-Element des Inputs wird nach einem Feedback-Container gesucht, in den die Hinweis-Meldung eingefügt werden kann:
 			feedbackContainer = inputContainer.querySelector('.feedback');
-			if(!feedbackContainer){
+			if (!feedbackContainer) {
 				// Noch kein Feedback-Container vorhanden - neu anlegen!
 				feedbackContainer = document.createElement('div');
 				feedbackContainer.setAttribute('class', 'feedback');
@@ -317,7 +330,7 @@ export default class AjaxFormular {
 		// if(feedbackContainer.innerHTML.length > 0){
 		// 	feedbackContainer.innerHTML = feedbackContainer.innerHTML + '<br/>' + hinweistext;
 		// }else{
-			feedbackContainer.innerHTML = hinweistext;
+		feedbackContainer.innerHTML = hinweistext;
 		// }
 
 		return true;
@@ -326,11 +339,11 @@ export default class AjaxFormular {
 	/**
 	 * Sperrt das Formular für weitere Eingaben
 	 */
-	 formularSperren(){
-	 	let formularFieldsets = this.element.querySelectorAll('.alle-formularelemente');
-	 	Array.prototype.forEach.call(formularFieldsets, function(el, i){
-	 		el.setAttribute('disabled', 'disabled');
-	 	});
+	formularSperren() {
+		let formularFieldsets = this.element.querySelectorAll('.alle-formularelemente');
+		Array.prototype.forEach.call(formularFieldsets, function (el, i) {
+			el.setAttribute('disabled', 'disabled');
+		});
 
 		// TODO: Optional Cookie speichern, um erneutes abschicken zu verhinden?
 	}
@@ -338,7 +351,7 @@ export default class AjaxFormular {
 	/**
 	* Schickt die Formularinhalte an die Schnittstelle.
 	*/
-	submit(ajaxFormular, event){
+	submit(ajaxFormular, event) {
 		event.preventDefault();
 
 		let formular = this;
@@ -352,24 +365,24 @@ export default class AjaxFormular {
 		ajaxCall.addPostParams(ajaxFormular.getValues());
 
 		ajaxCall.fetch()
-		.then(function(response){
-			let json = response.json();
-			if (response.status >= 200 && response.status < 300) {
-				return json;
-			}
-			return json.then(Promise.reject.bind(Promise));
-		})
-		.then(function(response) {
-			// console.log("Anfrage erfolgreich: ", response);
-			ajaxFormular.formularHinweiseAktualisieren(response);
-			ajaxFormular.formularSperren();
-		}, function(response){
-			// console.error('Fetch Error :-S', response);
-			ajaxFormular.formularHinweiseAktualisieren(response);
-		}).catch(function(err) {
-			// console.error('Fetch Error Catch :-S', err);
-			ajaxFormular.formularHinweiseAktualisieren(err);
-		});
+			.then(function (response) {
+				let json = response.json();
+				if (response.status >= 200 && response.status < 300) {
+					return json;
+				}
+				return json.then(Promise.reject.bind(Promise));
+			})
+			.then(function (response) {
+				// console.log("Anfrage erfolgreich: ", response);
+				ajaxFormular.formularHinweiseAktualisieren(response);
+				ajaxFormular.formularSperren();
+			}, function (response) {
+				// console.error('Fetch Error :-S', response);
+				ajaxFormular.formularHinweiseAktualisieren(response);
+			}).catch(function (err) {
+				// console.error('Fetch Error Catch :-S', err);
+				ajaxFormular.formularHinweiseAktualisieren(err);
+			});
 
 		return false;
 	}

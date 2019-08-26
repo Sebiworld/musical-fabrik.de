@@ -9,6 +9,11 @@ class TwackAccess {
         return self::pageRequest($page);
     }
 
+    public static function dashboardRequest() {
+        $page = wire('pages')->get('/');
+        return self::pageRequest($page);
+    }
+
     public static function pagePathRequest($data) {
         $data = RestApiHelper::checkAndSanitizeRequiredParameters($data, ['path|pagePathName']);
         $page = wire('pages')->get('/' . $data->path);

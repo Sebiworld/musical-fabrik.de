@@ -1,28 +1,27 @@
 <?php
+
 namespace ProcessWire;
 
 class Filtereinstellungen extends TwackComponent {
+    public function __construct($args) {
+        parent::__construct($args);
 
-	public function __construct($args) {
-		parent::__construct($args);
+        $this->schlagwoerter = '';
+        $this->freitextsuche = '';
 
-		$this->schlagwoerter = '';
-		$this->freitextsuche = '';
+        if (isset($args['filtereinstellungen'])) {
+            // Ist ein Schlagwort-Filter gesetzt?
+            if (isset($args['filtereinstellungen']['schlagwoerter'])) {
+                $this->schlagwoerter = $args['filtereinstellungen']['schlagwoerter'];
+            }
 
-		if (isset($args['filtereinstellungen'])) {
-			// Ist ein Schlagwort-Filter gesetzt?
-			if (isset($args['filtereinstellungen']['schlagwoerter'])) {
-				$this->schlagwoerter = $args['filtereinstellungen']['schlagwoerter'];
-			}
+            // Ist etwas bei der Freitextsuche eingetragen?
+            if (isset($args['filtereinstellungen']['freitextsuche'])) {
+                $this->freitextsuche = $args['filtereinstellungen']['freitextsuche'];
+            }
+        }
 
-			// Ist etwas bei der Freitextsuche eingetragen?
-			if (isset($args['filtereinstellungen']['freitextsuche'])) {
-				$this->freitextsuche = $args['filtereinstellungen']['freitextsuche'];
-			}
-		}
-
-		// Schlagwort-Auswahl hinzufügen:
-		$this->addComponent('SchlagwoerterBox', ['directory' => 'bauteile', 'name' => 'schlagwoerter', 'aktiv' => $this->schlagwoerter, 'selektierbar' => true]);
-		// $this->addStyle(wire('config')->urls->templates . 'assets/css/filtereinstellungen.min.css', true, true);
-	}
+        // Schlagwort-Auswahl hinzufügen:
+        $this->addComponent('SchlagwoerterBox', ['directory' => 'bauteile', 'name' => 'schlagwoerter', 'aktiv' => $this->schlagwoerter, 'selektierbar' => true]);
+    }
 }

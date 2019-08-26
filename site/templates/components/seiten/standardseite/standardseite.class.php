@@ -67,7 +67,11 @@ class Standardseite extends TwackComponent {
 			$this->inhalte = $this->addComponent('Inhalte', ['directory' => '']);
 		}
 
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/standardseite.min.css', true, true);
+		$this->addStyle('standardseite.css', array(
+            'path'     => wire('config')->urls->templates . 'assets/css/',
+			'absolute' => true,
+			'inline' => true
+        ));
 	}
 
 	public function getAjax() {

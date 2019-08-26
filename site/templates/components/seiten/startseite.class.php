@@ -16,6 +16,10 @@ class Startseite extends TwackComponent {
 			}
 		}
 
-		$this->addStyle(wire('config')->urls->templates . 'assets/css/home.min.css', true, true);
+		$this->addStyle('home.css', array(
+            'path'     => wire('config')->urls->templates . 'assets/css/',
+			'absolute' => true,
+			'inline' => true
+        ));
 	}
 }

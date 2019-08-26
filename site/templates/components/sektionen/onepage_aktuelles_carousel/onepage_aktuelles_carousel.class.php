@@ -25,7 +25,5 @@ class OnepageAktuellesCarousel extends TwackComponent {
 		if ($this->page->template->hasField('inhalte')) {
 			$this->addComponent('Inhalte', ['directory' => '']);
 		}
-
-		// $this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-aktuelles-carousel.min.css', true, true);
 	}
 }

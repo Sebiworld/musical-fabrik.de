@@ -4,7 +4,7 @@ namespace ProcessWire;
 if (!empty($this->felder)) {
 	?>
 	<div class="template-formular-wrapper">
-		<form action="<?= $this->page->url; ?>" method="post" class="formular template-formular" novalidate="novalidate" data-seite="<?= $this->page->id; ?>">
+		<form action="<?= $this->formAction; ?>" method="post" class="formular template-formular" novalidate="novalidate" data-seite="<?= $this->page->id; ?>">
 			<fieldset class="alle-formularelemente">
 				<div class="hinweise"></div>
 

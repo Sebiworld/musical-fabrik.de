@@ -5,7 +5,14 @@ class YoutubeVideo extends TwackComponent {
 
 	public function __construct($args) {
 		parent::__construct($args);
-		$this->addScript(wire('config')->urls->templates . 'assets/js/youtube-video.min.js', true, true);
+		$this->addScript('youtube-video.js', array(
+            'path'     => wire('config')->urls->templates . 'assets/js/',
+            'absolute' => true
+        ));
+        $this->addScript('legacy/youtube-video.js', array(
+            'path'     => wire('config')->urls->templates . 'assets/js/',
+            'absolute' => true
+        ));
 	}
 
 	public function getAjax(){

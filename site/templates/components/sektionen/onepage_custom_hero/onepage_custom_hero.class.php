@@ -19,9 +19,13 @@ class OnepageCustomHero extends TwackComponent {
 			$this->titel = $this->page->title;
 		}
 
-		// $this->addStyle(wire('config')->urls->templates . 'assets/css/custom-hero.min.css', true, true);
-		// $this->addStyle(wire('config')->urls->templates . 'assets/css/sektion-custom-hero.min.css', true, true);
-		$this->addScript(wire('config')->urls->templates . 'assets/js/custom-hero.min.js', true, true);
-		$this->addScript(wire('config')->urls->templates . 'assets/js/custom-hero.legacy.min.js', true, true);
+		$this->addScript('custom-hero.js', array(
+            'path'     => wire('config')->urls->templates . 'assets/js/',
+            'absolute' => true
+        ));
+        $this->addScript('legacy/custom-hero.js', array(
+            'path'     => wire('config')->urls->templates . 'assets/js/',
+            'absolute' => true
+        ));
 	}
 }

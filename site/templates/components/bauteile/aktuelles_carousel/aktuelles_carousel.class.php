@@ -26,8 +26,15 @@ class AktuellesCarousel extends TwackComponent {
 
 		$this->aktuellesSeite = $aktuellesService->getAktuellesSeite();
 
-		// $this->addStyle(wire('config')->urls->templates . 'assets/css/aktuelles-carousel.min.css', true, true);
-		$this->addScript(wire('config')->urls->templates . 'assets/js/swiper.min.js', true, true);
-		$this->addScript(wire('config')->urls->templates . 'assets/js/swiper.legacy.min.js', true, true);
+		$this->addScript('swiper.js', array(
+            'path'     => wire('config')->urls->templates . 'assets/js/',
+			'absolute' => true,
+			'inline' => true
+        ));
+        $this->addScript('legacy/swiper.js', array(
+            'path'     => wire('config')->urls->templates . 'assets/js/',
+			'absolute' => true,
+			'inline' => true
+        ));
 	}
 }
