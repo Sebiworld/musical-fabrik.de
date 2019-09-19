@@ -96,14 +96,14 @@ class SeitenHeader extends TwackComponent {
 			}
 		}
 
-		$this->addScript('animated-header.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
-        $this->addScript('legacy/animated-header.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
+		// $this->addScript('animated-header.js', array(
+        //     'path'     => wire('config')->urls->templates . 'assets/js/',
+        //     'absolute' => true
+        // ));
+        // $this->addScript('legacy/animated-header.js', array(
+        //     'path'     => wire('config')->urls->templates . 'assets/js/',
+        //     'absolute' => true
+        // ));
 	}
 
 	public function getLogo() {

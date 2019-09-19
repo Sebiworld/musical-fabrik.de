@@ -27,9 +27,13 @@ if (($this->auffuehrungen && count($this->auffuehrungen) > 0) || ($this->auffueh
 								<span class="badge badge-light"><?= $staffel->title; ?></span>
 								<?php
 							}
+							?>
+							<br/>
+							<?php
 						}
 						?>
-						<br/><?= $auffuehrung->wochentag; ?>, <?= $auffuehrung->datum; ?> - <?= $auffuehrung->uhrzeit; ?> Uhr&nbsp;
+						
+						<?= $auffuehrung->wochentag; ?>, <?= $auffuehrung->datum; ?> - <?= $auffuehrung->uhrzeit; ?> Uhr&nbsp;
 					</h6>
 					<p class="auffuehrung-besetzung"><?= $auffuehrung->besetzung; ?></p>
 				</div>
@@ -56,7 +60,7 @@ if (($this->auffuehrungen && count($this->auffuehrungen) > 0) || ($this->auffueh
 			<br/>
 			<button class="btn btn-light btn-sm" data-funktion="vergangene-veranstaltungen-anzeigen">Vergangene Aufführungen anzeigen</button>
 
-			<div class="vergangen" style="display: none;">
+			<div class="vergangen d-none">
 				<h5 class="subtitel">bereits vergangen:</h5>
 
 				<?php
@@ -71,9 +75,12 @@ if (($this->auffuehrungen && count($this->auffuehrungen) > 0) || ($this->auffueh
 									<span class="badge badge-light"><?= $staffel->title; ?></span>
 									<?php
 								}
+								?>
+								<br/>
+								<?php
 							}
 							?>
-							<br/><?= $auffuehrung->wochentag; ?>, <?= $auffuehrung->datum; ?> - <?= $auffuehrung->uhrzeit; ?> Uhr&nbsp;
+							<?= $auffuehrung->wochentag; ?>, <?= $auffuehrung->datum; ?> - <?= $auffuehrung->uhrzeit; ?> Uhr&nbsp;
 						</h6>
 						<p class="auffuehrung-besetzung"><?= $auffuehrung->besetzung; ?></p>
 					</div>

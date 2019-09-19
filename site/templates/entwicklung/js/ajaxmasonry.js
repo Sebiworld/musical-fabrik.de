@@ -1,6 +1,7 @@
+/* jshint -W024 */
 import { ready, hasClass, addClass, removeClass, createElementFromHTML, removeElements, trigger, nextUntil } from './classes/hilfsfunktionen.js';
 import AjaxCall from './classes/AjaxCall.js';
-import { debounce, uniq, remove } from 'lodash';
+import { debounce, uniq, remove } from 'lodash-es';
 
 (async () => {
 	const elemente = document.querySelectorAll('.aktuelles-kacheln');

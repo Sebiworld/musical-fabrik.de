@@ -1,5 +1,7 @@
 <?php
+
 namespace ProcessWire;
+
 ?>
 <section class="container-fluid onepage-sektion sektion-custom-hero <?= !empty($this->page->klassen . '') ? $this->page->klassen : ''; ?>" <?= $this->sektionID ? 'id="' . $this->sektionID . '"' : ''; ?>>
 
@@ -23,8 +25,11 @@ namespace ProcessWire;
 			</a>
 		</div>
 		<div class="medicus-teaser">
-			<div class="info-text">Aufführungen vom 19. bis zum 29.&nbsp;März&nbsp;2020</div>
-			<a class="btn hintergrund medicus" href="/projekte/der-medicus/">zur Projektseite</a>
+			<div class="info-text">
+				<span class="font-normal">Aufführungen vom 19. bis zum 29.&nbsp;März&nbsp;2020</span>
+				Der Kartenvorverkauf startet am&nbsp;21.09. um&nbsp;9:00&nbsp;Uhr
+			</div>
+			<a class="btn hintergrund medicus" href="/projekte/der-medicus/tickets-infos/">Tickets & Infos</a> <a class="btn hintergrund medicus" href="/projekte/der-medicus/">zur Projektseite</a>
 		</div>
 	</div>
 </section>

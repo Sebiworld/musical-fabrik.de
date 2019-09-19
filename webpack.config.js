@@ -13,6 +13,8 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 const CleanCSS = require('clean-css');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const PATHS = {
 	source: path.join(__dirname, "./site/templates/entwicklung/"),
@@ -22,7 +24,6 @@ const PATHS = {
 
 const ENTRIES = {
 	js: [
-		"jquery",
 		...glob.sync(PATHS.source + "/js/*.js"),
 	],
 	scss: [
@@ -109,20 +110,20 @@ module.exports = (env, options) => {
 					test: require.resolve("chart.js"),
 					use: "imports-loader?this=>window",
 				},
-				{
-					// Exposes jQuery for use outside Webpack build
-					test: require.resolve("jquery"),
-					use: [
-						{
-							loader: "expose-loader",
-							options: "jQuery",
-						},
-						{
-							loader: "expose-loader",
-							options: "$",
-						},
-					],
-				},
+				// {
+				// 	// Exposes jQuery for use outside Webpack build
+				// 	test: require.resolve("jquery"),
+				// 	use: [
+				// 		{
+				// 			loader: "expose-loader",
+				// 			options: "jQuery",
+				// 		},
+				// 		{
+				// 			loader: "expose-loader",
+				// 			options: "$",
+				// 		},
+				// 	],
+				// },
 				{
 					test: /\.(sass|scss|css)$/,
 
@@ -165,11 +166,13 @@ module.exports = (env, options) => {
 						{
 							loader: "sass-loader",
 							options: {
-								includePaths: [PATHS.source + "scss/"],
+								implementation: require('node-sass'),
 								sourceMap: true,
-								sourceMapContents: false,
-								errLogToConsole: true,
-								sass_option_push_import_extension: [".css"],
+								sassOptions: {
+									includePaths: [PATHS.source + "scss/"],
+									errLogToConsole: true,
+									sass_option_push_import_extension: [".css"],
+								}
 							},
 						},
 					],
@@ -196,14 +199,14 @@ module.exports = (env, options) => {
 						options: {
 							mozjpeg: {
 								progressive: true,
-								quality: 65
+								quality: [0.65]
 							},
 							// optipng.enabled: false will disable optipng
 							optipng: {
 								enabled: false,
 							},
 							pngquant: {
-								quality: '65-90',
+								quality: [0.65, 0.90],
 								speed: 4
 							},
 							gifsicle: {
@@ -211,7 +214,7 @@ module.exports = (env, options) => {
 							},
 							// the webp option will enable WEBP
 							webp: {
-								quality: 75
+								quality: [0.75]
 							}
 						}
 					}
@@ -267,6 +270,13 @@ module.exports = (env, options) => {
 			],
 		},
 		plugins: [
+			new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de/),
+            new LodashModuleReplacementPlugin({
+                'collections': true,
+                'paths': true,
+                'shorthands': true
+            }),
+            new webpack.HashedModuleIdsPlugin(),
 			new WebpackAssetsManifest({
 				merge: true,
 				customize(entry, original, manifest, asset) {
@@ -293,21 +303,21 @@ module.exports = (env, options) => {
 				filename: "css/[name]-[hash:8].min.css",
 				chunkFilename: "css/[id]-[chunkhash].min.css",
 			}),
-			new webpack.BannerPlugin(
-				{
-					banner: [
-						'/*!',
-						' * @project        ' + pkg.name,
-						' * @name           ' + '[filebase]',
-						' * @author         ' + pkg.author.name,
-						' * @build          ' + moment().format('llll') + ' ET',
-						' *',
-						' */',
-						''
-					].join('\n'),
-					raw: true
-				}
-			),
+			// new webpack.BannerPlugin(
+			// 	{
+			// 		banner: [
+			// 			'/*!',
+			// 			' * @project        ' + pkg.name,
+			// 			' * @name           ' + '[filebase]',
+			// 			' * @author         ' + pkg.author.name,
+			// 			' * @build          ' + moment().format('llll') + ' ET',
+			// 			' *',
+			// 			' */',
+			// 			''
+			// 		].join('\n'),
+			// 		raw: true
+			// 	}
+			// ),
 			new webpack.ProvidePlugin({
 				$: "jquery",
 				jQuery: "jquery",
@@ -328,7 +338,14 @@ module.exports = (env, options) => {
 			}),
 			new CompressionPlugin(),
 			new VueLoaderPlugin(),
-			new LiveReloadPlugin()
+			(isProduction ?
+                new BundleAnalyzerPlugin(
+                    {
+                        analyzerMode: 'static',
+                        reportFilename: 'report-' + options.browser_env + '.html',
+                    }
+                ) : new LiveReloadPlugin()
+            )
 		],
 	};
 };

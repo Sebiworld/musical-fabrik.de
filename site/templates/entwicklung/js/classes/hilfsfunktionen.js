@@ -1,4 +1,4 @@
-import { indexOf, random } from "lodash";
+import { indexOf, random } from "lodash-es";
 
 export const ready = function (fn) {
 	if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
@@ -6,24 +6,28 @@ export const ready = function (fn) {
 	} else {
 		document.addEventListener('DOMContentLoaded', fn);
 	}
-}
+};
 
 export const matches = function (el, selector) {
 	return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, selector);
 };
 
 export const closest = function (el, selector) {
-    if (Element.prototype.closest) {
-        return el.closest(selector);
-    }
-    do {
-        if (matches(el, selector)) return el;
-        el = el.parentElement || el.parentNode;
-    } while (el !== null && el.nodeType === 1);
-    return null;
+	if (Element.prototype.closest) {
+		return el.closest(selector);
+	}
+	do {
+		if (matches(el, selector)) return el;
+		el = el.parentElement || el.parentNode;
+	} while (el !== null && el.nodeType === 1);
+	return null;
 };
 
 export const addClass = function (el, className) {
+	if (hasClass(el, className)) {
+		return true;
+	}
+
 	if (el.classList) {
 		el.classList.add(className);
 	} else if (el.className !== undefined) {
@@ -31,25 +35,28 @@ export const addClass = function (el, className) {
 	} else {
 		el.className = className;
 	}
-}
+};
 
 export const hasClass = function (el, className) {
 	if (el.classList) {
 		return el.classList.contains(className);
 	}
 	return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
-}
+};
 
 export const removeClass = function (el, className) {
+	if (!hasClass(el, className)) {
+		return true;
+	}
 	if (el.classList) {
 		el.classList.remove(className);
 	} else if (el.className !== undefined) {
 		el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
 	}
-}
+};
 
 export const trigger = function (el, eventName, data) {
-	if (typeof data !== 'Object') {
+	if (typeof data !== 'object') {
 		data = {};
 	}
 
@@ -72,7 +79,7 @@ export const trigger = function (el, eventName, data) {
 	el.dispatchEvent(event);
 
 	return el;
-}
+};
 
 export const createElementFromHTML = function (htmlString) {
 	var div = document.createElement('div');
@@ -95,6 +102,10 @@ export const removeElements = function (elements) {
 		item.parentNode.removeChild(item);
 	}
 	return true;
+};
+
+export const timeout = function (ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
 };
 
 /**
@@ -133,10 +144,36 @@ export const nextUntil = function (elem, selector, filter) {
 	return siblings;
 };
 
+export const formatMoney = function (n, c, d, t) {
+	var c = isNaN(c = Math.abs(c)) ? 2 : c,
+		d = d == undefined ? "," : d,
+		t = t == undefined ? "." : t,
+		s = n < 0 ? "-" : "",
+		i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+		j = (j = i.length) > 3 ? j % 3 : 0;
+
+	return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
+
+export const slugify = function (string) {
+	const a = 'àáäâãåăæąçćčđďèéěėëêęğǵḧìíïîįłḿǹńňñòóöôœøṕŕřßşśšșťțùúüûǘůűūųẃẍÿýźžż·/_,:;'
+	const b = 'aaaaaaaaacccddeeeeeeegghiiiiilmnnnnooooooprrsssssttuuuuuuuuuwxyyzzz------'
+	const p = new RegExp(a.split('').join('|'), 'g')
+
+	return string.toString().toLowerCase()
+		.replace(/\s+/g, '-') // Replace spaces with -
+		.replace(p, c => b.charAt(a.indexOf(c))) // Replace special characters
+		.replace(/&/g, '-and-') // Replace & with 'and'
+		.replace(/[^\w\-]+/g, '') // Remove all non-word characters
+		.replace(/\-\-+/g, '-') // Replace multiple - with single -
+		.replace(/^-+/, '') // Trim - from start of text
+		.replace(/-+$/, ''); // Trim - from end of text
+};
+
 export const setIntervalAsync = (fn, msmin, msmax) => {
 	fn().then(() => {
 		let ms = msmin;
-		if(typeof msmin === 'number' && typeof msmax === 'number') ms = random(ms, msmax);
+		if (typeof msmin === 'number' && typeof msmax === 'number') ms = random(ms, msmax);
 		setTimeout(() => setIntervalAsync(fn, msmin, msmax), ms);
 	});
 };

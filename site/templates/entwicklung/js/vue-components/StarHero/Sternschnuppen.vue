@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { random } from "lodash";
+import { random } from "lodash-es";
 import Sternschnuppe from "./Sternschnuppe.vue";
 import { setIntervalAsync } from "../../classes/hilfsfunktionen";
 

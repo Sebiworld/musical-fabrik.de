@@ -1,12 +1,4 @@
-import {
-    matches,
-    ready,
-    addClass,
-    removeClass,
-    hasClass,
-    closest,
-} from "./hilfsfunktionen.js";
-import { throttle, remove, find, some } from "lodash";
+import { matches, ready, addClass, removeClass, closest } from "./hilfsfunktionen.js";
 
 let s = function () {
     "use strict";
@@ -171,7 +163,7 @@ let s = function () {
             }
             this._headerOffset = value;
 
-            if(!obj._isIntersectionObserverSupported()){
+            if (!obj._isIntersectionObserverSupported()) {
                 return false;
             }
 
@@ -557,10 +549,10 @@ let s = function () {
         addObservedElements(elements) {
             const obj = this;
 
-            if(!obj._isIntersectionObserverSupported()){
+            if (!obj._isIntersectionObserverSupported()) {
                 return false;
             }
-            
+
             if (typeof elements === 'string') {
                 elements = document.querySelectorAll(elements);
             }
@@ -579,7 +571,7 @@ let s = function () {
         addObservedElement(element) {
             const obj = this;
 
-            if(!obj._isIntersectionObserverSupported()){
+            if (!obj._isIntersectionObserverSupported()) {
                 return false;
             }
 
@@ -612,7 +604,7 @@ let s = function () {
         removeObservedElement(element) {
             const obj = this;
 
-            if(!obj._isIntersectionObserverSupported()){
+            if (!obj._isIntersectionObserverSupported()) {
                 return false;
             }
 
@@ -654,10 +646,10 @@ let s = function () {
         addObservedLinkElements(elements) {
             const obj = this;
 
-            if(!obj._isIntersectionObserverSupported()){
+            if (!obj._isIntersectionObserverSupported()) {
                 return false;
             }
-            
+
             if (typeof elements === 'string') {
                 elements = document.querySelectorAll(elements);
             }
@@ -676,7 +668,7 @@ let s = function () {
         addObservedLinkElement(element, targetSelector) {
             const obj = this;
 
-            if(!obj._isIntersectionObserverSupported()){
+            if (!obj._isIntersectionObserverSupported()) {
                 return false;
             }
 
@@ -720,7 +712,7 @@ let s = function () {
         removeObservedLinkElement(element) {
             const obj = this;
 
-            if(!obj._isIntersectionObserverSupported()){
+            if (!obj._isIntersectionObserverSupported()) {
                 return false;
             }
 
@@ -771,7 +763,7 @@ let s = function () {
                 return false;
             }
 
-            if(!obj._isIntersectionObserverSupported()){
+            if (!obj._isIntersectionObserverSupported()) {
                 return false;
             }
 
@@ -828,9 +820,9 @@ let s = function () {
                 }
 
             }, {
-                    root: null,
-                    rootMargin: obj._getLinktargetObserverMargin()
-                }
+                root: null,
+                rootMargin: obj._getLinktargetObserverMargin()
+            }
             );
 
             for (const selector in obj._observedLinkElements) {
