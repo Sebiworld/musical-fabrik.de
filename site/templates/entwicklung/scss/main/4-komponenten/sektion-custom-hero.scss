@@ -177,12 +177,28 @@
         color: #fff;
         max-width: 210px;
         font-weight: bold;
+        line-height: 1.2;
 
-        @include media-breakpoint-down("sm") {
+        .font-normal{
+          display: block;
+          position: relative;
+          font-weight: normal;
+          margin-bottom: 5px;
+          @include font-size(0.9rem);
+        }
+
+        @media (max-width: 1200px) {
           background: #fff;
           color: $body-color;
           @include font-size(0.8rem);
+
+          .font-normal{
+            @include font-size(0.8rem);
+          }
         }
+      }
+      .btn{
+        margin-bottom: 3px;
       }
     }
   }

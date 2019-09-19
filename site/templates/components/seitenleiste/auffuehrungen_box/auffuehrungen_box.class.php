@@ -71,6 +71,12 @@ class AuffuehrungenBox extends TwackComponent {
 			}
 		}
 
+		if (count($auffuehrungen) > 1) {
+			usort($auffuehrungen, function ($a, $b) {
+				return $a->timestamp > $b->timestamp;
+			});
+		}
+
 		if (count($auffuehrungenAlt) > 1) {
 			usort($auffuehrungenAlt, function ($a, $b) {
 				return $a->timestamp < $b->timestamp;
@@ -84,15 +90,15 @@ class AuffuehrungenBox extends TwackComponent {
 			$this->ticketSeite = $projektseite->seite;
 		}
 
-		if (($this->auffuehrungen && count($this->auffuehrungen) > 0) || ($this->auffuehrungenAlt && count($this->auffuehrungenAlt) > 0)) {
-			$this->addScript('auffuehrungen-box.js', array(
-				'path'     => wire('config')->urls->templates . 'assets/js/',
-				'absolute' => true
-			));
-			$this->addScript('legacy/auffuehrungen-box.js', array(
-				'path'     => wire('config')->urls->templates . 'assets/js/',
-				'absolute' => true
-			));
-		}
+		// if (($this->auffuehrungen && count($this->auffuehrungen) > 0) || ($this->auffuehrungenAlt && count($this->auffuehrungenAlt) > 0)) {
+			// $this->addScript('auffuehrungen-box.js', array(
+			// 	'path'     => wire('config')->urls->templates . 'assets/js/',
+			// 	'absolute' => true
+			// ));
+			// $this->addScript('legacy/auffuehrungen-box.js', array(
+			// 	'path'     => wire('config')->urls->templates . 'assets/js/',
+			// 	'absolute' => true
+			// ));
+		// }
 	}
 }

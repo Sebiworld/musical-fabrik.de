@@ -1,4 +1,4 @@
-import { merge, clone } from "lodash";
+import { merge, clone } from "lodash-es";
 
 class AjaxCall {
 	constructor(options) {
@@ -140,11 +140,11 @@ class AjaxCall {
 	*/
 	importGet(url) {
 		// get query string from url (optional) or window
-		var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
+		let queryString = url ? url.split('?')[1] : window.location.search.slice(1);
 		queryString = decodeURIComponent(queryString);
 
 		// we'll store the parameters here
-		var obj = {};
+		let obj = {};
 
 		// if query string exists
 		if (queryString) {
@@ -153,15 +153,15 @@ class AjaxCall {
 			queryString = queryString.split('#')[0];
 
 			// split our query string into its component parts
-			var arr = queryString.split('&');
+			let arr = queryString.split('&');
 
-			for (var i = 0; i < arr.length; i++) {
+			for (const arrayelement of arr) {
 				// separate the keys and the values
-				var a = arr[i].split('=');
+				const a = arrayelement.split('=');
 
 				// in case params look like: list[]=thing1&list[]=thing2
-				var paramNum = undefined;
-				var paramName = a[0].replace(/\[\d*\]/, function (v) {
+				let paramNum;
+				let paramName = a[0].replace(/\[\d*\]/, (v) => {
 					paramNum = v.slice(1, -1);
 					return '';
 				});
@@ -171,7 +171,7 @@ class AjaxCall {
 				}
 
 				// set parameter value (use 'true' if empty)
-				var paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
+				let paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
 
 				if (typeof paramValue !== 'string') {
 					continue;
@@ -215,13 +215,21 @@ class AjaxCall {
 		return this.objectToQueryString(this.getParams);
 	}
 
-	toBrowserUrl() {
+	toBrowserUrl(replace = true) {
 		// Adressleiste umschreiben:
-		window.history.replaceState(
-			{},
-			document.title,
-			"?" + this.exportGet() + (window.location.hash ? window.location.hash : '')
-		);
+		if (replace) {
+			window.history.replaceState(
+				{},
+				document.title,
+				"?" + this.exportGet() + (window.location.hash ? window.location.hash : '')
+			);
+		} else {
+			window.history.pushState(
+				{},
+				document.title,
+				"?" + this.exportGet() + (window.location.hash ? window.location.hash : '')
+			);
+		}
 	}
 
 	get postParams() {
@@ -266,8 +274,8 @@ class AjaxCall {
 	 * @return string
 	 */
 	objectToQueryString(a) {
-		var prefix, s, add, name, r20, output;
-		s = [];
+		let prefix, add, name, r20, output;
+		let s = [];
 		r20 = /%20/g;
 		add = function (key, value) {
 			// If value is a function, invoke it and return its value
@@ -285,11 +293,11 @@ class AjaxCall {
 		}
 		output = s.join("&").replace(r20, "+");
 		return output;
-	};
+	}
 
 	buildParams(prefix, obj, add) {
-		var name, i, l, rbracket;
-		rbracket = /\[\]$/;
+		let name, i, l;
+		let rbracket = /\[\]$/;
 		if (obj instanceof Array) {
 			for (i = 0, l = obj.length; i < l; i++) {
 				if (rbracket.test(prefix)) {
@@ -419,41 +427,41 @@ class AjaxCall {
 					resolve(response);
 				}).catch((error) => {
 					let code = 500;
-					if (error.code) {
-						code = error.code;
-					} else if (error.status) {
-						code = error.status;
-					}
-
 					let message = 'Ein unbekannter Fehler ist aufgetreten.';
-					if (error.message) {
-						message = error.message;
-					} else if (error.error) {
-						message = error.error;
+					const mainErrordetails = obj._extractErrorInfo(error);
+					if (mainErrordetails.code) {
+						code = mainErrordetails.code;
+					}
+					if (mainErrordetails.message) {
+						message = mainErrordetails.message;
 					}
 
 					if (typeof error.response === 'object') {
 						try {
 							error.response.json().then((json) => {
-								let code = 500;
-								if (json.code) {
-									code = json.code;
-								} else if (json.status) {
-									code = json.status;
+								const errordetails = obj._extractErrorInfo(json);
+								if (errordetails.code) {
+									code = errordetails.code;
+								}
+								if (errordetails.message) {
+									message = errordetails.message;
 								}
 								json.code = code;
-
-								let message = 'Ein unbekannter Fehler ist aufgetreten.';
-								if (json.message) {
-									message = json.message;
-								} else if (json.error) {
-									message = json.error;
-								}
 								json.message = message;
+								if (json.error !== undefined) {
+									delete json.error;
+								}
 
 								reject(json);
 							}).catch((e) => {
 								error.response.text().then((text) => {
+									const errordetails = obj._extractErrorInfo(text);
+									if (errordetails.code) {
+										code = errordetails.code;
+									}
+									if (errordetails.message) {
+										message = errordetails.message;
+									}
 									reject({
 										code: code,
 										message: text
@@ -479,6 +487,35 @@ class AjaxCall {
 					}
 				});
 		});
+	}
+	_extractErrorInfo(error) {
+		let code = false;
+		let message = false;
+
+		if (typeof error === 'string') {
+			message = error;
+		} else if (typeof error === 'object') {
+			if (error.code) {
+				code = error.code;
+			} else if (error.status) {
+				code = error.status;
+			} else if (typeof error.error === 'object' && error.error.code) {
+				code = error.error.code;
+			}
+
+			if (error.message) {
+				message = error.message;
+			} else if (typeof error.error === 'string') {
+				message = error.error;
+			} else if (typeof error.error === 'object' && typeof error.error.message === 'string') {
+				message = error.error.message;
+			}
+		}
+
+		return {
+			code: code,
+			message: message
+		};
 	}
 }
 

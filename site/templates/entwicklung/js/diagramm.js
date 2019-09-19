@@ -1,5 +1,5 @@
 import AjaxCall from './classes/AjaxCall.js';
-import { isEmpty, isNumber, startsWith } from "lodash";
+import { isEmpty, isNumber, startsWith } from "lodash-es";
 
 (async () => {
 	const chartjs = await import(/* webpackChunkName: "chartjs" */ 'chart.js/dist/chart.js');

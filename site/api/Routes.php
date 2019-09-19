@@ -26,5 +26,11 @@ $routes = [
         ['DELETE', '{id:\d+}', TwackAccess::class, 'pageIDRequest'],
         ['DELETE', '{path:.+}', TwackAccess::class, 'pagePathRequest'],
         ['DELETE', '', TwackAccess::class, 'dashboardRequest'],
+    ],
+    'file' => [
+        ['OPTIONS', ''], // this is needed for CORS Requests
+        ['GET', '{id:\d+}', TwackAccess::class, 'pageIDFileRequest'],
+        ['GET', '{path:.+}', TwackAccess::class, 'pagePathFileRequest'],
+        ['GET', '', TwackAccess::class, 'dashboardFileRequest']
     ]
 ];

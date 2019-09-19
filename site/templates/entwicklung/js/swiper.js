@@ -1,10 +1,11 @@
+/* jshint -W024 */
 import { ready } from './classes/hilfsfunktionen.js';
 
 (async () => {
 	const elemente = document.querySelectorAll('.swiper-container');
 	if (elemente.length > 0) {
 
-		const swiperLoad = await import(/* webpackChunkName: "swiper-slider" */ 'swiper/dist/js/swiper.esm.js');
+		const swiperLoad = await import(/* webpackChunkName: "swiper-slider" */ 'swiper/js/swiper.esm.js');
 		const Swiper = swiperLoad.Swiper;
 
 		// Install modules

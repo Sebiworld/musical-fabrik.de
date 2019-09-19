@@ -1,109 +1,171 @@
-html, body{
-	min-height: 100%;
-	height: 100%;
+@keyframes buttonIn {
+  0% {
+    visibility: visible;
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(2, 2);
+    filter: blur(2px);
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+    filter: blur(0px);
+  }
 }
 
-html{
-	font-size: $font-factor-base * 1px;
+@keyframes buttonOut {
+  0% {
+    visibility: visible;
+    opacity: 1;
+    transform-origin: 50% 50%;
+    transform: scale(1, 1);
+    filter: blur(0px);
+  }
+  99% {
+    visibility: visible;
+    opacity: 0;
+    transform-origin: 50% 50%;
+    transform: scale(2, 2);
+    filter: blur(2px);
+  }
+  100% {
+    visibility: hidden;
+  }
 }
 
-body{
-	// padding-top: 90px;
-	position: relative;
-	background: $body-bg;
-
-	&>header{
-		position: relative;
-	}
-	&>.haupt-inhaltsbereich{
-		position: relative;
-		overflow: auto;
-	}
-
-	.back-to-top{
-		display: none;
-		position: fixed;
-		bottom: $abstand-y-md + 0.5rem;
-		right: $abstand-x-sm;
-		z-index: 100;
-		// border-radius: 50%;
-		width: 50px;
-		height: 50px;
-		text-align: center;
-		padding: 4px 0;
-		vertical-align: middle;
-		@include fontsize(2.5, 1);
-		background-color: rgba(#fff, 0.65);
-		border-width: 2px;
-		transition: background-color 0.5s;
-	}
-
-	&::after {
-		/* dark overlay layer - visible when we fire .cd-quick-view */
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(71, 55, 78, 0.8);
-		visibility: hidden;
-		opacity: 0;
-		transition: opacity .3s 0s, visibility 0s .3s;
-	}
-
-	@media only screen and (min-width: 1024px) {
-		&.overlay-layer::after {
-			visibility: visible;
-			opacity: 1;
-			transition: opacity .3s 0s, visibility 0s 0s;
-		}
-	}
+html,
+body {
+  min-height: 100%;
+  height: 100%;
 }
 
-b,strong{
-	font-weight: bold;
+html {
+  font-size: $font-factor-base * 1px;
 }
 
-a{
-	transition: color 0.2s;
+body {
+  // padding-top: 90px;
+  position: relative;
+  background: $body-bg;
+
+  & > header {
+    position: relative;
+  }
+  & > .haupt-inhaltsbereich {
+    position: relative;
+    overflow: auto;
+  }
+
+  .back-to-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    position: fixed;
+    bottom: $abstand-y-md + 0.5rem;
+    right: $abstand-x-sm;
+    z-index: 100;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    padding: 4px 0;
+    vertical-align: middle;
+    @include fontsize(2.5, 1);
+    background-color: rgba(#fff, 0.65);
+    border-width: 2px;
+    transition: background-color 0.5s;
+    animation-fill-mode: both;
+
+    @media (print), (prefers-reduced-motion) {
+      animation: unset !important;
+      transition: none !important;
+    }
+
+    &.show {
+      animation-name: buttonIn;
+      animation-duration: 0.7s;
+    }
+    &.hide {
+      animation-name: buttonOut;
+      animation-duration: 0.3s;
+    }
+  }
+
+  &::after {
+    /* dark overlay layer - visible when we fire .cd-quick-view */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(71, 55, 78, 0.8);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s 0s, visibility 0s 0.3s;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    &.overlay-layer::after {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 0.3s 0s, visibility 0s 0s;
+    }
+  }
 }
 
-.titel-link{
-	color: $body-color;
-	display: block;
-
-	&:hover, &:focus{
-		color: $brand-primary;
-	}
+b,
+strong {
+  font-weight: bold;
 }
 
-.bild-caption-top{
-	position: absolute;
-	right: 0;
-	top: 0;
-	padding: 5px;
-	@include fontsize(0.65, 1);
+a {
+  transition: color 0.2s;
+}
+
+.titel-link {
+  color: $body-color;
+  display: block;
+
+  &:hover,
+  &:focus {
+    color: $brand-primary;
+  }
+}
+
+.bild-caption-top {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 5px;
+  @include fontsize(0.65, 1);
 }
 
 @each $color, $value in $theme-colors {
-	.btn-#{$color}, input.btn-#{$color}, button.btn-#{$color} {
-		&[type="submit"], &[type="button"], &[type="reset"]{
-			@include button-variant($value, $value);
-		}
-	}
+  .btn-#{$color},
+  input.btn-#{$color},
+  button.btn-#{$color} {
+    &[type="submit"],
+    &[type="button"],
+    &[type="reset"] {
+      @include button-variant($value, $value);
+    }
+  }
 }
 
-.form-control{
-	background-clip: unset;
+.form-control {
+  background-clip: unset;
 }
 
-.passwort-form{
-	max-width: 600px;
+.passwort-form {
+  max-width: 600px;
 }
 
-.normal-weight{
-	font-weight: normal;
-	font-family: $font-family-sans-serif;
+.normal-weight {
+  font-weight: normal;
+  font-family: $font-family-sans-serif;
 }
 
 @import "./fonts";

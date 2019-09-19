@@ -1,5 +1,5 @@
 import { matches, removeClass, addClass } from './hilfsfunktionen.js';
-import { values, join } from "lodash";
+import { values, join } from "lodash-es";
 import AjaxCall from './AjaxCall.js';
 import Scrollinator from './Scrollinator.js';
 

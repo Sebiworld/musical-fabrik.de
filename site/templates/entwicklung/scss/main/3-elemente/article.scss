@@ -49,6 +49,12 @@ article, .article{
 		width: 16em;
 		max-width: 100%;
 		hyphens: auto;
+
+		@include media-breakpoint-down(sm) {
+			@include font-size(1.5rem);
+			margin-bottom: $abstand-y-xs;
+			line-height: 1.2;
+		}
 	}
 	.einleitung{
 		margin-bottom: $abstand-sm;
