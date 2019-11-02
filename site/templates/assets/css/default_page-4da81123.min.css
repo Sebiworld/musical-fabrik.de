@@ -1,0 +1,7 @@
+/*!
+ * @project        www.musical-fabrik.de
+ * @name           default_page-4da81123.min.css
+ * @author         Sebastian Schendel
+ * @build          Sat, Nov 2, 2019 11:23 PM ET
+ *
+ */.default_page{position:relative;display:block;padding-top:2rem;margin-bottom:4rem}@media (max-width:767.98px){.default_page{margin-bottom:.5rem}}.default_page .row>.sidebar{padding:0}.default_page .row>.contents-area{padding:6rem 0 6rem 4rem}@media (max-width:991.98px){.default_page .row>.contents-area{padding:3rem 0 3rem 2rem}}@media (max-width:767.98px){.default_page .row>.contents-area{padding:.75rem .5rem}}.default_page .row>.contents-area>.main_image{margin-bottom:4rem}.default_page .row>.contents-area>.contents-area{margin-top:0}

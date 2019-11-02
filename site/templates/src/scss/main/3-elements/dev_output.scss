@@ -1,0 +1,13 @@
+.dev_output{
+	padding: $padding-y-xs $padding-x-xs;
+
+	pre{
+		padding: ($padding-y-xs * 2) $padding-x-xs;
+		background-color: #f7f7f9;
+		margin-bottom: $padding-y-xs;
+	}
+
+	hr{
+		margin: $padding-y-xs;
+	}
+}

@@ -1,0 +1,143 @@
+@import "./globals/index";
+@import "~mediaelement/build/mediaelementplayer.min";
+
+.mejs__overlay-button {
+	background-image: url("../../../img/mejs-controls.svg");
+}
+.mejs__overlay-loading-bg-img {
+	background-image: url("../../../img/mejs-controls.svg");
+}
+.mejs__button > button {
+	background-image: url("../../../img/mejs-controls.svg");
+}
+
+.content_files {
+	width: 100%;
+	align-self: flex-start;
+
+	.files {
+		margin: $padding-y-sm 0;
+	}
+	.file {
+		margin-top: $padding-y-xs;
+		margin-bottom: $padding-y-xs;
+		padding: $padding-xs $padding-sm $padding-xs 114px;
+		background: $bg-light;
+		position: relative;
+		max-width: 100%;
+
+		a {
+			color: $body-color;
+
+			&:hover,
+			&:focus {
+				color: lighten($body-color, 10%);
+			}
+		}
+
+		& > .icon-wrapper {
+			font-size: 60px;
+			margin: 0 auto;
+			display: flex;
+			position: absolute;
+			// top: 50%;
+			// margin-top: -45px;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			width: 114px;
+			vertical-align: middle;
+			text-align: center;
+			align-items: center;
+			justify-content: center;
+
+			& > .icon {
+				display: block;
+				font-size: 60px;
+				line-height: 1;
+				margin: 0 auto;
+				text-align: center;
+			}
+		}
+
+		.media-body {
+			position: relative;
+			display: block !important;
+			max-width: 100%;
+			color: $body-color;
+		}
+
+		.filename {
+			margin-top: $padding-y-xs;
+			margin-bottom: 0;
+			display: block;
+			word-wrap: break-word;
+		}
+
+		.file-meta {
+			margin-bottom: $padding-y-xs;
+		}
+
+		.audioplayer-wrapper {
+			margin-top: $padding-y-xs;
+			display: block;
+			position: relative;
+			width: 100%;
+		}
+
+		.audioplayer {
+			position: relative;
+			display: block;
+			// background: $bg-light;
+			// margin-top: $padding-y-xs;
+			width: 100%;
+			max-width: 100%;
+		}
+	}
+
+	@include media-breakpoint-down(xs) {
+		.file {
+			padding: $padding-xs 20px $padding-xs 70px;
+
+			& > .icon-wrapper {
+				font-size: 40px;
+				width: 70px;
+				& > .icon {
+					font-size: 40px;
+				}
+			}
+		}
+	}
+
+	&[data-depth="1"] {
+		@include media-breakpoint-down(sm) {
+			.file {
+				padding: $padding-xs 20px $padding-xs 70px;
+
+				& > .icon-wrapper {
+					font-size: 40px;
+					width: 70px;
+					& > .icon {
+						font-size: 40px;
+					}
+				}
+			}
+		}
+	}
+
+	&[data-depth="2"] {
+		@include media-breakpoint-down(md) {
+			.file {
+				padding: $padding-xs 20px $padding-xs 70px;
+
+				& > .icon-wrapper {
+					font-size: 40px;
+					width: 70px;
+					& > .icon {
+						font-size: 40px;
+					}
+				}
+			}
+		}
+	}
+}

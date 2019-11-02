@@ -17,7 +17,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 const PATHS = {
-	source: path.join(__dirname, "./site/templates/entwicklung/"),
+	source: path.join(__dirname, "./site/templates/src/"),
 	build: path.join(__dirname, "./site/templates/assets/"),
 	public: "/site/templates/assets/",
 };
@@ -29,8 +29,8 @@ const ENTRIES = {
 	scss: [
 		...glob.sync(PATHS.source + "/scss/vendors/*.scss"),
 		...glob.sync(PATHS.source + "/scss/*.scss"),
-		...glob.sync(PATHS.source + "/scss/komponenten/*.scss"),
-		...glob.sync(PATHS.source + "/scss/seiten/*.scss"),
+		...glob.sync(PATHS.source + "/scss/components/*.scss"),
+		...glob.sync(PATHS.source + "/scss/pages/*.scss"),
 	]
 };
 
@@ -243,8 +243,10 @@ module.exports = (env, options) => {
 		mode: isProduction ? 'production' : 'development',
 		devtool: isProduction ? '' : 'cheap-module-eval-source-map',
 		optimization: {
+			moduleIds: 'hashed',
 			minimize: isProduction,
 			usedExports: true,
+			// runtimeChunk: 'single',
 			minimizer: [
 				new OptimizeCSSAssetsPlugin({
 					cssProcessorOptions: {
@@ -303,21 +305,21 @@ module.exports = (env, options) => {
 				filename: "css/[name]-[hash:8].min.css",
 				chunkFilename: "css/[id]-[chunkhash].min.css",
 			}),
-			// new webpack.BannerPlugin(
-			// 	{
-			// 		banner: [
-			// 			'/*!',
-			// 			' * @project        ' + pkg.name,
-			// 			' * @name           ' + '[filebase]',
-			// 			' * @author         ' + pkg.author.name,
-			// 			' * @build          ' + moment().format('llll') + ' ET',
-			// 			' *',
-			// 			' */',
-			// 			''
-			// 		].join('\n'),
-			// 		raw: true
-			// 	}
-			// ),
+			new webpack.BannerPlugin(
+				{
+					banner: [
+						'/*!',
+						' * @project        ' + pkg.name,
+						' * @name           ' + '[filebase]',
+						' * @author         ' + pkg.author.name,
+						' * @build          ' + moment().format('llll') + ' ET',
+						' *',
+						' */',
+						''
+					].join('\n'),
+					raw: true
+				}
+			),
 			new webpack.ProvidePlugin({
 				$: "jquery",
 				jQuery: "jquery",

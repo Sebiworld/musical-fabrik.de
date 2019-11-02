@@ -1,7 +1,8 @@
 <?php
+
 namespace ProcessWire;
 
-$konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
+$configPage = $this->configurationService->getConfigurationPage();
 ?>
 
 <!DOCTYPE html>
@@ -12,12 +13,12 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<?php
-	if ($this->metaangaben) {
-		foreach ($this->metaangaben->getArray() as $meta) {
-			echo $meta . " \n";
-		}
-	}
-	?>
+    if ($this->metas) {
+        foreach ($this->metas->getArray() as $meta) {
+            echo $meta . " \n";
+        }
+    }
+    ?>
 
 	<link rel="shortcut icon" href="<?= wire('config')->urls->templates; ?>assets/static_img/icons/favicon.ico" />
 	<link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="<?= wire('config')->urls->templates; ?>assets/static_img/icons/favicon.ico">
@@ -40,29 +41,29 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 	<link rel="icon" sizes="192x192" href="<?= wire('config')->urls->templates; ?>assets/static_img/icons/favicon-192.png">
 
 	<?php
-	// Alle CSS-Styles werden über die addStyle()-Methode der Komponente hinzugefügt
-	foreach (wire('config')->styles as $stylefile) {
-		echo "\n\t<link rel='stylesheet' href='$stylefile' /> ";
-	}
-	?>
+    // Alle CSS-Styles werden über die addStyle()-Methode der Komponente hinzugefügt
+    foreach (wire('config')->styles as $stylefile) {
+        echo "\n\t<link rel='stylesheet' href='$stylefile' /> ";
+    }
+    ?>
 
 	<script type="application/ld+json">
 		{
 			"@context": "http://schema.org",
 			"@type": "Organization",
 			"url": "https://www.musical-fabrik.de",
-			"name": "<?= $konfigurationsseite->kurztext; ?>",
-			<?= $konfigurationsseite->logo_quadrat ? '"logo": "' . $konfigurationsseite->logo_quadrat->httpUrl . '",' : ''; ?>
+			"name": "<?= $configPage->short_text; ?>",
+			<?= $configPage->logo_square ? '"logo": "' . $configPage->logo_square->httpUrl . '",' : ''; ?>
 			<?php
-			if (($konfigurationsseite->telefonnummer && !empty($konfigurationsseite->telefonnummer)) || ($konfigurationsseite->emailadresse && !empty($konfigurationsseite->emailadresse))) {
-				?> "contactPoint": {
+            if (($configPage->phone_number && !empty($configPage->phone_number)) || ($configPage->emailaddress && !empty($configPage->emailaddress))) {
+                ?> "contactPoint": {
 					"@type": "ContactPoint",
-					<?= $konfigurationsseite->telefonnummer ? '"telephone": "' . $konfigurationsseite->telefonnummer . '",' : ''; ?>
-					<?= $konfigurationsseite->emailadresse ? '"email": "' . $konfigurationsseite->emailadresse . '",' : ''; ?> "contactType": "Customer service"
+					<?= $configPage->phone_number ? '"telephone": "' . $configPage->phone_number . '",' : ''; ?>
+					<?= $configPage->emailaddress ? '"email": "' . $configPage->emailaddress . '",' : ''; ?> "contactType": "Customer service"
 				}
 			<?php
-		}
-		?>
+            }
+        ?>
 		}
 	</script>
 </head>
@@ -72,16 +73,16 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 	<a href="#top" class="back-to-top btn btn-outline-dark">
 		<i class="icon ion-ios-arrow-round-up"></i>
 	</a>
-	<div class="haupt-inhaltsbereich" id="top">
-		<?= $this->component->getGlobalComponent('dev_ausgabe'); ?>
+	<div class="main-content" id="top">
+		<?= $this->component->getGlobalComponent('dev_output'); ?>
 
 		<?php
-		if ($this->childComponents) {
-			foreach ($this->childComponents as $component) {
-				echo $component;
-			}
-		}
-		?>
+        if ($this->childComponents) {
+            foreach ($this->childComponents as $component) {
+                echo $component;
+            }
+        }
+        ?>
 
 		<?= $this->component->getGlobalComponent('footer'); ?>
 	</div>
@@ -91,49 +92,16 @@ $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
 
 	<script src="<?= wire('config')->urls->templates; ?>assets/js/<?= Twack::getManifestFilename('polyfills.js'); ?>"></script>
 
-	<script>
-		<?php
-		$jsConfig = wire('config')->js();
-		$jsConfig['debug']  = wire('config')->debug;
-		$jsConfig['urls']   = array(
-			'current_url' => wire('page')->url,
-			'root' => wire('config')->urls->root,
-		);
-		?>
-		var sebi = {
-			konfiguration: <?php echo json_encode($jsConfig); ?>
-		};
-	</script>
-
 	<?php
-	// Alle Scripts werden über die addScript()-Methode der Komponente hinzugefügt:
-	foreach (wire('config')->scripts as $file) {
-		if (strpos($file, '.legacy.') !== false) {
-			echo "\n\t<script async nomodule src='$file'></script>";
-		} else {
-			echo "\n\t<script async type='module' src='$file'></script>";
-		}
-	}
-	?>
-
-	<?php
-	/*
-	<script>
-		var modernBrowser = (
-			'fetch' in window &&
-			'assign' in Object
-			);
-
-		if ( !modernBrowser ) {
-			var scriptElement = document.createElement('script');
-
-			scriptElement.async = false;
-			scriptElement.src = '<?= wire('config')->urls->templates; ?>/assets/js/polyfills.min.js';
-	document.head.appendChild(scriptElement);
-	}
-	</script>
-	*/
-	?>
+    // All scripts are added to the component using the addScript() method:
+    foreach (wire('config')->scripts as $file) {
+        if (strpos($file, '.legacy.') !== false) {
+            echo "\n\t<script async nomodule src='$file'></script>";
+        } else {
+            echo "\n\t<script async type='module' src='$file'></script>";
+        }
+    }
+    ?>
 </body>
 
 </html>

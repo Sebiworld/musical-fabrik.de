@@ -1,0 +1,39 @@
+@import "./globals/index";
+
+.default_page{
+	position: relative;
+	display: block;
+	padding-top: $padding-sm;
+
+	margin-bottom: $padding-md;
+	@include media-breakpoint-down(sm) {
+		margin-bottom: $padding-xs;
+	}
+
+	.row{
+		&>.sidebar{
+			padding: 0;
+		}
+
+		&>.contents-area{
+			padding: ($padding-md * 1.5) 0 ($padding-md * 1.5) $padding-md;
+
+			@include media-breakpoint-down(md) {
+				padding: ($padding-sm * 1.5) 0 ($padding-sm * 1.5) $padding-sm;
+			}
+
+			@include media-breakpoint-down(sm) {
+				padding: ($padding-xs * 1.5) $padding-xs;
+			}
+
+			&>.main_image{
+				margin-bottom: $padding-md;
+			}
+
+			&>.contents-area{
+				margin-top: 0;
+				// max-width: 1000px;
+			}
+		}
+	}
+}

@@ -1,0 +1,152 @@
+footer {
+	display: block;
+	position: relative;
+
+	& > .container-fluid,
+	& > .container {
+		& > .row {
+			padding-right: 0;
+			padding-left: 0;
+		}
+	}
+
+	.contents_component {
+		text-align: center;
+
+		.btn {
+			padding: 0.75rem 1.5rem;
+			font-size: 1.25rem;
+			font-weight: bold;
+		}
+
+		p {
+			margin: 0 auto;
+		}
+	}
+
+	.nav {
+		&.flex-column {
+			.nav-item {
+				margin-left: -1 * $padding-xs;
+			}
+		}
+
+		.nav-link {
+			padding: $padding-y-xs $padding-x-xs;
+		}
+	}
+
+	.top {
+		padding-top: $padding-sm;
+		padding-bottom: $padding-sm;
+	}
+
+	.mid-top {
+		@include angle("before", true);
+		padding-top: $padding-xs;
+		padding-bottom: $padding-xs;
+	}
+
+	.mid {
+		@include angle("before");
+		padding-top: $padding-md;
+		padding-bottom: $padding-md;
+		padding-left: $padding-sm;
+		padding-right: $padding-sm;
+
+		@include media-breakpoint-up(sm) {
+			padding-left: $padding-md;
+			padding-right: $padding-md;
+		}
+	}
+
+	.bottom {
+		@include fontsize(0.8);
+
+		.row > div {
+			padding-top: $padding-xs;
+			padding-bottom: $padding-xs;
+		}
+	}
+
+	.footer-nav-tertiary {
+		margin-left: -1 * $padding-xs;
+
+		.nav-link {
+			color: $body-color;
+		}
+
+		@include media-breakpoint-down("sm") {
+			flex-direction: column;
+			margin-left: 0;
+
+			.nav-link {
+				margin-left: -1 * $padding-xs;
+			}
+		}
+	}
+	.copyright {
+		display: block;
+		padding: 8px 0 8px 16px;
+		text-align: right;
+	}
+
+	.border-top {
+		margin-top: $padding-y-md;
+		padding-top: $padding-y-sm;
+		border-top: 1px solid #fff;
+	}
+
+	.footer-search,
+	.socialmedia-links {
+		padding: 10px;
+		display: flex;
+		align-items: center;
+	}
+
+	.footer-search {
+		& > form {
+			width: 100%;
+		}
+	}
+
+	.socialmedia-links.socialmedia-links {
+		text-align: left;
+		justify-content: flex-end;
+
+		.title {
+			display: none;
+		}
+
+		.social-button.social-button {
+			display: flex !important;
+			vertical-align: top;
+			@include fontsize(2);
+			margin: 10px 0;
+			width: font-px(3);
+			height: font-px(3);
+			line-height: font-px(2);
+			// padding: font-px(0.5);
+			text-align: center;
+
+			.icon {
+				@include fontsize(2);
+				line-height: font-px(2);
+			}
+
+			&.background {
+				&:hover,
+				&:focus {
+					color: #fff;
+				}
+			}
+
+			& > img {
+				width: font-px(2.4);
+				height: font-px(2.4);
+				display: block;
+				margin: font-px(0.3) auto;
+			}
+		}
+	}
+}

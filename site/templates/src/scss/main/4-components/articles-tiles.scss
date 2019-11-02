@@ -1,0 +1,89 @@
+@import "./globals/index";
+
+.articles_tiles{
+	margin-left: -1 * $padding-y-xs;
+	margin-right: -1 * $padding-y-xs;
+
+	.total-number{
+		margin: $padding-y-xs;
+	}
+
+	&>.btn-group{
+		margin: $padding-y-xs;
+		display: block;
+		text-align: center;
+	}
+
+	.masonry-grid{
+
+		.masonry-grid-sizer,
+		.masonry-grid-item {
+			width: 20%;
+		}
+
+		.masonry-grid-item {
+			padding: $padding-y-xs;
+		}
+
+		@include media-breakpoint-down('xl') {
+			.masonry-grid-sizer,
+			.masonry-grid-item {
+				width: 33%;
+			}
+		}
+
+		@include media-breakpoint-down('lg') {
+			.masonry-grid-sizer,
+			.masonry-grid-item {
+				width: 33%;
+			}
+		}
+
+		@include media-breakpoint-down('sm') {
+			.masonry-grid-sizer,
+			.masonry-grid-item {
+				width: 50%;
+			}
+		}
+
+		@include media-breakpoint-down('xs') {
+			.masonry-grid-sizer,
+			.masonry-grid-item {
+				width: 100%;
+			}
+		}
+	}
+}
+
+.has-sidebar{
+	.articles_tiles{
+		.masonry-grid{
+
+			.masonry-grid-sizer,
+			.masonry-grid-item {
+				width: 20%;
+			}
+
+			@include media-breakpoint-down('xl') {
+				.masonry-grid-sizer,
+				.masonry-grid-item {
+					width: 33%;
+				}
+			}
+
+			@include media-breakpoint-down('lg') {
+				.masonry-grid-sizer,
+				.masonry-grid-item {
+					width: 50%;
+				}
+			}
+
+			@include media-breakpoint-down('md') {
+				.masonry-grid-sizer,
+				.masonry-grid-item {
+					width: 100%;
+				}
+			}
+		}
+	}
+}

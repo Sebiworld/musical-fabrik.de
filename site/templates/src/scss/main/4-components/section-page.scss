@@ -1,0 +1,17 @@
+@import "./globals/index";
+
+.section.section_page{
+	.inhalte{
+		.inhalt-block{
+			margin-bottom: $padding-md;
+
+			&:first-child, &>*:first-child{
+				margin-top: 0;
+			}
+
+			&:last-child, &>*:last-child{
+				margin-bottom: 0;
+			}
+		}
+	}
+}

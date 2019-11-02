@@ -3,10 +3,10 @@ namespace ProcessWire;
 
 $wire->addHookAfter('InputfieldPage::getSelectablePages', function($event) {
 	if($event->object->hasField == 'portraits') {
-		$projektseite = $event->arguments('page')->closest("template.name^=projekt");
-		if(!($projektseite instanceof Page) || !$projektseite->id){
-			$projektseite = $event->pages->get('/');
+		$projectpage = $event->arguments('page')->closest("template.name^=project, template.name!=project_role, template.name!=project_roles_container, template.name!=projects_container");
+		if(!($projectpage instanceof Page) || !$projectpage->id){
+			$projectpage = $event->pages->get('/');
 		}
-		$event->return = $projektseite->find("template.name=portrait, sort=title");
+		$event->return = $projectpage->find("template.name=portrait, sort=title");
 	}
 });

@@ -1,0 +1,33 @@
+@import "./globals/index";
+
+.events_box{
+	p{
+		margin-bottom: $padding-xs;
+		&:last-child{
+			margin-bottom: 0;
+		}
+	}
+
+	.subtitle{
+		margin-top: $padding-sm;
+		@include fontsize("box-subtitle", 1.2);
+		font-family: $font-family-sans-serif;
+		font-style: italic;
+	}
+
+	.event{
+		margin-bottom: $padding-y-sm;
+
+		.event-title{
+			@include fontsize("box-event-title", 1.2);
+			margin-bottom: 0;
+		}
+		.event-cast{
+			@include fontsize("box-event-cast", 1.2);
+		}
+	}
+
+	.btn-sm{
+		margin-top: $padding-xs;
+	}
+}

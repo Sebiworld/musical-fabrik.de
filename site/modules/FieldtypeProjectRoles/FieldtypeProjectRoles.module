@@ -1,0 +1,206 @@
+<?php namespace ProcessWire;
+
+/**
+ * Ein Feld, das Rollen speichert - in Kombination mit Besetzungen.
+ */
+
+class FieldtypeProjectRoles extends FieldtypeMulti {
+
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'Project Roles',
+			'version' => '0.1.0',
+			'summary' => 'Ein Feld, das Rollen speichert - in Kombination mit Besetzungen.',
+			'installs' => 'InputfieldRollen',
+			);
+	}
+
+	public function __construct() {
+		require_once(dirname(__FILE__) . '/ProjectRole.class.php');
+		require_once(dirname(__FILE__) . '/ProjectRolesArray.class.php');
+
+		parent::__construct();
+	}
+
+	public function getProjectPage(){
+		$page = wire('pages')->get($this->input->get->id);
+		if(!$page->id) $page = wire('pages')->get('/');
+		$projectpage = $page->closest("template.name=project|home");
+		return $projectpage;
+	}
+
+	public function getProjectRoles(){
+		$container = $this->getProjectPage()->find('template.name=project_roles_container, include=hidden');
+		$pages = new PageArray();
+		if($container instanceof PageArray && count($container) > 0){
+			foreach($container as $page){
+				$pages->add($page->children('template.name=project_role, include=hidden'));
+			}
+		}
+		return $pages;
+	}
+
+	public function getCasts(){
+		$container = $this->getProjectPage()->find('template.name=casts_container, include=hidden');
+		$pages = new PageArray();
+		if($container instanceof PageArray && count($container) > 0){
+			foreach($container as $page){
+				$pages->add($page->children('template.name=cast'));
+			}
+		}
+		return $pages;
+	}
+
+	/**
+	 * Return the required Inputfield used to populate a field of this type
+	 *
+	 */
+	public function getInputfield(Page $page, Field $field) {
+		$inputfield = $this->modules->get("InputfieldProjectRoles");
+		$inputfield->setProjectroles($this->getProjectRoles());
+		$inputfield->setCasts($this->getCasts());
+		return $inputfield;
+	}
+
+	public function ___getCompatibleFieldtypes(Field $field) {
+		// there are no other fieldtypes compatible with this one
+		return null;
+	}
+
+	/**
+	 * Given a value, make it clean for storage within a Page
+	 *
+	 */
+	public function sanitizeValue(Page $page, Field $field, $value) {
+		// if given a blank value, return a valid blank value
+		if(empty($value) || !$value instanceof FieldtypeProjectRoleProjectRolesArray) return $this->getBlankValue($page, $field, $value);
+		if($value->isChanged('projectRoles')) $page->trackChange($field->name);
+		return $value;
+	}
+
+	/**
+	 * Return a blank ready-to-populate version of a field of this type
+	 *
+	 */
+	public function getBlankValue(Page $page, Field $field) {
+		$roles = new FieldtypeProjectRoleProjectRolesArray();
+		$roles->setTrackChanges(true);
+		return $roles;
+	}
+
+
+	/**
+	* Given a raw value (value as stored in DB), return the value as it would appear in a Page object
+	*
+	* @param Page $page
+	* @param Field $field
+	* @param string|int|array $value
+	* @return string|int|array|object $value
+	*
+	*/
+	public function ___wakeupValue(Page $page, Field $field, $value) {
+
+		// if for some reason we already get a valid value, then just return it
+		if($value instanceof FieldtypeProjectRoleProjectRolesArray) return $value;
+
+		// start a blank value to be populated
+		$roles = $this->getBlankValue($page, $field);
+
+		// if we were given a blank value, then we've got nothing to do: just return a blank EventArray
+		if(empty($value) || !is_array($value)) return $roles;
+
+		// create new Rolle objects from each item in the array
+		foreach($value as $v) {
+			$projectrole = new ProjectRoles($v['data']);
+			$projectrole->casts = $v['casts'];
+			$projectrole->setTrackChanges(true);
+			$roles->add($projectrole);
+		}
+
+		$roles->resetTrackChanges();
+
+		return $roles;
+	}
+
+	/**
+	 * Given an 'awake' value, as set by wakeupValue, convert the value back to a basic type for storage in DB.
+	 *
+	 * @param Page $page
+	 * @param Field $field
+	 * @param string|int|array|object $value
+	 * @return string|int
+	 *
+	 */
+	public function ___sleepValue(Page $page, Field $field, $value) {
+
+		$sleepValue = array();
+
+		// if we are given something other than an ProjectRolesArray,
+		// then just return a blank array
+		if(!$value instanceof FieldtypeProjectRoleProjectRolesArray) return $sleepValue;
+
+		// $value->sort('sort');
+
+		// convert each Rolle to an array within sleepValue
+		foreach($value as $role) {
+			$casts = array();
+			foreach($role->casts as $cast){
+				if(!$cast instanceof Page || !$cast->id) continue;
+				$casts[] = $cast->id;
+			}
+
+			$sleepValue[] = array(
+				'data' => $role->projectRole->id, // note: rolle is becoming data
+				'casts' => json_encode($casts)
+				);
+		}
+		return $sleepValue;
+	}
+
+	/**
+	 * Format a value for output, called when a Page's outputFormatting is on
+	 *
+	 */
+	public function formatValue(Page $page, Field $field, $value) {
+		// we actually don't need to do anything in here since each Rolle object
+		// is doing this work in the Rolle::get() method. But I've included this
+		// comment here just to explain where that is taking place.
+		return $value;
+	}
+
+	/**
+	 * Return the database schema that defines an Rolle
+	 *
+	 */
+	public function getDatabaseSchema(Field $field) {
+		$schema = parent::getDatabaseSchema($field);
+
+		// 'data' is a required field for any Fieldtype, and we're using it to represent our 'date' field
+		$schema['data'] = 'INT NOT NULL DEFAULT 0';
+
+		// our text fields
+		$schema['casts'] = 'TEXT';
+
+		// indexes, for any fields that need to be searchable from selectors
+		// in this case, we're just making our 'rolle' field searchable
+		// but the others could easily be added, likely as fulltext indexes
+		$schema['keys']['data'] = 'KEY data(data)';
+
+		return $schema;
+	}
+
+	/**
+	 * Method called when the field is database-queried from a selector
+	 *
+	 */
+	public function getMatchQuery($query, $table, $subfield, $operator, $value) {
+		// If searching 'projectRole' then assume our default (data) field
+		if($subfield == 'projectRole') $subfield = 'data';
+
+		// if value is a formatted date, convert it to unix timestamp
+		if(!ctype_digit("$value")) $value = strtotime($value);
+
+		return parent::getMatchQuery($query, $table, $subfield, $operator, $value);
+	}
+
+}

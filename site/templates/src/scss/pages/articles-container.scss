@@ -1,0 +1,16 @@
+@import "./globals/index";
+
+.t-articles_container{
+	.main-content{
+		.contents-area{
+			.content_articles{
+				margin-top: $padding-y-sm;
+			}
+		}
+	}
+
+	article .title{
+		padding-left: 0;
+		padding-right: 0;
+	}
+}

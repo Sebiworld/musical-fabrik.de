@@ -1,0 +1,17 @@
+@import "./globals/index";
+
+.content_chart{
+	display: block;
+	position: relative;
+
+	.chart-container{
+		position: relative;
+		display: block;
+		width: 100%;
+		height: auto;
+		min-height: 400px;
+		// height: 30vw;
+		// width: 80vw;
+		margin: 0 auto;
+	}
+}
