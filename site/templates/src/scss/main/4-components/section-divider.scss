@@ -1,0 +1,62 @@
+@import "./globals/index";
+
+.section.section_divider {
+	text-align: center;
+	margin-top: -1 * $padding-md;
+	margin-bottom: -1 * $padding-md;
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+	padding-right: 0;
+	position: relative;
+	display: block;
+	background-color: transparent;
+	// height: 500px;
+	max-height: 100%;
+	max-width: 100%;
+	overflow: hidden;
+
+	& > .bg-image {
+		background-size: cover;
+		background-position: center;
+		background-color: transparent;
+		background-repeat: no-repeat;
+		position: absolute;
+		display: block;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+
+	.hero-image {
+		text-align: center;
+		margin: $padding-y-xs $padding-x-md;
+
+		@include media-breakpoint-down(sm) {
+			margin: $padding-y-xs $padding-x-xs;
+		}
+
+		.main_image {
+			height: 100%;
+			width: auto;
+			max-width: 100%;
+			display: inline-block;
+			position: relative;
+		}
+	}
+
+	.divider-contents-wrapper {
+		align-items: stretch;
+		display: flex;
+
+		& > .divider-contents {
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+			z-index: 1;
+			width: 100%;
+			box-sizing: border-box;
+		}
+	}
+}

@@ -1,0 +1,11 @@
+$project-primary-bg: #9fb030;
+$project-primary-color: #fff;
+
+$brand-primary: $project-primary-bg !default;
+
+@import "globals/index";
+@import "templates/project";
+
+body .portrait-image{
+	border: 3px solid #DCDCDC;
+}

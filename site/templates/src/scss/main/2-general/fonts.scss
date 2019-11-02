@@ -1,0 +1,44 @@
+$font-path: "./../../../fonts/";
+
+@font-face {
+	font-family: "Aileron";
+	src: url("#{$font-path}aileron/Aileron-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Aileron";
+	src: url("#{$font-path}aileron/Aileron-Italic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+@font-face {
+	font-family: "Aileron";
+	src: url("#{$font-path}aileron/Aileron-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Aileron Heavy";
+	src: url("#{$font-path}aileron/Aileron-Heavy.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Aileron Light";
+	src: url("#{$font-path}aileron/Aileron-Light.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Aileron Light";
+	src: url("#{$font-path}aileron/Aileron-LightItalic.otf") format("opentype");
+	font-weight: normal;
+	font-style: italic;
+}
+@font-face {
+	font-family: "Aileron Light";
+	src: url("#{$font-path}aileron/Aileron-Bold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+}

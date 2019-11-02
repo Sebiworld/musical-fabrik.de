@@ -1,0 +1,70 @@
+@import "./globals/index";
+@import "~hover.css/scss/hover";
+
+.tags_box.tags_box{
+
+	&>.tag-cloud{
+		padding: $padding-y-xs 0;
+		margin: 0 -7px;
+		@include fontsize(0.8, 1.4);
+
+		&>.tag.tag{
+			white-space: normal;
+			text-align: left;
+			margin-bottom: 7px;
+			margin-right: 7px;
+			color: $body-color;
+
+			&.active{
+				// border: 3px solid theme-color('primary');
+				color: theme-color('primary');
+			}
+
+			&:hover, &:focus{
+				color: theme-color('primary');
+			}
+
+			&.has-background{
+				color: #fff;
+				@include grow();
+
+				&:hover, &:focus{
+					color: #fff;
+				}
+			}
+
+			&.t-1{
+				font-size: 0.6em;
+			}
+			&.t-2{
+				font-size: 0.8em;
+			}
+			&.t-3{
+				font-size: 1em;
+			}
+			&.t-4{
+				font-size: 1.2em;
+			}
+			&.t-5{
+				font-size: 1.4em;
+			}
+			&.t-6{
+				font-size: 1.6em;
+			}
+		}
+	}
+}
+
+.highlight{
+	.tags_box{
+		&>.tag-cloud{
+			&>.tag{
+				color: #fff;
+
+				&:hover, &:focus{
+					color: contrast(theme-color('primary'), theme-color("dark"));
+				}
+			}
+		}
+	}
+}

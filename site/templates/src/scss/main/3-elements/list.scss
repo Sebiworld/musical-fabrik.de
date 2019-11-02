@@ -1,0 +1,23 @@
+.list-group{
+	&.without-border{
+		.list-group-item{
+			border: 0 none;
+			margin-bottom: $padding-y-sm;
+
+			padding-left: $padding-x-sm;
+			margin-left: -1 * $padding-x-sm;
+			padding-right: $padding-x-sm;
+			margin-right: -1 * $padding-x-sm;
+
+			&>p:last-child{
+				margin-bottom: 0;
+			}
+
+			&>div:last-child:first-child{
+				&>h1, &>h2, &>h3, &>h4, &>h5, &>h6{
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+}

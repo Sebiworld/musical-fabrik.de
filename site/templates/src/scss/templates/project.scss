@@ -1,0 +1,235 @@
+$project-primary-bg: theme-color("primary");
+$project-primary-color: text-color-over(theme-color("primary"));
+$project-primary-inverse-bg: #000;
+$project-primary-inverse-color: #fff;
+$project-mainimage-color: #fff !default;
+
+body {
+	a {
+		color: $project-primary-bg;
+	}
+
+	.title-link,
+	.btn-link,
+	.general_data_box .data-item-link {
+		&:hover,
+		&:focus {
+			color: $project-primary-bg;
+		}
+
+		&:focus {
+			box-shadow: 0 0 0 0px rgba($project-primary-bg, 0.25);
+		}
+	}
+
+	.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+		background: $project-primary-bg;
+		color: $project-primary-color;
+	}
+
+	.project-title {
+		text-align: center;
+
+		.project-title-link {
+			&:hover {
+				text-decoration: none;
+			}
+
+			h1 {
+				color: $project-primary-bg;
+			}
+			.lead {
+				color: $text-muted;
+			}
+		}
+
+		.title-text {
+			padding: $padding-sm;
+		}
+
+		&.main_image {
+			position: relative;
+			padding-left: 0;
+			padding-right: 0;
+			padding-top: 0;
+
+			margin-bottom: $padding-md;
+			@include media-breakpoint-down(md) {
+				margin-bottom: $padding-sm;
+			}
+		}
+
+		.info-overlay {
+			position: absolute;
+			bottom: (-0.5 * (font-rem("info-overlay") * 1.1 + ($padding-y-sm * 2)));
+			left: 0;
+			@include fontsize("info-overlay", 1.1);
+			font-weight: lighter;
+			padding: $padding-y-sm $padding-x-sm;
+			background: $project-primary-bg;
+			color: $project-primary-color;
+
+			@include media-breakpoint-down(sm) {
+				position: relative;
+				bottom: 0;
+			}
+		}
+	}
+
+	.breadcrumb > .breadcrumb-item > a {
+		color: $project-primary-bg;
+	}
+
+	.btn-project-primary, .CommentFormSubmit>button {
+		@include button-variant($project-primary-bg, $project-primary-bg);
+	}
+
+	.bg-project-primary {
+		background-color: $project-primary-bg;
+		color: $project-primary-color;
+	}
+
+	.text-project-primary {
+		color: $project-primary-bg;
+	}
+
+	.sidebar,
+	.sidebar .box .title {
+		border-color: $project-primary-inverse-bg;
+	}
+
+	.project-title {
+		.project-title-link h1 {
+			color: $project-primary-bg;
+		}
+		.info-overlay {
+			background: $project-primary-bg;
+			color: $project-primary-color;
+		}
+	}
+
+	.rolle-container > .title {
+		color: $project-primary-bg;
+	}
+
+	.portrait {
+		.aspect-ratio:before {
+			padding-top: 133.33%;
+		}
+	}
+
+	.portrait-image {
+		border: 3px solid #fff;
+	}
+
+	.breadcrumb > .breadcrumb-item > a {
+		color: $project-primary-bg;
+
+		&:focus {
+			box-shadow: 0 0 0 2px rgba($project-primary-bg, 0.25);
+		}
+	}
+
+	.badge-primary {
+		background: $project-primary-bg;
+		color: $project-primary-color;
+	}
+
+	.sidebar.sidebar .box a {
+		&:hover,
+		&:focus {
+			color: theme-color("primary");
+		}
+	}
+
+	.btn-project-primary-inverse, .sidebar.sidebar .box .btn-project-primary-inverse{
+		// @include button-variant($project-primary-inverse-color, $project-primary-inverse-bg, $project-primary-inverse-bg);
+		border-width: 1px;
+		border-style: solid;
+
+		&:hover,
+		&:focus {
+			background-color: $project-primary-bg;
+			color: $project-primary-color;
+			border-color: $project-primary-bg;
+		}
+
+		&:focus {
+			box-shadow: 0 0 0 2px rgba($project-primary-bg, 0.25);
+		}
+	}
+
+	.image-caption {
+		border-color: $project-primary-bg;
+	}
+
+	.image-caption-top {
+		background-color: rgba($project-mainimage-color, 0.5);
+		color: text-color-over($project-mainimage-color);
+	}
+
+	blockquote {
+		&:before {
+			color: $project-primary-bg;
+		}
+	}
+
+	header {
+		.navbar-nav a.nav-link.nav-link,
+		.dropdown-menu .dropdown-item {
+			&.active,
+			&:active {
+				color: contrast($project-primary-bg, theme-color("dark"));
+			}
+		}
+
+		.nav-item {
+			&.active,
+			&:active {
+				color: contrast($project-primary-bg, theme-color("dark"));
+				& > a.nav-link.nav-link {
+					color: contrast($project-primary-bg, theme-color("dark"));
+				}
+			}
+		}
+	}
+
+	footer .nav-link.nav-link,
+	footer .highlight .nav-link.nav-link {
+		&:hover,
+		&:focus {
+			color: contrast($project-primary-bg, theme-color("dark"));
+		}
+	}
+
+	.swiper-pagination-progress .swiper-pagination-progressbar {
+		background: $project-primary-bg;
+	}
+
+	.project_role .title-link {
+		&:hover {
+			.title {
+				color: $project-primary-bg;
+			}
+		}
+	}
+
+	.lSSlideOuter .lSPager.lSGallery li.active,
+	.lSSlideOuter .lSPager.lSGallery li:hover {
+		border-bottom-color: $project-primary-bg;
+	}
+
+	.sharing-box .social-button .icon {
+		color: $project-primary-inverse-bg;
+	}
+
+	.swiper-pagination-progress .swiper-pagination-progressbar {
+		background: $project-primary-bg;
+	}
+	.nav-link {
+		&:hover,
+		&:focus {
+			color: $project-primary-bg;
+		}
+	}
+}

@@ -23,23 +23,20 @@ bower_components/
 yarn-error.log
 yarn.lock
 
-# ProcessWire-Ordner nicht ins Git überführen:
+# Don't git ProcessWire folders:
 /wire/
 /site/assets/
 /site/config-dev.php
 /site/config.php
 /index.php
 
-# Keine Module ins Git aufnehmen:
+# Don't add modules to the git... #
 /site/modules/*
 # Custom Module müssen explizit wieder freigegeben werden. Hier ein Beispielcode dafür:
 # !/site/modules/CustomModul
-!/site/modules/SebiMusicalFabrikFunktionen
-!/site/modules/FieldtypeRollen
+!/site/modules/SebiMusicalFabrikFunctions
+!/site/modules/FieldtypeProjectRoles
 
-/kommandos.md
 /*.html
-/entwicklung
-entwicklung/external
 /site/templates/entwicklung/external/progressively
 /bin

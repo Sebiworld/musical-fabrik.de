@@ -1,0 +1,14 @@
+@import "./globals/index";
+
+// Imports:
+@import "main/1-vendors/index.scss";
+
+// General Styles
+@import "main/2-general/index.scss";
+
+// Styles for common elements that appear anywhere on the page:
+@import "main/3-elements/*";
+
+@import "main/4-components/*";
+
+@import "templates/project";

@@ -1,0 +1,18 @@
+.content_youtube_video{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &>.video-wrapper{
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        max-width: 600px;
+
+        &>.video-js{
+            width: 100%;
+        }
+    }
+}

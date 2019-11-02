@@ -6,15 +6,15 @@ class General extends TwackComponent {
     public function __construct($args) {
         parent::__construct($args);
 
-        $this->konfigurationService = $this->getService('KonfigurationService');
+        $this->configurationService = $this->getService('ConfigurationService');
 
-        // Hier werden zusätzliche Meta-Angaben gesammelt:
-        $this->metaangaben = new WireData();
+        // Additional meta data is collected here:
+        $this->metas = new WireData();
 
-        // general soll global verfügbar sein
+        // general should be globally available
         $this->twack->makeComponentGlobal($this, 'general');
 
-        // Main-Scripte für alle Seiten hinzufügen:
+        // Add main scripts for all pages:
         $this->addStyle('bootstrap.css', array(
             'path'     => wire('config')->urls->templates . 'assets/css/',
             'absolute' => true
@@ -53,7 +53,7 @@ class General extends TwackComponent {
             'absolute' => true
         ));
 
-        // Cookie-Skripte hinzufügen:
+        // Add cookie scripts:
         $this->addScript('cookies.js', array(
             'path'     => wire('config')->urls->templates . 'assets/js/',
             'absolute' => true
@@ -63,7 +63,7 @@ class General extends TwackComponent {
             'absolute' => true
         ));
 
-        // Kommentar-Javascripts:
+        // Comment-Assets:
         $this->addStyle('comments.css', array(
             'path'     => wire('config')->urls->templates . 'assets/css/',
             'absolute' => true
@@ -77,36 +77,36 @@ class General extends TwackComponent {
             'absolute' => true
         ));
 
-        // Eigene Dev-Ausgabe
-        $devAusgabe = $this->addComponent('DevAusgabe', ['globalName' => 'dev_ausgabe']);
-        $this->twack->registerDevEchoComponent($devAusgabe);
+        // Custom Dev output
+        $devOutput = $this->addComponent('DevOutput', ['globalName' => 'dev_output']);
+        $this->twack->registerDevEchoComponent($devOutput);
 
-        // Layout-Komponenten anlegen:
-        $this->addComponent('SeitenHeader', ['globalName' => 'header']);
-        $this->addComponent('SeitenFooter', ['globalName' => 'footer']);
-        $this->addComponent('Seitenleiste', ['globalName' => 'seitenleiste', 'directory' => '']);
+        // Create Layout Components:
+        $this->addComponent('HeaderComponent', ['globalName' => 'header']);
+        $this->addComponent('FooterComponent', ['globalName' => 'footer']);
+        $this->addComponent('SidebarComponent', ['globalName' => 'sidebar', 'directory' => '']);
 
         $modalKomponente = $this->addComponent('Modals', ['globalName' => 'modals', 'directory' => '']);
-        $bildModal       = $modalKomponente->addComponent('BildModal', [
-            'id'         => 'einzelbild_modal',
-            'globalName' => 'einzelbild_modal',
-            'einzelbild' => true
+        $imagemodal       = $modalKomponente->addComponent('ImageModal', [
+            'id'         => 'singleimage_modal',
+            'globalName' => 'singleimage_modal',
+            'single' => true
         ]);
-        $this->addGlobalParameters(['einzelbildModalID' => $bildModal->getID()]);
+        $this->addGlobalParameters(['singleimageModalID' => $imagemodal->getID()]);
 
-        $this->addComponent('Formulare', ['globalName' => 'formulare', 'directory' => '']);
+        $this->addComponent('FormsComponent', ['globalName' => 'forms', 'directory' => '']);
 
-        // Standard-Komponente automatisch hinzufügen. Kann durch $general->resetKomponenten(); wieder entfernt werden
-        $this->addComponent('Projektseiten', ['directory' => 'seiten']);
-        $this->addComponent('Standardseite', ['directory' => 'seiten']);
+        // Add default component automatically. Can be removed by $general->resetComponents(); again
+        $this->addComponent('ProjectPage', ['directory' => 'pages']);
+        $this->addComponent('DefaultPage', ['directory' => 'pages']);
 
         $this->setSeoTags();
     }
 
     protected function setSeoTags() {
-        $konfigurationsseite = $this->konfigurationService->getKonfigurationsseite();
+        $configPage = $this->configurationService->getConfigurationPage();
 
-        $metaangaben = array(
+        $metas = array(
             'title'       => 'Musical-Fabrik - ' . $this->page->title,
             'site_name'   => '',
             'author'      => '',
@@ -118,70 +118,68 @@ class General extends TwackComponent {
             'type'        => 'website'
         );
 
-        $metaangaben['site_name'] = $konfigurationsseite->kurztext;
-        $metaangaben['author']    = $konfigurationsseite->kurztext;
+        $metas['site_name'] = $configPage->short_text;
+        $metas['author']    = $configPage->short_text;
 
         // Description aus Einleitungs-Feld erzeugen:
-        if ($this->page->hasField('einleitung') && !empty($this->page->einleitung)) {
-            $metaangaben['description'] = Twack::wordLimiter($this->page->einleitung, 160);
-        } elseif ($konfigurationsseite->kurzbeschreibung && !empty($konfigurationsseite->kurzbeschreibung)) {
-            $metaangaben['description'] = $konfigurationsseite->kurzbeschreibung;
+        if ($this->page->hasField('intro') && !empty($this->page->intro)) {
+            $metas['description'] = Twack::wordLimiter($this->page->intro, 160);
+        } elseif ($configPage->short_description && !empty($configPage->short_description)) {
+            $metas['description'] = $configPage->short_description;
         }
 
-        $metaangaben['canonical'] = $this->page->httpUrl;
+        $metas['canonical'] = $this->page->httpUrl;
 
-        // Titelbild als Image einsetzen, wenn vorhanden:
-        if ($this->page->hasField('titelbild') && $this->page->titelbild && !empty($this->page->titelbild)) {
-            $metaangaben['image'] = $this->page->titelbild->httpUrl;
-        } elseif ($konfigurationsseite->titelbild && !empty($konfigurationsseite->titelbild)) {
-            $metaangaben['image'] = $konfigurationsseite->titelbild->httpUrl;
+        // Use main image as image, if available:
+        if ($this->page->hasField('main_image') && $this->page->main_image && !empty($this->page->main_image)) {
+            $metas['image'] = $this->page->main_image->httpUrl;
+        } elseif ($configPage->main_image && !empty($configPage->main_image)) {
+            $metas['image'] = $configPage->main_image->httpUrl;
         }
 
-        // Einstellungen aus dem SEO-Modul übernehmen, wenn vorhanden:
+        // Accept settings from the SEO module, if available:
         if (is_object($this->page->seo)) {
             $seo = $this->page->seo;
             if (isset($seo->title) && is_string($seo->title) && !empty($seo->title)) {
-                $metaangaben['title'] = $seo->title;
+                $metas['title'] = $seo->title;
             }
             if (isset($seo->site_name) && is_string($seo->site_name) && !empty($seo->site_name)) {
-                $metaangaben['site_name'] = $seo->site_name;
+                $metas['site_name'] = $seo->site_name;
             }
             if (isset($seo->description) && is_string($seo->description) && !empty($seo->description)) {
-                $metaangaben['description'] = $seo->description;
+                $metas['description'] = $seo->description;
             }
             if (isset($seo->author) && is_string($seo->author) && !empty($seo->author)) {
-                $metaangaben['author'] = $seo->author;
+                $metas['author'] = $seo->author;
             }
             if (isset($seo->keywords) && is_string($seo->keywords) && !empty($seo->keywords)) {
-                $metaangaben['keywords'] = $seo->keywords;
+                $metas['keywords'] = $seo->keywords;
             }
             if (isset($seo->image) && is_string($seo->image) && !empty($seo->image)) {
-                $metaangaben['image'] = $seo->image;
+                $metas['image'] = $seo->image;
             }
             if (isset($seo->canonical) && is_string($seo->canonical) && !empty($seo->canonical)) {
-                $metaangaben['canonical'] = $seo->canonical;
+                $metas['canonical'] = $seo->canonical;
             }
             if (isset($seo->robots) && is_string($seo->robots) && !empty($seo->robots)) {
-                $metaangaben['robots'] = $seo->robots;
+                $metas['robots'] = $seo->robots;
             }
             if (isset($seo->generator) && is_string($seo->generator) && !empty($seo->generator)) {
-                $metaangaben['generator'] = $seo->generator;
+                $metas['generator'] = $seo->generator;
             }
             if (isset($seo->{'og:site_name'}) && is_string($seo->{'og:site_name'}) && !empty($seo->{'og:site_name'})) {
-                $metaangaben['site_name'] = $seo->{'og:site_name'};
+                $metas['site_name'] = $seo->{'og:site_name'};
             }
             if (isset($seo->{'twitter:site'}) && is_string($seo->{'twitter:site'}) && !empty($seo->{'twitter:site'})) {
-                $metaangaben['twitter:site'] = $seo->{'twitter:site'};
+                $metas['twitter:site'] = $seo->{'twitter:site'};
             }
             if (isset($seo->custom) && is_array($seo->custom) && !empty($seo->custom)) {
-                $metaangaben = array_merge($metaangaben, $seo->custom);
+                $metas = array_merge($metas, $seo->custom);
             }
         }
 
-        // Twack::devEcho($metaangaben);
-
-        // Meta-Tags generieren:
-        foreach ($metaangaben as $metaname => $metacontent) {
+        // Generate Meta-Tags:
+        foreach ($metas as $metaname => $metacontent) {
             if (empty($metacontent)) {
                 continue;
             }
@@ -215,12 +213,12 @@ class General extends TwackComponent {
     }
 
     /**
-     * Fügt ein zusätzliches Metatag hinzu
-     * @param string $metatag  	Metatag-String (inklusive Html)
+     * Adds an additional meta tag
+     * @param string $metatag  	Metatag string (including html) 
      */
     public function addMeta($metaname, $metatag) {
         if (is_string($metaname) && !empty($metaname) && is_string($metatag) && !empty($metatag)) {
-            $this->metaangaben->{$metaname} = $metatag;
+            $this->metas->{$metaname} = $metatag;
         }
     }
 

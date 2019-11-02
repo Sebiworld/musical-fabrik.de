@@ -2,7 +2,7 @@
 namespace ProcessWire;
 
 /**
- * Stellt unique IDs zur Verfügung (Benötigt für z.B. Formulare, Akkordeons und Modals).
+ * Provides unique IDs (needed for e.g. forms, accordions and modals).
  */
 class IdService extends TwackComponent {
 
@@ -14,27 +14,27 @@ class IdService extends TwackComponent {
 	}
 
 	/**
-	 * Liefert eine unique ID auf der aktuellen Seite
-	 * @param  string $forderung
+	 * Returns a unique ID on the current page
+	 * @param  string $requestedId
 	 * @return string
 	 */
-	public function getID($forderung = 'id') {
-		if (!isset($this->ids[$forderung]) && $forderung != 'id') {
-			$this->ids[$forderung] = $forderung;
-			return $this->ids[$forderung];
+	public function getID($requestedId = 'id') {
+		if (!isset($this->ids[$requestedId]) && $requestedId != 'id') {
+			$this->ids[$requestedId] = $requestedId;
+			return $this->ids[$requestedId];
 		}
 
 		$counterChar = 'a';
-		$wert = $forderung . '-' . $counterChar;
-		while (isset($this->ids[$wert])) {
-			// Erhöht auf den nächsten Buchstaben im Alphabet: Wenn bei z angekommen, folgt aa.
-			$wert = $forderung . '-' . (++$counterChar);
+		$value = $requestedId . '-' . $counterChar;
+		while (isset($this->ids[$value])) {
+			// Increments to the next letter in the alphabet: When z is reached, aa follows.
+			$value = $requestedId . '-' . (++$counterChar);
 		}
 
 		$ids = $this->ids;
-		$ids[$wert] = $wert;
+		$ids[$value] = $value;
 		$this->ids = $ids;
 
-		return $this->ids[$wert];
+		return $this->ids[$value];
 	}
 }

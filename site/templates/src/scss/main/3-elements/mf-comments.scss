@@ -1,0 +1,46 @@
+.mf_comments{
+	margin-top: $padding-y-lg;
+	max-width: 1000px;
+
+	.CommentList{
+		list-style: none;
+		padding-left: 0;
+		margin-bottom: $padding-y-md;
+
+		&>.CommentListItem{
+			position: relative;
+			display: block;
+			margin-bottom: $padding-y-xs;
+			padding: $padding-xs $padding-xs;
+			background: $bg-light;
+			overflow: auto;
+
+			&>.CommentGravatar{
+				position: relative;
+				display: inline-block;
+				float: left;
+				height: 100%;
+				width: auto;
+				margin-right: $padding-xs;
+
+				&:after {
+					content: "";
+					display: block;
+					clear: both;
+				}
+			}
+
+			&>.CommentHeader, &>.CommentText, &>.CommentFooter{
+				display: block;
+			}
+
+			&>.CommentHeader{
+				margin-bottom: $padding-xs;
+
+				&>.CommentCite{
+					font-weight: bold;
+				}
+			}
+		}
+	}
+}

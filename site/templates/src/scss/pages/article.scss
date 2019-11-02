@@ -1,0 +1,18 @@
+@import "./globals/index";
+
+.t-article {
+  .main-content {
+    .contents-area {
+      .main_image {
+        @include media-breakpoint-up(lg) {
+			margin-bottom: $padding-md;
+        }
+      }
+      .title {
+        border-style: solid;
+        border-width: 0;
+        border-color: $body-color;
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+@import "./globals/index";
+.filters_component{
+	margin-bottom: $padding-y-sm;
+
+	.form-row{
+		.form-group{
+			&>label{
+				width: 100%;
+			}
+		}
+	}
+}

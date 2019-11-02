@@ -1,0 +1,195 @@
+<?php
+
+namespace ProcessWire;
+
+class InputfieldProjectRoles extends Inputfield {
+    public static function getModuleInfo() {
+        return array(
+            'title'    => 'Project Roles',
+            'version'  => '0.1.0',
+            'summary'  => 'InputField für den ProjectROles Fieldtype.',
+            'requires' => 'FieldtypeProjectRoles'
+        );
+    }
+
+    protected $projectRoles;
+    protected $casts;
+
+    public function __construct() {
+        require_once dirname(__FILE__) . '/ProjectRole.class.php';
+        require_once dirname(__FILE__) . '/ProjectRolesArray.class.php';
+
+        $this->set('defaultProjectRole', new NullPage());
+        $this->set('defaultCasts', new PageArray());
+
+        parent::__construct();
+    }
+
+    /**
+     * Setzt die möglichen, zur Auswahl stehenden Rollen
+     */
+    public function setProjectRoles(PageArray $projectRoles) {
+        $this->projectRoles = $projectRoles;
+    }
+
+    /**
+     * Setzt die möglichen, zur Auswahl stehenden Besetzungen
+     */
+    public function setCasts(PageArray $casts) {
+        $this->casts = $casts;
+    }
+
+    public function setAttribute($key, $value) {
+        if ($key == 'value' && !$value instanceof FieldtypeProjectRoleProjectRolesArray && !is_null($value)) {
+            throw new WireException("This input only accepts a ProjectRolesArray for it's value");
+        }
+
+        return parent::setAttribute($key, $value);
+    }
+
+    public function isEmpty() {
+        return (!$this->value || !$this->value->projectRole || !$this->value->projectRole->id);
+    }
+
+    public function renderReady(Inputfield $parent = null, $renderValueMode = false) {
+        return parent::renderReady($parent, $renderValueMode);
+    }
+
+    /**
+     * Render the entire input area for Events
+     *
+     */
+    public function ___render() {
+        $fieldname = $this->attr('name');
+        if (empty($fieldname)) {
+            return;
+        }
+
+        $values = $this->attr('value');
+
+        $thead = '<tr>';
+        $thead .= '<th class="beschriftungs-zelle">&nbsp;</th>';
+        $thead .= '<th data-spalte="0" class="checkbox-zelle spalte-0 alle">Alle Besetzungen</th>';
+        foreach ($this->casts as $index => $cast) {
+            $thead .= '<th data-spalte="' . ($index + 1) . '" class="checkbox-zelle spalte-' . ($index + 1) . '">' . $cast->title . '</th>';
+        }
+        $thead .= '</tr>';
+
+        $tbody = '';
+        foreach ($this->projectRoles as $projectRole) {
+            $tbody .= $this->renderProjectRoleRow($fieldname, $projectRole, $values);
+        }
+
+        $output = '<table class="' . $fieldname . ' rollen-tabelle">';
+        $output .= '<thead>';
+        $output .= $thead;
+        $output .= '</thead>';
+        $output .= '<tbody>';
+        $output .= $tbody;
+        $output .= '</tbody>';
+        $output .= '</table>';
+
+        return $output;
+    }
+
+    protected function renderProjectRoleRow($fieldname, Page $projectRole, FieldtypeProjectRoleProjectRolesArray $values, $depth = 0) {
+        $projectRolesInput = $values->get('projectRole.id=' . $projectRole->id);
+
+        $output = '<tr data-ebene="' . $depth . '" class="reihe ebene-' . $depth . '">';
+        $output .= '<td class="beschriftungs-zelle"><span>' . $projectRole->title . '</span></td>';
+        $output .= '<td data-spalte="0" class="checkbox-zelle alle spalte-0">' . $this->renderCheckbox($fieldname, $projectRole->id . '_a') . '</td>';
+
+        foreach ($this->casts as $index => $cast) {
+            $checked = $projectRolesInput && $projectRolesInput->casts->get('id=' . $cast->id);
+
+            $output .= '<td data-spalte="' . ($index + 1) . '" class="checkbox-zelle spalte-' . ($index + 1) . '">';
+            $output .= $this->renderCheckbox($fieldname, $projectRole->id . '_' . $cast->id, $checked);
+            $output .= '</td>';
+        }
+
+        $output .= '</tr>';
+
+        $childroles = $projectRole->children('template.name=project_role');
+        if ($childroles->count > 0) {
+            foreach ($childroles as $childrole) {
+                $output .= $this->renderProjectRoleRow($fieldname, $childrole, $values, $depth + 1);
+            }
+        }
+
+        return $output;
+    }
+
+    protected function renderCheckbox($name, $value = 'on', $checked = false, $label = '') {
+        $output = '<label class="control control--checkbox">' . $label;
+        $output .= '<input type="checkbox" name="' . $name . '[]" value="' . $value . '" ' . ($checked ? 'checked="checked"' : '') . '/>';
+        $output .= '<div class="control__indicator"></div>';
+        $output .= '</label>';
+        return $output;
+    }
+
+    /**
+     * Process the input after a form submission
+     *
+     * @param WireInputData $input
+     * @return $this
+     */
+    public function ___processInput(WireInputData $input) {
+        $fieldname = $this->attr('name');
+
+        // Rollen-IDs und zugehörige Besetzungen sammeln und sortieren:
+        $rolesCollection = array();
+        foreach ($input->{$fieldname} as $cnt => $inputstring) {
+            if (!is_string($inputstring)) {
+                continue;
+            }
+
+            $roleAndCast = explode('_', $inputstring);
+            if (count($roleAndCast) != 2) {
+                continue;
+            }
+            if (empty($roleAndCast[0]) || empty($roleAndCast[1])) {
+                continue;
+            }
+
+            $rolesPage = wire('pages')->get($roleAndCast[0]);
+            if (!$rolesPage->id) {
+                continue;
+            }
+
+            if (!isset($rolesCollection[$rolesPage->id]) || !is_array($rolesCollection[$rolesPage->id]) || !isset($rolesCollection[$rolesPage->id]['projectRole'])) {
+                $rolesCollection[$rolesPage->id] = array(
+                    'projectRole'       => $rolesPage,
+                    'casts' => new PageArray()
+                );
+            }
+
+            if ($roleAndCast[1] == 'a') {
+                $rolesCollection[$rolesPage->id]['casts'] = $this->casts;
+            } else {
+                $castPage = wire('pages')->get($roleAndCast[1]);
+                if (!$castPage->id) {
+                    continue;
+                }
+
+                $rolesCollection[$rolesPage->id]['casts']->add($castPage);
+            }
+        }
+
+        $projectRoles = new FieldtypeProjectRoleProjectRolesArray();
+        ;
+        foreach ($rolesCollection as $projectRoleArray) {
+            if (!isset($projectRoleArray['projectRole']) || !isset($projectRoleArray['casts'])) {
+                continue;
+            }
+
+            $newRole              = new FieldtypeProjectRoleProjectRole($projectRoleArray['projectRole']);
+            $newRole->casts = $projectRoleArray['casts'];
+            $projectRoles->add($newRole);
+        }
+
+        if (!$this->value->isEqualTo($projectRoles)) {
+            $this->attr('value', $projectRoles);
+            $this->trackChange('value');
+        }
+    }
+}

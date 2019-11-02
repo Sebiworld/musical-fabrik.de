@@ -1,7 +1,7 @@
 <?php
 namespace ProcessWire;
 
-require_once('basis_modal.class.php');
+require_once('base_modal.class.php');
 
 class Modals extends TwackComponent {
 
@@ -9,28 +9,28 @@ class Modals extends TwackComponent {
 
 	public function __construct($args) {
 		parent::__construct($args);
-		$this->modalkomponenten = new WireArray();
+		$this->modalcomponents = new WireArray();
 	}
 
 	/**
-	 * Fügt eine neue Komponente zur Modals-Liste hinzu.
+	 * Adds a new component to the modals list.
 	 */
 	public function addComponent($componentname, $args = array()) {
 		if (!isset($args['id'])) {
 			$args['id'] = Twack::camelCaseToUnderscore($componentname);
 		}
 
-		// Der ID-Service stellt sicher, dass jede HTML-ID nur einmal vergeben wird:
+		// The ID service ensures that each HTML ID is assigned only once:
 		$this->idService = $this->getService('IdService');
 		$args['id'] = $this->idService->getID($args['id']);
 
 		$args['name'] = $args['id'];
-		$komponente = parent::addComponent($componentname, $args);
-		if (!($komponente instanceof BasisModal)) {
-			throw new ComponentNotInitializedException($componentname, 'Alle Modals müssen von der Klasse BasisModal abgeleitet werden.');
+		$component = parent::addComponent($componentname, $args);
+		if (!($component instanceof BaseModal)) {
+			throw new ComponentNotInitializedException($componentname, $this->_('All modals must be derived from the class BaseModal.'));
 		}
 
-		$this->modalkomponenten->add($komponente);
-		return $komponente;
+		$this->modalcomponents->add($component);
+		return $component;
 	}
 }

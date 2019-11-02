@@ -1,0 +1,39 @@
+@import "./globals/index";
+
+.content_gallery_grid{
+	margin-top: $padding-md;
+	margin-left: $grid-gutter-width / -2;
+	margin-right: $grid-gutter-width / -2;
+
+	.grid{
+		margin-top: $padding-xs;
+		margin-bottom: $padding-md;
+	}
+
+	.masonry-grid {
+		// & > .masonry-grid-item,
+		// & > .masonry-grid-sizer {
+		// 	width: 50%;
+
+		// 	@include media-breakpoint-up(sm) {
+		// 		width: 50%;
+		// 	}
+		// 	@include media-breakpoint-up(md) {
+		// 		width: 33%;
+		// 	}
+		// 	@include media-breakpoint-up(xxxl) {
+		// 		width: 20%;
+		// 	}
+		// }
+
+		& > .masonry-grid-item {
+			// box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
+
+			& > a {
+				display: block;
+				// height: 100%;
+				width: 100%;
+			}
+		}
+	}
+}

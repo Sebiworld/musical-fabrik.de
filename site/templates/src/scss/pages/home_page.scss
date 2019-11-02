@@ -1,0 +1,25 @@
+@import "./globals/index";
+
+.t-home_page{
+	header{
+		&>.header-hero{
+			display: none;
+		}
+
+		height: 0;
+		&:not(.minimized){
+			height: 0;
+
+			.navbar, .navbar-collapse{
+				background-color: transparent;
+			}
+			.navbar-brand{
+				display: none;
+			}
+
+			.navbar-nav a.nav-link.nav-link{
+				color: #fff;
+			}
+		}
+	}
+}

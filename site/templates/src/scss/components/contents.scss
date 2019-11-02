@@ -1,0 +1,148 @@
+@import "./globals/index";
+
+.contents_component,
+.InputfieldCKEditorInline {
+  .row {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .riesig {
+    @include fontsize(10, 1.1);
+  }
+
+  .gross {
+    @include fontsize(5, 1.1);
+  }
+
+  .etwas-gross {
+    @include fontsize(2, 1.1);
+  }
+
+  .content-block {
+    margin-bottom: $padding-y-sm;
+    max-width: 100%;
+
+    &:first-child,
+    & > *:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child,
+    & > *:last-child {
+      margin-bottom: 0;
+    }
+
+    .block-title {
+      margin-top: $padding-sm;
+      margin-bottom: $padding-xs;
+    }
+
+    .content_text {
+      width: 100%;
+    }
+
+    .content_collapsible {
+      width: 38em;
+      max-width: 100%;
+    }
+
+    .content_image{
+      width: 100%;
+    }
+  }
+
+  .content-sub-block {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  h2 {
+    @include fontsize("content-h2", 1.1);
+    margin-top: font-px("content-h2") * 2;
+    margin-bottom: font-px("content-h2");
+
+    &:first-child {
+      margin-top: font-px("content-h2");
+    }
+  }
+  h3 {
+    @include fontsize("content-h3", 1.1);
+    margin-top: font-px("content-h3") * 2;
+    margin-bottom: font-px("content-h3");
+  }
+  h4 {
+    @include fontsize("content-h4", 1.1);
+    margin-top: font-px("content-h4") * 2;
+    margin-bottom: font-px("content-h4");
+  }
+  h5 {
+    @include fontsize("content-h5", 1.1);
+    margin-top: font-px("content-h5") * 2;
+    margin-bottom: font-px("content-h5");
+  }
+  h6 {
+    @include fontsize("content-h6", 1.1);
+    margin-top: font-px("content-h6") * 2;
+    margin-bottom: font-px("content-h6");
+  }
+
+  p {
+    width: 38em;
+    max-width: 100%;
+  }
+
+  .limit-video {
+    width: 32em;
+    max-width: 100%;
+
+    &.w-600 {
+      width: 600px;
+    }
+    &.w-800 {
+      width: 800px;
+    }
+    &.w-1000 {
+      width: 1000px;
+    }
+  }
+
+  .center,
+  .center > p {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .content_gallery {
+    margin-top: $padding-md;
+    margin-bottom: $padding-md;
+    width: auto;
+  }
+}
+
+.center {
+  .contents_component {
+    .content-block,
+    .content-block > *,
+    p {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
+
+.center-vertical {
+  .contents_component {
+    .content-sub-block {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+@import "contents/content-files";
+@import "contents/content-chart";
+@import "contents/content-youtube-video";

@@ -8,12 +8,10 @@ require_once wire('config')->paths->RestApi . 'classes/RestApiHelper.php';
 require_once __DIR__ . '/TwackAccess.class.php';
 
 $routes = [
-    'current_user' => [
-        ['OPTIONS', ''],
-        ['GET', '', Auth::class, 'currentUser'],
-    ],
     'page' => [
-        ['OPTIONS', ''], // this is needed for CORS Requests
+        ['OPTIONS', '{id:\d+}', ['GET', 'POST', 'UPDATE', 'DELETE']],
+        ['OPTIONS', '{path:.+}', ['GET', 'POST', 'UPDATE', 'DELETE']],
+        ['OPTIONS', '', ['GET', 'POST', 'UPDATE', 'DELETE']],
         ['GET', '{id:\d+}', TwackAccess::class, 'pageIDRequest'],
         ['GET', '{path:.+}', TwackAccess::class, 'pagePathRequest'],
         ['GET', '', TwackAccess::class, 'dashboardRequest'],
@@ -28,7 +26,9 @@ $routes = [
         ['DELETE', '', TwackAccess::class, 'dashboardRequest'],
     ],
     'file' => [
-        ['OPTIONS', ''], // this is needed for CORS Requests
+        ['OPTIONS', '{id:\d+}', ['GET']],
+        ['OPTIONS', '{path:.+}', ['GET']],
+        ['OPTIONS', '', ['GET']],
         ['GET', '{id:\d+}', TwackAccess::class, 'pageIDFileRequest'],
         ['GET', '{path:.+}', TwackAccess::class, 'pagePathFileRequest'],
         ['GET', '', TwackAccess::class, 'dashboardFileRequest']
