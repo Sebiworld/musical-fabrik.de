@@ -73,4 +73,19 @@ class ContentGallery extends TwackComponent {
 			));
 		}
 	}
+
+	public function getAjax() {
+        $output = array(
+            'type' => 'gallery',
+            'depth' => $this->page->depth,
+            'title' => $this->title,
+            'hide_title' => $this->page->hide_title,
+            'description' => $this->description,
+            'classes' => $this->page->classes,
+			'images' => $this->getAjaxOf($this->images),
+			'gallery_type' => $this->type
+        );
+
+        return $output;
+    }
 }

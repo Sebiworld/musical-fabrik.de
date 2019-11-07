@@ -2,7 +2,7 @@
 
 namespace ProcessWire;
 
-class ContentText extends TwackComponent {
+class ContentContainer extends TwackComponent {
     public function __construct($args) {
         parent::__construct($args);
     }
@@ -13,7 +13,6 @@ class ContentText extends TwackComponent {
             'depth' => $this->page->depth,
             'title' => $this->page->title,
             'hide_title' => $this->page->hide_title,
-            'text' => $this->page->text,
             'classes' => $this->page->classes
         );
 

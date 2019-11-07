@@ -80,7 +80,7 @@ class DefaultPage extends TwackComponent {
 		);
 
 		if (!empty($this->datetime_unformatted)) {
-			$output['datetime'] = $this->datetime_unformatted;
+			$output['datetime_from'] = $this->datetime_unformatted;
 		}
 
 		if (!empty($this->datetime_until_unformatted)) {
@@ -91,8 +91,8 @@ class DefaultPage extends TwackComponent {
 			$output['intro'] = $this->intro;
 		}
 
-		if (!empty($this->main_image)) {
-			$output['main_image'] = $this->getAjaxOf($this->main_image);
+		if (!empty($this->page->main_image)) {
+			$output['main_image'] = $this->getAjaxOf($this->page->main_image);
 		}
 
 		if (!empty($this->authors)) {

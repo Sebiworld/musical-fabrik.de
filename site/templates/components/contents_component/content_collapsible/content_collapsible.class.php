@@ -48,4 +48,26 @@ class ContentCollapsible extends TwackComponent {
 			}
 		}
 	}
+
+	public function getAjax() {
+        $output = array(
+            'type' => 'collapsible',
+			'depth' => $this->page->depth,
+			'id' => $this->id,
+            'title' => $this->title,
+            'hide_title' => $this->page->hide_title,
+            'classes' => $this->page->classes,
+			'tabs' => []
+		);
+		
+		foreach($this->tabs as $tab){
+			$output['tabs'][] = [
+				'id' => $tab->id,
+				'title' => $tab->title,
+				'content' => $tab->content
+			];
+		}
+
+        return $output;
+    }
 }
