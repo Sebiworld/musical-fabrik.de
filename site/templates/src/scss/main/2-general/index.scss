@@ -168,4 +168,14 @@ a {
   font-family: $font-family-sans-serif;
 }
 
+p.capital-letter, .capital-letter p:first-of-type{
+  &:first-letter {
+    font-family: $font-family-serif;
+    font-size: 5.5rem;
+    float: left;
+    line-height: 0.6; /* from 1 */
+    margin-right: 0.05em;
+  }
+}
+
 @import "./fonts";

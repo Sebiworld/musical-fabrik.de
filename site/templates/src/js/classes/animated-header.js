@@ -17,7 +17,7 @@ import { throttle } from "lodash-es";
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     if (scrollTop >= 400) {
       if (headerElement) {
-        addClass(headerElement, 'minimiert');
+        addClass(headerElement, 'mini');
       }
       if (backToTopElement) {
         addClass(backToTopElement, 'show');
@@ -25,7 +25,7 @@ import { throttle } from "lodash-es";
       }
     } else if (scrollTop < 300) {
       if (headerElement) {
-        removeClass(headerElement, 'minimiert');
+        removeClass(headerElement, 'mini');
       }
       if (backToTopElement) {
         addClass(backToTopElement, 'hide');

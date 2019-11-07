@@ -23,8 +23,8 @@ $font-family-sans-serif: "Aileron Light", -apple-system, system-ui, BlinkMacSyst
 $font-family-serif:      "Cardo", Georgia, "Times New Roman", Times, serif !default;
 $font-family-monospace:  Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
 $font-family-base:       $font-family-sans-serif !default;
-$headings-font-family:   "Aileron Heavy", -apple-system, system-ui,
-BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$headings-font-family:   "Aileron Heavy", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+
 
 // The yiq lightness value that determines when the lightness of color changes from "dark" to "light". Acceptable values are between 0 and 255.
 $yiq-contrasted-threshold: 160;

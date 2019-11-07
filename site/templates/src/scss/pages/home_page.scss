@@ -1,13 +1,13 @@
 @import "./globals/index";
 
-.t-home_page{
+.t-home{
 	header{
 		&>.header-hero{
 			display: none;
 		}
 
 		height: 0;
-		&:not(.minimized){
+		&:not(.mini){
 			height: 0;
 
 			.navbar, .navbar-collapse{

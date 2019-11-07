@@ -35,4 +35,18 @@ class ContentAudiofiles extends TwackComponent {
             'absolute' => true
         ));
     }
+
+    public function getAjax() {
+        $output = array(
+            'type' => 'files',
+            'depth' => $this->page->depth,
+            'title' => $this->title,
+            'hide_title' => $this->page->hide_title,
+            'description' => $this->description,
+            'classes' => $this->page->classes,
+			'files' => $this->getAjaxOf($this->audiofiles)
+        );
+
+        return $output;
+    }
 }

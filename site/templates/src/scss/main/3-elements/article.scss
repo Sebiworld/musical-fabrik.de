@@ -1,101 +1,118 @@
-article, .article{
-	display: block;
-	position: relative;
+article,
+.article {
+  display: block;
+  position: relative;
 
-	.tags{
-		margin-bottom: $padding-xs;
-	}
+  .tags {
+    margin-bottom: $padding-xs;
+  }
 
-	.main_image{
-		margin-bottom: $padding-sm;
-		max-width: 100%;
-		width: 50rem + (2 * $padding-sm);
-	}
+  .main_image {
+    margin-bottom: $padding-sm;
+    max-width: 100%;
+    width: 50rem + (2 * $padding-sm);
+  }
 
-	.contents-container{
-		display: block;
-		position: relative;
+  .contents-container {
+    display: block;
+    position: relative;
 
-		&>:first-child{
-			margin-top: 0;
-			padding-top: 0;
-		}
+    & > :first-child {
+      margin-top: 0;
+      padding-top: 0;
+    }
 
-		.content_articles{
-			margin-top: $padding-md;
+    .content_articles {
+      margin-top: $padding-md;
 
-			.articles_carousel{
-				margin-top: $padding-y-xs;
-			}
-		}
-	}
+      .articles_carousel {
+        margin-top: $padding-y-xs;
+      }
+    }
+  }
 
-	.intro, .content-block p, .content-block>.collapsible{
-		max-width: 100%;
-		width: 38em;
-	}
+  .intro,
+  .content-block p,
+  .content-block > .content_collapsible {
+    max-width: 100%;
+    width: 38em;
+  }
+  
+//   .intro:not(.no-capital-letter):first-of-type:first-letter {
+//     font-family: $font-family-serif;
+//     font-size: 5.5rem;
+//     float: left;
+//     line-height: 0.6; /* from 1 */
+//     margin-right: 0.05em;
+//   }
 
-	.title{
-		margin-top: 0;
-		// margin-top: $padding-xs;
-		padding-top: $padding-xs;
-		margin-bottom: $padding-y-sm * 1.5;
-		padding-bottom: $padding-xs;
-		display: block;
-		width: 16em;
-		max-width: 100%;
-		hyphens: auto;
+  .title {
+    margin-top: 0;
+    // margin-top: $padding-xs;
+    padding-top: $padding-xs;
+    margin-bottom: $padding-y-sm * 1.5;
+    padding-bottom: $padding-xs;
+    display: block;
+    width: 16em;
+    max-width: 100%;
+    hyphens: auto;
 
-		@include media-breakpoint-down(sm) {
-			@include font-size(1.5rem);
-			margin-bottom: $padding-y-xs;
-			line-height: 1.2;
-		}
-	}
-	.intro{
-		margin-bottom: $padding-sm;
-		font-weight: bold;
-	}
+    @include media-breakpoint-down(sm) {
+      @include font-size(1.5rem);
+      margin-bottom: $padding-y-xs;
+      line-height: 1.2;
+    }
+  }
+  .intro {
+    margin-bottom: $padding-sm;
+    font-weight: bold;
+  }
 
-	.contents_component{
-		.content_gallery{
-			// margin: $padding-md (-1 * $padding-sm);
-			width: auto;
-		}
-	}
+  .contents_component {
+    .content_gallery {
+      // margin: $padding-md (-1 * $padding-sm);
+      width: auto;
+    }
+  }
 
-	@include media-breakpoint-only(sm) {
-		.title, .intro, .meta, .contents_component{
-			padding-left: $padding-xs;
-			padding-right: $padding-xs;
-		}
-	}
+  @include media-breakpoint-only(sm) {
+    .title,
+    .intro,
+    .meta,
+    .contents_component {
+      padding-left: $padding-xs;
+      padding-right: $padding-xs;
+    }
+  }
 
-	@include media-breakpoint-up(md) {
-		.title, .intro, .meta, .contents_component{
-			padding-left: $padding-sm;
-			padding-right: $padding-sm;
-		}
-	}
+  @include media-breakpoint-up(md) {
+    .title,
+    .intro,
+    .meta,
+    .contents_component {
+      padding-left: $padding-sm;
+      padding-right: $padding-sm;
+    }
+  }
 
-	h2{
-		@include fontsize("content-h2", 1.1);
-		margin-bottom: font-px("content-h2");
-	}
-	h3{
-		@include fontsize("content-h3", 1.1);
-		margin-bottom: font-px("content-h3");
-	}
-	h4{
-		@include fontsize("content-h4", 1.1);
-		margin-bottom: font-px("content-h4");
-	}
-	h5{
-		@include fontsize("content-h5", 1.1);
-		margin-bottom: font-px("content-h5");
-	}
-	h6{
-		@include fontsize("content-h6", 1.1);
-		margin-bottom: font-px("content-h6");
-	}
+  h2 {
+    @include fontsize("content-h2", 1.1);
+    margin-bottom: font-px("content-h2");
+  }
+  h3 {
+    @include fontsize("content-h3", 1.1);
+    margin-bottom: font-px("content-h3");
+  }
+  h4 {
+    @include fontsize("content-h4", 1.1);
+    margin-bottom: font-px("content-h4");
+  }
+  h5 {
+    @include fontsize("content-h5", 1.1);
+    margin-bottom: font-px("content-h5");
+  }
+  h6 {
+    @include fontsize("content-h6", 1.1);
+    margin-bottom: font-px("content-h6");
+  }
 }
