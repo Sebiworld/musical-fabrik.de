@@ -3,7 +3,7 @@
 /**
  *  Enthält mehrere Rollen, deren Besetzungen jeweils an- oder abgewählt sein können.
  */
-class FieldtypeProjectRoleProjectRolesArray extends WireArray {
+class FieldtypeProjectRoleProjectRolesArray extends PageArray {
 
 	public function __construct() {
 	}

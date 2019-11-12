@@ -11,7 +11,7 @@ class FieldtypeProjectRoles extends FieldtypeMulti {
 			'title' => 'Project Roles',
 			'version' => '0.1.0',
 			'summary' => 'Ein Feld, das Rollen speichert - in Kombination mit Besetzungen.',
-			'installs' => 'InputfieldRollen',
+			'installs' => 'InputfieldProjectRoles',
 			);
 	}
 
@@ -111,7 +111,7 @@ class FieldtypeProjectRoles extends FieldtypeMulti {
 
 		// create new Rolle objects from each item in the array
 		foreach($value as $v) {
-			$projectrole = new ProjectRoles($v['data']);
+			$projectrole = new FieldtypeProjectRoleProjectRole($v['data']);
 			$projectrole->casts = $v['casts'];
 			$projectrole->setTrackChanges(true);
 			$roles->add($projectrole);

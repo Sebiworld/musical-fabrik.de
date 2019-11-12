@@ -312,8 +312,7 @@ module.exports = (env, options) => {
 						' * @project        ' + pkg.name,
 						' * @name           ' + '[filebase]',
 						' * @author         ' + pkg.author.name,
-						' * @build          ' + moment().format('llll') + ' ET',
-						' *',
+						(isProduction ? ' *' : ' * @build          ' + moment().format('llll') + ' ET'),
 						' */',
 						''
 					].join('\n'),

@@ -108,11 +108,11 @@ class SebiMusicalFabrikFunctions extends WireData implements Module {
 				$page->save();
 			}
 
-		} elseif ($page->template->name == 'time_period') {
-			$parentPages = wire('pages')->find('time_period='.$page->id);
+		} elseif ($page->template->name == 'time_periods') {
+			$parentPages = wire('pages')->find('time_periods='.$page->id);
 			foreach ($parentPages as $parentPage) {
 				$datetimeFrom = false;
-				if (!$parentPage->template->hasField('time_period') || $page->time_period->count <= 0) {
+				if (!$parentPage->template->hasField('time_periods') || $page->time_period->count <= 0) {
 					$datetimeFrom = '';
 				} else {
 					$start = $page->time_periods->filter('sort=datetime_from')->first();

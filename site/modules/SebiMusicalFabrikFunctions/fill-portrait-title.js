@@ -8,7 +8,7 @@
 	};
 
 	// Fields from which the title is to be formed:
-	var titleFelder = ['first_name', 'surname'];
+	var titleFields = ['first_name', 'surname'];
 
 	/**
 	* Replaces the contents of the Title field if the first name and/or last name have contents and the Title has not been changed.
@@ -27,9 +27,9 @@
 		var titleString = '';
 
 		for(var i = 0; i < titleFields.length; i++){
-			var titleFeld = titleFields[i];
-			var value = $('#Inputfield_'+titleFeld).val();
-			if(value.length > 0){
+			var titleField = titleFields[i];
+			var value = $('#Inputfield_'+titleField).val();
+			if(typeof value === 'string' && value.length > 0){
 				titleString += value + ' ';
 			}
 		}
