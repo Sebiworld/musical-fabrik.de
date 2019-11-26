@@ -218,10 +218,14 @@ export default class AjaxForm {
 		}
 
 		// General notes are displayed above and below the form in the ".alerts" container to be created for this purpose:
-		let alertsContainer = this.element.querySelector('.alerts');
-		if (alertsContainer) {
+		const alertcontainers = this.element.querySelectorAll('.alerts');
+		for (const index in alertcontainers) {
+			const element = alertcontainers[index];
+			if (typeof element !== 'object' || !(element instanceof Element)) {
+				continue;
+			}
 			// Empty the hint container:
-			alertsContainer.innerHTML = '';
+			element.innerHTML = '';
 
 			// Display new success notes:
 			if (typeof alerts.success === 'object') {
@@ -231,7 +235,7 @@ export default class AjaxForm {
 					alertbox.setAttribute('class', 'alert alert-success');
 					alertbox.setAttribute('role', 'alert');
 					alertbox.innerHTML = alert;
-					alertsContainer.appendChild(alertbox);
+					element.appendChild(alertbox);
 				}
 			}
 
@@ -243,7 +247,7 @@ export default class AjaxForm {
 					alertbox.setAttribute('class', 'alert alert-danger');
 					alertbox.setAttribute('role', 'alert');
 					alertbox.innerHTML = alert;
-					alertsContainer.appendChild(alertbox);
+					element.appendChild(alertbox);
 				}
 			}
 		}
@@ -340,8 +344,8 @@ export default class AjaxForm {
 	 * Locks the form for further entries.
 	 */
 	lockForm() {
-		let formularFieldsets = this.element.querySelectorAll('.all-formelements');
-		Array.prototype.forEach.call(formularFieldsets, function (el, i) {
+		let formFields = this.element.querySelectorAll('.all-formelements');
+		Array.prototype.forEach.call(formFields, function (el, i) {
 			el.setAttribute('disabled', 'disabled');
 		});
 
@@ -354,9 +358,17 @@ export default class AjaxForm {
 	submit(ajaxForm, event) {
 		event.preventDefault();
 
-		let formular = this;
-		formular.querySelector('.form-control').classList.remove('is-invalid');
-		formular.querySelector('.alerts').innerHTML = '';
+		const form = this;
+		form.querySelector('.form-control').classList.remove('is-invalid');
+
+		const alertcontainers = form.querySelectorAll('.alerts');
+		for (const index in alertcontainers) {
+			const element = alertcontainers[index];
+			if (typeof element !== 'object' || !(element instanceof Element)) {
+				continue;
+			}
+			element.innerHTML = '';
+		}
 
 		// Clone Ajax query object:
 		let ajaxCall = ajaxForm.ajaxCall.clone();
@@ -375,13 +387,21 @@ export default class AjaxForm {
 			.then(function (response) {
 				// console.log("Request successful: ", response);
 				ajaxForm.refreshFormEvaluation(response);
-				ajaxForm.lockForm();
+				if(response.submission_blocked){
+					ajaxForm.lockForm();
+				}
 			}, function (response) {
 				// console.error('Fetch Error :-S', response);
 				ajaxForm.refreshFormEvaluation(response);
+				if(response.submission_blocked){
+					ajaxForm.lockForm();
+				}
 			}).catch(function (err) {
 				// console.error('Fetch Error Catch :-S', err);
 				ajaxForm.refreshFormEvaluation(err);
+				if(err.submission_blocked){
+					ajaxForm.lockForm();
+				}
 			});
 
 		return false;

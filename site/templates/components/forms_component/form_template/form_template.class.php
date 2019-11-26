@@ -26,16 +26,17 @@ class FormTemplate extends TwackComponent {
                 'content'   => '',
                 'signature' => ''
             ),
-            'recipient'    => '',
-            'recipientCC'  => '',
-            'recipientBCC' => '',
+            'recipient'     => '',
+            'recipientCC'   => '',
+            'recipientBCC'  => '',
             'placeholders'  => array(
                 'html'  => array(),
                 'plain' => array()
             )
         );
 
-        $this->idService = $this->getService('IdService');
+        $this->idService          = $this->getService('IdService');
+        $this->evaluationResponse = [];
 
         // Determine Container Page. A container page must have the TemplateSelect field "form_template" in which it is specified which template is to be used as the form. The template must be permitted as a child template for the container page so that pages with the completed forms can be created below the container page.
         if (isset($args['containerPage']) && $args['containerPage'] instanceof Page && $args['containerPage']->id) {
@@ -48,7 +49,8 @@ class FormTemplate extends TwackComponent {
             throw new ComponentNotInitializedException('FormTemplate', $this->_('No valid container page was passed to the form.'));
         }
 
-        $this->formAction = $this->containerPage->url;
+        $this->formOrigin = $this->containerPage->id;
+        // $this->formAction = $this->containerPage->url;
 
         // Fill placeholder collection. {{placeholders}}} will be replaced by the specified match.
         $this->placeholders = array();
@@ -96,9 +98,16 @@ class FormTemplate extends TwackComponent {
         // When the template is set, it is run through and it is evaluated which fields must be generated and validated:
         $this->setTemplate($this->template);
 
+        if (wire('input')->post->int('form-origin') === $this->formOrigin) {
+            $this->evaluationResponse = $this->evaluateRequest();
+        }
+
         if (isset($args['formName']) && empty($args['formName'])) {
             $this->formName = $args['formName'];
         }
+
+        // When the template is set, it is run through and it is evaluated which fields must be generated and validated:
+        $this->setTemplate($this->template);
 
         // The form script makes the form Ajax-enabled. An evaluation without Ajax is not intended.
         $this->addScript('form-template.js', array(
@@ -112,7 +121,7 @@ class FormTemplate extends TwackComponent {
     }
 
     public function getAjax() {
-        $this->evaluateRequest();
+        // $this->evaluateRequest();
         return array();
     }
 
@@ -135,11 +144,15 @@ class FormTemplate extends TwackComponent {
         );
 
         try {
-            wire('session')->CSRF->validate($this->formName);
+            if (!empty(wire('input')->post->information)) {
+                throw new FormException($this->_('Form could not be submitted.'));
+            }
+            wire('session')->CSRF->validate($this->formOrigin);
 
             $newRequest            = new Page();
             $newRequest->template  = $this->template;
             $errorFlag             = false;
+            $values                = [];
 
             foreach ($this->fields as $fieldParams) {
                 $field = $this->template->fieldgroup->getField($fieldParams->name, true);
@@ -154,6 +167,7 @@ class FormTemplate extends TwackComponent {
                     'error'          => array(),
                     'success'        => array()
                 );
+                $values[$field->name] = $inputField->attr('value');
 
                 // The field has no content, but is required:
                 if (!!$field->required && empty($field->requiredIf) && $inputField->isEmpty()) {
@@ -170,6 +184,11 @@ class FormTemplate extends TwackComponent {
                 }
 
                 $newRequest->{$field->name} = $inputField->attr('value');
+            }
+
+            $messageIdent = md5(http_build_query($values));
+            if (!empty(wire('session')->get($this->formOrigin)) && wire('session')->get($this->formOrigin) === $messageIdent) {
+                throw new FormCriticalException($this->_('Form was already submitted.'));
             }
 
             // Check Required-If information (only possible when all POST information has been transferred to the page):
@@ -212,7 +231,7 @@ class FormTemplate extends TwackComponent {
             if (empty($newRequest->subject)) {
                 $newRequest->subject = $this->_('Request');
             }
-            $newRequest->title = sprintf($this->_('%1$s: %2$s (by %3$s)'), date('d.m.Y'), $newRequest->subject,  $name);
+            $newRequest->title = sprintf($this->_('%1$s: %2$s (by %3$s)'), date('d.m.Y'), $newRequest->subject, $name);
 
             // Save requested page:
             $newRequest->page = $this->page;
@@ -226,34 +245,60 @@ class FormTemplate extends TwackComponent {
             }
         } catch (WireCSRFException $e) {
             $output['error']['csrf_error']   = $this->_('This request was apparently forged and therefore aborted.');
+            $output['submission_blocked']    = true;
             $output['status']                = false;
-            Twack::sendResponse($output, 403);
-            return false;
+            if ($this->twack->isTwackAjaxCall()) {
+                Twack::sendResponse($output, 403);
+            }
+            return $output;
+        } catch (FormCriticalException $e) {
+            $output['error']['form_error']      = $e->getMessage();
+            $output['submission_blocked']       = true;
+            $output['status']                   = false;
+
+            if ($this->twack->isTwackAjaxCall()) {
+                Twack::sendResponse($output, 400);
+            }
+            return $output;
         } catch (FormException $e) {
             $output['error']['form_error']      = $e->getMessage();
+            $output['submission_blocked']       = false;
             $output['status']                   = false;
-            Twack::sendResponse($output, 400);
-            return false;
+
+            if ($this->twack->isTwackAjaxCall()) {
+                Twack::sendResponse($output, 400);
+            }
+            return $output;
         } catch (\Exception $e) {
             $output['error']['form_error']      = $e->getMessage();
+            $output['submission_blocked']       = false;
             $output['status']                   = false;
-            Twack::sendResponse($output, 400);
-            return false;
+
+            if ($this->twack->isTwackAjaxCall()) {
+                Twack::sendResponse($output, 400);
+            }
+            return $output;
         }
 
         try {
-            // wire('log')->save('forms', 'A Notification will be sent.');
             $this->sendNotification($newRequest);
         } catch (\Exception $e) {
             wire('log')->save('forms', 'An error occurred while sending the notification: ' . $e->getMessage());
         }
 
+        wire('session')->set($this->formOrigin, $messageIdent);
         wire('session')->CSRF->resetToken($this->formularName);
         unset($_POST);
 
+        $output['submission_blocked']    = true;
         $output['status']                = true;
         $output['success']['finished']   = $this->_('Your request was processed successfully.');
-        Twack::sendResponse($output, 200);
+
+        if ($this->twack->isTwackAjaxCall()) {
+            Twack::sendResponse($output, 200);
+        }
+
+        return $output;
     }
 
     protected function sendNotification(Page $newRequestPage) {
@@ -382,10 +427,10 @@ class FormTemplate extends TwackComponent {
                     $emailParams['recipient'] = $this->getEmailRecipients($emailNotification->get('email_recipient'));
                 }
                 if (!empty($emailNotification->email_recipient_cc)) {
-					$emailParams['recipientCC'] = $this->getEmailRecipients($emailNotification->get('email_recipient_cc'));
+                    $emailParams['recipientCC'] = $this->getEmailRecipients($emailNotification->get('email_recipient_cc'));
                 }
                 if (!empty($emailNotification->email_recipient_bcc)) {
-					$emailParams['recipientBCC'] = $this->getEmailRecipients($emailNotification->get('email_recipient_bcc'));
+                    $emailParams['recipientBCC'] = $this->getEmailRecipients($emailNotification->get('email_recipient_bcc'));
                 }
 
                 // Are the required values available?
@@ -398,7 +443,7 @@ class FormTemplate extends TwackComponent {
                     continue;
                 }
                 if (empty($emailParams['recipient'])) {
-                    wire('log')->save('forms', 'No recipient. '.json_encode($emailParams));
+                    wire('log')->save('forms', 'No recipient. ' . json_encode($emailParams));
                     continue;
                 }
 
@@ -522,7 +567,7 @@ class FormTemplate extends TwackComponent {
         foreach ($template->fields as $field) {
             try {
                 // Do not output system fields:
-                if ($field->hasFlag(Field::flagSystem)) {                    
+                if ($field->hasFlag(Field::flagSystem)) {
                     continue;
                 }
 
@@ -548,6 +593,6 @@ class FormTemplate extends TwackComponent {
      * @return string
      */
     protected function getFieldHtml(Field $field, Page $page) {
-        return $this->getComponent('formOutput')->getFieldHtml($field, $page);
+        return $this->getComponent('formOutput')->getFieldHtml($field, $page, $this->evaluationResponse);
     }
 }

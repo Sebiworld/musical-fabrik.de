@@ -27,7 +27,7 @@ if (!class_exists('Processwire\FormOutputType')) {
          * @param  Page   $page
          * @return string
          */
-        abstract public function getFieldHtml(Field $feld, Page $page);
+        abstract public function getFieldHtml(Field $feld, Page $page, $evaluationResponse = []);
 
         /**
          * Searches a string for {{placeholders}}, and replaces them if matches have been defined in $args["placeholders"].

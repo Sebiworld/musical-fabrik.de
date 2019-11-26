@@ -15,6 +15,8 @@ const CleanCSS = require('clean-css');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
+
 
 const PATHS = {
 	source: path.join(__dirname, "./site/templates/src/"),
@@ -305,20 +307,20 @@ module.exports = (env, options) => {
 				filename: "css/[name]-[hash:8].min.css",
 				chunkFilename: "css/[id]-[chunkhash].min.css",
 			}),
-			new webpack.BannerPlugin(
-				{
-					banner: [
-						'/*!',
-						' * @project        ' + pkg.name,
-						' * @name           ' + '[filebase]',
-						' * @author         ' + pkg.author.name,
-						(isProduction ? ' *' : ' * @build          ' + moment().format('llll') + ' ET'),
-						' */',
-						''
-					].join('\n'),
-					raw: true
-				}
-			),
+			// new webpack.BannerPlugin(
+			// 	{
+			// 		banner: [
+			// 			'/*!',
+			// 			' * @project        ' + pkg.name,
+			// 			' * @name           ' + '[filebase]',
+			// 			' * @author         ' + pkg.author.name,
+			// 			(isProduction ? ' *' : ' * @build          ' + moment().format('llll') + ' ET'),
+			// 			' */',
+			// 			''
+			// 		].join('\n'),
+			// 		raw: true
+			// 	}
+			// ),
 			new webpack.ProvidePlugin({
 				$: "jquery",
 				jQuery: "jquery",
@@ -346,7 +348,8 @@ module.exports = (env, options) => {
                         reportFilename: 'report-' + options.browser_env + '.html',
                     }
                 ) : new LiveReloadPlugin()
-            )
+			),
+			// new LicenseWebpackPlugin()
 		],
 	};
 };
