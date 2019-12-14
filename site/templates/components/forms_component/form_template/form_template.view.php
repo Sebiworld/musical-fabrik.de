@@ -81,6 +81,7 @@ if (!empty($this->fields)) {
 
 				<input type="text" name="information" class="info-field"/>
 				<input type="hidden" name="form-origin" value="<?= $this->formOrigin; ?>">
+
 				<button class="btn btn-project-primary btn-form-send" type="submit"><?= __('Send Request'); ?></button>
 			</fieldset>
 		</form>

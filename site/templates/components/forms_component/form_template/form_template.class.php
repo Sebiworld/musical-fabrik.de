@@ -78,6 +78,13 @@ class FormTemplate extends TwackComponent {
             throw new ComponentNotInitializedException('FormTemplate', $this->_('No form template was defined on the container page.'));
         }
 
+        if ($this->template->hasField('antispam_code')) {
+            if (empty($this->getAntispamCode())) {
+                $this->regenerateAntispamCode();
+            }
+            $this->placeholders['session_antispam_code'] = $this->getAntispamCode();
+        }
+
         require_once __DIR__ . '/form_output_type.class.php';
 
         // Determine form output. Later other possibilities than bootstrap should be possible:
@@ -120,6 +127,18 @@ class FormTemplate extends TwackComponent {
         ));
     }
 
+    protected function regenerateAntispamCode() {
+        wire('session')->set('antispam_code_' . $this->formOrigin, mt_rand(1000, 9999));
+    }
+
+    protected function clearAntispamCode() {
+        wire('session')->remove('antispam_code_' . $this->formOrigin);
+    }
+
+    protected function getAntispamCode() {
+        return wire('session')->get('antispam_code_' . $this->formOrigin);
+    }
+
     public function getAjax() {
         // $this->evaluateRequest();
         return array();
@@ -144,9 +163,12 @@ class FormTemplate extends TwackComponent {
         );
 
         try {
+            // Check Honeypot:
             if (!empty(wire('input')->post->information)) {
                 throw new FormException($this->_('Form could not be submitted.'));
             }
+
+            // Throws Exception if csrf validation fails:
             wire('session')->CSRF->validate($this->formOrigin);
 
             $newRequest            = new Page();
@@ -156,6 +178,25 @@ class FormTemplate extends TwackComponent {
 
             foreach ($this->fields as $fieldParams) {
                 $field = $this->template->fieldgroup->getField($fieldParams->name, true);
+
+                if ($field->name === 'antispam_code') {
+                    $antispamCode = wire('input')->post->int('antispam_code');
+
+                    $output['fields'][$field->name] = array(
+                        'name'           => $field->name,
+                        'label'          => $field->label,
+                        'currentValue'   => '',
+                        'error'          => array(),
+                        'success'        => array()
+                    );
+
+                    if ($this->getAntispamCode() !== $antispamCode) {
+                        $errorFlag                                 = true;
+                        $output['fields'][$field->name]['error'][] = $this->_('Please fill in the code above.');
+                        // $this->regenerateAntispamCode();
+                    }
+                    continue;
+                }
 
                 $inputField = $field->getInputfield($newRequest);
                 $inputField->processInput(wire('input')->post);
@@ -194,6 +235,10 @@ class FormTemplate extends TwackComponent {
             // Check Required-If information (only possible when all POST information has been transferred to the page):
             foreach ($this->fields as $fieldParams) {
                 $field = $this->template->fieldgroup->getField($fieldParams->name, true);
+
+                if ($field->name === 'antispam_code') {
+                    continue;
+                }
 
                 $inputField = $field->getInputfield($newRequest);
                 $inputField->processInput(wire('input')->post);
@@ -286,6 +331,7 @@ class FormTemplate extends TwackComponent {
             wire('log')->save('forms', 'An error occurred while sending the notification: ' . $e->getMessage());
         }
 
+        $this->clearAntispamCode();
         wire('session')->set($this->formOrigin, $messageIdent);
         wire('session')->CSRF->resetToken($this->formularName);
         unset($_POST);
@@ -324,6 +370,9 @@ class FormTemplate extends TwackComponent {
                     $einruecken = false;
                     foreach ($newRequestPage->template->fields as $field) {
                         $field = $newRequestPage->template->fieldgroup->getField($field->name, true); // Include fieldgroup settings
+                        if (!($field instanceof Field)) {
+                            continue;
+                        }
                         if ($field->hasFlag(Field::flagSystem)) {
                             continue; // Do not play any system fields
                         }
@@ -572,6 +621,10 @@ class FormTemplate extends TwackComponent {
                 }
 
                 $field = $template->fieldgroup->getField($field->name, true); // Include fieldgroup settings
+
+                if (!($field instanceof Field)) {
+                    continue;
+                }
 
                 // Do not output fields that do not have HTML output:
                 if (empty($this->getFieldHtml($field, $newRequest))) {

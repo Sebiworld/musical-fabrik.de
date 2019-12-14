@@ -47,26 +47,64 @@ class FormOutputBootstrap extends FormOutputType {
             // $groupClasses[] = 'formular-feld-smaller';
         }
 
-        $errormsg = [];
-        $successmsg = [];
+        $errormsg     = [];
+        $successmsg   = [];
         $currentValue = null;
-        if(!empty($evaluationResponse['fields'][$field->name]) && is_array($evaluationResponse['fields'][$field->name])){
-            if(isset($evaluationResponse['fields'][$field->name]['currentValue'])){
+        if (!empty($evaluationResponse['fields'][$field->name]) && is_array($evaluationResponse['fields'][$field->name])) {
+            if (isset($evaluationResponse['fields'][$field->name]['currentValue'])) {
                 $currentValue = $evaluationResponse['fields'][$field->name]['currentValue'];
             }
 
             if (!empty($evaluationResponse['fields'][$field->name]['error']) && is_array($evaluationResponse['fields'][$field->name]['error'])) {
                 $inputClasses[] = 'is-invalid';
-                $errormsg = $evaluationResponse['fields'][$field->name]['error'];
-            }else if (!empty($evaluationResponse['fields'][$field->name]['success']) && is_array($evaluationResponse['fields'][$field->name]['success'])) {
+                $errormsg       = $evaluationResponse['fields'][$field->name]['error'];
+            } elseif (!empty($evaluationResponse['fields'][$field->name]['success']) && is_array($evaluationResponse['fields'][$field->name]['success'])) {
                 $inputClasses[] = 'is-valid';
-                $successmsg = $evaluationResponse['fields'][$field->name]['success'];
+                $successmsg     = $evaluationResponse['fields'][$field->name]['success'];
             }
         }
 
         // Twack::devEcho($field->type);
+        if ($field->name === 'antispam_code') {
+            $isRequired             = true;
+            $attributes['required'] = 'required';
+            $fieldHtml .= '<div class="form-group antispam-code ' . ($isRequired ? 'required' : '') . ' ' . implode(' ', $groupClasses) . '" ' . $this->getAttributeString($groupAttributes) . '>';
+            $fieldHtml .= '<label for="' . $attributes['id'] . '" class="form-control-label">' . $field->label . '</label>';
 
-        if ($field->type instanceof \FieldtypeRuntimeMarkup) {
+            if (!empty($field->description . '')) {
+                $fieldHtml .= '<div class="form-text text-muted">' . $this->replacePlaceholders($field->description) . '</div>';
+            }
+
+            if ($field->size && is_integer($field->size)) {
+                $attributes['size'] = $field->size;
+            }
+
+            if ($field->minlength && is_integer($field->minlength)) {
+                $attributes['minlength'] = $field->minlength;
+            }
+
+            if ($field->maxlength && is_integer($field->maxlength)) {
+                $attributes['maxlength'] = $field->maxlength;
+            }
+            
+            $fieldHtml .= '<div class="input-group">';
+            $fieldHtml .= '<div class="code">' . $this->replacePlaceholders($page->get($field->name)) . '</div>';
+
+            $fieldHtml .= '<input ' . $this->getAttributeString($attributes) . ' type="text" class="form-control ' . implode(' ', $inputClasses) . '" />';
+
+            $fieldHtml .= '<span class="input-group-addon icon-placeholder"></span>';
+            if (!empty($errormsg)) {
+                $fieldHtml .= '<div class="invalid-feedback">' . implode(', ', $errormsg) . '</div>';
+            } elseif (!empty($successmsg)) {
+                $fieldHtml .= '<div class="valid-feedback">' . implode(', ', $successmsg) . '</div>';
+            }
+
+            $fieldHtml .= '</div>';
+            if (!empty('' . $field->notes)) {
+                $fieldHtml .= '<div class="form-text">' . $this->replacePlaceholders($field->notes) . '</div>';
+            }
+            $fieldHtml .= '</div>';
+        } elseif ($field->type instanceof \FieldtypeRuntimeMarkup) {
             $fieldHtml .= '<div class="form-group ' . ($isRequired ? 'required' : '') . ' ' . implode(' ', $groupClasses) . '" ' . $this->getAttributeString($groupAttributes) . '>';
             $fieldHtml .= '<label for="' . $attributes['id'] . '" class="form-control-label">' . $field->label . '</label>';
 
@@ -100,7 +138,7 @@ class FormOutputBootstrap extends FormOutputType {
                 $attributes['maxlength'] = $field->maxlength;
             }
 
-            if(!empty($currentValue)){
+            if (!empty($currentValue)) {
                 $attributes['value'] = $currentValue;
             }
 
@@ -123,9 +161,9 @@ class FormOutputBootstrap extends FormOutputType {
                 $fieldHtml .= '<input ' . $this->getAttributeString($attributes) . ' type="text" class="form-control ' . implode(' ', $inputClasses) . '" />';
             }
             $fieldHtml .= '<span class="input-group-addon icon-placeholder"></span>';
-            if(!empty($errormsg)){
+            if (!empty($errormsg)) {
                 $fieldHtml .= '<div class="invalid-feedback">' . implode(', ', $errormsg) . '</div>';
-            }else if(!empty($successmsg)){
+            } elseif (!empty($successmsg)) {
                 $fieldHtml .= '<div class="valid-feedback">' . implode(', ', $successmsg) . '</div>';
             }
 
@@ -135,7 +173,7 @@ class FormOutputBootstrap extends FormOutputType {
             }
             $fieldHtml .= '</div>';
         } elseif ($field->type instanceof FieldtypeCheckbox) {
-            if(!empty($currentValue) && $currentValue){
+            if (!empty($currentValue) && $currentValue) {
                 $attributes['checked'] = 'checked';
             }
 
@@ -145,9 +183,9 @@ class FormOutputBootstrap extends FormOutputType {
             $fieldHtml .= '<input class="form-check-input ' . implode(' ', $inputClasses) . '" type="checkbox" ' . $this->getAttributeString($attributes) . ' />';
             $fieldHtml .= '<div class="control__indicator"></div>';
             $fieldHtml .= '<span class="label">' . $field->label . '</span>';
-            if(!empty($errormsg)){
+            if (!empty($errormsg)) {
                 $fieldHtml .= '<div class="invalid-feedback">' . implode(', ', $errormsg) . '</div>';
-            }else if(!empty($successmsg)){
+            } elseif (!empty($successmsg)) {
                 $fieldHtml .= '<div class="valid-feedback">' . implode(', ', $successmsg) . '</div>';
             }
             $fieldHtml .= '</label>';
@@ -173,9 +211,9 @@ class FormOutputBootstrap extends FormOutputType {
             foreach ($field->type->getOptions($field) as $option) {
                 $id               = $this->idService->getID($attributes['id'] . '-' . $option->id);
 
-                if(!empty($currentValue) && is_array($currentValue) && in_array($option->id, $currentValue)){
+                if (!empty($currentValue) && is_array($currentValue) && in_array($option->id, $currentValue)) {
                     $attributes['checked'] = 'checked';
-                }else if(isset($attributes['checked'])){
+                } elseif (isset($attributes['checked'])) {
                     unset($attributes['checked']);
                 }
 
@@ -188,9 +226,9 @@ class FormOutputBootstrap extends FormOutputType {
                     $fieldHtml .= '<div class="control__indicator"></div>';
                     $fieldHtml .= '<span class="label">' . $option->title . '</span>';
                     $fieldHtml .= '</label>';
-                    if(!empty($errormsg)){
+                    if (!empty($errormsg)) {
                         $fieldHtml .= '<div class="invalid-feedback">' . implode(', ', $errormsg) . '</div>';
-                    }else if(!empty($successmsg)){
+                    } elseif (!empty($successmsg)) {
                         $fieldHtml .= '<div class="valid-feedback">' . implode(', ', $successmsg) . '</div>';
                     }
                     $fieldHtml .= '</div>';
@@ -201,9 +239,9 @@ class FormOutputBootstrap extends FormOutputType {
                     $fieldHtml .= '<input class="form-check-input ' . implode(' ', $inputClasses) . '" type="radio" ' . $this->getAttributeString($attributes) . ' value="' . $option->id . '" /> ';
                     $fieldHtml .= '<span class="title">' . $option->title . '</span>';
                     $fieldHtml .= '</label>';
-                    if(!empty($errormsg)){
+                    if (!empty($errormsg)) {
                         $fieldHtml .= '<div class="invalid-feedback">' . implode(', ', $errormsg) . '</div>';
-                    }else if(!empty($successmsg)){
+                    } elseif (!empty($successmsg)) {
                         $fieldHtml .= '<div class="valid-feedback">' . implode(', ', $successmsg) . '</div>';
                     }
                     $fieldHtml .= '</div>';
