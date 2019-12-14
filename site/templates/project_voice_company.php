@@ -6,6 +6,6 @@ $general = $twack->getNewComponent('General');
 
 $content = $twack->getComponent('mainContent');
 $content->mainImage = false;
-$content->addComponent('ContentArticles', ['directory' => 'contents', 'title' => __('News & Events')]);
+$content->addComponent('ContentArticles', ['directory' => 'contents_component', 'title' => __('News & Events')]);
 
 echo $general->render();

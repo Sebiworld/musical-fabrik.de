@@ -55,9 +55,9 @@ class TwackAccess {
     }
 
     protected static function fileRequest(Page $page) {
-        if (!$page->viewable()) {
-            throw new ForbiddenException();
-        }
+        // if (!$page->viewable()) {
+        //     throw new ForbiddenException();
+        // }
 
         $filename = wire('input')->get('file', 'filename');
         if (!$filename || !is_string($filename)) {
