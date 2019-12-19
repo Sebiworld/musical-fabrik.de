@@ -177,6 +177,114 @@ class ArticlesService extends TwackComponent {
         return $ajaxOutput;
     }
 
+    public function getGalleriesPage() {
+        $galleriesPage = wire('pages')->get('/')->children('template.name=galleries_container')->first();
+        if ($this->projectPage instanceof Page && $this->projectPage->id) {
+            $results = $this->projectPage->find('template.name=galleries_container');
+            if ($results->count > 0) {
+                $galleriesPage = $results->first();
+            }
+        }
+        return $galleriesPage;
+    }
+
+    /**
+     * Returns all galleries that can be output on this page.
+     * @return PageArray
+     */
+    public function getGalleries($args = array()) {
+        $output   = new \StdClass();
+        $galleries = new PageArray();
+
+        if ($this->projectPage instanceof Page && $this->projectPage->id) {
+            // If project page: Include all sub-galleries of the project
+            $galleries->add($this->projectPage->find('template=gallery'));
+        } else {
+            // Galleries from the main page:
+            // $galleries->add(wire('pages')->find('template=gallery'));
+
+            // Globally released galleries:
+            $galleries->add(wire('pages')->find('template=gallery, show_global=1'));
+        }
+
+        if (isset($args['sort'])) {
+            $galleries->filter('sort=' . $args['sort']);
+        } else {
+            $galleries->filter('sort=-datetime_from');
+        }
+
+        // Filtering by keywords:
+        if (isset($args['tags'])) {
+            if (is_string($args['tags'])) {
+                $args['tags'] = explode(',', $args['tags']);
+            }
+
+            if (is_array($args['tags'])) {
+                $galleries->filter('tags=' . implode('|', $args['tags']));
+            }
+        }
+
+        // Filtering by free text:
+        if (isset($args['query'])) {
+            if (is_string($args['query'])) {
+                $query = wire('sanitizer')->text($args['query']);
+                $galleries->filter("title|name|intro|contents.text%={$query}");
+            }
+        }
+
+        // Store original number of galleries without limit:
+        $output->totalNumber = $galleries->count;
+
+        // The index of the last element:
+        $output->lastElementIndex = 0;
+
+        // Include Limit and Offset:
+        $limitStrings = array();
+
+        if (isset($args['start'])) {
+            $limitStrings[]              = 'start=' . $args['start'];
+            $output->lastElementIndex    = intval($args['start']);
+        } elseif (isset($args['offset'])) {
+            $limitStrings[]              = 'start=' . $args['offset'];
+            $output->lastElementIndex    = intval($args['offset']);
+        } else {
+            $limitStrings[] = 'start=0';
+        }
+
+        if (isset($args['limit']) && $args['limit'] >= 0) {
+            $limitStrings[]              = 'limit=' . $args['limit'];
+            $output->lastElementIndex    = $output->lastElementIndex + intval($args['limit']);
+        } elseif (!isset($args['limit'])) {
+            $limitStrings[]              = 'limit=12';
+            $output->lastElementIndex    = $output->lastElementIndex + 12;
+        }
+
+        if (!empty($limitStrings)) {
+            $galleries->filter(implode(', ', $limitStrings));
+        }
+
+        // Are there any more posts that can be downloaded?
+        $output->moreAvailable = $output->lastElementIndex + 1 < $output->totalNumber;
+
+        // Prepare args for the overview pages service:
+        if (isset($args['charLimit'])) {
+            $args['limit'] = $args['charLimit'];
+        } else {
+            unset($args['limit']);
+        }
+        $galleries = $this->overviewPagesService->format($galleries, $args);
+
+        foreach ($galleries as &$gallery) {
+            if ($gallery->projectPage instanceof Page && $gallery->projectPage->color) {
+                $gallery->color = $gallery->projectPage->color;
+            }
+        }
+
+        $output->galleries = $galleries;
+
+        return $output;
+    }
+
     protected function startsWith($haystack, $needle) {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);

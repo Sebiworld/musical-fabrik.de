@@ -38,11 +38,19 @@
 			@include fontsize("box-title", 1.2);
 		}
 
+		.gallery_card{
+			margin-bottom: $padding-y-xs;
+		}
+
 		a{
 			color: $body-color;
 
 			&:hover, &:focus{
 				color: theme-color('primary');
+			}
+
+			.swiper-slide{
+				cursor: pointer;
 			}
 		}
 	}

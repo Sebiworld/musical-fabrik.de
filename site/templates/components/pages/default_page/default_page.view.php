@@ -91,10 +91,16 @@ namespace ProcessWire;
 
 				<div class="contents-container">
 					<?php
-					if ($this->publishTimeString) {
+					if ($this->publishTimeString && $this->authors) {
 						?>
 						<div class="meta">
-							<?= $this->authors ? sprintf(__('Published on %1$s from %2$s%3$s%4$s'), $this->publishTimeString, '<strong>', implode(' & ', $this->authors), '</strong>') : sprintf(__('Published on %1$s'), $this->publishTimeString); ?>
+							<?= sprintf(__('Published on %1$s from %2$s%3$s%4$s'), $this->publishTimeString, '<strong>', implode(' & ', $this->authors), '</strong>'); ?>
+						</div>
+						<?php
+					}else if ($this->publishTimeString) {
+						?>
+						<div class="meta">
+							<?= sprintf(__('Published on %1$s'), $this->publishTimeString); ?>
 						</div>
 						<?php
 					}

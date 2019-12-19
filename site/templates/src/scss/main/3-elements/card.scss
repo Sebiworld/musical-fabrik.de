@@ -48,11 +48,28 @@
 		color: text-color-over($brand-primary);
 	}
 
-	.article-image{
+	.article-image, .gallery-image{
 		background-repeat: no-repeat;
 		background-size: cover;
 		background-position: 50%;
 		z-index: 0;
+	}
+
+	&.gallery_card{
+		.card-title{
+			@include fontsize('card-meta', 1.1);
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			font-weight: lighter;
+			padding: $padding-y-xs $padding-x-xs;
+			background: $brand-primary;
+			color: text-color-over($brand-primary);
+			z-index: 1;
+		}
+		.swiper-slide{
+			cursor: pointer;
+		}
 	}
 
 	&.no-background{
@@ -128,7 +145,7 @@
 			opacity: 0;
 		}
 
-		.article-image{
+		.article-image, .gallery-image{
 			height: 100%;
 			width: auto;
 			max-width: 100%;

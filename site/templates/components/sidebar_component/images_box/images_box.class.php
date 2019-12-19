@@ -1,32 +1,23 @@
 <?php
+
 namespace ProcessWire;
 
 class ImagesBox extends TwackComponent {
+    public function __construct($args) {
+        parent::__construct($args);
 
-	public static $sliderIndex = 0; // Counts up to avoid ID conflicts
+        $articlesService       = $this->getService('ArticlesService');
+		$galleriesOutput       = $articlesService->getGalleries();
 
-	public function __construct($args) {
-		parent::__construct($args);
-
-		$this->projectPage = $this->getGlobalParameter('projectPage');
-		if (isset($args['projectPage']) && $args['projectPage'] instanceof Page && $args['projectPage']->id) {
-			$this->projectPage = $args['projectPage'];
-		}
-
-		$this->images = new PageArray();
-		if (isset($args['images']) && $args['images'] instanceof PageArray) {
-			$this->images->add($args['images']);
-		}
-
-		if (isset($args['useField']) && !empty($args['useField'])) {
-			$this->images->add($this->page->get($args['useField']));
-		}
-
+		$this->title = $this->_('Galleries');
 		if (isset($args['title']) && !empty($args['title'])) {
 			$this->title = str_replace(array("\n", "\r"), '', $args['title']);
 		}
 
-		self::$sliderIndex++;
-		$this->sliderIndex = self::$sliderIndex;
+        if ($galleriesOutput->galleries instanceof PageArray && count($galleriesOutput->galleries) > 0) {
+			$this->galleriesPage   = $articlesService->getGalleriesPage();
+			$this->sidebarGallery = $galleriesOutput->galleries->first();
+			$this->addComponent('GalleryCard', ['directory' => 'partials', 'page' => $this->sidebarGallery, 'autoplay' => true]);
+        }
 	}
 }

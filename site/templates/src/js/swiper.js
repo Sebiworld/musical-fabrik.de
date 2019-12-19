@@ -34,9 +34,17 @@ import { ready } from './classes/helpers.js';
 					watchSlidesVisibility: true,
 					grabCursor: true,
 					preloadImages: false,
-					lazyLoading: true,
-					lazyLoadingInPrevNext: true
+					lazy: {
+						loadPrevNext: true,
+						loadPrevNextAmount: 2
+					}
 				};
+
+				if (element.hasAttribute('data-autoplay')) {
+					swiperParams.autoplay = {
+						delay: 5000
+					};
+				}
 
 				const slider = new Swiper(element, swiperParams);
 			}
