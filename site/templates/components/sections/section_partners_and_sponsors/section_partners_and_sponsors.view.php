@@ -30,9 +30,29 @@ namespace ProcessWire;
 								<div class="content-wrapper">
 									<?php
                                     if ($partner->main_image) {
-                                        ?>
-										<img class="img-fluid" src="<?= $partner->main_image->width(800)->url; ?>" alt="<?= $partner->title; ?>" />
-										<?php
+										echo $this->component->getService('ImageService')->getImgHtml(array(
+											'image' => $partner->main_image,
+											'alt' => $partner->title,
+											'outputType' => 'image',
+											'loadAsync' => true,
+											'default' => array(
+												'width' => 800
+											),
+											'srcset' => array(
+												'400w' => array(
+													'width' => 400
+												),
+												'800w' => array(
+													'width' => 800
+												),
+												'1200w' => array(
+													'width' => 1200
+												),
+												'1600w' => array(
+													'width' => 1600
+												)
+											)
+										));
                                     } else {
                                         ?>
 										<span class="title"><?= $partner->title; ?></span>
@@ -74,9 +94,29 @@ namespace ProcessWire;
 								<div class="content-wrapper">
 									<?php
                                     if ($sponsor->main_image) {
-                                        ?>
-										<img class="img-fluid" src="<?= $sponsor->main_image->width(500)->url; ?>" alt="<?= $sponsor->title; ?>" />
-										<?php
+                                        echo $this->component->getService('ImageService')->getImgHtml(array(
+											'image' => $sponsor->main_image,
+											'alt' => $sponsor->title,
+											'outputType' => 'image',
+											'loadAsync' => true,
+											'default' => array(
+												'width' => 500
+											),
+											'srcset' => array(
+												'250w' => array(
+													'width' => 250
+												),
+												'500w' => array(
+													'width' => 500
+												),
+												'1000w' => array(
+													'width' => 1000
+												),
+												'1500w' => array(
+													'width' => 1500
+												)
+											)
+										));
                                     } else {
                                         ?>
 										<span class="title"><?= $sponsor->title; ?></span>

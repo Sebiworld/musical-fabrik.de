@@ -44,6 +44,16 @@ class General extends TwackComponent {
             'absolute' => true
         ));
 
+
+        $this->addScript('image-loading.js', array(
+            'path'     => wire('config')->urls->templates . 'assets/js/',
+            'absolute' => true
+        ));
+        $this->addScript('legacy/image-loading.js', array(
+            'path'     => wire('config')->urls->templates . 'assets/js/',
+            'absolute' => true
+        ));
+
         $this->addScript('general.js', array(
             'path'     => wire('config')->urls->templates . 'assets/js/',
             'absolute' => true

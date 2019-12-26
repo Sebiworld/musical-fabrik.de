@@ -22,17 +22,38 @@ Show single actor portrait
 	<div class="aspect-ratio card-img-top">
 		<?php
 		if ($this->page->main_image) {
-			echo $this->imageService->getImgHtml(array(
-				'image' => $this->page->main_image,
-				'outputType' => 'bg-image',
-				'classes' => 'bg-image portrait-image ar-content',
-				'normal' => array(
+			echo $this->component->getService('ImageService')->getImgHtml(array(
+                'image' => $this->page->main_image,
+                'classes' => array('ar-content', 'portrait-image'),
+                'outputType' => 'image',
+                'loadAsync' => true,
+                'default' => array(
+                    'width' => 400,
 					'height' => 400
-				),
-				'sm' => array(
-					'height' => 200
-				)
-			));
+                ),
+                'srcset' => array(
+                    '320w' => array(
+						'width' => 320,
+						'height' => 320
+                    ),
+                    '640w' => array(
+                        'width' => 640,
+						'height' => 640
+                    ),
+                    '720w' => array(
+                        'width' => 720,
+						'height' => 720
+                    ),
+                    '800w' => array(
+                        'width' => 800,
+						'height' => 800
+                    ),
+                    '960w' => array(
+                        'width' => 960,
+						'height' => 960
+                    )
+                )
+            ));
 		} else {
 			?>
 			<div class="bg-image ar-content portrait-image" style="background-image: url('<?= wire('config')->urls->templates . 'assets/static_img/silhouette_einzel.png'; ?>');"> </div>

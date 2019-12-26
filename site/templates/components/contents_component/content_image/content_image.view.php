@@ -18,33 +18,41 @@ if ($this->page->image) {
         } ?>
 
 		<div class="<?= !empty($this->page->classes . '') ? $this->page->classes : ''; ?>">
-			<?php
-            if ($this->page->image->ext == 'svg') {
-                echo $this->component->getService('ImageService')->getImgHtml(array(
-                    'image'                 => $this->page->image,
-                    'outputType'            => 'image',
-                    'loadAsync'             => false,
-                    'normal'                => 'original'
-                ));
-            } else {
-                echo $this->component->getService('ImageService')->getImgHtml(array(
-                    'image'       => $this->page->image,
-                    'outputType'  => 'image',
-                    'normal'      => array(
-                        'width' => 1400
+            <?php
+            echo $this->component->getService('ImageService')->getImgHtml(array(
+                'image' => $this->page->image,
+                'classes' => array('ar-content'),
+                'outputType' => 'image',
+                'loadAsync' => true,
+                'default' => array(
+                    'width' => 800
+                ),
+                'srcset' => array(
+                    '320w' => array(
+                        'width' => 320
                     ),
-                    'sm' => array(
-                        'width' => 600
+                    '640w' => array(
+                        'width' => 640
                     ),
-                    'fullsize-modal' => array(
-                        'width' => 1400
+                    '720w' => array(
+                        'width' => 720
+                    ),
+                    '800w' => array(
+                        'width' => 800
+                    ),
+                    '960w' => array(
+                        'width' => 960
+                    ),
+                    '1600w' => array(
+                        'width' => 1600
                     )
-                ));
-            }
+                )
+            ));
 
-		if ($this->page->image->caption && !empty($this->page->image->caption . '')) {
-			echo '<div class="image-caption">' . $this->page->image->caption . '</div>';
-		} ?>
+            if ($this->page->image->caption && !empty($this->page->image->caption . '')) {
+                echo '<div class="image-caption">' . $this->page->image->caption . '</div>';
+            } 
+        ?>
 		</div>
 	</div>
 	<?php

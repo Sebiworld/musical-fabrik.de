@@ -3,38 +3,68 @@ namespace ProcessWire;
 
 ?>
 <div class="card event_card" data-id="<?= $this->page->id; ?>">
-	<?php
-	if ($this->page->main_image) {
-		?>
-		<div class="aspect-ratio card-img-top ar-2-1">
-			<?php
-			echo $this->component->getService('ImageService')->getImgHtml(array(
-				'image' => $this->page->main_image,
-				'outputType' => 'bg-image',
-				'classes' => 'ar-content event-image',
-				'normal' => array(
-					'height' => 300
-				)
-			));
-			?>
-		</div>
+<div class="aspect-ratio card-img-top ar-2-1">
 		<?php
-	} else {
-		?>
-		<div class="aspect-ratio card-img-top ar-2-1">
-			<?php
+		if ($this->page->main_image) {
 			echo $this->component->getService('ImageService')->getImgHtml(array(
-				'outputType' => 'bg-image',
-				'classes' => 'ar-content event-image',
-				'normal' => array(
-					'height' => 300
-				)
+                'image' => $this->page->main_image,
+                'classes' => array('ar-content', 'event-image'),
+                'outputType' => 'image',
+                'loadAsync' => true,
+                'default' => array(
+                    'width' => 320,
+					'height' => 160
+                ),
+                'srcset' => array(
+                    '320w' => array(
+						'width' => 320,
+						'height' => 160
+                    ),
+                    '640w' => array(
+                        'width' => 640,
+						'height' => 320
+                    ),
+                    '960w' => array(
+                        'width' => 960,
+						'height' => 480
+                    ),
+                    '1280w' => array(
+                        'width' => 1280,
+						'height' => 640
+                    )
+                )
+            ));
+		} else {
+			echo $this->component->getService('ImageService')->getPlaceholderImageHtml(array(
+				'classes' => array('ar-content', 'event-image'),
+                'outputType' => 'image',
+                'loadAsync' => true,
+                'default' => array(
+                    'width' => 320,
+					'height' => 160
+                ),
+                'srcset' => array(
+                    '320w' => array(
+						'width' => 320,
+						'height' => 160
+                    ),
+                    '640w' => array(
+                        'width' => 640,
+						'height' => 320
+                    ),
+                    '960w' => array(
+                        'width' => 960,
+						'height' => 480
+                    ),
+                    '1280w' => array(
+                        'width' => 1280,
+						'height' => 640
+                    )
+                )
 			));
-			?>
-		</div>
-		<?php
-	}
-	?>
+		}
+		?>
+	</div>
 	<div class="card-block">
 		<div class="card-meta" <?= $this->page->color ? 'style="background-color: #'.$this->page->color.'; border-color: #'.$this->page->color.'"' : ''; ?>>
 			vom <?= date('d.m.Y', $this->page->getUnformatted('datetime_from')); ?>

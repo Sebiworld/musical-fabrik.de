@@ -13,6 +13,11 @@ class GalleryCard extends TwackComponent {
 			$this->autoplay = true;
 		}
 
+		$this->loop = false;
+		if(isset($args['loop']) && $args['loop']){
+			$this->loop = true;
+		}
+
 		$this->addScript('swiper.js', array(
 			'path'     => wire('config')->urls->templates . 'assets/js/',
 			'absolute' => true

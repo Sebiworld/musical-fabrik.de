@@ -95,11 +95,20 @@ $configPage = $this->configurationService->getConfigurationPage();
 	<?php
     // All scripts are added to the component using the addScript() method:
     foreach (wire('config')->scripts as $file) {
+        if (strpos($file, 'image_service') !== false) {
+            if (strpos($file, '.legacy.') !== false) {
+				echo "\n\t<script nomodule src='$file'></script>";
+				continue;
+			}
+			echo "\n\t<script type='module' src='$file'></script>";
+			continue;
+        }
+		
         if (strpos($file, '.legacy.') !== false) {
             echo "\n\t<script async nomodule src='$file'></script>";
-        } else {
-            echo "\n\t<script async type='module' src='$file'></script>";
+            continue;
         }
+        echo "\n\t<script async type='module' src='$file'></script>";
     }
     ?>
 </body>

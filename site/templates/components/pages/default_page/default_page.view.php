@@ -17,31 +17,32 @@ namespace ProcessWire;
 							?>
 							<div>
 								<?php
-								if ($this->mainImage->ext == 'svg') {
 									echo $this->imageService->getImgHtml(array(
 										'image' => $this->mainImage,
+										'classes' => array('ar-content'),
 										'outputType' => 'image',
-										'classes' => 'progressive',
-										'loadAsync' => false,
-										'normal' => 'original',
-										'fullsize-modal' => 'original'
-									));
-								} else {
-									echo $this->imageService->getImgHtml(array(
-										'image' => $this->mainImage,
-										'outputType' => 'image',
-										'classes' => 'progressive',
-										'normal' => array(
-											'height' => 800
+										'loadAsync' => true,
+										'default' => array(
+											'width' => 800
 										),
-										'sm' => array(
-											'height' => 400
-										),
-										'fullsize-modal' => array(
-											'width' => 1400
+										'srcset' => array(
+											'400w' => array(
+												'width' => 400
+											),
+											'640w' => array(
+												'width' => 640
+											),
+											'800w' => array(
+												'width' => 800
+											),
+											'960w' => array(
+												'width' => 960
+											),
+											'1600w' => array(
+												'width' => 1600
+											)
 										)
 									));
-								}
 								?>
 							</div>
 							<?php
@@ -50,31 +51,38 @@ namespace ProcessWire;
 							?>
 							<div class="aspect-ratio ar-2-1">
 								<?php
-								if ($this->mainImage->ext == 'svg') {
-									echo $this->imageService->getImgHtml(array(
-										'image' => $this->mainImage,
-										'outputType' => 'bg-image',
-										'classes' => 'bg-image ar-content progressive',
-										'loadAsync' => false,
-										'normal' => 'original',
-										'fullsize-modal' => 'original'
-									));
-								} else {
-									echo $this->imageService->getImgHtml(array(
-										'image' => $this->mainImage,
-										'outputType' => 'bg-image',
-										'classes' => 'bg-image ar-content progressive',
-										'normal' => array(
-											'height' => 800
+								echo $this->imageService->getImgHtml(array(
+									'image' => $this->mainImage,
+									'classes' => array('ar-content'),
+									'outputType' => 'image',
+									'loadAsync' => true,
+									'default' => array(
+										'width' => 800,
+										'height' => 400
+									),
+									'srcset' => array(
+										'400w' => array(
+											'width' => 400,
+											'height' => 200
 										),
-										'sm' => array(
+										'640w' => array(
+											'width' => 640,
+											'height' => 320
+										),
+										'800w' => array(
+											'width' => 800,
 											'height' => 400
 										),
-										'fullsize-modal' => array(
-											'width' => 1400
+										'960w' => array(
+											'width' => 960,
+											'height' => 480
+										),
+										'1600w' => array(
+											'width' => 1600,
+											'height' => 800
 										)
-									));
-								}
+									)
+								));
 								?>
 							</div>
 							<?php

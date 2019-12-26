@@ -27,27 +27,41 @@ class ProjectPage extends TwackComponent {
 
 		if ($this->projectPage->main_image) {
 			$this->main_image = $this->projectPage->main_image;
-			if ($this->main_image->ext == 'svg') {
-				$this->main_image_html = $this->getService('ImageService')->getImgHtml(array(
+			$this->main_image_html = $this->getService('ImageService')->getImgHtml(array(
 				'image' => $this->main_image,
-				'classes' => 'ar-content bg-image',
-				'outputType' => 'bg-image',
-				'loadAsync' => false,
-				'normal' => 'original'
-				));
-			} else {
-				$this->main_image_html =  $this->getService('ImageService')->getImgHtml([
-				'image' => $this->main_image,
-				'classes' => 'ar-content bg-image',
-				'outputType' => 'bg-image',
-				'normal' => array(
-					'width' => 1800
+				'classes' => array('ar-content'),
+				'outputType' => 'image',
+				'loadAsync' => true,
+				'default' => array(
+					'width' => 800
+				),
+				'srcset' => array(
+					'320w' => array(
+						'width' => 320
 					),
-				'sm' => array(
-					'width' => 700
+					'640w' => array(
+						'width' => 640
+					),
+					'720w' => array(
+						'width' => 720
+					),
+					'800w' => array(
+						'width' => 800
+					),
+					'960w' => array(
+						'width' => 960
+					),
+					'1600w' => array(
+						'width' => 1600
+					),
+					'2000w' => array(
+						'width' => 2000
+					),
+					'2400w' => array(
+						'width' => 2400
 					)
-				]);
-			}
+				)
+			));
 		}
 
 		// Include CSS file for the project

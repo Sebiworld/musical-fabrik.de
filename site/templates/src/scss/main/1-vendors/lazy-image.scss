@@ -1,0 +1,46 @@
+/*
+.ls-blur-up-img {
+  filter: blur(20px);
+  opacity: 1;
+  transition: opacity 1000ms, filter 1500ms;
+}
+
+.ls-blur-up-img.ls-inview.ls-original-loaded {
+  opacity: 0;
+  filter: blur(5px);
+}
+*/
+.lazy-image {
+	width: auto;
+	height: auto;
+	backface-visibility: hidden;
+}
+
+@keyframes sharpen {
+	from {
+		filter: blur(20px);
+	}
+	to {
+		filter: blur(0px);
+		background-color: transparent;
+	}
+}
+
+img.lazy-image {
+	width: 100%;
+	transform: translateZ(0);
+}
+
+.lazy-image {
+	overflow: hidden;
+	position: relative;
+	filter: blur(30px);
+	transform: scale(1.1);
+	background-color: #000;
+
+	&.lazyloaded{
+		filter: blur(20px);
+		animation: sharpen 0.5s both;
+		transform: scale(1);
+	}
+}

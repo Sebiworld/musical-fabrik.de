@@ -25,23 +25,35 @@ if ($this->images && !empty($this->images)) {
 			$counter = 0;
 			foreach ($this->images as $listenIndex => $image) {
 				?>
-				<div class="masonry-grid-item">
+				<div class="masonry-grid-item <?= ($image->width / $image->height) > 2  ? 'double-width' : ''; ?>">
 					<a class="lightgallery-item" href="<?= $image->url; ?>">
 						<?php
-						echo $this->component->getService('ImageService')->getImgHtml(
-							array(
-								'image' => $image,
-								'outputType' => 'image',
-								'loadAsync' => true,
-								'classes' => 'bild',
-								'normal' => array(
-									'width' => 800
+						echo $this->component->getService('ImageService')->getImgHtml(array(
+							'image' => $image,
+							'classes' => array('ar-content'),
+							'outputType' => 'image',
+							'loadAsync' => true,
+							'default' => array(
+								'width' => 640
+							),
+							'srcset' => array(
+								'320w' => array(
+									'width' => 320
 								),
-								'sm' => array(
-									'width' => 500
+								'640w' => array(
+									'width' => 640
+								),
+								'960w' => array(
+									'width' => 960
+								),
+								'1280w' => array(
+									'width' => 1280
+								),
+								'1920w' => array(
+									'width' => 1920
 								)
 							)
-						);
+						));
 						?>
 					</a>
 					<?php

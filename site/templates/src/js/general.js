@@ -15,7 +15,7 @@ scrollinator.addObservedElements('section');
 
 // Bootstrap will be reloaded:
 (async () => {
-	const progressively = await import(/* webpackChunkName: "progressively" */ "progressively");
+	// const progressively = await import(/* webpackChunkName: "progressively" */ "progressively");
 	
 	await import (/* webpackChunkName: "bootstrap-js" */ 'bootstrap/js/src/util');
 	await import (/* webpackChunkName: "bootstrap-js" */ 'bootstrap/js/src/alert');
@@ -32,15 +32,15 @@ scrollinator.addObservedElements('section');
 
 	ready(function() {
 		// Progressively for dynamically loading images:
-		progressively.init({
-			onLoad: function(elem) {
-				trigger(elem, "img-loaded");
-			},
-		});
+		// progressively.init({
+		// 	onLoad: function(elem) {
+		// 		trigger(elem, "img-loaded");
+		// 	},
+		// });
 
-		$('a[data-toggle="pill"], a[data-toggle="tab"]').on("shown.bs.tab", function(e) {
-			progressively.render();
-		});
+		// $('a[data-toggle="pill"], a[data-toggle="tab"]').on("shown.bs.tab", function(e) {
+		// 	progressively.render();
+		// });
 
 		// Hamburgericon-Animation:
 		// Dropdowns:

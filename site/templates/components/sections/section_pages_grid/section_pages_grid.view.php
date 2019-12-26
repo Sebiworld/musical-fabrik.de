@@ -26,19 +26,32 @@ namespace ProcessWire;
 					<div class="card card-dark text-white <?= $this->cardClasses; ?>">
 						<div class="card-content-wrapper">
 							<div class="card-img aspect-ratio ar-<?= $this->imageRatio; ?>">
-								<?php
-                                echo $this->imageService->getimgHtml(array(
-                                    'image'       => $page->gridImage,
-                                    'outputStyle' => 'bg-image',
+                                <?php
+                                echo $this->imageService->getImgHtml(array(
+                                    'image' => $page->gridImage,
+                                    'classes' => array('ar-content', 'main_image'),
+                                    'outputType' => 'image',
                                     'styles'     => $page->color ? 'background-color: #' . $page->color . ';' : '',
-                                    'classes'    => 'main_image ar-content',
-                                    'normal'     => array(
+                                    'loadAsync' => true,
+                                    'default' => array(
                                         'width' => 600
                                     ),
-                                    'sm' => array(
-                                        'width' => 400
+                                    'srcset' => array(
+                                        '300w' => array(
+                                            'width' => 300
+                                        ),
+                                        '600w' => array(
+                                            'width' => 600
+                                        ),
+                                        '900w' => array(
+                                            'width' => 900
+                                        ),
+                                        '1200w' => array(
+                                            'width' => 1200
+                                        )
                                     )
-                                )); ?>
+                                ));
+                                 ?>
 							</div>
 							<div class="card-img-overlay">
 								<div class="top">

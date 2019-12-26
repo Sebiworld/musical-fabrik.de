@@ -16,13 +16,28 @@ if (!empty($this->subroles)) {
 							if ($projectRole->main_image) {
 								echo $this->imageService->getImgHtml(array(
 									'image' => $projectRole->main_image,
+									'classes' => array('project-role-group-portrait', 'img-fluid'),
 									'outputType' => 'image',
-									'classes' => 'project-role-group-portrait img-fluid',
-									'normal' => array(
-										'height' => 800
+									'loadAsync' => true,
+									'default' => array(
+										'width' => 400
 									),
-									'sm' => array(
-										'height' => 400
+									'srcset' => array(
+										'320w' => array(
+											'width' => 320
+										),
+										'640w' => array(
+											'width' => 640
+										),
+										'720w' => array(
+											'width' => 720
+										),
+										'800w' => array(
+											'width' => 800
+										),
+										'960w' => array(
+											'width' => 960
+										)
 									)
 								));
 							} else {

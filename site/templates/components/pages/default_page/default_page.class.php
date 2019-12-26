@@ -71,7 +71,9 @@ class DefaultPage extends TwackComponent {
             'path'     => wire('config')->urls->templates . 'assets/css/',
 			'absolute' => true,
 			'inline' => true
-        ));
+		));
+		
+		// Twack::devEcho($this->page->main_image->placeholder_svg);
 	}
 
 	public function getAjax() {

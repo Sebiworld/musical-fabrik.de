@@ -1,124 +1,116 @@
 @import "./globals/index";
 
 .section.section_partners_and_sponsors {
-	$grid-padding: $padding-xs * 2;
-	padding-left: 0;
-	padding-right: 0;
+  $grid-padding: $padding-xs * 2;
+  padding-left: 0;
+  padding-right: 0;
 
-	.list {
-		padding-left: $padding-sm;
-		padding-right: $padding-sm;
+  .list {
+    padding-left: $padding-sm;
+    padding-right: $padding-sm;
 
-		@include media-breakpoint-up(sm) {
-			padding-left: $padding-md;
-			padding-right: $padding-md;
-		}
-		// padding: 0 ($grid-padding / 2);
+    @include media-breakpoint-up(sm) {
+      padding-left: $padding-md;
+      padding-right: $padding-md;
+    }
+    // padding: 0 ($grid-padding / 2);
 
-		.tile {
-			padding: $grid-padding;
-		}
-	}
+    .tile {
+      padding: $grid-padding;
+    }
+  }
 
-	.contents_component > .content-block {
-		max-width: 30em;
-	}
+  .contents_component > .content-block {
+    max-width: 30em;
+  }
 
-	.subtitle {
-		padding-left: $padding-sm;
-		padding-right: $padding-sm;
+  .subtitle {
+    padding-left: $padding-sm;
+    padding-right: $padding-sm;
 
-		@include media-breakpoint-up(sm) {
-			padding-left: $padding-md;
-			padding-right: $padding-md;
-		}
-	}
+    @include media-breakpoint-up(sm) {
+      padding-left: $padding-md;
+      padding-right: $padding-md;
+    }
+  }
 
-	.tile {
-		text-align: center;
-		font-weight: bold;
-		@include fontsize(0.9, 1.2);
+  .tile {
+    text-align: center;
+    font-weight: bold;
+    @include fontsize(0.9, 1.2);
 
-		.content-wrapper {
-			display: flex;
-			height: 100%;
-			width: 100%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
+    .content-wrapper {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: grayscale(100%);
+      transition: filter 1s;
 
-			& > img {
-				filter: grayscale(100%);
-				transition: filter 1s;
-			}
+      &:hover,
+      &:focus {
+        filter: none;
+      }
+    }
+  }
 
-			&:hover,
-			&:focus {
-				& > img {
-					filter: none;
-				}
-			}
-		}
-	}
+  .highlight {
+    padding: $padding-sm;
+    padding-left: $padding-sm;
+    padding-right: $padding-sm;
 
-	.highlight {
-		padding: $padding-sm;
-		padding-left: $padding-sm;
-		padding-right: $padding-sm;
+    @include media-breakpoint-up(sm) {
+      padding-left: $padding-md;
+      padding-right: $padding-md;
+    }
 
-		@include media-breakpoint-up(sm) {
-			padding-left: $padding-md;
-			padding-right: $padding-md;
-		}
+    .subtitle {
+      padding-left: $grid-padding;
+      padding-right: $grid-padding;
+    }
 
-		.subtitle {
-			padding-left: $grid-padding;
-			padding-right: $grid-padding;
-		}
+    &.text-block {
+      text-align: center;
+      padding: $padding-md;
 
-		&.text-block {
-			text-align: center;
-			padding: $padding-md;
+      .content-block {
+        margin: 0 auto;
 
-			.content-block {
-				margin: 0 auto;
+        p:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
 
-				p:last-child {
-					margin-bottom: 0;
-				}
-			}
-		}
-	}
+  .partners {
+    // @include angle('before', true);
+    // @include angle('after', false);
+    padding: $padding-sm;
+    margin-bottom: $padding-sm;
+    padding-left: $padding-sm;
+    padding-right: $padding-sm;
 
-	.partners {
-		// @include angle('before', true);
-		// @include angle('after', false);
-		padding: $padding-sm;
-		margin-bottom: $padding-sm;
-		padding-left: $padding-sm;
-		padding-right: $padding-sm;
+    @include media-breakpoint-up(sm) {
+      padding-left: $padding-md;
+      padding-right: $padding-md;
+    }
 
-		@include media-breakpoint-up(sm) {
-			padding-left: $padding-md;
-			padding-right: $padding-md;
-		}
+    // padding-bottom: $padding-sm;
+    // padding-top: $padding-sm;
 
-		// padding-bottom: $padding-sm;
-		// padding-top: $padding-sm;
+    .content-wrapper {
+      padding: $padding-xs;
+      background: #fff;
+      filter: none;
+    }
 
-		.content-wrapper {
-			padding: $padding-xs;
-			background: #fff;
-
-			& > img {
-				filter: none;
-			}
-		}
-
-		.row {
-			padding: 0 $grid-padding;
-			margin-right: -1 * $grid-padding;
-			margin-left: -1 * $grid-padding;
-		}
-	}
+    .row {
+      padding: 0 $grid-padding;
+      margin-right: -1 * $grid-padding;
+      margin-left: -1 * $grid-padding;
+    }
+  }
 }

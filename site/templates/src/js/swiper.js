@@ -46,6 +46,10 @@ import { ready } from './classes/helpers.js';
 					};
 				}
 
+				if (element.hasAttribute('data-loop')) {
+					swiperParams.loop = true;
+				}
+
 				const slider = new Swiper(element, swiperParams);
 			}
 		});
