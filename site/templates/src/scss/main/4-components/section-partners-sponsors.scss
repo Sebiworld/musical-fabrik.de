@@ -53,6 +53,10 @@
       &:focus {
         filter: none;
       }
+
+      .lazy-image{
+        background-color: $body-bg;
+      }
     }
   }
 
