@@ -1,0 +1,35 @@
+// @import "~@ciar4n/izmir/scss/base/mixins";
+
+$prefix: 'io42';
+$name: 'img-overlay';
+
+$padding: 1em;
+$transition-duration: 600ms;
+$image-opacity: .25;
+
+$border-margin: 15px;
+$border-width: 3px;
+$border-color: #fff;
+$border-radius: 3px;
+
+$primary-color: theme-color-level('dark', -1);
+$secondary-color: theme-color-level('dark', 10);
+$text-color: #fff;
+
+// @import "~@ciar4n/izmir/scss/base/variables";
+@import "~@ciar4n/izmir/scss/base/base";
+
+// -----------------------------------------
+// Modules
+//-------------------------------------------
+@import "~@ciar4n/izmir/scss/modules/animate-border";
+@import "~@ciar4n/izmir/scss/modules/animate-image";
+@import "~@ciar4n/izmir/scss/modules/animate-delay";
+@import "~@ciar4n/izmir/scss/modules/animate-text";
+@import "~@ciar4n/izmir/scss/modules/gradient";
+@import "~@ciar4n/izmir/scss/modules/layout";
+
+// -----------------------------------------
+// Style
+//-------------------------------------------
+@import "~@ciar4n/izmir/scss/style/style";

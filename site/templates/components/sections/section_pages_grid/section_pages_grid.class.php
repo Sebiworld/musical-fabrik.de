@@ -46,6 +46,12 @@ class SectionPagesGrid extends TwackComponent {
             $this->imageRatio = $this->page->image_ratio->title;
         }
 
+        $this->imageFactor = 1;
+        $ratioParts = explode('-', $this->imageRatio);
+        if(is_array($ratioParts && count($ratioParts) === 2)){
+            $this->imageFactor = intval($ratioParts[1]) / intval($ratioParts[2]);
+        }
+
         $this->determineGridClasses();
         $this->importField($this->page->fields->get($args['useField']));
     }
@@ -100,7 +106,7 @@ class SectionPagesGrid extends TwackComponent {
                 $array->add($values);
                 $this->addPages($array);
             } else {
-                Twack::devAusgabe('SectionPagesGrid->importField() could not read output pages.');
+                Twack::devEcho('SectionPagesGrid->importField() could not read output pages.');
             }
         }
     }

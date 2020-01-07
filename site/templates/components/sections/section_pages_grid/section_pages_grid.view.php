@@ -23,43 +23,45 @@ namespace ProcessWire;
             foreach ($pages as $listindex => $page) {
                 ?>
 				<article class="<?= $this->gridClasses; ?> page">
-					<div class="card card-dark text-white <?= $this->cardClasses; ?>">
-						<div class="card-content-wrapper">
-							<div class="card-img aspect-ratio ar-<?= $this->imageRatio; ?>">
+                    <figure class="io42-img-overlay io42-border-bottom-left io42-image-rotate-right io42-gradient-bottom-right">
+                        <?php
+                        echo $this->imageService->getImgHtml(array(
+                            'image' => $page->gridImage,
+                            'classes' => array('main_image'),
+                            'outputType' => 'image',
+                            'styles'     => $page->color ? 'background-color: #' . $page->color . ';' : '',
+                            'loadAsync' => true,
+                            'default' => array(
+                                'width' => 600,
+                                'height' => 600 * $this->imageFactor
+                            ),
+                            'srcset' => array(
+                                '300w' => array(
+                                    'width' => 300,
+                                    'height' => 300 * $this->imageFactor
+                                ),
+                                '600w' => array(
+                                    'width' => 600,
+                                    'height' => 600 * $this->imageFactor
+                                ),
+                                '900w' => array(
+                                    'width' => 900,
+                                    'height' => 900 * $this->imageFactor
+                                ),
+                                '1200w' => array(
+                                    'width' => 1200,
+                                    'height' => 1200 * $this->imageFactor
+                                )
+                            )
+                        ));
+                        ?>
+                        <figcaption class="">
+                            <div class="io42-fade-up io42-delay-100 d-block mb-1">
+                                <h4 class="mb-2 card-title"><?= $page->title; ?></h4>
+                                <?= !empty($page->freetext) ? '<div class="mb-2 small">' . $page->freetext . '</div>' : ''; ?>
+                            </div>
+                            <div class="io42-delay-200">
                                 <?php
-                                echo $this->imageService->getImgHtml(array(
-                                    'image' => $page->gridImage,
-                                    'classes' => array('ar-content', 'main_image'),
-                                    'outputType' => 'image',
-                                    'styles'     => $page->color ? 'background-color: #' . $page->color . ';' : '',
-                                    'loadAsync' => true,
-                                    'default' => array(
-                                        'width' => 600
-                                    ),
-                                    'srcset' => array(
-                                        '300w' => array(
-                                            'width' => 300
-                                        ),
-                                        '600w' => array(
-                                            'width' => 600
-                                        ),
-                                        '900w' => array(
-                                            'width' => 900
-                                        ),
-                                        '1200w' => array(
-                                            'width' => 1200
-                                        )
-                                    )
-                                ));
-                                 ?>
-							</div>
-							<div class="card-img-overlay">
-								<div class="top">
-									<h4 class="card-title"><?= $page->title; ?></h4>
-									<div class="card-text"><?= $page->freetext; ?></div>
-								</div>
-
-								<?php
                                 if (!$page->template->hasField('no_details_view') || !$page->no_details_view) {
                                     $btnText = __('More...');
                                     if ($page->template->hasField('btn_text') && !empty($page->btn_text)) {
@@ -67,12 +69,12 @@ namespace ProcessWire;
                                     } elseif ($page->template->name == 'project') {
                                         $btnText = __('Jump the project');
                                     } ?>
-									<a class="card-link btn btn-primary btn-inlinecolor hvr-grow" href="<?= $page->url; ?>" <?= $page->color ? 'style="background-color: #' . $page->color . '; border-color: #' . $page->color . '"' : ''; ?>><?= $btnText ?></a>
-									<?php
+                                    <a class="btn btn-primary btn-inlinecolor hvr-grow" href="<?= $page->url; ?>" <?= $page->color ? 'style="background-color: #' . $page->color . '; border-color: #' . $page->color . '"' : ''; ?>><?= $btnText ?></a>
+                                    <?php
                                 } ?>
-							</div>
-						</div>
-					</div>
+                            </div>
+                        </figcaption>
+                    </figure>
 				</article>
 
 				<?php
