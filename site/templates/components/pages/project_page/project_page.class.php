@@ -27,38 +27,19 @@ class ProjectPage extends TwackComponent {
 
 		if ($this->projectPage->main_image) {
 			$this->main_image = $this->projectPage->main_image;
-			$this->main_image_html = $this->getService('ImageService')->getImgHtml(array(
+			$this->main_image_html = $this->getService('ImageService')->getPictureHtml(array(
 				'image' => $this->main_image,
-				'classes' => array('ar-content'),
-				'outputType' => 'image',
+				'pictureclasses' => array('ar-content'),
 				'loadAsync' => true,
 				'default' => array(
 					'width' => 800
 				),
 				'srcset' => array(
-					'320w' => array(
-						'width' => 320
-					),
-					'640w' => array(
-						'width' => 640
-					),
-					'720w' => array(
-						'width' => 720
-					),
-					'800w' => array(
+					'1x' => array(
 						'width' => 800
 					),
-					'960w' => array(
-						'width' => 960
-					),
-					'1600w' => array(
-						'width' => 1600
-					),
-					'2000w' => array(
-						'width' => 2000
-					),
-					'2400w' => array(
-						'width' => 2400
+					'2x' => array(
+						'width' => (800 * 2)
 					)
 				)
 			));

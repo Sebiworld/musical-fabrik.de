@@ -19,32 +19,19 @@ if ($this->page->image) {
 
 		<div class="<?= !empty($this->page->classes . '') ? $this->page->classes : ''; ?>">
             <?php
-            echo $this->component->getService('ImageService')->getImgHtml(array(
+            echo $this->component->getService('ImageService')->getPictureHtml(array(
                 'image' => $this->page->image,
-                'classes' => array('ar-content'),
-                'outputType' => 'image',
+                'pictureclasses' => array('ar-content')
                 'loadAsync' => true,
                 'default' => array(
                     'width' => 800
                 ),
                 'srcset' => array(
-                    '320w' => array(
-                        'width' => 320
-                    ),
-                    '640w' => array(
-                        'width' => 640
-                    ),
-                    '720w' => array(
-                        'width' => 720
-                    ),
-                    '800w' => array(
+                    '1x' => array(
                         'width' => 800
                     ),
-                    '960w' => array(
-                        'width' => 960
-                    ),
-                    '1600w' => array(
-                        'width' => 1600
+                    '2x' => array(
+                        'width' => (800 * 2)
                     )
                 )
             ));

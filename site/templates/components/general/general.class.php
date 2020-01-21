@@ -197,14 +197,17 @@ class General extends TwackComponent {
             if ($metaname == 'canonical') {
                 $this->addMeta('canonical-link', "<link rel=\"canonical\" href=\"{$metacontent}\" />");
             } elseif ($metaname == 'title') {
+                $metacontent = htmlspecialchars($metacontent);
                 $this->addMeta('title-tag', "<title>{$metacontent}</title>");
                 $this->addMeta('title-og', "<meta property=\"og:title\" content=\"{$metacontent}\" />");
                 $this->addMeta('title-twitter', "<meta name=\"twitter:title\" content=\"{$metacontent}\" />");
             } elseif ($metaname == 'site_name') {
+                $metacontent = htmlspecialchars($metacontent);
                 $this->addMeta('site_name', "<meta name=\"site_name\" content=\"{$metacontent}\" />");
                 $this->addMeta('site_name-og', "<meta property=\"og:site_name\" content=\"{$metacontent}\" />");
                 $this->addMeta('site-twitter', "<meta name=\"twitter:site\" content=\"{$metacontent}\" />");
             } elseif ($metaname == 'description') {
+                $metacontent = htmlspecialchars($metacontent);
                 $this->addMeta('description', "<meta name=\"description\" content=\"{$metacontent}\" />");
                 $this->addMeta('description-og', "<meta property=\"og:description\" content=\"{$metacontent}\" />");
                 $this->addMeta('description-twitter', "<meta name=\"twitter:description\" content=\"{$metacontent}\" />");
@@ -213,6 +216,7 @@ class General extends TwackComponent {
                 $this->addMeta('image-og', "<meta property=\"og:image\" content=\"{$metacontent}\" />");
                 $this->addMeta('image-twitter', "<meta name=\"twitter:image\" content=\"{$metacontent}\" />");
             } else {
+                $metacontent = htmlspecialchars($metacontent);
                 $this->addMeta($metaname, "<meta name=\"{$metaname}\" content=\"{$metacontent}\" />");
             }
         }

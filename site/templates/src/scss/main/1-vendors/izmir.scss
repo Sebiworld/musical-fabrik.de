@@ -16,20 +16,36 @@ $primary-color: theme-color-level('dark', -1);
 $secondary-color: theme-color-level('dark', 10);
 $text-color: #fff;
 
-// @import "~@ciar4n/izmir/scss/base/variables";
-@import "~@ciar4n/izmir/scss/base/base";
+// @import "~@ciar4n/izmir/scss/base/base";
+
+// // -----------------------------------------
+// // Modules
+// //-------------------------------------------
+// @import "~@ciar4n/izmir/scss/modules/animate-border";
+// @import "~@ciar4n/izmir/scss/modules/animate-image";
+// @import "~@ciar4n/izmir/scss/modules/animate-delay";
+// @import "~@ciar4n/izmir/scss/modules/animate-text";
+// @import "~@ciar4n/izmir/scss/modules/gradient";
+// @import "~@ciar4n/izmir/scss/modules/layout";
+
+// // -----------------------------------------
+// // Style
+// //-------------------------------------------
+// @import "~@ciar4n/izmir/scss/style/style";
+
+@import "./izmir/base/_base";
 
 // -----------------------------------------
 // Modules
 //-------------------------------------------
-@import "~@ciar4n/izmir/scss/modules/animate-border";
-@import "~@ciar4n/izmir/scss/modules/animate-image";
-@import "~@ciar4n/izmir/scss/modules/animate-delay";
-@import "~@ciar4n/izmir/scss/modules/animate-text";
-@import "~@ciar4n/izmir/scss/modules/gradient";
-@import "~@ciar4n/izmir/scss/modules/layout";
+@import "./izmir/modules/_animate-border";
+@import "./izmir/modules/_animate-image";
+@import "./izmir/modules/_animate-delay";
+@import "./izmir/modules/_animate-text";
+@import "./izmir/modules/_gradient";
+@import "./izmir/modules/_layout";
 
 // -----------------------------------------
 // Style
 //-------------------------------------------
-@import "~@ciar4n/izmir/scss/style/style";
+@import "./izmir/style/_style";

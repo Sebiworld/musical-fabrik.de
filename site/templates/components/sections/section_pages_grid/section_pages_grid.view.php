@@ -19,38 +19,30 @@ namespace ProcessWire;
 
 	<div class="row pages-row">
 		<?php
-        if ($pages) {
-            foreach ($pages as $listindex => $page) {
+        if ($this->pages) {
+            foreach ($this->pages as $listindex => $page) {
                 ?>
 				<article class="<?= $this->gridClasses; ?> page">
-                    <figure class="io42-img-overlay io42-border-bottom-left io42-image-rotate-right io42-gradient-bottom-right">
+                    <figure class="io42-img-overlay io42-border-bottom-left io42-image-rotate-right io42-gradient-bottom-right w-100">
                         <?php
-                        echo $this->imageService->getImgHtml(array(
+                        echo $this->imageService->getPictureHtml(array(
                             'image' => $page->gridImage,
-                            'classes' => array('main_image'),
-                            'outputType' => 'image',
+                            'pictureclasses' => array('aspect-ratio', 'ar-'.$this->imageRatio),
+                            'classes' => array('ar-content'),
                             'styles'     => $page->color ? 'background-color: #' . $page->color . ';' : '',
                             'loadAsync' => true,
                             'default' => array(
-                                'width' => 600,
-                                'height' => 600 * $this->imageFactor
+                                'width' => 500,
+                                'height' => 500 * $this->imageFactor
                             ),
                             'srcset' => array(
-                                '300w' => array(
-                                    'width' => 300,
-                                    'height' => 300 * $this->imageFactor
+                                '1x' => array(
+                                    'width' => 500,
+                                    'height' => 500 * $this->imageFactor
                                 ),
-                                '600w' => array(
-                                    'width' => 600,
-                                    'height' => 600 * $this->imageFactor
-                                ),
-                                '900w' => array(
-                                    'width' => 900,
-                                    'height' => 900 * $this->imageFactor
-                                ),
-                                '1200w' => array(
-                                    'width' => 1200,
-                                    'height' => 1200 * $this->imageFactor
+                                '2x' => array(
+                                    'width' => 1000,
+                                    'height' => 1000 * $this->imageFactor
                                 )
                             )
                         ));
@@ -58,7 +50,7 @@ namespace ProcessWire;
                         <figcaption class="">
                             <div class="io42-fade-up io42-delay-100 d-block mb-1">
                                 <h4 class="mb-2 card-title"><?= $page->title; ?></h4>
-                                <?= !empty($page->freetext) ? '<div class="mb-2 small">' . $page->freetext . '</div>' : ''; ?>
+                                <?= !empty($page->desctext) ? '<div class="mb-2 small">' . $page->desctext . '</div>' : ''; ?>
                             </div>
                             <div class="io42-delay-200">
                                 <?php

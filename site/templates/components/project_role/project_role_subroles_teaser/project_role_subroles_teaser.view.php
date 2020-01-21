@@ -14,29 +14,19 @@ if (!empty($this->subroles)) {
 						<div class="card-img-top">
 							<?php
 							if ($projectRole->main_image) {
-								echo $this->imageService->getImgHtml(array(
+								echo $this->imageService->getPictureHtml(array(
 									'image' => $projectRole->main_image,
 									'classes' => array('project-role-group-portrait', 'img-fluid'),
-									'outputType' => 'image',
 									'loadAsync' => true,
 									'default' => array(
 										'width' => 400
 									),
 									'srcset' => array(
-										'320w' => array(
-											'width' => 320
+										'1x' => array(
+											'width' => 400
 										),
-										'640w' => array(
-											'width' => 640
-										),
-										'720w' => array(
-											'width' => 720
-										),
-										'800w' => array(
-											'width' => 800
-										),
-										'960w' => array(
-											'width' => 960
+										'2x' => array(
+											'width' => (400 * 2)
 										)
 									)
 								));

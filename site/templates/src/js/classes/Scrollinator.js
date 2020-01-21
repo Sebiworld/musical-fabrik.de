@@ -149,7 +149,6 @@ let s = function () {
                 return false;
             }
             this._scrollOffset = value;
-            return this._scrollOffset;
         }
 
         get headerOffset() {
@@ -170,8 +169,6 @@ let s = function () {
             if (this._linktargetObserver instanceof IntersectionObserver) {
                 this._refreshObservers();
             }
-
-            return this._headerOffset;
         }
 
         _getHeaderOffsetValue() {
@@ -199,7 +196,6 @@ let s = function () {
             }
             this._activateHashListener(!!value);
             this._activateLinkListener = !!value;
-            return this._activateLinkListener;
         }
 
         getPositionTop(element) {
@@ -276,7 +272,6 @@ let s = function () {
             if (!this._initialized) {
                 return false;
             }
-            document.removeEventListener("click", this.hashListener.bind(this));
             if (activate !== false) {
                 document.addEventListener("click", this.hashListener.bind(this));
             }
@@ -438,7 +433,6 @@ let s = function () {
             }
             this._activeClass = value;
             this._refreshObservers();
-            return this._activeClass;
         }
 
         get activeLinkClass() {
@@ -451,7 +445,6 @@ let s = function () {
             }
             this._activeLinkClass = value;
             this._refreshObservers();
-            return this._activeLinkClass;
         }
 
         get sectionInViewClass() {
@@ -464,7 +457,6 @@ let s = function () {
             }
             this._sectionInViewClass = value;
             this._refreshObservers();
-            return this._sectionInViewClass;
         }
 
 
@@ -478,7 +470,6 @@ let s = function () {
             }
             this._alternativeTargetAttribute = value;
             this._refreshObservers();
-            return this._alternativeTargetAttribute;
         }
 
         _getLinkSelector() {
@@ -495,7 +486,6 @@ let s = function () {
             }
             this._sectionSelector = value;
             this._refreshObservers();
-            return this._sectionSelector;
         }
 
         get onlySingleSectionActive() {
@@ -508,7 +498,6 @@ let s = function () {
             }
             this._onlySingleSectionActive = !!value;
             this._refreshObservers();
-            return this._onlySingleSectionActive;
         }
 
         get sectionToUrl() {
@@ -521,7 +510,6 @@ let s = function () {
             }
             this._sectionToUrl = !!value;
             this._refreshUrlHash();
-            return this._sectionToUrl;
         }
 
         get highlightOffset() {
@@ -533,7 +521,6 @@ let s = function () {
                 return false;
             }
             this._highlightOffset = value;
-            return this._highlightOffset;
         }
 
         get observedElements() {

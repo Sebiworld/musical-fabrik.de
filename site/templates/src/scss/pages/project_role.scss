@@ -167,7 +167,7 @@
 		text-align: center;
 		background-color: transparent;
 
-		.card-img-top img{
+		.card-img-top>img, .card-img-top>picture{
 			max-width: 100%;
 			width: 100%;
 		}

@@ -22,36 +22,23 @@ Show single actor portrait
 	<div class="aspect-ratio card-img-top">
 		<?php
 		if ($this->page->main_image) {
-			echo $this->component->getService('ImageService')->getImgHtml(array(
+			echo $this->component->getService('ImageService')->getPictureHtml(array(
                 'image' => $this->page->main_image,
-                'classes' => array('ar-content', 'portrait-image'),
-                'outputType' => 'image',
+				'pictureclasses' => array('ar-content', 'portrait-image'),
                 'loadAsync' => true,
                 'default' => array(
                     'width' => 400,
-					'height' => 400
+					// 'height' => 400
                 ),
                 'srcset' => array(
-                    '320w' => array(
-						'width' => 320,
-						'height' => 320
-                    ),
-                    '640w' => array(
-                        'width' => 640,
-						'height' => 640
-                    ),
-                    '720w' => array(
-                        'width' => 720,
-						'height' => 720
-                    ),
-                    '800w' => array(
+                    '1x' => array(
                         'width' => 800,
-						'height' => 800
+						// 'height' => 800
                     ),
-                    '960w' => array(
-                        'width' => 960,
-						'height' => 960
-                    )
+                    '2x' => array(
+                        'width' => (800 * 2),
+						// 'height' => (800 * 2)
+					)
                 )
             ));
 		} else {

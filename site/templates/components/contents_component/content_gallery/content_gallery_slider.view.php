@@ -18,16 +18,38 @@ if ($this->images && !empty($this->images)) {
         } ?>
 		<?= $this->description ? '<div class="block-description">' . $this->description . '</div>' : ''; ?>
 
-		<ul class="lightslider">
-			<?php
-            foreach ($this->images as $image) {
-                ?>
-				<li class="lightslider-item" data-thumb="<?= $image->height(300)->url; ?>" data-src="<?= $image->url; ?>" data-responsive="<?= $image->height(300)->url; ?> 400w, <?= $image->height(1000)->url; ?> 1000w">
-					<img class="gallery-image <?= $image->classes ? $image->classes : ''; ?>" src="<?= $image->height(300)->url; ?>" alt="<?= $image->description; ?>"/>
-				</li>
-				<?php
-            } ?>
-		</ul>
+		<div class="lSSlideOuter">
+			<div class="lSSlideWrapper usingCss">
+				<ul class="lightslider lightSlider">
+					<?php
+					foreach ($this->images as $image) {
+						?>
+						<li class="lightslider-item" data-thumb="<?= $image->height(300)->url; ?>" data-src="<?= $image->url; ?>" data-responsive="<?= $image->height(300)->url; ?> 400w, <?= $image->height(1000)->url; ?> 1000w">
+							<?php
+							 echo $this->component->getService('ImageService')->getPictureHtml(array(
+								'image' => $image,
+								'pictureclasses' => array('gallery-image', $image->classes ? $image->classes : ''),
+								'classes' => array(),
+								'loadAsync' => true,
+								'default' => array(
+									'height' => 300
+								),
+								'srcset' => array(
+									'1x' => array(
+										'height' => 300
+									),
+									'2x' => array(
+										'height' => (300 * 2)
+									)
+								)
+							));
+							?>
+						</li>
+						<?php
+					} ?>
+				</ul>
+			</div>
+		</div>
 	</div>
 	<?php
 }

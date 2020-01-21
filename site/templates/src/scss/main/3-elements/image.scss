@@ -1,7 +1,7 @@
-.image-small img {
+.image-small img, .image-small picture {
 	max-width: 200px;
 }
-.image-medium img {
+.image-medium img, .image-medium picture {
 	max-width: 400px;
 }
 
@@ -44,7 +44,7 @@
 	}
 }
 
-img.lazyload:not([src]) {
+img.lazyload:not([src]), picture.lazyload:not([src]) {
   visibility: hidden;
 }
 

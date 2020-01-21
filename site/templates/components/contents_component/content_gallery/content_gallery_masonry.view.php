@@ -28,29 +28,19 @@ if ($this->images && !empty($this->images)) {
 				<div class="masonry-grid-item <?= ($image->width / $image->height) > 2  ? 'double-width' : ''; ?>">
 					<a class="lightgallery-item" href="<?= $image->url; ?>">
 						<?php
-						echo $this->component->getService('ImageService')->getImgHtml(array(
+						echo $this->component->getService('ImageService')->getPictureHtml(array(
 							'image' => $image,
-							'classes' => array('ar-content'),
-							'outputType' => 'image',
+							'pictureclasses' => array('ar-content'),
 							'loadAsync' => true,
 							'default' => array(
 								'width' => 640
 							),
 							'srcset' => array(
-								'320w' => array(
-									'width' => 320
-								),
-								'640w' => array(
+								'1x' => array(
 									'width' => 640
 								),
-								'960w' => array(
-									'width' => 960
-								),
-								'1280w' => array(
-									'width' => 1280
-								),
-								'1920w' => array(
-									'width' => 1920
+								'2x' => array(
+									'width' => (640 * 2)
 								)
 							)
 						));

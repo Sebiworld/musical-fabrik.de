@@ -361,7 +361,17 @@ class AjaxCall {
 		return output;
 	}
 
+	abort() {
+		if (this._controller === undefined) {
+			return false;
+		}
+		this._controller.abort();
+		return true;
+	}
+
 	fetch(options) {
+		let opts = typeof options === 'object' ? options : {};
+
 		let fetchOptions = {
 			method: this.method,
 			headers: new Headers(this.headers),
@@ -369,21 +379,22 @@ class AjaxCall {
 			body: this.exportPost()
 		};
 
-		if (this._controller !== undefined) {
-			this._controller.abort();
-		}
+		this.abort();
 
 		// Feature detect
-		if ("AbortController" in window) {
+		if ("AbortController" in window && opts.abortable) {
 			this._controller = new AbortController();
 			fetchOptions.signal = this._controller.signal;
 		}
+		if(opts.abortable === undefined){
+			delete opts.abortable;
+		}
 
-		for (let key in options) {
-			if (key === "body" && typeof options[key] === 'object') {
-				fetchOptions.body = this.objectToQueryString(options[key]);
+		for (const key in opts) {
+			if (key === "body" && typeof opts[key] === 'object') {
+				fetchOptions.body = this.objectToQueryString(opts[key]);
 			} else {
-				fetchOptions[key] = options[key];
+				fetchOptions[key] = opts[key];
 			}
 		}
 

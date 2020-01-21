@@ -30,26 +30,19 @@ namespace ProcessWire;
 								<div class="content-wrapper">
 									<?php
                                     if ($partner->main_image) {
-										echo $this->component->getService('ImageService')->getImgHtml(array(
+										echo $this->component->getService('ImageService')->getPictureHtml(array(
 											'image' => $partner->main_image,
 											'alt' => $partner->title,
-											'outputType' => 'image',
 											'loadAsync' => true,
 											'default' => array(
 												'width' => 800
 											),
 											'srcset' => array(
-												'400w' => array(
-													'width' => 400
-												),
-												'800w' => array(
+												'1x' => array(
 													'width' => 800
 												),
-												'1200w' => array(
-													'width' => 1200
-												),
-												'1600w' => array(
-													'width' => 1600
+												'2x' => array(
+													'width' => 800 * 2
 												)
 											)
 										));
@@ -94,26 +87,19 @@ namespace ProcessWire;
 								<div class="content-wrapper">
 									<?php
                                     if ($sponsor->main_image) {
-                                        echo $this->component->getService('ImageService')->getImgHtml(array(
+                                        echo $this->component->getService('ImageService')->getPictureHtml(array(
 											'image' => $sponsor->main_image,
 											'alt' => $sponsor->title,
-											'outputType' => 'image',
 											'loadAsync' => true,
 											'default' => array(
 												'width' => 500
 											),
 											'srcset' => array(
-												'250w' => array(
-													'width' => 250
-												),
-												'500w' => array(
+												'1x' => array(
 													'width' => 500
 												),
-												'1000w' => array(
-													'width' => 1000
-												),
-												'1500w' => array(
-													'width' => 1500
+												'2x' => array(
+													'width' => 500 * 2
 												)
 											)
 										));

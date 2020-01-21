@@ -47,9 +47,9 @@ class SectionPagesGrid extends TwackComponent {
         }
 
         $this->imageFactor = 1;
-        $ratioParts = explode('-', $this->imageRatio);
-        if(is_array($ratioParts && count($ratioParts) === 2)){
-            $this->imageFactor = intval($ratioParts[1]) / intval($ratioParts[2]);
+        $ratioParts        = explode('-', $this->imageRatio);
+        if (is_array($ratioParts) && count($ratioParts) === 2) {
+            $this->imageFactor = floatval($ratioParts[1]) / floatval($ratioParts[0]);
         }
 
         $this->determineGridClasses();
@@ -64,7 +64,7 @@ class SectionPagesGrid extends TwackComponent {
         }
 
         $this->gridClasses = '';
-        $cardSizes      = [1, 2, 3, 4, 6, 12];
+        $cardSizes         = [1, 2, 3, 4, 6, 12];
         $bootstrapSizes    = ['xl', 'lg', 'md', 'sm', 'xs'];
 
         foreach ($cardSizes as $key => $size) {
@@ -138,9 +138,9 @@ class SectionPagesGrid extends TwackComponent {
         }
 
         if ($page->hasField('short_description')) {
-            $page->beschreibung = $page->short_description;
+            $page->desctext = $page->short_description;
         } elseif ($page->hasField('freetext')) {
-            $page->beschreibung = $page->freetext;
+            $page->desctext = $page->freetext;
         }
 
         $this->pages->add($page);

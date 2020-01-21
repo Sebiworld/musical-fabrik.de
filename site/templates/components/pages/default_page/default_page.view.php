@@ -17,29 +17,19 @@ namespace ProcessWire;
 							?>
 							<div>
 								<?php
-									echo $this->imageService->getImgHtml(array(
+									echo $this->imageService->getPictureHtml(array(
 										'image' => $this->mainImage,
-										'classes' => array('ar-content'),
-										'outputType' => 'image',
+										'pictureclasses' => array('ar-content'),
 										'loadAsync' => true,
 										'default' => array(
 											'width' => 800
 										),
 										'srcset' => array(
-											'400w' => array(
-												'width' => 400
-											),
-											'640w' => array(
-												'width' => 640
-											),
-											'800w' => array(
+											'1x' => array(
 												'width' => 800
 											),
-											'960w' => array(
-												'width' => 960
-											),
-											'1600w' => array(
-												'width' => 1600
+											'2x' => array(
+												'width' => (800 * 2)
 											)
 										)
 									));
@@ -51,35 +41,22 @@ namespace ProcessWire;
 							?>
 							<div class="aspect-ratio ar-2-1">
 								<?php
-								echo $this->imageService->getImgHtml(array(
+								echo $this->imageService->getPictureHtml(array(
 									'image' => $this->mainImage,
-									'classes' => array('ar-content'),
-									'outputType' => 'image',
+									'pictureclasses' => array('ar-content'),
 									'loadAsync' => true,
 									'default' => array(
 										'width' => 800,
 										'height' => 400
 									),
 									'srcset' => array(
-										'400w' => array(
-											'width' => 400,
-											'height' => 200
-										),
-										'640w' => array(
-											'width' => 640,
-											'height' => 320
-										),
-										'800w' => array(
+										'1x' => array(
 											'width' => 800,
 											'height' => 400
 										),
-										'960w' => array(
-											'width' => 960,
-											'height' => 480
-										),
-										'1600w' => array(
-											'width' => 1600,
-											'height' => 800
+										'2x' => array(
+											'width' => (800 * 2),
+											'height' => (400 * 2)
 										)
 									)
 								));

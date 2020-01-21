@@ -352,6 +352,16 @@ export default class AjaxForm {
 		// TODO: Optionally save cookie to prevent sending it again?
 	}
 
+	addSubmitWatcher(watcherFunction) {
+		if (typeof watcherFunction !== 'function') {
+			return false;
+		}
+		if (typeof this._watchers !== 'object' || !Array.isArray(this._watchers)) {
+			this._watchers = [];
+		}
+		this._watchers.push(watcherFunction);
+	}
+
 	/**
 	* Sends the form contents to the interface.
 	*/
@@ -376,33 +386,44 @@ export default class AjaxForm {
 		// Add entered values to the query:
 		ajaxCall.addPostParams(ajaxForm.getValues());
 
-		ajaxCall.fetch()
-			.then(function (response) {
-				let json = response.json();
-				if (response.status >= 200 && response.status < 300) {
-					return json;
-				}
-				return json.then(Promise.reject.bind(Promise));
-			})
-			.then(function (response) {
-				// console.log("Request successful: ", response);
-				ajaxForm.refreshFormEvaluation(response);
-				if(response.submission_blocked){
-					ajaxForm.lockForm();
-				}
-			}, function (response) {
-				// console.error('Fetch Error :-S', response);
-				ajaxForm.refreshFormEvaluation(response);
-				if(response.submission_blocked){
-					ajaxForm.lockForm();
-				}
-			}).catch(function (err) {
-				// console.error('Fetch Error Catch :-S', err);
-				ajaxForm.refreshFormEvaluation(err);
-				if(err.submission_blocked){
-					ajaxForm.lockForm();
-				}
-			});
+		const submitPromise = new Promise(function (resolve, reject) {
+			ajaxCall.fetch()
+				.then(function (response) {
+					let json = response.json();
+					if (response.status >= 200 && response.status < 300) {
+						return json;
+					}
+					return json.then(Promise.reject.bind(Promise));
+				})
+				.then(function (response) {
+					// console.log("Request successful: ", response);
+					ajaxForm.refreshFormEvaluation(response);
+					if (response.submission_blocked) {
+						ajaxForm.lockForm();
+					}
+					resolve(response);
+				}, function (response) {
+					// console.error('Fetch Error :-S', response);
+					ajaxForm.refreshFormEvaluation(response);
+					if (response.submission_blocked) {
+						ajaxForm.lockForm();
+					}
+					reject(response);
+				}).catch(function (err) {
+					// console.error('Fetch Error Catch :-S', err);
+					ajaxForm.refreshFormEvaluation(err);
+					if (err.submission_blocked) {
+						ajaxForm.lockForm();
+					}
+					reject(err);
+				});
+		});
+
+		if (typeof ajaxForm._watchers === 'object' && Array.isArray(ajaxForm._watchers) && ajaxForm._watchers.length > 0) {
+			for (const watcherFunction of ajaxForm._watchers) {
+				watcherFunction(ajaxForm, submitPromise);
+			}
+		}
 
 		return false;
 	}

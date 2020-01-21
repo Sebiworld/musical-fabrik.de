@@ -27,32 +27,19 @@ if ($this->images && !empty($this->images)) {
 				<div class="masonry-grid-item col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
 					<a class="lightgallery-item" href="<?= $image->url; ?>">
 						<?php
-						echo $this->component->getService('ImageService')->getImgHtml(array(
+						echo $this->component->getService('ImageService')->getPictureHtml(array(
 							'image' => $image,
-							'classes' => array('ar-content'),
-							'outputType' => 'image',
+							'pictureclasses' => array('ar-content'),
 							'loadAsync' => true,
 							'default' => array(
 								'width' => 720
 							),
 							'srcset' => array(
-								'320w' => array(
-									'width' => 320
-								),
-								'640w' => array(
-									'width' => 640
-								),
-								'720w' => array(
+								'1x' => array(
 									'width' => 720
 								),
-								'960w' => array(
-									'width' => 960
-								),
-								'1280w' => array(
-									'width' => 1280
-								),
-								'1600w' => array(
-									'width' => 1600
+								'2x' => array(
+									'width' => (720 * 2)
 								)
 							)
 						));

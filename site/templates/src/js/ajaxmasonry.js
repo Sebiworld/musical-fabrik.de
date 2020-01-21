@@ -6,7 +6,7 @@ import { debounce, uniq, remove } from 'lodash-es';
 (async () => {
 	const elements = document.querySelectorAll('.articles_tiles');
 	if (elements.length > 0) {
-		const msnr = await import('./masonry.js');
+		await import('./masonry.js');
 		const imagesloadedLoad = await import('imagesloaded');
 		const ImagesLoaded = imagesloadedLoad.default;
 		const msryLoad = await import(/* webpackChunkName: "masonry-import" */ 'masonry-layout');
@@ -142,7 +142,7 @@ import { debounce, uniq, remove } from 'lodash-es';
 					}
 					if (data.moreAvailable === true) {
 						let offset = grid.querySelectorAll('.masonry-grid-item').length;
-						if (data.lastElementIndex && parseInt(data.lastElementIndex) !== NaN) {
+						if (data.lastElementIndex && !isNaN(parseInt(data.lastElementIndex))) {
 							offset = parseInt(data.lastElementIndex) + 1;
 						}
 
@@ -221,11 +221,10 @@ import { debounce, uniq, remove } from 'lodash-es';
 				}
 			}
 
-			for (const index in articlesArray) {
+			for (const article of articlesArray) {
 				trigger(grid, 'elements-changed');
-				const article = articlesArray[index];
 				if (logging) {
-					console.log("Next Element: ", article, index);
+					console.log("Next Element: ", article);
 				}
 
 				if (typeof article !== 'object' || typeof article.html !== 'string' || article.html.length < 1 || article.id === undefined) {
@@ -441,8 +440,6 @@ import { debounce, uniq, remove } from 'lodash-es';
 										// No input text: Delete user-defined text search parameters
 										delete getParams.q;
 									}
-
-									ajaxCall.getParams = getParams;
 									sendFilterRequest(tileElement, grid, ajaxCall);
 									return true;
 								}, 300));

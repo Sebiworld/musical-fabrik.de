@@ -6,59 +6,43 @@ namespace ProcessWire;
 	<div class="aspect-ratio card-img-top ar-2-1">
 		<?php
 		if ($this->page->main_image) {
-			echo $this->component->getService('ImageService')->getImgHtml(array(
+			echo $this->component->getService('ImageService')->getPictureHtml(array(
                 'image' => $this->page->main_image,
-                'classes' => array('ar-content', 'article-image'),
-                'outputType' => 'image',
+                'classes' => array('article-image'),
+                'pictureclasses' => array('ar-content'),
                 'loadAsync' => true,
                 'default' => array(
                     'width' => 320,
 					'height' => 160
                 ),
                 'srcset' => array(
-                    '320w' => array(
+                    '1x' => array(
 						'width' => 320,
 						'height' => 160
                     ),
-                    '640w' => array(
-                        'width' => 640,
-						'height' => 320
-                    ),
-                    '960w' => array(
-                        'width' => 960,
-						'height' => 480
-                    ),
-                    '1280w' => array(
-                        'width' => 1280,
-						'height' => 640
+                    '2x' => array(
+                        'width' => (320 * 2),
+						'height' => (160 * 2)
                     )
                 )
             ));
 		} else {
-			echo $this->component->getService('ImageService')->getPlaceholderImageHtml(array(
-				'classes' => array('ar-content', 'article-image'),
-                'outputType' => 'image',
+			echo $this->component->getService('ImageService')->getPlaceholderPictureHtml(array(
+                'classes' => array('article-image'),
+                'pictureclasses' => array('ar-content'),
                 'loadAsync' => true,
                 'default' => array(
                     'width' => 320,
 					'height' => 160
                 ),
                 'srcset' => array(
-                    '320w' => array(
+                    '1x' => array(
 						'width' => 320,
 						'height' => 160
                     ),
-                    '640w' => array(
-                        'width' => 640,
-						'height' => 320
-                    ),
-                    '960w' => array(
-                        'width' => 960,
-						'height' => 480
-                    ),
-                    '1280w' => array(
-                        'width' => 1280,
-						'height' => 640
+                    '2x' => array(
+                        'width' => (320 * 2),
+						'height' => (160 * 2)
                     )
                 )
 			));

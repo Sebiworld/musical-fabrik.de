@@ -50,7 +50,7 @@ import { ready } from './classes/helpers.js';
 					swiperParams.loop = true;
 				}
 
-				const slider = new Swiper(element, swiperParams);
+				new Swiper(element, swiperParams);
 			}
 		});
 	}
