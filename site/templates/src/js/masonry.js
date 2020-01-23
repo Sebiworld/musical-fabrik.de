@@ -31,6 +31,10 @@ import { trigger, ready } from "./classes/helpers.js";
 					masonryGrid.layout();
 				});
 
+				element.addEventListener("lazyloaded", function () {
+					masonryGrid.layout();
+				});
+
 				element.addEventListener("elements-changed", function () {
 					masonryGrid.reloadItems();
 					masonryGrid.layout();

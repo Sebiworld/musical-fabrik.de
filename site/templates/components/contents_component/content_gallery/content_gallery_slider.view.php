@@ -22,12 +22,14 @@ if ($this->images && !empty($this->images)) {
 			<div class="lSSlideWrapper usingCss">
 				<ul class="lightslider lightSlider">
 					<?php
+					$counter = 1;
 					foreach ($this->images as $image) {
 						?>
 						<li class="lightslider-item" data-thumb="<?= $image->height(300)->url; ?>" data-src="<?= $image->url; ?>" data-responsive="<?= $image->height(300)->url; ?> 400w, <?= $image->height(1000)->url; ?> 1000w">
 							<?php
 							 echo $this->component->getService('ImageService')->getPictureHtml(array(
 								'image' => $image,
+								'alt' => sprintf(__('Gallery %1$s, slide %2$s'), $this->title, $counter),
 								'pictureclasses' => array('gallery-image', $image->classes ? $image->classes : ''),
 								'classes' => array(),
 								'loadAsync' => true,
@@ -46,6 +48,7 @@ if ($this->images && !empty($this->images)) {
 							?>
 						</li>
 						<?php
+						$counter++;
 					} ?>
 				</ul>
 			</div>

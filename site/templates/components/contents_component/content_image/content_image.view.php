@@ -21,7 +21,7 @@ if ($this->page->image) {
             <?php
             echo $this->component->getService('ImageService')->getPictureHtml(array(
                 'image' => $this->page->image,
-                'pictureclasses' => array('ar-content')
+                'pictureclasses' => array('ar-content'),
                 'loadAsync' => true,
                 'default' => array(
                     'width' => 800

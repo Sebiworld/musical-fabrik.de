@@ -238,9 +238,10 @@ class ImageService extends TwackComponent {
         }
 
         $attributes        = array(
-            'alt' => $this->getFromArgsOrFromImage('alt', $args, $image),
-            'data-caption' => $this->getFromArgsOrFromImage('caption', $args, $image)
+            'data-caption' => $this->mergeArgs('caption', $args, $image)
         );
+
+        $attributes['alt'] = $this->mergeArgs('alt', $image, $attributes['data-caption'], $args);
 
         $styles            = array();
         if (isset($args['styles'])) {
@@ -276,19 +277,17 @@ class ImageService extends TwackComponent {
 
             $classes[]                        = 'lazyload';
             $classes[]                        = 'lazy-image';
-            $attributes['data-sizes'] = $this->getFromArgsOrFromImage('sizes', $args, $image);
-
-            $loadingimage = $this->getLoadingImage($image, $args);
+            $attributes['data-sizes'] = $this->mergeArgs('sizes', $args, $image);
 
             if (!empty($webpsrcset) && $image->ext !== 'svg') {
-                $output .= '<source srcset="' . $this->getLoadingImage($image, $args, true, 'webp') . ' 1x" data-srcset="' . implode(', ', $webpsrcset) . '" type="image/webp">';
+                $output .= '<source srcset="' . $this->getLoadingImage($image, $args, true, 'jpg') . ' 1x" data-srcset="' . implode(', ', $webpsrcset) . '" type="image/webp">';
             }
             if (!empty($srcset)  && $image->ext !== 'svg') {
-                $output .= '<source srcset="' . $this->getLoadingImage($image, $args, true, 'jpeg') . ' 1x" data-srcset="' . implode(', ', $srcset) . '" type="image/jpeg">';
+                $output .= '<source srcset="' . $this->getLoadingImage($image, $args, true, 'webp') . ' 1x" data-srcset="' . implode(', ', $srcset) . '" type="image/jpeg">';
             }
 
             $attributes['data-src'] = $src;
-            $attributes['src']      = $loadingimage;
+            $attributes['src']      = $this->getLoadingImage($image, $args);
             $attributes['class']    = implode(' ', $classes);
 
             $output .= '<img ' . $this->makeAttributeString($attributes) . ' ' . $this->makeStyleString($styles) . ' />';
@@ -300,7 +299,7 @@ class ImageService extends TwackComponent {
             return $output;
         }
 
-        $attributes['sizes'] = $this->getFromArgsOrFromImage('sizes', $args, $image);
+        $attributes['sizes'] = $this->mergeArgs('sizes', $args, $image);
 
         if (!empty($webpsrcset) && $image->ext !== 'svg') {
             $output .= '<source srcset="' . implode(', ', $webpsrcset) . '" type="image/webp">';
@@ -364,13 +363,27 @@ class ImageService extends TwackComponent {
         return $data;
     }
 
-    protected function getFromArgsOrFromImage($key, $args, $image) {
-        if (is_array($args) && isset($args[$key])) {
-            return $args[$key];
+    protected function mergeArgs() {
+        if (!func_num_args()) {
+            return null;
         }
-        if ($image instanceof Pageimage && isset($image->{$key}) && !empty($image->{$key})) {
-            return $image->{$key};
+
+        $args      = func_get_args();
+        if(!is_array($args) || count($args) <= 1){
+            return null;
         }
+        $key = array_shift($args);
+
+        foreach($args as $options){
+            if ($options instanceof Pageimage && isset($options->{$key}) && !empty($options->{$key})) {
+                return $options->{$key};
+            }else if (is_array($options) && isset($options[$key])) {
+                return $options[$key];
+            }else if(is_string($options) && strlen($options) > 0){
+                return $options;
+            }
+        }
+
         return null;
     }
 
@@ -473,18 +486,31 @@ class ImageService extends TwackComponent {
      * Retrieves a small image that can be shown while the full sized image is been loaded
      */
     protected function getLoadingImage($image, $args = array(), $inline = false, $ext = false) {
+        if($ext === 'webp'){
+            $args['webp'] = true;
+        }
         if ($image instanceof Pageimage) {
-            if ((!$ext || $ext === 'svg') && !empty($image->placeholder_svg)) {
+            if (!empty($image->placeholder_svg)) {
                 // A svg-placeholder is defined
-                return 'data:image/svg+xml;utf8,' . $this->svgUrlEncode($image->placeholder_svg);
-            } elseif (!$inline && is_array($args) && isset($args['default']['width']) && isset($args['default']['height'])) {
-                // Width and height are set -> preserve aspect ratio:
-                return $this->getImageWithOptions($image, array('width' => 100, 'height' => round($args['default']['width'] / $args['default']['height']) * 100));
-            } else if(!$inline){
-                return $this->getImageWithOptions($image, array('width' => 100));
+                return 'data:image/svg+xml,' . $this->svgUrlEncode($image->placeholder_svg);
+            } elseif ($inline) {
+                if (is_array($args) && isset($args['default']['width']) && isset($args['default']['height'])) {
+                    // Width and height are set -> preserve aspect ratio:
+                    return $this->getImageWithOptions($image, array('width' => 10, 'height' => round($args['default']['width'] / $args['default']['height']) * 10));
+                } else{
+                    return $this->getImageWithOptions($image, array('width' => 10));
+                }
+            } else{
+                if (is_array($args) && isset($args['default']['width']) && isset($args['default']['height'])) {
+                    // Width and height are set -> preserve aspect ratio:
+                    return $this->getImageWithOptions($image, array('width' => 100, 'height' => round($args['default']['width'] / $args['default']['height']) * 100));
+                } else{
+                    return $this->getImageWithOptions($image, array('width' => 100));
+                }
             }
         }
 
+        // Empty images in different formats::
         if($ext === 'png'){
             return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=';
         }else if($ext === 'jpg' || $ext === 'jpeg'){
@@ -493,7 +519,6 @@ class ImageService extends TwackComponent {
             return 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
         }
 
-        // If no image could be generated: return empty gif:
         return 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=';
     }
 

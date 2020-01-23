@@ -29,6 +29,7 @@ class ProjectPage extends TwackComponent {
 			$this->main_image = $this->projectPage->main_image;
 			$this->main_image_html = $this->getService('ImageService')->getPictureHtml(array(
 				'image' => $this->main_image,
+				'alt' => sprintf($this->_('Logo of %1$s'), $this->projectPage->title),
 				'pictureclasses' => array('ar-content'),
 				'loadAsync' => true,
 				'default' => array(

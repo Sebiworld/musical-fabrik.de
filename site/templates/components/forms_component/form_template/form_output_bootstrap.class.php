@@ -64,7 +64,6 @@ class FormOutputBootstrap extends FormOutputType {
             }
         }
 
-        // Twack::devEcho($field->type);
         if ($field->name === 'antispam_code') {
             $isRequired             = true;
             $attributes['required'] = 'required';
@@ -106,7 +105,7 @@ class FormOutputBootstrap extends FormOutputType {
             $fieldHtml .= '</div>';
         } elseif ($field->type instanceof \FieldtypeRuntimeMarkup) {
             $fieldHtml .= '<div class="form-group ' . ($isRequired ? 'required' : '') . ' ' . implode(' ', $groupClasses) . '" ' . $this->getAttributeString($groupAttributes) . '>';
-            $fieldHtml .= '<label for="' . $attributes['id'] . '" class="form-control-label">' . $field->label . '</label>';
+            $fieldHtml .= '<label class="form-control-label">' . $field->label . '</label>';
 
             if (!empty($field->description . '')) {
                 $fieldHtml .= '<div class="form-text text-muted">' . $this->replacePlaceholders($field->description) . '</div>';
@@ -181,7 +180,7 @@ class FormOutputBootstrap extends FormOutputType {
 
             $fieldHtml .= '<label class="form-check-label" for="' . $attributes['id'] . '">';
             $fieldHtml .= '<input class="form-check-input ' . implode(' ', $inputClasses) . '" type="checkbox" ' . $this->getAttributeString($attributes) . ' />';
-            $fieldHtml .= '<div class="control__indicator"></div>';
+            $fieldHtml .= '<span class="control__indicator"></span>';
             $fieldHtml .= '<span class="label">' . $field->label . '</span>';
             if (!empty($errormsg)) {
                 $fieldHtml .= '<div class="invalid-feedback">' . implode(', ', $errormsg) . '</div>';
@@ -223,7 +222,7 @@ class FormOutputBootstrap extends FormOutputType {
                     $fieldHtml .= '<div class="form-check">';
                     $fieldHtml .= '<label class="form-check-label" for="' . $id . '">';
                     $fieldHtml .= '<input class="form-check-input ' . implode(' ', $inputClasses) . '" type="checkbox" ' . $this->getAttributeString($attributes) . ' value="' . $option->id . '" /> ';
-                    $fieldHtml .= '<div class="control__indicator"></div>';
+                    $fieldHtml .= '<span class="control__indicator"></span>';
                     $fieldHtml .= '<span class="label">' . $option->title . '</span>';
                     $fieldHtml .= '</label>';
                     if (!empty($errormsg)) {

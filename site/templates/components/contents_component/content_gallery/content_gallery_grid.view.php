@@ -21,7 +21,7 @@ if ($this->images && !empty($this->images)) {
 		<div class="masonry-grid lightgallery row">
 			<div class="masonry-grid-sizer col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2"></div>
 			<?php
-            $counter = 0;
+            $counter = 1;
     		foreach ($this->images as $listenIndex => $image) {
         		?>
 				<div class="masonry-grid-item col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
@@ -29,6 +29,7 @@ if ($this->images && !empty($this->images)) {
 						<?php
 						echo $this->component->getService('ImageService')->getPictureHtml(array(
 							'image' => $image,
+							'alt' => sprintf(__('Gallery %1$s, slide %2$s'), $this->title, $counter),
 							'pictureclasses' => array('ar-content'),
 							'loadAsync' => true,
 							'default' => array(
@@ -47,7 +48,7 @@ if ($this->images && !empty($this->images)) {
 					</a>
 					<?php
                     if ($image->caption && !empty($image->caption . '')) {
-                        echo '<div class="image-caption">' . $bild->caption . '</div>';
+                        echo '<div class="image-caption">' . $image->caption . '</div>';
                     } ?>
 				</div>
 				<?php

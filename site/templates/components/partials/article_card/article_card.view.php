@@ -8,6 +8,7 @@ namespace ProcessWire;
 		if ($this->page->main_image) {
 			echo $this->component->getService('ImageService')->getPictureHtml(array(
                 'image' => $this->page->main_image,
+                'alt' => sprintf(__('Main-image of %1$s'), $this->page->title),
                 'classes' => array('article-image'),
                 'pictureclasses' => array('ar-content'),
                 'loadAsync' => true,
@@ -28,6 +29,7 @@ namespace ProcessWire;
             ));
 		} else {
 			echo $this->component->getService('ImageService')->getPlaceholderPictureHtml(array(
+                'alt' => sprintf(__('Main-image of %1$s'), $this->page->title),
                 'classes' => array('article-image'),
                 'pictureclasses' => array('ar-content'),
                 'loadAsync' => true,

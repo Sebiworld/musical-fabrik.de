@@ -23,7 +23,8 @@ Show single actor portrait
 		<?php
 		if ($this->page->main_image) {
 			echo $this->component->getService('ImageService')->getPictureHtml(array(
-                'image' => $this->page->main_image,
+				'image' => $this->page->main_image,
+				'alt' => sprintf(__('Portrait of %1$s'), $this->page->title),
 				'pictureclasses' => array('ar-content', 'portrait-image'),
                 'loadAsync' => true,
                 'default' => array(

@@ -22,7 +22,7 @@ if ($this->images && !empty($this->images)) {
 		<div class="masonry-grid lightgallery">
 			<div class="masonry-grid-sizer"></div>
 			<?php
-			$counter = 0;
+			$counter = 1;
 			foreach ($this->images as $listenIndex => $image) {
 				?>
 				<div class="masonry-grid-item <?= ($image->width / $image->height) > 2  ? 'double-width' : ''; ?>">
@@ -30,6 +30,7 @@ if ($this->images && !empty($this->images)) {
 						<?php
 						echo $this->component->getService('ImageService')->getPictureHtml(array(
 							'image' => $image,
+							'alt' => sprintf(__('Gallery %1$s, slide %2$s'), $this->title, $counter),
 							'pictureclasses' => array('ar-content'),
 							'loadAsync' => true,
 							'default' => array(

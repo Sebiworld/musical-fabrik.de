@@ -27,6 +27,7 @@ namespace ProcessWire;
                         <?php
                         echo $this->imageService->getPictureHtml(array(
                             'image' => $page->gridImage,
+                            'alt' => $page->title,
                             'pictureclasses' => array('aspect-ratio', 'ar-'.$this->imageRatio),
                             'classes' => array('ar-content'),
                             'styles'     => $page->color ? 'background-color: #' . $page->color . ';' : '',

@@ -19,6 +19,7 @@ namespace ProcessWire;
 								<?php
 									echo $this->imageService->getPictureHtml(array(
 										'image' => $this->mainImage,
+										'alt' => sprintf(__('Main-image of %1$s'), $this->title),
 										'pictureclasses' => array('ar-content'),
 										'loadAsync' => true,
 										'default' => array(
@@ -43,6 +44,7 @@ namespace ProcessWire;
 								<?php
 								echo $this->imageService->getPictureHtml(array(
 									'image' => $this->mainImage,
+									'alt' => sprintf(__('Main-image of %1$s'), $this->title),
 									'pictureclasses' => array('ar-content'),
 									'loadAsync' => true,
 									'default' => array(
