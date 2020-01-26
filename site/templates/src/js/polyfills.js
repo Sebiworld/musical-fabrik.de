@@ -2,6 +2,8 @@ import 'core-js/modules/es.array.iterator';
 import 'core-js/modules/es.object.to-string';
 import 'core-js/modules/es.promise';
 
+import 'picturefill/dist/picturefill.min.js';
+
 /**
  * Safari 10.1 supports modules, but does not support the `nomodule` attribute - it will
  * load <script nomodule> anyway. This snippet solve this problem, but only for script
