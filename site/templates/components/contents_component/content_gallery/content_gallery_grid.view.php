@@ -33,14 +33,11 @@ if ($this->images && !empty($this->images)) {
 							'pictureclasses' => array('ar-content'),
 							'loadAsync' => true,
 							'default' => array(
-								'width' => 720
+								'width' => 410
 							),
-							'srcset' => array(
-								'1x' => array(
-									'width' => 720
-								),
-								'2x' => array(
-									'width' => (720 * 2)
+							'media' => array(
+								'(max-width: 500px)' => array(
+									'width' => 250
 								)
 							)
 						));

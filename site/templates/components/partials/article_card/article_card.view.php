@@ -16,16 +16,6 @@ namespace ProcessWire;
                     'width' => 320,
 					'height' => 160
                 ),
-                'srcset' => array(
-                    '1x' => array(
-						'width' => 320,
-						'height' => 160
-                    ),
-                    '2x' => array(
-                        'width' => (320 * 2),
-						'height' => (160 * 2)
-                    )
-                )
             ));
 		} else {
 			echo $this->component->getService('ImageService')->getPlaceholderPictureHtml(array(
@@ -36,16 +26,6 @@ namespace ProcessWire;
                 'default' => array(
                     'width' => 320,
 					'height' => 160
-                ),
-                'srcset' => array(
-                    '1x' => array(
-						'width' => 320,
-						'height' => 160
-                    ),
-                    '2x' => array(
-                        'width' => (320 * 2),
-						'height' => (160 * 2)
-                    )
                 )
 			));
 		}

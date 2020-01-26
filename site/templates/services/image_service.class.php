@@ -14,84 +14,36 @@ class ImageService extends TwackComponent {
         $this->configurationService = $this->getService('ConfigurationService');
     }
 
+    /**
+     * Returns <img> html for an image with the given args. Automatically creates srcsets for multiple resolutions
+     */
     public function getImgHtml($args = array()) {
+        $output = '';
+
         $image = $this->getImage($args);
         if (!($image instanceof Pageimage)) {
             return '';
         }
 
-        $attributes        = array();
+        $attributes        = array(
+            'data-caption' => $this->mergeArgs('caption', $args, $image)
+        );
+
+        $attributes['alt'] = $this->mergeArgs('alt', $image, $attributes['data-caption'], $args);
+
         $styles            = array();
-        $classes           = array();
-        $pictureclasses    = array();
-
-        $src                 = $image->url;
-        $this->webpSupported = true;
-        // Check if server can build webp images:
-        if ($image->ext !== 'svg' && isset($args['outputType']) && $args['outputType'] === 'picture' && $src === $image->webp->url) {
-            $this->webpSupported = false;
-        }
-
-        if (isset($args['classes'])) {
-            if (is_array($args['classes'])) {
-                $classes = $args['classes'];
-            } elseif (is_string($args['classes'])) {
-                $classes = explode(' ', $args['classes']);
-            }
-        }
-        if (isset($args['pictureclasses'])) {
-            if (is_array($args['pictureclasses'])) {
-                $pictureclasses = $args['pictureclasses'];
-            } elseif (is_string($args['pictureclasses'])) {
-                $pictureclasses = explode(' ', $args['pictureclasses']);
-            }
-        }
-
         if (isset($args['styles'])) {
-            if (is_array($args['styles'])) {
-                $styles = $args['styles'];
-            } elseif (is_string($args['styles'])) {
-                $styleparts = explode(';', $args['styles']);
-                foreach ($styleparts as $stylepart) {
-                    $style = explode(':', $stylepart);
-                    if (count($style) < 2) {
-                        continue;
-                    }
-                    if (empty(trim($style[0])) || empty(trim($style[1]))) {
-                        continue;
-                    }
-                    $styles[trim($style[0])] = trim($style[1]);
-                }
-            }
+            $styles = $this->getStylesArray($args['styles']);
         }
 
-        if (!isset($args['outputType']) || !in_array($args['outputType'], ['bg-image', 'background-image'])) {
-            if (isset($args['alt'])) {
-                $attributes['alt'] = $args['alt'];
-            } else {
-                $attributes['alt'] = $image->alt;
-            }
+        $classes = array();
+        if (isset($args['classes'])) {
+            $classes = $this->getClassArray($args['classes']);
         }
 
-        if (isset($args['caption'])) {
-            $attributes['data-caption'] = $args['caption'];
-        } elseif (isset($image->caption) && !empty($image->caption)) {
-            $attributes['data-caption'] = $image->caption;
-        }
+        $srcset     = $this->getSrcset($image, $args);
 
-        $loadAsync = true;
-        if (isset($args['loadAsync']) && !$args['loadAsync']) {
-            $loadAsync = false;
-        }
-
-        if ($loadAsync && $image->ext === 'svg' && empty($image->placeholder_svg)) {
-            $loadAsync = false;
-        }
-
-        if (isset($args['sizes']) && is_array($args['sizes'])) {
-            $attributes['sizes'] = $args['sizes'];
-        }
-
+        $src = $image->url;
         if ($image->ext !== 'svg') {
             if (!isset($args['default'])) {
                 $args['default'] = array('width' => 1000);
@@ -99,136 +51,36 @@ class ImageService extends TwackComponent {
             $src = $this->getImageWithOptions($image, $args['default']);
         }
 
-        $srcset     = array();
-        $webpsrcset = array();
-        if (isset($args['srcset']) && is_array($args['srcset'])) {
-            foreach ($args['srcset'] as $key => $value) {
-                if (empty($value)) {
-                    continue;
-                }
-                if (is_string($value)) {
-                    $srcset[] = $value . ' ' . $key;
-                    if ($this->webpSupported && isset($args['outputType']) && $args['outputType'] === 'picture') {
-                        $webpsrcset[] = $value . ' ' . $key;
-                    }
-                } elseif ($image->ext !== 'svg' && is_array($value)) {
-                    $srcset[] = $this->getImageWithOptions($image, $value) . ' ' . $key;
-                    if ($this->webpSupported && isset($args['outputType']) && $args['outputType'] === 'picture') {
-                        $webpsrcset[] = $this->getImageWithOptions($image, array_merge($value, ['webp' => true])) . ' ' . $key;
-                    }
-                }
-            }
-        }
+        if ($this->shouldLoadAsync($image, $args)) {
+            // Load full sized image async:
 
-        $imgHtml = '';
-        if (isset($args['outputType']) && in_array($args['outputType'], ['bg-image', 'background-image'])) {
-            // Get image as background of a div element:
+            $classes[]                        = 'lazyload';
+            $classes[]                        = 'lazy-image';
 
-            // Load a bigger image size asynchronously?
-            if ($loadAsync) {
-                $classes[]                        = 'lazyload';
-                $classes[]                        = 'lazy-image';
+            $attributes['data-src'] = $src;
+            $attributes['src']      = $this->getLoadingImage($image, $args);
+            $attributes['class']    = implode(' ', $classes);
 
-                $attributes['data-bgset'] = implode(', ', $srcset);
-
-                if (isset($attributes['sizes'])) {
-                    $attributes['data-sizes'] = $attributes['sizes'];
-                    unset($attributes['sizes']);
-                } else {
-                    $attributes['data-sizes'] = 'auto';
-                }
-            }
-
-            $styles['background-image'] = 'url("' . $src . '")';
-            $imgHtml                    = '<div class="' . implode(' ', $classes) . '" ' . $this->makeAttributeString($attributes) . ' ' . $this->makeStyleString($styles) . ' ></div>';
-        } elseif (isset($args['outputType']) && $args['outputType'] === 'picture') {
-            // Get image as <picture> element with webp-support
-
-            $classes[] = 'img-fluid';
-
-            $placeholder = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-            if ($loadAsync) {
-                if (!empty($image->placeholder_svg)) {
-                    // There is a svg-placeholder defined
-                    $placeholder = 'data:image/svg+xml;utf8,' . $this->svgUrlEncode($image->placeholder_svg);
-                } elseif (isset($args['default']['width']) && isset($args['default']['height'])) {
-                    // Width and height are set -> preserve aspect ratio:
-                    $placeholder = $this->getImageWithOptions($image, array('width' => 100, 'height' => round($args['default']['width'] / $args['default']['height']) * 100));
-                } else {
-                    $placeholder = $this->getImageWithOptions($image, array('width' => 100));
-                }
-            }
-
-            if (!empty($webpsrcset)) {
-                if ($loadAsync) {
-                    $imgHtml .= '<source srcset="' . $placeholder . '" data-srcset="' . implode(', ', $webpsrcset) . '" type="image/webp">';
-                } else {
-                    $imgHtml .= '<source srcset="' . implode(', ', $webpsrcset) . '" type="image/webp">';
-                }
-            }
-
-            if (!empty($srcset)) {
-                if ($loadAsync) {
-                    $imgHtml .= '<source srcset="' . $placeholder . '" data-srcset="' . implode(', ', $srcset) . '" type="image/jpeg">';
-                } else {
-                    $imgHtml .= '<source srcset="' . implode(', ', $srcset) . '" type="image/jpeg">';
-                }
-            }
-
-            // Load a bigger image size asynchronously?
-            if ($loadAsync) {
-                $classes[]                        = 'lazyload';
-                $classes[]                        = 'lazy-image';
-
-                $attributes['data-src']                    = $src;
-                $attributes['src']                         = $placeholder;
-
-                $imgHtml .= '<img class="' . implode(' ', $classes) . '" ' . $this->makeAttributeString($attributes) . ' ' . $this->makeStyleString($styles) . ' />';
-            } else {
-                $attributes['src'] = $src;
-                $imgHtml .= '<img class="' . implode(' ', $classes) . '" />';
-            }
-
-            // Wrap everything in a <picture> element:
-            $imgHtml = '<picture class="' . implode(' ', $pictureclasses) . '">' . $imgHtml;
-            $imgHtml .= '</picture>';
-        } else {
-            // Get image as a <img> element
-            $classes[] = 'img-fluid';
-
-            // Load a bigger image size asynchronously?
-            if ($loadAsync) {
-                $classes[]                        = 'lazyload';
-                $classes[]                        = 'lazy-image';
-
-                if (!empty($image->placeholder_svg)) {
-                    // A svg-placeholder was found:
-                    $attributes['data-src']                    = $src;
-                    $attributes['src']                         = 'data:image/svg+xml;utf8,' . $this->svgUrlEncode($image->placeholder_svg);
-                } elseif ($image->ext !== 'svg') {
-                    // No svg-placeholder, generate low-quality version:
-                    $attributes['data-src']                    = $src;
-                    $attributes['src']                         = $this->getImageWithOptions($image, array('width' => 100));
-                }
-
+            if(!empty($srcset)){
                 $attributes['data-srcset'] = implode(', ', $srcset);
-
-                if (isset($attributes['sizes'])) {
-                    $attributes['data-sizes'] = $attributes['sizes'];
-                    unset($attributes['sizes']);
-                } else {
-                    $attributes['data-sizes'] = 'auto';
-                }
-            } else {
-                $attributes['src']    = $src;
-                $attributes['srcset'] = implode(', ', $srcset);
             }
 
-            $imgHtml = '<img class="' . implode(' ', $classes) . '" ' . $this->makeAttributeString($attributes) . ' ' . $this->makeStyleString($styles) . ' />';
+            return '<img ' . $this->makeAttributeString($attributes) . ' ' . $this->makeStyleString($styles) . ' />';
         }
-        return $imgHtml;
+
+        $attributes['src']      = $src;
+        $attributes['class']    = implode(' ', $classes);
+
+        if(!empty($srcset)){
+            $attributes['srcset'] = implode(', ', $srcset);
+        }
+
+        return '<img ' . $this->makeAttributeString($attributes) . ' ' . $this->makeStyleString($styles) . ' />';
     }
 
+    /**
+     * Returns <picture> html for an image with the given args. Automatically creates srcsets for multiple resolutions and webp alternatives
+     */
     public function getPictureHtml($args = array()) {
         $output = '';
 
@@ -258,11 +110,7 @@ class ImageService extends TwackComponent {
             $pictureclasses = $this->getClassArray($args['pictureclasses']);
         }
 
-        $srcset     = $this->getSrcset($image, $args);
-        $webpsrcset = array();
-        if ($this->isWebpSupported($image)) {
-            $webpsrcset = $this->getSrcset($image, $args, true);
-        }
+        $medias = $this->getMedia($args);
 
         $src = $image->url;
         if ($image->ext !== 'svg') {
@@ -272,18 +120,36 @@ class ImageService extends TwackComponent {
             $src = $this->getImageWithOptions($image, $args['default']);
         }
 
+        // Add Default-image as last media-option:
+        $medias[] = $args['default'];
+
         if ($this->shouldLoadAsync($image, $args)) {
             // Load full sized image async:
 
             $classes[]                        = 'lazyload';
             $classes[]                        = 'lazy-image';
-            $attributes['data-sizes'] = $this->mergeArgs('sizes', $args, $image);
 
-            if (!empty($webpsrcset) && $image->ext !== 'svg') {
-                $output .= '<source srcset="' . $this->getLoadingImage($image, $args, true, 'jpg') . ' 1x" data-srcset="' . implode(', ', $webpsrcset) . '" type="image/webp">';
-            }
-            if (!empty($srcset)  && $image->ext !== 'svg') {
-                $output .= '<source srcset="' . $this->getLoadingImage($image, $args, true, 'webp') . ' 1x" data-srcset="' . implode(', ', $srcset) . '" type="image/jpeg">';
+            // Only generate different sizes if the image is no svg:
+            if ($image->ext !== 'svg') {
+                foreach ($medias as $mediaquery => $options) {
+                    $mediastring = '';
+                    if (!empty($mediaquery) && is_string($mediaquery)) {
+                        $mediastring = 'media="' . $mediaquery . '"';
+                    }
+
+                    if ($this->isWebpSupported($image)) {
+                        $webpsrcset = $this->getSrcset($image, $options, true);
+
+                        if (!empty($webpsrcset)) {
+                            $output .= '<source ' . $mediastring . ' srcset="' . $this->getLoadingImage($image, $options, true, 'webp') . ' 1x" data-srcset="' . implode(', ', $webpsrcset) . '" type="image/webp">';
+                        }
+                    }
+
+                    $srcset     = $this->getSrcset($image, $options);
+                    if (!empty($srcset)) {
+                        $output .= '<source ' . $mediastring . ' srcset="' . $this->getLoadingImage($image, $options, true, 'jpg') . ' 1x" data-srcset="' . implode(', ', $srcset) . '" type="image/jpeg">';
+                    }
+                }
             }
 
             $attributes['data-src'] = $src;
@@ -299,14 +165,22 @@ class ImageService extends TwackComponent {
             return $output;
         }
 
-        $attributes['sizes'] = $this->mergeArgs('sizes', $args, $image);
+        // Only generate different sizes if the image is no svg:
+        if ($image->ext !== 'svg') {
+            foreach ($medias as $mediaquery => $options) {
+                if ($this->isWebpSupported($image)) {
+                    $webpsrcset = $this->getSrcset($image, $options, true);
 
-        if (!empty($webpsrcset) && $image->ext !== 'svg') {
-            $output .= '<source srcset="' . implode(', ', $webpsrcset) . '" type="image/webp">';
-        }
+                    if (!empty($webpsrcset)) {
+                        $output .= '<source srcset="' . implode(', ', $webpsrcset) . '" type="image/webp">';
+                    }
+                }
 
-        if (!empty($srcset) && $image->ext !== 'svg') {
-            $output .= '<source srcset="' . implode(', ', $srcset) . '" type="image/jpeg">';
+                $srcset     = $this->getSrcset($image, $options);
+                if (!empty($srcset)) {
+                    $output .= '<source srcset="' . implode(', ', $srcset) . '" type="image/jpeg">';
+                }
+            }
         }
 
         $attributes['src']      = $src;
@@ -325,6 +199,10 @@ class ImageService extends TwackComponent {
      * Check if server can build webp images
      */
     protected function isWebpSupported(Pageimage $image) {
+        if (isset(wire('config')->webpSupported) && !wire('config')->webpSupported) {
+            return false;
+        }
+
         if ($image->ext === 'svg') {
             return false;
         }
@@ -369,17 +247,17 @@ class ImageService extends TwackComponent {
         }
 
         $args      = func_get_args();
-        if(!is_array($args) || count($args) <= 1){
+        if (!is_array($args) || count($args) <= 1) {
             return null;
         }
         $key = array_shift($args);
 
-        foreach($args as $options){
+        foreach ($args as $options) {
             if ($options instanceof Pageimage && isset($options->{$key}) && !empty($options->{$key})) {
                 return $options->{$key};
-            }else if (is_array($options) && isset($options[$key])) {
+            } elseif (is_array($options) && isset($options[$key])) {
                 return $options[$key];
-            }else if(is_string($options) && strlen($options) > 0){
+            } elseif (is_string($options) && strlen($options) > 0) {
                 return $options;
             }
         }
@@ -466,7 +344,7 @@ class ImageService extends TwackComponent {
     protected function makeAttributeString($attributArray) {
         $output = '';
         foreach ($attributArray as $name => $value) {
-            if ($value === NULL) {
+            if ($value === null) {
                 continue;
             }
 
@@ -486,7 +364,7 @@ class ImageService extends TwackComponent {
      * Retrieves a small image that can be shown while the full sized image is been loaded
      */
     protected function getLoadingImage($image, $args = array(), $inline = false, $ext = false) {
-        if($ext === 'webp'){
+        if ($ext === 'webp') {
             $args['webp'] = true;
         }
         if ($image instanceof Pageimage) {
@@ -497,25 +375,25 @@ class ImageService extends TwackComponent {
                 if (is_array($args) && isset($args['default']['width']) && isset($args['default']['height'])) {
                     // Width and height are set -> preserve aspect ratio:
                     return $this->getImageWithOptions($image, array('width' => 10, 'height' => round($args['default']['width'] / $args['default']['height']) * 10));
-                } else{
+                } else {
                     return $this->getImageWithOptions($image, array('width' => 10));
                 }
-            } else{
+            } else {
                 if (is_array($args) && isset($args['default']['width']) && isset($args['default']['height'])) {
                     // Width and height are set -> preserve aspect ratio:
                     return $this->getImageWithOptions($image, array('width' => 100, 'height' => round($args['default']['width'] / $args['default']['height']) * 100));
-                } else{
+                } else {
                     return $this->getImageWithOptions($image, array('width' => 100));
                 }
             }
         }
 
         // Empty images in different formats::
-        if($ext === 'png'){
+        if ($ext === 'png') {
             return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=';
-        }else if($ext === 'jpg' || $ext === 'jpeg'){
+        } elseif ($ext === 'jpg' || $ext === 'jpeg') {
             return 'data:image/jpeg;base64,/9j/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAAA//EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AN//Z';
-        }else if($ext === 'webp'){
+        } elseif ($ext === 'webp') {
             return 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
         }
 
@@ -523,22 +401,63 @@ class ImageService extends TwackComponent {
     }
 
     protected function getSrcset(Pageimage $image, $args = array(), $webp = false) {
-        if (!is_array($args) || !isset($args['srcset']) || !is_array($args['srcset'])) {
+        if ((empty($args['width']) || !is_integer($args['width'])) && (empty($args['height']) || !is_integer($args['height']))) {
             return array();
         }
 
+        if ($webp) {
+            $args['webp'] = true;
+        }
+
+        return array(
+            $this->getImageWithOptions($image, $args) . ' 1x',
+            $this->getImageWithOptions($image, $this->getMultipliedSizeoptions($args, 2)) . ' 2x'
+        );
+    }
+
+    protected function getMultipliedSizeoptions($args, $factor) {
+        if (!is_array($args)) {
+            return array();
+        }
+
+        if (!is_numeric($factor)) {
+            return $args;
+        }
+
+        if (!empty($args['width']) && is_numeric($args['width'])) {
+            $args['width'] = $args['width'] * $factor;
+        }
+        if (!empty($args['height']) && is_numeric($args['height'])) {
+            $args['height'] = $args['height'] * $factor;
+        }
+
+        return $args;
+    }
+
+    /**
+     * Returns an array with media-attributes for generating different <source>-Tags in a picture element.
+     */
+    protected function getMedia($args = array()) {
+        if (!is_array($args) || !isset($args['media']) || !is_array($args['media'])) {
+            return array();
+        }
+
+        // Only allow valid values:
         $output = array();
-        foreach ($args['srcset'] as $key => $value) {
-            if (empty($value)) {
+        foreach ($args['media'] as $key => $value) {
+            if (empty($key) || !is_string($key)) {
                 continue;
             }
-            if (is_string($value)) {
-                $output[] = $value . ' ' . $key;
-            } elseif ($webp && $image->ext !== 'svg' && is_array($value)) {
-                $output[] = $this->getImageWithOptions($image, array_merge($value, ['webp' => true])) . ' ' . $key;
-            } elseif ($image->ext !== 'svg' && is_array($value)) {
-                $output[] = $this->getImageWithOptions($image, $value) . ' ' . $key;
+
+            if (empty($value) || !is_array($value)) {
+                continue;
             }
+
+            if ((empty($value['width']) || !is_integer($value['width'])) && (empty($value['height']) || !is_integer($value['height']))) {
+                continue;
+            }
+
+            $output[$key] = $value;
         }
         return $output;
     }

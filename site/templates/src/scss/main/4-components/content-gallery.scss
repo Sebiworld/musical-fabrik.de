@@ -16,7 +16,7 @@
         @include media-breakpoint-up(md) {
           width: 33%;
         }
-        @include media-breakpoint-up(xxxl) {
+        @include media-breakpoint-up(xxl) {
           width: 20%;
         }
 
@@ -29,7 +29,7 @@
           @include media-breakpoint-up(md) {
             width: 66%;
           }
-          @include media-breakpoint-up(xxxl) {
+          @include media-breakpoint-up(xxl) {
             width: 40%;
           }
         }

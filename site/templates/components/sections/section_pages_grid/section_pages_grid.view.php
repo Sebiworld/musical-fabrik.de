@@ -35,16 +35,6 @@ namespace ProcessWire;
                             'default' => array(
                                 'width' => 500,
                                 'height' => 500 * $this->imageFactor
-                            ),
-                            'srcset' => array(
-                                '1x' => array(
-                                    'width' => 500,
-                                    'height' => 500 * $this->imageFactor
-                                ),
-                                '2x' => array(
-                                    'width' => 1000,
-                                    'height' => 1000 * $this->imageFactor
-                                )
                             )
                         ));
                         ?>

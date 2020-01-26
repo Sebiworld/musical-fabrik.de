@@ -25,12 +25,9 @@ namespace ProcessWire;
 										'default' => array(
 											'width' => 800
 										),
-										'srcset' => array(
-											'1x' => array(
-												'width' => 800
-											),
-											'2x' => array(
-												'width' => (800 * 2)
+										'media' => array(
+											'(max-width: 500px)' => array(
+												'width' => 500
 											)
 										)
 									));
@@ -51,14 +48,10 @@ namespace ProcessWire;
 										'width' => 800,
 										'height' => 400
 									),
-									'srcset' => array(
-										'1x' => array(
-											'width' => 800,
-											'height' => 400
-										),
-										'2x' => array(
-											'width' => (800 * 2),
-											'height' => (400 * 2)
+									'media' => array(
+										'(max-width: 500px)' => array(
+											'width' => 500,
+											'height' => 250
 										)
 									)
 								));

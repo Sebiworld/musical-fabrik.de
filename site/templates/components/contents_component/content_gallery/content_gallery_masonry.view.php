@@ -36,12 +36,9 @@ if ($this->images && !empty($this->images)) {
 							'default' => array(
 								'width' => 640
 							),
-							'srcset' => array(
-								'1x' => array(
-									'width' => 640
-								),
-								'2x' => array(
-									'width' => (640 * 2)
+							'media' => array(
+								'(max-width: 500px)' => array(
+									'width' => 500
 								)
 							)
 						));

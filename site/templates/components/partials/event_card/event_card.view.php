@@ -14,16 +14,6 @@ namespace ProcessWire;
                 'default' => array(
                     'width' => 320,
 					'height' => 160
-                ),
-                'srcset' => array(
-                    '1x' => array(
-						'width' => 320,
-						'height' => 160
-                    ),
-                    '2x' => array(
-                        'width' => (320 * 2),
-						'height' => (160 * 2)
-                    )
                 )
             ));
 		} else {
@@ -34,16 +24,6 @@ namespace ProcessWire;
                 'default' => array(
                     'width' => 320,
 					'height' => 160
-                ),
-                'srcset' => array(
-                    '1x' => array(
-						'width' => 320,
-						'height' => 160
-                    ),
-                    '2x' => array(
-                        'width' => (320 * 2),
-						'height' => (160 * 2)
-                    )
                 )
 			));
 		}

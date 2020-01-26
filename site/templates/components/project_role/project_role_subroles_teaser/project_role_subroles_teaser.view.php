@@ -20,14 +20,6 @@ if (!empty($this->subroles)) {
 									'loadAsync' => true,
 									'default' => array(
 										'width' => 400
-									),
-									'srcset' => array(
-										'1x' => array(
-											'width' => 400
-										),
-										'2x' => array(
-											'width' => (400 * 2)
-										)
 									)
 								));
 							} else {

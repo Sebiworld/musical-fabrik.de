@@ -36,12 +36,9 @@ if ($this->images && !empty($this->images)) {
 								'default' => array(
 									'height' => 300
 								),
-								'srcset' => array(
-									'1x' => array(
-										'height' => 300
-									),
-									'2x' => array(
-										'height' => (300 * 2)
+								'media' => array(
+									'(max-width: 500px)' => array(
+										'height' => 200
 									)
 								)
 							));

@@ -36,14 +36,6 @@ namespace ProcessWire;
 											'loadAsync' => true,
 											'default' => array(
 												'width' => 800
-											),
-											'srcset' => array(
-												'1x' => array(
-													'width' => 800
-												),
-												'2x' => array(
-													'width' => 800 * 2
-												)
 											)
 										));
                                     } else {
@@ -93,14 +85,6 @@ namespace ProcessWire;
 											'loadAsync' => true,
 											'default' => array(
 												'width' => 500
-											),
-											'srcset' => array(
-												'1x' => array(
-													'width' => 500
-												),
-												'2x' => array(
-													'width' => 500 * 2
-												)
 											)
 										));
                                     } else {

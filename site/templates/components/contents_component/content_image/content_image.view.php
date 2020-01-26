@@ -26,12 +26,9 @@ if ($this->page->image) {
                 'default' => array(
                     'width' => 800
                 ),
-                'srcset' => array(
-                    '1x' => array(
-                        'width' => 800
-                    ),
-                    '2x' => array(
-                        'width' => (800 * 2)
+                'media' => array(
+                    '(max-width: 500px)' => array(
+                        'width' => 500
                     )
                 )
             ));

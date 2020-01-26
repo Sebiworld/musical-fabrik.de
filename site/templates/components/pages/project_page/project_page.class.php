@@ -1,109 +1,109 @@
 <?php
+
 namespace ProcessWire;
 
 /**
  * Applies globally to all project pages (including subpages).
  */
 class ProjectPage extends TwackComponent {
+    public function __construct($args) {
+        parent::__construct($args);
 
-	public function __construct($args) {
-		parent::__construct($args);
+        $this->isProjectPage = false;
+        $this->projectPage   = $this->page;
+        if ($this->projectPage->template->name !== 'project') {
+            $this->projectPage = $this->page->closest('template.name^=project, template.name!=project_role, template.name!=project_roles_container, template.name!=projects_container');
+        }
+        if (!($this->projectPage instanceof Page) || !($this->projectPage->id . '')) {
+            return;
+        }
 
-		$this->isProjectPage = false;
-		$this->projectPage = $this->page;
-		if ($this->projectPage->template->name !== 'project') {
-			$this->projectPage = $this->page->closest('template.name^=project, template.name!=project_role, template.name!=project_roles_container, template.name!=projects_container');
-		}
-		if (!($this->projectPage instanceof Page) || !($this->projectPage->id.'')) {
-			return;
-		}
+        $this->addGlobalParameters(['projectPage' => $this->projectPage]);
+        $this->isProjectPage = true;
 
-		$this->addGlobalParameters(['projectPage' => $this->projectPage]);
-		$this->isProjectPage = true;
+        if ($this->projectPage->template->hasField('info_overlay') && !empty($this->projectPage->info_overlay)) {
+            $this->infoOverlay = $this->projectPage->info_overlay;
+        }
 
-		if ($this->projectPage->template->hasField('info_overlay') && !empty($this->projectPage->info_overlay)) {
-			$this->infoOverlay = $this->projectPage->info_overlay;
-		}
-
-		if ($this->projectPage->main_image) {
-			$this->main_image = $this->projectPage->main_image;
-			$this->main_image_html = $this->getService('ImageService')->getPictureHtml(array(
-				'image' => $this->main_image,
-				'alt' => sprintf($this->_('Logo of %1$s'), $this->projectPage->title),
-				'pictureclasses' => array('ar-content'),
-				'loadAsync' => true,
-				'default' => array(
-					'width' => 800
-				),
-				'srcset' => array(
-					'1x' => array(
-						'width' => 800
+        if ($this->projectPage->main_image) {
+            $this->main_image      = $this->projectPage->main_image;
+            $this->main_image_html = $this->getService('ImageService')->getPictureHtml(array(
+                'image'          => $this->main_image,
+                'alt'            => sprintf($this->_('Logo of %1$s'), $this->projectPage->title),
+                'pictureclasses' => array('ar-content'),
+                'loadAsync'      => true,
+                'default'        => array(
+                    'width' => 800
+                ),
+                'media' => array(
+					'(max-width: 500px)' => array(
+						'width' => 500
 					),
-					'2x' => array(
-						'width' => (800 * 2)
+					'(min-width: 1200px)' => array(
+						'width' => 1200
 					)
-				)
-			));
-		}
+                )
+            ));
+        }
 
-		// Include CSS file for the project
-		$this->loadProjectCss($this->projectPage->name);
+        // Include CSS file for the project
+        $this->loadProjectCss($this->projectPage->name);
 
-		// Sidebar components:
-		$sidebar = $this->getGlobalComponent('sidebar');
+        // Sidebar components:
+        $sidebar = $this->getGlobalComponent('sidebar');
 
-		// Images slider:
-		$sidebar->addComponent('ImagesBox');
+        // Images slider:
+        $sidebar->addComponent('ImagesBox');
 
-		// Information about the performances:
-		$sidebar->addComponent('EventsBox');
+        // Information about the performances:
+        $sidebar->addComponent('EventsBox');
 
-		// Share Buttons:
-		$sidebar->addComponent('SharingBox');
+        // Share Buttons:
+        $sidebar->addComponent('SharingBox');
 
-		// General data:
-		$sidebar->addComponent('GeneralDataBox');
+        // General data:
+        $sidebar->addComponent('GeneralDataBox');
 
-		// Partners:
-		$sidebar->addComponent('SponsorsBox', ['title' => $this->_('Our Partners'), 'useField' => 'partners']);
+        // Partners:
+        $sidebar->addComponent('SponsorsBox', ['title' => $this->_('Our Partners'), 'useField' => 'partners']);
 
-		//Sponsors:
-		$sidebar->addComponent('SponsorsBox', ['title' => $this->_('Our Sponsors'), 'useField' => 'sponsors']);
-	}
+        //Sponsors:
+        $sidebar->addComponent('SponsorsBox', ['title' => $this->_('Our Sponsors'), 'useField' => 'sponsors']);
+    }
 
-	/**
-	 * Includes a CSS file (if available)
-	 */
-	public function loadProjectCss($cssName) {
-		$cssPath = 'assets/css/'. Twack::getManifestFilename($cssName.'.css');
-		
-		if (file_exists(wire('config')->paths->templates . $cssPath)) {
-			$this->addStyle($cssName.'.css', array(
-				'path'     => wire('config')->urls->templates . 'assets/css/',
-				'absolute' => true
-			));
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Includes a CSS file (if available)
+     */
+    public function loadProjectCss($cssName) {
+        $cssPath = 'assets/css/' . Twack::getManifestFilename($cssName . '.css');
 
-	public function getAjax() {
-		$output = array(
-			'isProjectPage' => $this->isProjectPage
-		);
+        if (file_exists(wire('config')->paths->templates . $cssPath)) {
+            $this->addStyle($cssName . '.css', array(
+                'path'     => wire('config')->urls->templates . 'assets/css/',
+                'absolute' => true
+            ));
+            return true;
+        }
+        return false;
+    }
 
-		if($this->isProjectPage){
-			$output['project'] = $this->getAjaxOf($this->projectPage);
+    public function getAjax() {
+        $output = array(
+            'isProjectPage' => $this->isProjectPage
+        );
 
-			if($this->projectPage->main_image){
-				$output['project']['main_image'] = $this->getAjaxOf($this->projectPage->main_image);
-			}
+        if ($this->isProjectPage) {
+            $output['project'] = $this->getAjaxOf($this->projectPage);
 
-			if($this->projectPage->color){
-				$output['color'] = $this->projectPage->color;
-			}
-		}
+            if ($this->projectPage->main_image) {
+                $output['project']['main_image'] = $this->getAjaxOf($this->projectPage->main_image);
+            }
 
-		return $output;
-	}
+            if ($this->projectPage->color) {
+                $output['color'] = $this->projectPage->color;
+            }
+        }
+
+        return $output;
+    }
 }
