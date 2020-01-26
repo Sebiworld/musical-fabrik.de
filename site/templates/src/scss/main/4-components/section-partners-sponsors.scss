@@ -57,6 +57,10 @@
       .lazy-image{
         background-color: $body-bg;
       }
+
+      &>picture{
+        width: 100%;
+      }
     }
   }
 
