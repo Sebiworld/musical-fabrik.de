@@ -17,7 +17,7 @@ if ($this->page->image) {
 			<?php
         } ?>
 
-		<div class="<?= !empty($this->page->classes . '') ? $this->page->classes : ''; ?>">
+		<a class="<?= !empty($this->page->classes . '') ? $this->page->classes : ''; ?>" data-open-imagelightbox="<?= $this->page->image->url; ?>" href="<?= $this->page->image->url; ?>" target="_blank">
             <?php
             echo $this->component->getService('ImageService')->getPictureHtml(array(
                 'image' => $this->page->image,
@@ -38,7 +38,7 @@ if ($this->page->image) {
             } 
         ?>
 		</div>
-	</div>
+    </a>
 	<?php
 }
 ?>

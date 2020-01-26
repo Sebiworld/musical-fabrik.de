@@ -8,6 +8,7 @@ article,
   }
 
   .main_image {
+    display: block;
     margin-bottom: $padding-sm;
     max-width: 100%;
     width: 50rem + (2 * $padding-sm);
