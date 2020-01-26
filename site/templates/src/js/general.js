@@ -30,6 +30,9 @@ scrollinator.addObservedElements('section');
 	// await import (/* webpackChunkName: "bootstrap-js" */ 'bootstrap/js/src/toast');
 	await import (/* webpackChunkName: "bootstrap-js" */ 'bootstrap/js/src/tooltip');
 
+	const lighboxload = await import(/* webpackChunkName: "basiclightbox-import" */ 'basiclightbox');
+	const basicLightbox = lighboxload.default;
+
 	ready(function() {
 		// Progressively for dynamically loading images:
 		// progressively.init({
