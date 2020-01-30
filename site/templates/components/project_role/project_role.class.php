@@ -56,8 +56,7 @@ class ProjectRole extends ProjectRoleBase {
 
 		$this->addStyle('project_role.css', array(
             'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true,
-			'inline' => true
+			'absolute' => true
         ));
 	}
 

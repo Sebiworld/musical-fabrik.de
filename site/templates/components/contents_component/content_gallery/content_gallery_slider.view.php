@@ -29,7 +29,7 @@ if ($this->images && !empty($this->images)) {
 							<?php
 							 echo $this->component->getService('ImageService')->getPictureHtml(array(
 								'image' => $image,
-								'alt' => sprintf(__('Gallery %1$s, slide %2$s'), $this->title, $counter),
+								'alt' => sprintf(__('Gallery %1$s, slide %2$s'), $this->title, (string)$counter),
 								'pictureclasses' => array('gallery-image', $image->classes ? $image->classes : ''),
 								'classes' => array(),
 								'loadAsync' => true,

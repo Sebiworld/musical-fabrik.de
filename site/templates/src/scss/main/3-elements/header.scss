@@ -1,17 +1,17 @@
 header{
 	height: 90px;
-	background-color: theme-color("dark");
+	// background-color: theme-color("dark");
 	transition: height 0.5s;
 
-	// @include media-breakpoint-down(sm) {
-	// 	background-color: $inverse-bg;
-	// }
+	@include media-breakpoint-down(sm) {
+		background-color: theme-color("dark");
+	}
 
 	// .bg-dark{
 	// 	background-color: theme-color("dark");
 	// }
 
-	// background-color: transparent;
+	background-color: transparent;
 
 	.navbar{
 		min-height: 65px;
@@ -30,7 +30,7 @@ header{
 	}
 
 	.navbar{
-		background-color: theme-color("dark");
+		background-color: transparent;
 		@include media-breakpoint-down(sm) {
 			background-color: theme-color("dark");
 		}

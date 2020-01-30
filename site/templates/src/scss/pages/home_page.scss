@@ -2,11 +2,16 @@
 
 .t-home{
 	header{
+		height: 0;
+
 		&>.header-hero{
 			display: none;
 		}
 
-		height: 0;
+		&.mini{
+			height: 0;
+		}
+		
 		&:not(.mini){
 			height: 0;
 

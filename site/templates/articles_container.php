@@ -5,8 +5,7 @@ $twack = wire('modules')->get('Twack');
 $general = $twack->getNewComponent('General');
 $general->addStyle('articles-container.css', array(
     'path'     => wire('config')->urls->templates . 'assets/css/',
-    'absolute' => true,
-    'inline' => true
+    'absolute' => true
 ));
 
 $content = $twack->getComponent('mainContent');

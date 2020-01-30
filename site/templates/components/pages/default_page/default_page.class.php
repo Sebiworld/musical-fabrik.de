@@ -69,8 +69,7 @@ class DefaultPage extends TwackComponent {
 
 		$this->addStyle('default_page.css', array(
             'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true,
-			'inline' => true
+			'absolute' => true
 		));
 		
 		// Twack::devEcho($this->page->main_image->placeholder_svg);

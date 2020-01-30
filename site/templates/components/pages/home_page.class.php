@@ -18,8 +18,7 @@ class HomePage extends TwackComponent {
 
 		$this->addStyle('home_page.css', array(
             'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true,
-			'inline' => true
+			'absolute' => true
         ));
 	}
 }

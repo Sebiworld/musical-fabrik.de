@@ -26,7 +26,7 @@ import {ready} from './classes/helpers.js';
 					continue;
 				}
 
-				$(element).lightSlider({
+				const slider = $(element).lightSlider({
 					autoWidth: true,
 					loop: true,
 					gallery: true,
@@ -37,6 +37,10 @@ import {ready} from './classes/helpers.js';
 							gallerId: ++lightGalleryCounter
 						});
 					}
+				});
+
+				element.addEventListener("lazyloaded", function () {
+					slider.refresh();
 				});
 			}
 		});

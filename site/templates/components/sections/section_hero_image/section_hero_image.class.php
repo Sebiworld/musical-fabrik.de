@@ -4,8 +4,6 @@ class SectionHeroImage extends TwackComponent {
 	public function __construct($args) {
 		parent::__construct($args);
 
-		$this->imageService = $this->getService('ImageService');
-
 		// Determine the ID of the one-page section:
 		$this->sectionId = '';
 		if ((string) $this->page->section_name) {
@@ -29,20 +27,5 @@ class SectionHeroImage extends TwackComponent {
 		if ($this->page->main_image && $this->page->main_image->url) {
 			$this->mainImage = $this->page->main_image;
 		}
-
-		// background image:
-		$this->backgroundImage = '';
-		if ($this->page->background_image && $this->page->background_image->url) {
-			$this->backgroundImage = $this->page->background_image;
-		}
-
-		$this->addScript('parallax.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
-        $this->addScript('legacy/parallax.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
 	}
 }

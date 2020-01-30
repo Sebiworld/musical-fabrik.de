@@ -15,8 +15,7 @@ class ContentsComponent extends TwackComponent {
         $this->createFromField($this->useField);
         $this->addStyle('contents.css', array(
             'path'     => wire('config')->urls->templates . 'assets/css/',
-            'absolute' => true,
-            'inline'   => true
+            'absolute' => true
         ));
     }
 
