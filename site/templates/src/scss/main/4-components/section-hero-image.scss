@@ -8,6 +8,7 @@
   display: block;
   background-color: #08030e;
   background-image: linear-gradient(360deg, #9c4f1a 0%, #69454b 32%, #2c182c 67%, #08030e 100%);
+  overflow: hidden;
 
   &:first-child {
     // margin-top: -90px;

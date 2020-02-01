@@ -23,7 +23,7 @@ namespace ProcessWire;
             foreach ($this->pages as $listindex => $page) {
                 ?>
 				<article class="<?= $this->gridClasses; ?> page">
-                    <figure class="io42-img-overlay io42-border-bottom-left io42-image-rotate-right io42-gradient-bottom-right w-100">
+                    <figure class="io42-img-overlay io42-border-bottom-left io42-gradient-bottom-right w-100">
                         <?php
                         echo $this->imageService->getPictureHtml(array(
                             'image' => $page->gridImage,
@@ -41,7 +41,7 @@ namespace ProcessWire;
                         <figcaption class="">
                             <div class="io42-fade-up io42-delay-100 d-block mb-1">
                                 <h4 class="mb-2 card-title"><?= $page->title; ?></h4>
-                                <?= !empty($page->desctext) ? '<div class="mb-2 small">' . $page->desctext . '</div>' : ''; ?>
+                                <?= !empty($page->desctext) ? '<div class="mb-2 small d-block">' . $page->desctext . '</div>' : ''; ?>
                             </div>
                             <div class="io42-delay-200">
                                 <?php

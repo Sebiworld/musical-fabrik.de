@@ -2,6 +2,9 @@
    ----------------------------- */
 
 .#{$prefix}-image {
+    img, picture {
+        will-change: filter;
+    }
 
     &-zoom-in {
 

@@ -14,6 +14,7 @@
 		
 		&:not(.mini){
 			height: 0;
+			background-color: transparent;
 
 			.navbar, .navbar-collapse{
 				background-color: transparent;
