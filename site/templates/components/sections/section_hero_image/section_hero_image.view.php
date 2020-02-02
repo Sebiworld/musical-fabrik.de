@@ -10,30 +10,31 @@ namespace ProcessWire;
 	<div class="hero-image-wrapper">
 		<div class="hero-image">
 			<?php
-			if ($this->mainImage) {
-				echo $this->component->getService('ImageService')->getPictureHtml(array(
-					'image' => $this->mainImage,
-					'alt' => $this->page->title,
-					'pictureclasses' => array('img-fluid'),
-					'loadAsync' => true,
-					'default' => array(
-						'width' => 1000,
-						'height' => 500
-					),
-					'media' => array(
-						'(max-width: 500px)' => array(
-							'width' => 500,
-							'height' => 350
-						),
-						'(min-width: 1100px)' => array(
-							'width' => 1100,
-							'height' => 400
-						)
-					)
-				));
-			}
-			?>
-			<img src="<?= wire('config')->urls->templates . 'assets/static_img/section-spacer-white-logo.svg'; ?>" class="img-fluid spacer-image"/>
+            if ($this->mainImage) {
+                echo $this->component->getService('ImageService')->getPictureHtml(array(
+                    'image'          => $this->mainImage,
+                    'alt'            => $this->page->title,
+                    'pictureclasses' => array('img-fluid'),
+                    'loadAsync'      => true,
+                    'default'        => array(
+                        'width'  => 1000,
+                        'height' => 500
+                    ),
+                    'media' => array(
+                        '(max-width: 500px)' => array(
+                            'width'  => 500,
+                            'height' => 350
+                        ),
+                        '(min-width: 1100px)' => array(
+                            'width'  => 1100,
+                            'height' => 400
+                        )
+                    )
+                ));
+            }
+            ?>
+			<img alt="MF Logo Spacer" src="<?= wire('config')->urls->templates . 'assets/static_img/section-spacer-white-logo-mobile.svg'; ?>" class="img-fluid spacer-image d-block d-md-none"/>
+			<img alt="MF Logo Spacer" src="<?= wire('config')->urls->templates . 'assets/static_img/section-spacer-white-logo.svg'; ?>" class="img-fluid spacer-image d-none d-md-block"/>
 		</div>
 
 		<div class="description-wrapper">
