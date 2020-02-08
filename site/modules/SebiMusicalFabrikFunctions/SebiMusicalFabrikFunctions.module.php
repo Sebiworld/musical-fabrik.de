@@ -27,6 +27,18 @@ class SebiMusicalFabrikFunctions extends WireData implements Module {
 
 		// Reload Backend JS:
 		$this->addHookBefore('Page::render', $this, 'hookPageRender');
+
+		$this->addHook('LazyCron::every30Seconds', $this, 'cleanup');
+	}
+
+	public function cleanup(HookEvent $event){
+		$containerpages = wire('pages')->find('template.name=forms_container, cleanup=1');
+		foreach($containerpages as $containerpage){
+			$pagesToDelete = $containerpage->find('created<='.strtotime('-2 weeks'));
+			foreach($pagesToDelete as $deletablePage){
+				$deletablePage->delete();
+			}
+		}
 	}
 
 	public function hookPagesAfterAdded(HookEvent $event) {
