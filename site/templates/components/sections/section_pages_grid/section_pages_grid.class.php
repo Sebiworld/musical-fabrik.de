@@ -83,6 +83,7 @@ class SectionPagesGrid extends TwackComponent {
             }
             
             if ($size === null) {
+                $this->gridClasses = 'col-12 '.$this->gridClasses;
                 break;
             }
 
