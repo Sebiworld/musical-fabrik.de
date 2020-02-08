@@ -76,7 +76,12 @@ class SectionPagesGrid extends TwackComponent {
         }
 
         foreach ($bootstrapSizes as $key => $bootstrapSize) {
-            $size = array_shift($cardSizes);
+            if($bootstrapSize === 'md' && count($cardSizes) <= 1){
+                $size = 6;
+            }else{
+                $size = array_shift($cardSizes);
+            }
+            
             if ($size === null) {
                 break;
             }
@@ -84,15 +89,15 @@ class SectionPagesGrid extends TwackComponent {
             if (!empty($this->gridClasses)) {
                 $this->gridClasses = ' ' . $this->gridClasses;
             }
-            $this->gridClasses = 'col-' . $bootstrapSize . '-' . $size . $this->gridClasses;
+
+            if($bootstrapSize === 'xs'){
+                $this->gridClasses = 'col-' . $size . $this->gridClasses;
+            }else{
+                $this->gridClasses = 'col-' . $bootstrapSize . '-' . $size . $this->gridClasses;
+            }
+            
 
             unset($bootstrapSizes[$key]);
-        }
-
-        if (empty($cardSizes)) {
-            $this->gridClasses = 'col-12 ' . $this->gridClasses;
-        } elseif (empty($cardSizes)) {
-            $this->gridClasses = 'col-' . $cardSizes[0] . $this->gridClasses;
         }
     }
 

@@ -14,4 +14,12 @@
 			}
 		}
 	}
+
+	@include media-breakpoint-down(sm) {
+		.pages-row{
+			.page{
+				padding: ($grid-padding / 4) ($grid-padding / 4);
+			}
+		}
+	}
 }

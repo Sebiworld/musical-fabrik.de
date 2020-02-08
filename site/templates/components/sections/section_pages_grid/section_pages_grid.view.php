@@ -22,7 +22,7 @@ namespace ProcessWire;
         if ($this->pages) {
             foreach ($this->pages as $listindex => $page) {
                 ?>
-				<article class="<?= $this->gridClasses; ?> page">
+				<article class="col <?= $this->gridClasses; ?> page">
                     <figure class="io42-img-overlay io42-border-bottom-left io42-gradient-bottom-right w-100">
                         <?php
                         echo $this->imageService->getPictureHtml(array(
