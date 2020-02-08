@@ -44,6 +44,12 @@ namespace ProcessWire;
 						"@id": "<?= $crumb->httpUrl; ?>",
 						"name": "<?= $crumb->title; ?>"
 						<?php
+						if ($crumb->viewable()) {
+							?>
+							,"url": "<?= $crumb->httpUrl; ?>"
+							<?php
+						}
+
 						if ($crumb->template->hasField('main_image') && $crumb->main_image && !empty($crumb->main_image)) {
 							?>
 							,"image": "<?= $crumb->main_image->httpUrl; ?>"

@@ -1,159 +1,209 @@
 @import "~hover.css/scss/hover";
 
 .section {
-	position: relative;
-	display: block;
-	background-color: $body-bg;
-	margin-top: $padding-md;
-	margin-bottom: $padding-md;
+  position: relative;
+  display: block;
+  background-color: $body-bg;
+//   margin-top: $padding-md;
+//   margin-bottom: $padding-md;
 
-	padding-top: $padding-y-sm;
-	padding-bottom: $padding-y-sm;
-	padding-left: $padding-x-sm;
-	padding-right: $padding-x-sm;
+  padding-top: 48px;
+  padding-bottom: 48px;
+  padding-left: 24px;
+  padding-right: 24px;
 
-	@include media-breakpoint-up(sm) {
-		padding-top: $padding-y-md;
-		padding-bottom: $padding-y-md;
-		padding-left: $padding-x-md;
-		padding-right: $padding-x-md;
-	}
+  @include media-breakpoint-up(sm) {
+    padding-top: 64px;
+    padding-bottom: 64px;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
 
-	&:first-child {
-		margin-top: 0;
-	}
+  &:first-child {
+    margin-top: 0;
+  }
 
-	.section-title {
-		margin-top: $padding-y-md;
-		margin-bottom: $padding-y-sm;
-		@include fontsize("section-title", 1.2);
-		display: block;
-		position: relative;
-		margin-left: auto;
-		margin-right: auto;
+  .section-title {
+    margin-top: $padding-y-md;
+    margin-bottom: $padding-y-sm;
+    @include fontsize("section-title", 1.2);
+    display: block;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
 
-		& > span {
-			margin-left: auto;
-			margin-right: auto;
-			border-bottom: 1px solid $body-color;
-			margin-bottom: $padding-y-sm;
-			width: 100%;
-			max-width: 100%;
-		}
+    & > span {
+      margin-left: auto;
+      margin-right: auto;
+      border-bottom: 1px solid $body-color;
+      margin-bottom: $padding-y-sm;
+      width: 100%;
+      max-width: 100%;
+    }
 
-		&.sr-only,
-		&.sr-only > span {
-			margin-top: 0;
-			margin-bottom: 0;
-			border-bottom: 0 none;
-			padding-bottom: 0;
-			height: 1px;
-		}
+    &.sr-only,
+    &.sr-only > span {
+      margin-top: 0;
+      margin-bottom: 0;
+      border-bottom: 0 none;
+      padding-bottom: 0;
+      height: 1px;
+    }
 
-		@include media-breakpoint-down(xs) {
-			@include fontsize("section-title-xs", 1.4);
-		}
-	}
+    @include media-breakpoint-down(xs) {
+      @include fontsize("section-title-xs", 1.4);
+    }
+  }
 
-	& > .row {
-		padding-left: 0;
-		padding-right: 0;
-	}
+  & > .row {
+    padding-left: 0;
+    padding-right: 0;
+  }
 
-	& > :first-child {
-		margin-top: 0;
-	}
-	& > :last-child {
-		margin-bottom: 0;
-	}
+  & > :first-child {
+    margin-top: 0;
+  }
+  & > :last-child {
+    margin-bottom: 0;
+  }
+
+  &.spacer-up,
+  &.spacer-down,
+  &.spacer-tertiary-up,
+  &.spacer-tertiary-down,
+  &.spacer-dark-up,
+  &.spacer-dark-down,
+  &.spacer-light-up,
+  &.spacer-light-down {
+    &:before {
+      content: "";
+      position: absolute;
+      top: -150px;
+      left: 0;
+      height: 150px;
+      width: 100%;
+      background-repeat: no-repeat;
+      background-position: top center;
+      background-size: auto 150px;
+    }
+  }
+
+  &.spacer-up:before {
+    background-image: url("/site/templates/assets/static_img/spacer/spacer_up.svg");
+  }
+  &.spacer-down:before {
+    background-image: url("/site/templates/assets/static_img/spacer/spacer_down.svg");
+  }
+  &.spacer-tertiary-up:before {
+    background-image: url("/site/templates/assets/static_img/spacer/spacer_tertiary_up.svg");
+  }
+  &.spacer-tertiary-down:before {
+    background-image: url("/site/templates/assets/static_img/spacer/spacer_tertiary_down.svg");
+  }
+  &.spacer-dark-up:before {
+    background-image: url("/site/templates/assets/static_img/spacer/spacer_dark_up.svg");
+  }
+  &.spacer-dark-down:before {
+    background-image: url("/site/templates/assets/static_img/spacer/spacer_dark_down.svg");
+  }
+  &.spacer-light-up:before {
+    background-image: url("/site/templates/assets/static_img/spacer/spacer_light_up.svg");
+  }
+  &.spacer-light-down:before {
+    background-image: url("/site/templates/assets/static_img/spacer/spacer_light_down.svg");
+  }
+
+  &.spacer-follows{
+	  padding-bottom: 150px;
+  }
 }
 
 @mixin section-variant($color, $gradientcolor: null) {
-	@if ($gradientcolor == null) {
-		$gradientcolor: darken($color, 5%);
-	}
-	background-color: $color;
-	background-image: linear-gradient(315deg, $gradientcolor 0%, $color 74%);
-	color: text-color-over($color);
+  @if ($gradientcolor == null) {
+    $gradientcolor: darken($color, 5%);
+  }
+  background-color: $color;
+//   background-image: linear-gradient(315deg, $gradientcolor 0%, $color 74%);
+  color: text-color-over($color);
 
-	.section-title > span {
-		border-color: text-color-over($color);
-	}
+  .section-title > span {
+    border-color: text-color-over($color);
+  }
 
-	a:not(.btn):not(.social-button) {
-		color: text-color-over($color);
+  a:not(.btn):not(.social-button) {
+    color: text-color-over($color);
 
-		.icon{
-			color: text-color-over($color);
-		}
+    .icon {
+      color: text-color-over($color);
+    }
 
-		&:hover,
-		&:focus {
-			@if $color != theme-color("primary") {
-				color: contrast(theme-color("primary"), $color);
-			}
-			else {
-				@include grow();
-			}
+    &:hover,
+    &:focus {
+      @if $color != theme-color("primary") {
+        color: contrast(theme-color("primary"), $color);
+      }
+      else {
+        @include grow();
+      }
 
-			.icon{
-				@if $color != theme-color("primary") {
-					color: contrast(theme-color("primary"), $color);
-				}
-				else {
-					@include grow();
-				}
-			}
-		}
-	}
+      .icon {
+        @if $color != theme-color("primary") {
+          color: contrast(theme-color("primary"), $color);
+        }
+        else {
+          @include grow();
+        }
+      }
+    }
+  }
 
-	a.social-button:not(.btn) {
-		color: text-color-over($color);
+  a.social-button:not(.btn) {
+    color: text-color-over($color);
 
-		.icon{
-			color: text-color-over($color);
-		}
-	}
+    .icon {
+      color: text-color-over($color);
+    }
+  }
 
-	.nav {
-		.nav-link {
-			color: text-color-over($color);
+  .nav {
+    .nav-link {
+      color: text-color-over($color);
 
-			&:hover,
-			&:focus {
-				@if $color != theme-color("primary") {
-					color: contrast(theme-color("primary"), $color);
-				}
-				else {
-					@include grow();
-				}
-			}
-		}
-	}
+      &:hover,
+      &:focus {
+        @if $color != theme-color("primary") {
+          color: contrast(theme-color("primary"), $color);
+        }
+        else {
+          @include grow();
+        }
+      }
+    }
+  }
 }
 
 .section,
 .container,
 .container-fluid {
-	&.highlight {
-		@include section-variant(theme-color("primary"));
+  &.highlight {
+    @include section-variant(theme-color("primary"));
 
-		// All colors defined in $colors are selectable as background colors.
-		@each $color, $value in $colors {
-			&.#{$color} {
-				@include section-variant($value);
-			}
-		}
+    // All colors defined in $colors are selectable as background colors.
+    @each $color, $value in $colors {
+      &.#{$color} {
+        @include section-variant($value);
+      }
+    }
 
-		// All colors defined in $theme-colors are also selectable as background colors.
-		@each $color, $value in $theme-colors {
-			&.#{$color} {
-				@include section-variant($value);
-			}
-		}
-	}
+    // All colors defined in $theme-colors are also selectable as background colors.
+    @each $color, $value in $theme-colors {
+      &.#{$color} {
+        @include section-variant($value);
+      }
+    }
+  }
 
-	&.center {
-		text-align: center;
-	}
+  &.center {
+    text-align: center;
+  }
 }

@@ -54,24 +54,36 @@
         filter: none;
       }
 
-      .lazy-image{
+      .lazy-image {
         background-color: $body-bg;
       }
 
-      &>picture{
+      & > picture {
         width: 100%;
       }
     }
   }
 
   .highlight {
-    padding: $padding-sm;
-    padding-left: $padding-sm;
-    padding-right: $padding-sm;
+    position: relative;
+    padding: 24px;
 
     @include media-breakpoint-up(sm) {
-      padding-left: $padding-md;
-      padding-right: $padding-md;
+      padding-left: 48px;
+      padding-right: 48px;
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: -150px;
+      left: 0;
+      height: 150px;
+      width: 100%;
+      background-repeat: no-repeat;
+      background-position: top center;
+      background-size: auto 150px;
+      background-image: url("/site/templates/assets/static_img/spacer/spacer_tertiary_down.svg");
     }
 
     .subtitle {
@@ -94,20 +106,13 @@
   }
 
   .partners {
-    // @include angle('before', true);
-    // @include angle('after', false);
-    padding: $padding-sm;
-    margin-bottom: $padding-sm;
-    padding-left: $padding-sm;
-    padding-right: $padding-sm;
+    padding: 24px;
+    padding-bottom: 150px;
 
     @include media-breakpoint-up(sm) {
-      padding-left: $padding-md;
-      padding-right: $padding-md;
+      padding-left: 48px;
+      padding-right: 48px;
     }
-
-    // padding-bottom: $padding-sm;
-    // padding-top: $padding-sm;
 
     .content-wrapper {
       padding: $padding-xs;
@@ -119,6 +124,33 @@
       padding: 0 $grid-padding;
       margin-right: -1 * $grid-padding;
       margin-left: -1 * $grid-padding;
+    }
+  }
+
+  .sponsors {
+    position: relative;
+    padding-top: 48px;
+    padding-bottom: 150px;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: -150px;
+      left: 0;
+      height: 150px;
+      width: 100%;
+      background-repeat: no-repeat;
+      background-position: top center;
+      background-size: auto 150px;
+      background-image: url("/site/templates/assets/static_img/spacer/spacer_up.svg");
+    }
+  }
+
+  &.spacer-follows {
+    padding-bottom: 0;
+
+    .thank-you {
+      padding-bottom: 150px;
     }
   }
 }

@@ -4,19 +4,15 @@ namespace ProcessWire;
 ?>
 
 <footer>
-	<div class="container-fluid text-right">
-		<?= $this->breadcrumbs; ?>
-	</div>
 	<div class="container-fluid highlight light top">
+		<?= $this->breadcrumbs; ?>
 		<div class="row">
 			<div class="col-12">
 				<?= $this->contents; ?>
 			</div>
 		</div>
 	</div>
-	<div class="container-fluid highlight primary mid-top">
 
-	</div>
 	<div class="container-fluid highlight dark mid">
 		<div class="row">
 			<?php

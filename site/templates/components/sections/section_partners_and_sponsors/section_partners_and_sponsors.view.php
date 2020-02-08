@@ -117,7 +117,7 @@ namespace ProcessWire;
     }
     ?>
 
-	<div class="container-fluid highlight tertiary text-block">
+	<div class="container-fluid highlight tertiary text-block thank-you capital-letter">
 		<?= $this->contents; ?>
 	</div>
 </section>

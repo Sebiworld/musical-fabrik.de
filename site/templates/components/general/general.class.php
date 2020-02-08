@@ -110,7 +110,16 @@ class General extends TwackComponent {
         $this->addComponent('ProjectPage', ['directory' => 'pages']);
         $this->addComponent('DefaultPage', ['directory' => 'pages']);
 
-        $this->setSeoTags();
+        if($this->wire('config')->noindex === true){
+            $this->page->seo->robots_noIndex = true;
+            $this->page->seo->robots_noFollow = true;
+
+            $field = $this->wire('fields')->get('name=seo');
+            $field->robots_noIndex = 1;
+            $field->robots_noFollow = 1;
+            $field->sitemap_include = 0;
+            $field->save();
+        }
     }
 
     protected function setSeoTags() {

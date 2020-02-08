@@ -417,3 +417,21 @@ DirectoryIndex index.php index.html index.htm
 #################################################################################################
 # END PROCESSWIRE HTACCESS DIRECTIVES
 #################################################################################################
+
+# Browser-Caching
+<IfModule mod_headers.c> 
+  # Cache images for 30 days:
+  <FilesMatch "\.(gif|jpe?g|png|svg|webp)$">
+    Header set Cache-Control "max-age=2592000, public"
+  </FilesMatch>
+
+  # Cache fonts for 1 year:
+  <FilesMatch "\.(woff|ttf|eot|otf)(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$">
+    Header set Cache-Control "max-age=31536000, public"
+  </FilesMatch>
+
+  # Cache css and js files for 1 year:
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "max-age=31536000, public"
+  </FilesMatch>
+</IfModule>

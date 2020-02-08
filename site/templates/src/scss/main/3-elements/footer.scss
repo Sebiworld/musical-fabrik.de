@@ -37,35 +37,48 @@ footer {
   }
 
   .top {
-    padding-top: $padding-sm;
-    padding-bottom: $padding-sm;
-  }
-
-  .mid-top {
-    @include angle("before", true);
-    padding-top: $padding-xs;
-    padding-bottom: $padding-xs;
+    position: relative;
+    padding-top: 48px;
+    padding-bottom: 150px;
   }
 
   .mid {
-    @include angle("before");
-    padding-top: $padding-md;
-    padding-bottom: $padding-md;
-    padding-left: $padding-sm;
-    padding-right: $padding-sm;
+    position: relative;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
 
     @include media-breakpoint-up(sm) {
-      padding-left: $padding-md;
-      padding-right: $padding-md;
+      padding-left: 48px;
+      padding-right: 48px;
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: -150px;
+      left: 0;
+      height: 150px;
+      width: 100%;
+      background-repeat: no-repeat;
+      background-position: top center;
+      background-size: auto 150px;
+      background-image: url("/site/templates/assets/static_img/spacer/spacer_dark_down.svg");
+    }
+
+    .form-control{
+      height: auto;
     }
   }
 
   .bottom {
+    position: relative;
     @include fontsize(0.8);
 
     .row > div {
-      padding-top: $padding-xs;
-      padding-bottom: $padding-xs;
+      padding-top: 8px;
+      padding-bottom: 8px;
     }
   }
 

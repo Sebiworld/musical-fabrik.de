@@ -108,33 +108,30 @@ namespace ProcessWire;
 				</div>
 
 				<?php
-				if ($this->page->template->name == 'article') {
+				if ($this->page->template->name === 'article') {
 					?>
 					<script type="application/ld+json">
 						{
 							"@context": "http://schema.org",
-							"@type": "NewsArticle",
-							"mainEntityOfPage": {
-								"@type": "WebPage",
-								"@id": "https://google.com/article"
-							},
+							"@type": "Article",
 							"headline": "<?= $this->title; ?>",
 							<?php
 							if ($this->mainImage) {
 								?>
-								"image": [
-								"<?= $this->mainImage->httpUrl; ?>"
-								],
+								"image": "<?= $this->mainImage->httpUrl; ?>",
 								<?php
 							}
 							?>
 
 							"datePublished": "<?= date(DATE_ATOM, wire('page')->created); ?>",
-							"dateModified": "<?= date(DATE_ATOM, wire('page')->created); ?>",
+							"dateCreated": "<?= date(DATE_ATOM, wire('page')->created); ?>",
+							"dateModified": "<?= date(DATE_ATOM, wire('page')->modified); ?>",
+							"description": "<?= htmlentities($this->page->intro); ?>",
 
+							"author": 
 							<?php
 							if ($this->authors && !empty($this->authors)) {
-								echo '"author" : [';
+								echo '[';
 								$firstFlag = true;
 								foreach ($this->authors as $author) {
 									if (!$firstFlag) {
@@ -143,25 +140,63 @@ namespace ProcessWire;
 									?>
 									{
 										"@type": "Person",
-										"name": "<?= $author; ?>"
+										"name": "<?= htmlentities($author); ?>"
 									}
 									<?php
 									$firstFlag = false;
 								}
 								echo '],';
+							}else{
+								?>
+								{
+									"@type": "Person",
+									"name": "Musical-Fabrik e. V."
+								}
+								<?php
 							}
 							?>
 
-							"publisher": {
+							"publisher": { 
 								"@type": "Organization",
-								"name": "<?= $this->configPage->short_text; ?>",
+								"name": "Musical-Fabrik",
+								"legalName": "Musical-Fabrik e. V.",
+								"url": "https://www.musical-fabrik.de",
 								"logo": {
-									"@type": "ImageObject"
-									<?= $this->configPage->logo_square ? ',"url": "' . $this->configPage->logo_square->httpUrl . '"' : ''; ?>
+									"@type": "ImageObject",
+									"url": "https://www.musical-fabrik.de/site/templates/assets/static_img/logo_optimized.jpg",
+									"width": "254",
+									"height": "60"
 								}
+							},
+							"url": "<?= $this->page->httpUrl; ?>",
+							"mainEntityOfPage": {
+								"@type": "WebPage",
+								"@id": "https://google.com/article"
 							}
-							<?= $this->configPage->intro ? ',"description": "' . $this->configPage->intro . '",' : ''; ?>
 						}
+					</script>
+					<?php
+				}else if($this->page->template->name === 'project' || $this->page->template->name === 'project_voice_company'){
+					?>
+					<script type="application/ld+json">
+					{
+						"@context": "http://schema.org",
+						"@type": "WebPage",
+						"name": "<?= htmlentities($this->page->title); ?> (eine Produktion der Musical-Fabrik e. V.)",
+						"description": "<?= htmlentities($this->page->intro); ?>",
+						"publisher": { 
+							"@type": "Organization",
+							"name": "Musical-Fabrik",
+							"legalName": "Musical-Fabrik e. V.",
+							"url": "https://www.musical-fabrik.de",
+							"logo": {
+								"@type": "ImageObject",
+								"url": "https://www.musical-fabrik.de/site/templates/assets/static_img/logo_optimized.jpg",
+								"width": "254",
+								"height": "60"
+							}
+						}
+					}
 					</script>
 					<?php
 				}

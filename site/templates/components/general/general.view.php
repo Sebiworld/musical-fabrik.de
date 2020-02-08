@@ -12,13 +12,8 @@ $configPage = $this->configurationService->getConfigurationPage();
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<?php
-    if ($this->metas) {
-        foreach ($this->metas->getArray() as $meta) {
-            echo $meta . " \n";
-        }
-    }
-    ?>
+	
+	<?= $this->page->seo; ?>
 
 	<link rel="shortcut icon" href="<?= wire('config')->urls->templates; ?>assets/static_img/icons/favicon.ico" />
 	<link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="<?= wire('config')->urls->templates; ?>assets/static_img/icons/favicon.ico">
@@ -46,26 +41,6 @@ $configPage = $this->configurationService->getConfigurationPage();
         echo "\n\t<link rel='stylesheet' href='$stylefile' /> ";
     }
     ?>
-
-	<script type="application/ld+json">
-		{
-			"@context": "http://schema.org",
-			"@type": "Organization",
-			"url": "https://www.musical-fabrik.de",
-			"name": "<?= $configPage->short_text; ?>",
-			<?= $configPage->logo_square ? '"logo": "' . $configPage->logo_square->httpUrl . '",' : ''; ?>
-			<?php
-            if (($configPage->phone_number && !empty($configPage->phone_number)) || ($configPage->emailaddress && !empty($configPage->emailaddress))) {
-                ?> "contactPoint": {
-					"@type": "ContactPoint",
-					<?= $configPage->phone_number ? '"telephone": "' . $configPage->phone_number . '",' : ''; ?>
-					<?= $configPage->emailaddress ? '"email": "' . $configPage->emailaddress . '",' : ''; ?> "contactType": "Customer service"
-				}
-			<?php
-            }
-        ?>
-		}
-	</script>
 
 	<script type="text/javascript">
 	var _paq = window._paq || [];
