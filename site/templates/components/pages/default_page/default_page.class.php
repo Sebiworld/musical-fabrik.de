@@ -67,10 +67,10 @@ class DefaultPage extends TwackComponent {
 			$this->contents = $this->addComponent('ContentsComponent', ['directory' => '']);
 		}
 
-		$this->addStyle('default_page.css', array(
-            'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true
-		));
+		// $this->addStyle('default_page.css', array(
+        //     'path'     => wire('config')->urls->templates . 'assets/css/',
+		// 	'absolute' => true
+		// ));
 		
 		// Twack::devEcho($this->page->main_image->placeholder_svg);
 	}

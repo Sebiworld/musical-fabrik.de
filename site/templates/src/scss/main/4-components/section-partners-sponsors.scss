@@ -76,13 +76,13 @@
     &:before {
       content: "";
       position: absolute;
-      top: -150px;
+      top: -146px;
       left: 0;
       height: 150px;
       width: 100%;
       background-repeat: no-repeat;
       background-position: top center;
-      background-size: auto 150px;
+      background-size: 100% 100%;
       background-image: url("/site/templates/assets/static_img/spacer/spacer_tertiary_down.svg");
     }
 
@@ -135,13 +135,13 @@
     &:before {
       content: "";
       position: absolute;
-      top: -150px;
+      top: -146px;
       left: 0;
       height: 150px;
       width: 100%;
       background-repeat: no-repeat;
       background-position: top center;
-      background-size: auto 150px;
+      background-size: 100% 100%;
       background-image: url("/site/templates/assets/static_img/spacer/spacer_up.svg");
     }
   }
