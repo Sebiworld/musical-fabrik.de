@@ -75,13 +75,20 @@
 	.project_role{
 		margin-bottom: $padding-y-md;
 
-		.title{
-			margin-bottom: $padding-y-sm;
-		}
+		.role-head{
+			position: relative;
+			display: block;
+			margin-bottom: 24px;
 
-		.intro{
-			margin-top: -0.95 * $padding-y-sm;
-			font-weight: normal;
+			.title{
+				padding-top: 0;
+				padding-bottom: 0;
+				margin-bottom: 8px;
+			}
+			.intro{
+				font-weight: normal;
+				margin-bottom: 8px;
+			}
 		}
 
 		&:last-child{

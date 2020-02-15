@@ -58,7 +58,7 @@ if (!empty($this->portraits) && !empty($casts)) {
 		foreach($this->subroles as $projectRole){
 			?>
 			<div class="project_role">
-				<a class="title-link" href="<?= $projectRole->url; ?>">
+				<div class="role-head">
 					<h2 class="title">
 						<?= $projectRole->title; ?>
 					</h2>
@@ -71,7 +71,10 @@ if (!empty($this->portraits) && !empty($casts)) {
 						<?php
 					}
 					?>
-				</a>
+					<a class="btn btn-sm btn-light role-more" href="<?= $projectRole->url; ?>" title="<?= sprintf(__('Jump to role description %1$s'), $projectRole->title); ?>">
+						<?= __('Role description'); ?>
+					</a>
+				</div>
 				<div class="casts-row">
 					<?php
 					$bCounter = 1;
