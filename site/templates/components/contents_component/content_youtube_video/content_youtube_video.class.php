@@ -5,11 +5,22 @@ namespace ProcessWire;
 class ContentYoutubeVideo extends TwackComponent {
     public function __construct($args) {
         parent::__construct($args);
-        $this->addScript('content-youtube-video.js', array(
+
+        $this->videoWidth = 560;
+        if(!empty($this->page->width) && $this->page->width >= 100){
+            $this->videoWidth = $this->page->width;
+        }
+
+        $this->videoHeight = 315;
+        if(!empty($this->page->height) && $this->page->height >= 100){
+            $this->videoHeight = $this->page->height;
+        }
+
+        $this->addScript('content-video.js', array(
             'path'     => wire('config')->urls->templates . 'assets/js/',
             'absolute' => true
         ));
-        $this->addScript('legacy/content-youtube-video.js', array(
+        $this->addScript('legacy/content-video.js', array(
             'path'     => wire('config')->urls->templates . 'assets/js/',
             'absolute' => true
         ));

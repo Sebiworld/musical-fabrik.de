@@ -27,8 +27,6 @@
     height: 100%;
     margin-left: 0;
     margin-right: 0;
-    object-fit: cover;
-    font-family: "object-fit: cover";
 
     & > img,
     & > picture,
@@ -45,6 +43,13 @@
       background-size: cover;
       background-position: center center;
     }
+  }
+
+  & > img.ar-content,
+  & > picture.ar-content,
+  & > div.ar-content {
+    object-fit: cover;
+    font-family: "object-fit: cover";
   }
 
   &.ar-1-1:before {

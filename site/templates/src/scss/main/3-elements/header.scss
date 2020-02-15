@@ -25,6 +25,14 @@ header{
 				width: auto;
 				height: 50px;
 				transition: height 0.5s;
+
+				@include media-breakpoint-only(md) {
+					height: 40px;
+				}
+
+				@include media-breakpoint-down(xs) {
+					height: 40px;
+				}
 			}
 		}
 	}
@@ -94,11 +102,10 @@ header{
 			}
 		}
 
-		@include media-breakpoint-up('md') {
-			// border-left: 1px solid white;
-			padding-left: $padding-xs;
-			padding-right: $padding-xs;
+		padding-left: 0;
+		padding-right: 0;
 
+		@include media-breakpoint-up('md') {
 			&:first-child{
 				border-left: 0 none;
 			}
@@ -107,6 +114,7 @@ header{
 				border-left: 0 none;
 
 				.hamburger-box{
+					margin-left: 5px;
 					margin-top: 7px;
 				}
 			}

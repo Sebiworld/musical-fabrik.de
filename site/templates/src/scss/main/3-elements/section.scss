@@ -4,8 +4,8 @@
   position: relative;
   display: block;
   background-color: $body-bg;
-//   margin-top: $padding-md;
-//   margin-bottom: $padding-md;
+  //   margin-top: $padding-md;
+  //   margin-bottom: $padding-md;
 
   padding-top: 48px;
   padding-bottom: 48px;
@@ -55,6 +55,12 @@
     }
   }
 
+  &.title-centered {
+    .section-title {
+      text-align: center;
+    }
+  }
+
   & > .row {
     padding-left: 0;
     padding-right: 0;
@@ -89,32 +95,32 @@
   }
 
   &.spacer-up:before {
-    background-image: url("/site/templates/assets/static_img/spacer/spacer_up.svg");
+    background-image: url("./../../../img/spacer/spacer_up.svg");
   }
   &.spacer-down:before {
-    background-image: url("/site/templates/assets/static_img/spacer/spacer_down.svg");
+    background-image: url("./../../../img/spacer/spacer_down.svg");
   }
   &.spacer-tertiary-up:before {
-    background-image: url("/site/templates/assets/static_img/spacer/spacer_tertiary_up.svg");
+    background-image: url("./../../../img/spacer/spacer_tertiary_up.svg");
   }
   &.spacer-tertiary-down:before {
-    background-image: url("/site/templates/assets/static_img/spacer/spacer_tertiary_down.svg");
+    background-image: url("./../../../img/spacer/spacer_tertiary_down.svg");
   }
   &.spacer-dark-up:before {
-    background-image: url("/site/templates/assets/static_img/spacer/spacer_dark_up.svg");
+    background-image: url("./../../../img/spacer/spacer_dark_up.svg");
   }
   &.spacer-dark-down:before {
-    background-image: url("/site/templates/assets/static_img/spacer/spacer_dark_down.svg");
+    background-image: url("./../../../img/spacer/spacer_dark_down.svg");
   }
   &.spacer-light-up:before {
-    background-image: url("/site/templates/assets/static_img/spacer/spacer_light_up.svg");
+    background-image: url("./../../../img/spacer/spacer_light_up.svg");
   }
   &.spacer-light-down:before {
-    background-image: url("/site/templates/assets/static_img/spacer/spacer_light_down.svg");
+    background-image: url("./../../../img/spacer/spacer_light_down.svg");
   }
 
-  &.spacer-follows{
-	  padding-bottom: 150px;
+  &.spacer-follows {
+    padding-bottom: 150px;
   }
 }
 
@@ -123,7 +129,7 @@
     $gradientcolor: darken($color, 5%);
   }
   background-color: $color;
-//   background-image: linear-gradient(315deg, $gradientcolor 0%, $color 74%);
+  //   background-image: linear-gradient(315deg, $gradientcolor 0%, $color 74%);
   color: text-color-over($color);
 
   .section-title > span {

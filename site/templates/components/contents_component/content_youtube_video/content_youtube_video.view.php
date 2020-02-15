@@ -3,26 +3,35 @@
 namespace ProcessWire;
 
 ?>
-<div class="content_youtube_video <?= !empty($this->page->classes . '') ? $this->page->classes : ''; ?>" <?= $this->page->depth ? 'data-depth="' . $this->page->depth . '"' : ''; ?>>
-	<?php
-    if (!empty($this->page->title)) {
-        $headingDepth = 2;
-        if ($this->page->depth && intval($this->page->depth)) {
-            $headingDepth = $headingDepth + intval($this->page->depth);
-        } ?>
-		<h<?= $headingDepth; ?> class="block-title <?= $this->page->hide_title ? 'sr-only sr-only-focusable' : ''; ?>">
-			<?= $this->page->title; ?>
-		</h<?= $headingDepth; ?>>
-	<?php
-    }
-    /*
-    <video-player>
-        <source src="//vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
-        <source src="//vjs.zencdn.net/v/oceans.webm" type="video/webm">
-    </video-player>
-     */
-    ?>
-	<div class="video-wrapper">
-		<video-player class="youtube-player" data-youtube-id="<?= $this->page->short_text; ?>"></video-player>
-	</div>
+<div class="content_youtube_video video-element aspect-ratio ar-16-9 <?= !empty($this->page->classes . '') ? $this->page->classes : ''; ?>" <?= $this->page->depth ? 'data-depth="' . $this->page->depth . '"' : ''; ?> data-youtube-id="<?= $this->page->short_text; ?>">
+    <div class="placeholder ar-content">
+        <?php
+            if ($this->page->image) {
+                echo $this->component->getService('ImageService')->getPictureHtml(array(
+                    'image'          => $this->page->image,
+                    'pictureclasses' => array('placeholder-image'),
+                    'loadAsync'      => true,
+                    'default'        => array(
+                        'width'  => 800,
+                        'height' => 450
+                    )
+                ));
+            } else {
+                echo $this->component->getService('ImageService')->getPlaceholderPictureHtml(array(
+                    'alt'            => sprintf(__('Main-image of %1$s'), $this->page->title),
+                    'pictureclasses' => array('placeholder-image'),
+                    'loadAsync'      => true,
+                    'default'        => array(
+                        'width'  => 800,
+                        'height' => 450
+                    )
+                ));
+            }
+        ?>
+        <div class="overlay">
+            <div class="title"><span><?= $this->page->title; ?></span></div>
+            <div class="play-indicator"></div>
+            <div class="description">Video ansehen</div>
+        </div>
+    </div>
 </div>

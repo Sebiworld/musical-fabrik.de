@@ -12,6 +12,6 @@ $brand-primary: $project-primary-bg !default;
 	}
 }
 
-.portrait-image {
+img.portrait-image, .portrait-image>img {
 	border-radius: 50%;
 }

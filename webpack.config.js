@@ -9,14 +9,11 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 const CleanCSS = require('clean-css');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
-
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const PATHS = {
 	source: path.join(__dirname, "./site/templates/src/"),
@@ -185,7 +182,21 @@ module.exports = (env, options) => {
 					loader: "import-glob-loader",
 				},
 				{
-					test: /\.(gif|jpe?g|png|svg)$/,
+					test: /\.(svg)$/,
+					use: [{
+						loader: "file-loader",
+						options: {
+							name: "[name].[hash:8].[ext]",
+							outputPath: "img/",
+							emitFile: true,
+							useRelativePath: false
+							// publicPath: PATHS.public,
+						},
+					}
+					],
+				},
+				{
+					test: /\.(gif|jpe?g|png)$/,
 					use: [{
 						loader: "file-loader",
 						options: {
@@ -237,10 +248,7 @@ module.exports = (env, options) => {
 			],
 		},
 		resolve: {
-			symlinks: true,
-			alias: {
-				'vue$': 'vue/dist/vue.esm.js'
-			}
+			symlinks: true
 		},
 		mode: isProduction ? 'production' : 'development',
 		devtool: isProduction ? '' : 'cheap-module-eval-source-map',
@@ -307,28 +315,10 @@ module.exports = (env, options) => {
 				filename: "css/[name]-[hash:8].min.css",
 				chunkFilename: "css/[id]-[chunkhash].min.css",
 			}),
-			// new webpack.BannerPlugin(
-			// 	{
-			// 		banner: [
-			// 			'/*!',
-			// 			' * @project        ' + pkg.name,
-			// 			' * @name           ' + '[filebase]',
-			// 			' * @author         ' + pkg.author.name,
-			// 			(isProduction ? ' *' : ' * @build          ' + moment().format('llll') + ' ET'),
-			// 			' */',
-			// 			''
-			// 		].join('\n'),
-			// 		raw: true
-			// 	}
-			// ),
 			new webpack.ProvidePlugin({
 				$: "jquery",
 				jQuery: "jquery",
-				"window.jQuery": "jquery",
-				Vue: ['vue/dist/vue.esm.js'],
-				VueRouter: ["vue-router/dist/vue-router.esm"],
-				VueResource: ["vue-resource/dist/vue-resource.es2015", 'default'],
-				Vuex: ["vuex/dist/vuex.esm", 'default']
+				"window.jQuery": "jquery"
 			}),
 			new OptimizeCSSAssetsPlugin({
 				cssProcessor: CleanCSS,
@@ -340,7 +330,6 @@ module.exports = (env, options) => {
 				canPrint: true
 			}),
 			new CompressionPlugin(),
-			new VueLoaderPlugin(),
 			(isProduction ?
                 new BundleAnalyzerPlugin(
                     {
@@ -348,8 +337,7 @@ module.exports = (env, options) => {
                         reportFilename: 'report-' + options.browser_env + '.html',
                     }
                 ) : new LiveReloadPlugin()
-			),
-			// new LicenseWebpackPlugin()
+            )
 		],
 	};
 };

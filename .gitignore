@@ -16,6 +16,7 @@ sess_*
 .svn
 /*.html
 gulpfile.js
+sitemap.xml 
 
 # node_modules ausnehmen. node_modules enthält externe Node-Plugins, die in der package.json als dependencies aufgeführt sind. Mit 'yarn install' oder 'npm install' können diese Plugins lokal nachinstalliert werden.
 node_modules/
