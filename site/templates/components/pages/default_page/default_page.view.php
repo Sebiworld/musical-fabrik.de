@@ -151,7 +151,7 @@ namespace ProcessWire;
 								{
 									"@type": "Person",
 									"name": "Musical-Fabrik e. V."
-								}
+								},
 								<?php
 							}
 							?>

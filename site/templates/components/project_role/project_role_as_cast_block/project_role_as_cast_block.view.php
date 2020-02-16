@@ -22,7 +22,7 @@ if (!empty($this->portraits) && !empty($casts)) {
 			<div class="cast-block">
 				<div class="title">
 					<strong><?= $cast->title; ?></strong>
-					<?= ($cast->intro) ? '<br/>'.$cast->intro : ''; ?>
+					<?= ($cast->text) ? '<div class="description">'.$cast->text.'</div>' : ''; ?>
 				</div>
 
 				<div class="container-fluid">

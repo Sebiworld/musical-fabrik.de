@@ -50,9 +50,9 @@ article,
   .title {
     margin-top: 0;
     // margin-top: $padding-xs;
-    padding-top: $padding-xs;
-    margin-bottom: $padding-y-sm * 1.5;
-    padding-bottom: $padding-xs;
+    padding-top:8px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
     display: block;
     width: 16em;
     max-width: 100%;
@@ -60,7 +60,7 @@ article,
 
     @include media-breakpoint-down(sm) {
       @include font-size(1.5rem);
-      margin-bottom: $padding-y-xs;
+      margin-bottom: 8px;
       line-height: 1.2;
     }
   }

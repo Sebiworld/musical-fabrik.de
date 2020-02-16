@@ -1,6 +1,31 @@
 @import "./globals/index";
 
 .t-project_roles_container, .t-project_role{
+	.casts-description{
+		position: relative;
+		display: block;
+		text-align: left;
+		max-width: 100%;
+		width: 400px;
+		margin: 8px auto;
+
+		.cast-title{
+			@include font-size(0.85rem);
+			margin-bottom: 0;
+		}
+		.cast-description{
+			@include font-size(0.85rem);
+
+			&>*:last-child{
+				margin-bottom: 0;
+			}
+		}
+
+		.card-body{
+			padding-bottom: 0;
+		}
+	}
+
 	.contents-area{
 		text-align: center;
 
@@ -36,6 +61,14 @@
 		.title{
 			margin-left: auto;
 			margin-right: auto;
+		}
+
+		.card{
+			.title{
+				padding-top: 0;
+				padding-bottom: 0;
+
+			}
 		}
 	}
 }

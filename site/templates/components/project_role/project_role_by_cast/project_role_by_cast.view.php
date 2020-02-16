@@ -2,10 +2,14 @@
 namespace ProcessWire;
 
 $casts = new WireArray();
+$castInfosAvailable = false;
 foreach($this->allCasts as $cast){
 	// Check if this cast is at all in this season:
 	if($this->portraits->find('season_'.$this->season->id.'_'.$cast->id.'=1')->count > 0){
 		$casts->add($cast);
+		if(!empty($cast->text)){
+			$castInfosAvailable = true;
+		}
 	}
 }
 
@@ -23,7 +27,16 @@ if (!empty($this->portraits) && !empty($casts)) {
 			?>
 			<div class="cast-block">
 				<div class="title">
-					<i><?= $cast->title; ?></i>
+					<i>
+						<?= $cast->title; ?>
+						<?php 
+						if($castInfosAvailable){
+							?>
+								&nbsp; <a href="#casts-description_<?= $this->season->id; ?>"><span class="icon ion-ios-information-circle-outline"></span></a>
+							<?php
+						}
+						?>
+					</i>
 				</div>
 
 				<div class="container-fluid">
@@ -63,10 +76,10 @@ if (!empty($this->portraits) && !empty($casts)) {
 						<?= $projectRole->title; ?>
 					</h2>
 					<?php
-					if($projectRole->intro){
+					if($projectRole->text){
 						?>
-						<div class="intro">
-							<?= $projectRole->intro; ?>
+						<div class="description">
+							<?= $projectRole->text; ?>
 						</div>
 						<?php
 					}
@@ -85,7 +98,16 @@ if (!empty($this->portraits) && !empty($casts)) {
 						?>
 						<div class="cast-block">
 							<div class="title">
-								<i><?= $cast->title; ?></i>
+								<i>
+									<?= $cast->title; ?>
+									<?php 
+									if($castInfosAvailable){
+										?>
+										 &nbsp; <a href="#casts-description_<?= $this->season->id; ?>"><span class="icon ion-ios-information-circle-outline"></span></a>
+										<?php
+									}
+									?>
+								</i>
 							</div>
 
 							<div class="row portraits-row <?= $bCounter === 1 ? 'justify-content-end' : ($bCounter === count($casts) ? 'justify-content-start' : 'justify-content-around'); ?>">
@@ -117,4 +139,29 @@ if (!empty($this->portraits) && !empty($casts)) {
 			<?php
 		}
 	}
+	
+    if ($castInfosAvailable) {
+		?>
+		<div class="casts-description card bg-light" id="casts-description_<?= $this->season->id; ?>">
+			<div class="card-body">
+				<h2 class="card-title">Unsere Besetzungen</h2>
+			</div>
+			<ul class="list-group list-group-flush">
+				<?php
+				foreach ($casts as $index => $cast) {
+					if ($this->portraits->find('season_' . $this->season->id . '_' . $cast->id . '=1')->count < 1) {
+						continue;
+					}
+					?>
+					<li class="list-group-item bg-light">
+						<h3 class="cast-title"><?= $cast->title; ?></h3>
+						<div class="cast-description"><?= $cast->text; ?></div>
+					</li>
+				<?php
+				}
+				?>
+			</ul>
+		</div>
+		<?php
+    }
 }
