@@ -143,24 +143,29 @@ if (!empty($this->portraits) && !empty($casts)) {
     if ($castInfosAvailable) {
 		?>
 		<div class="casts-description card bg-light" id="casts-description_<?= $this->season->id; ?>">
-			<div class="card-body">
-				<h2 class="card-title">Unsere Besetzungen</h2>
+			<div class="image-wrapper">
+				<img src="<?= wire('config')->urls->templates; ?>assets/static_img/friends.svg" class="card-img" alt="Casts as friends">
 			</div>
-			<ul class="list-group list-group-flush">
-				<?php
-				foreach ($casts as $index => $cast) {
-					if ($this->portraits->find('season_' . $this->season->id . '_' . $cast->id . '=1')->count < 1) {
-						continue;
+			<div class="content-wrapper">
+				<div class="card-body">
+					<h2 class="card-title">Unsere Besetzungen</h2>
+				</div>
+				<ul class="list-group list-group-flush">
+					<?php
+					foreach ($casts as $index => $cast) {
+						if ($this->portraits->find('season_' . $this->season->id . '_' . $cast->id . '=1')->count < 1) {
+							continue;
+						}
+						?>
+						<li class="list-group-item bg-light">
+							<h3 class="cast-title"><?= $cast->title; ?></h3>
+							<div class="cast-description"><?= $cast->text; ?></div>
+						</li>
+					<?php
 					}
 					?>
-					<li class="list-group-item bg-light">
-						<h3 class="cast-title"><?= $cast->title; ?></h3>
-						<div class="cast-description"><?= $cast->text; ?></div>
-					</li>
-				<?php
-				}
-				?>
-			</ul>
+				</ul>
+			</div>
 		</div>
 		<?php
     }

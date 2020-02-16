@@ -3,11 +3,28 @@
 .t-project_roles_container, .t-project_role{
 	.casts-description{
 		position: relative;
-		display: block;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
 		text-align: left;
 		max-width: 100%;
-		width: 400px;
+		width: 460px;
 		margin: 8px auto;
+
+		.image-wrapper{
+			width: 90px;
+			max-width: 100%;
+			padding: 1.25rem 0 1.25rem .75rem;
+
+			@include media-breakpoint-down(xs) {
+				width: 60px;
+				align-self: flex-start;
+			}
+		}
+		.content-wrapper{
+			flex-grow: 1;
+			flex-shrink: 1;
+		}
 
 		.cast-title{
 			@include font-size(0.85rem);
