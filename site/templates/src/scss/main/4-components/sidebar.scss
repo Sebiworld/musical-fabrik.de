@@ -1,57 +1,74 @@
 @import "./globals/index";
 
-.sidebar{
-	border-style: solid;
-	border-width: 0 2px 0 0;
-	border-color: $body-color;
-	padding: $padding-md;
+.sidebar {
+  border-right: 3px solid $body-color;
+  padding: 20px 40px;
 
-	@include media-breakpoint-down(md) {
-		padding: $padding-sm;
-	}
+  @include media-breakpoint-down(sm) {
+    border-right: 0 none;
+    padding: 0;
+  }
 
-	@include media-breakpoint-down(sm) {
-		padding: $padding-xs;
-	}
+  @include media-breakpoint-only(md) {
+    padding-left: 20px;
+  }
 
-	.box{
-		color: $body-color;
-		margin: $padding-md 0;
+  .box {
+    color: $body-color;
+    margin: 40px 0;
 
-		@include media-breakpoint-down(sm) {
-			margin: $padding-sm 0;
-		}
+    @include media-breakpoint-down(md) {
+      margin: 32px 0;
+    }
 
-		&:first-child{
-			margin-top: 0;
-		}
-		&:last-child{
-			margin-bottom: 0;
-		}
+    @include media-breakpoint-down(sm) {
+      margin: 24px 0;
+    }
 
-		.title{
-			padding-bottom: 0.5em;
-			margin-bottom: 0.5em;
-			border-style: solid;
-			border-width: 0 0 2px 0;
-			border-color: $body-color;
-			@include fontsize("box-title", 1.2);
-		}
+    &:first-child {
+      margin-top: 0;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
 
-		.gallery_card{
-			margin-bottom: $padding-y-xs;
-		}
+    .title {
+      padding-bottom: 0.5em;
+      margin-bottom: 0.5em;
+      @include fontsize("box-title", 1.2);
+      border-bottom: 3px solid $body-color;
+    }
 
-		a{
-			color: $body-color;
+    .gallery_card {
+      margin-bottom: 8px;
+    }
 
-			&:hover, &:focus{
-				color: theme-color('primary');
-			}
+    &.general_data_box{
+      a{
+        color: $body-color;
+        text-decoration: none;
+      }
 
-			.swiper-slide{
-				cursor: pointer;
-			}
-		}
-	}
+      .data-item{
+        &.depth-1{
+          padding-left: 16px;
+        }
+        &.depth-2{
+          padding-left: 32px;
+        }
+      }
+    }
+
+    // a{
+    // 	color: $body-color;
+
+    // 	&:hover, &:focus{
+    // 		color: theme-color('primary');
+    // 	}
+
+    // 	.swiper-slide{
+    // 		cursor: pointer;
+    // 	}
+    // }
+  }
 }

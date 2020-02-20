@@ -1,18 +1,13 @@
 @import "./globals/index";
 
 .section.section_articles_carousel{
-	// padding-top: $padding-sm;
-	// padding-bottom: $padding-sm;
-	// @include angle('before', true);
-	// @include angle('after', false);
-
 	.section-title.section-title{
-		margin-bottom: $padding-xs;
+		margin-bottom: 8px;
 	}
 
 	.carousel{
-		margin-top: $padding-sm;
-		margin-bottom: $padding-xs;
+		margin-top: 32px;
+		margin-bottom: 8px;
 
 		.carousel-cell {
 			margin-right: 10px;

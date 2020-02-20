@@ -1,17 +1,17 @@
 .mf_comments{
-	margin-top: $padding-y-lg;
+	margin-top: 64px;
 	max-width: 1000px;
 
 	.CommentList{
 		list-style: none;
 		padding-left: 0;
-		margin-bottom: $padding-y-md;
+		margin-bottom: 48px;
 
 		&>.CommentListItem{
 			position: relative;
 			display: block;
-			margin-bottom: $padding-y-xs;
-			padding: $padding-xs $padding-xs;
+			margin-bottom: 8px;
+			padding: 8px;
 			background: $bg-light;
 			overflow: auto;
 
@@ -21,7 +21,7 @@
 				float: left;
 				height: 100%;
 				width: auto;
-				margin-right: $padding-xs;
+				margin-right: 8px;
 
 				&:after {
 					content: "";
@@ -35,7 +35,7 @@
 			}
 
 			&>.CommentHeader{
-				margin-bottom: $padding-xs;
+				margin-bottom: 8px;
 
 				&>.CommentCite{
 					font-weight: bold;

@@ -19,6 +19,8 @@ class DefaultPage extends TwackComponent {
 			$this->title = $this->page->headline;
 		}
 
+		$this->hideTitle = false;
+
 		if ($this->page->template->hasField('intro') && !empty((string) $this->page->intro)) {
 			$this->intro = $this->page->intro;
 		}

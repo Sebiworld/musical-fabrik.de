@@ -1,20 +1,14 @@
 @import "./globals/index";
 
 .section.section_form{
-	// max-width: 950px;
-	// margin-left: 0;
-	// margin-right: 0;
-	// width: 100%;
-	// max-width: 1000px;
-
 	.section-title{
-		margin-bottom: $padding-sm;
+		margin-bottom: 32px;
 	}
 
 	blockquote{
 		border-color: $brand-primary;
-		margin-top: $padding-sm;
-		margin-bottom: $padding-sm;
+		margin-top: 32px;
+		margin-bottom: 32px;
 	}
 
 	p{

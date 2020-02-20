@@ -27,6 +27,10 @@ input.btn[type="submit"] {
 	}
 }
 
+.btn:not(.btn-link), .nav-link, .dropdown-item{
+	text-decoration: none;
+}
+
 input[type="submit"],
 button[type="submit"] {
 	@include button-variant(
@@ -52,7 +56,7 @@ a.social-button, .container-fluid.highlight.highlight a.social-button {
 	@include fontsize("social-button", 1);
 	color: $body-color;
 	transition: color 0.5s;
-	margin-right: $padding-xs;
+	margin-right: 8px;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;

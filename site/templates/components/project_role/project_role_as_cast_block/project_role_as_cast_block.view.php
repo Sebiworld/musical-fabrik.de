@@ -31,7 +31,7 @@ if (!empty($this->portraits) && !empty($casts)) {
 						$pCounter = 1;
 						foreach ($this->portraits->find('season_'.$this->season->id.'_'.$cast->id.'=1, root=1') as $portrait) {
 							?>
-							<div class="col-6 col-sm-6 col-lg-4 col-xl-3 portrait-block">
+							<div class="col col-6 col-sm-6 col-lg-4 col-xl-3 portrait-block">
 								<?= $portrait ?>
 							</div>
 							<?php

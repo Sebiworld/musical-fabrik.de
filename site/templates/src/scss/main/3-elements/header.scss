@@ -161,7 +161,7 @@ header{
 		}
 
 		.dropdown-item{
-			padding: $padding-y-xs $padding-x-sm;
+			padding: 8px 32px;
 			&.active, &:active{
 				color: $brand-primary;
 				background-color: transparent;

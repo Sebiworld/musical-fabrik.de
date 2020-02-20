@@ -21,6 +21,12 @@ class GeneralDataBox extends TwackComponent {
             $this->title = str_replace(array("\n", "\r"), '', $args['title']);
         }
 
+        if($projectPage->template->hasField('infos') && $projectPage->infos->count > 0){
+            foreach($projectPage->infos as $info){
+                $this->addData($info->short_html, $info->short_html2, $info->link, $info->title, $info->depth);
+            }
+        }
+
         // Number of participants:
         $projectRolesPage = $projectPage->get('template.name=project_roles_container');
 
@@ -51,7 +57,7 @@ class GeneralDataBox extends TwackComponent {
                 $this->addData('', $roleText);
 
                 foreach ($projectRolesPage->children('template.name=project_role') as $projectRole) {
-                    $this->addData('<i class="icon ion-ios-arrow-round-forward"></i>&nbsp; ' . $projectRole->title, '', $projectRole->url, $projectRole->title, 1);
+                    $this->addData($projectRole->title, '', $projectRole->url, $projectRole->title, 1);
                 }
             }
         }

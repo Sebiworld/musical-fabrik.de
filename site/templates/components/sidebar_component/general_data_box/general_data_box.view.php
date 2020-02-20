@@ -17,14 +17,18 @@ if ($this->dataCollection && count($this->dataCollection) > 0) {
             ?>
 			<div class="data-item depth-<?= $dataitem->depth; ?>">
 				<?php
+				$indicator = '&rsaquo;&nbsp; ';
+				if($dataitem->depth && $dataitem->depth > 0){
+					$indicator = '<i class="icon ion-ios-arrow-round-forward"></i>&nbsp; ';
+				}
                 if (isset($dataitem->link)) {
                     ?>
 					<a class="data-item-link" href="<?= $dataitem->link; ?>" <?= isset($dataitem->linktitle) ? 'title="' . $dataitem->linktitle . '"' : ''; ?>>
-						<?= $dataitem->label; ?>
+						<?= $indicator . $dataitem->label; ?>
 					</a>
 					<?php
                 } else {
-                    echo $dataitem->label;
+                    echo $indicator . $dataitem->label;
                 } ?>
 			</div>
 			<?php

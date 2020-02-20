@@ -9,12 +9,13 @@ class ProjectPage extends TwackComponent {
     public function __construct($args) {
         parent::__construct($args);
 
+        $content            = $this->getComponent('mainContent');
+
         $this->isProjectPage = false;
-        $this->projectPage   = $this->page;
-        if ($this->projectPage->template->name !== 'project') {
-            $this->projectPage = $this->page->closest('template.name^=project, template.name!=project_role, template.name!=project_roles_container, template.name!=projects_container');
-        }
-        if (!($this->projectPage instanceof Page) || !($this->projectPage->id . '')) {
+        $projectService      = $this->getService('ProjectService');
+        $this->projectPage   = $projectService->getProjectPage();
+
+        if (!$projectService->isProjectPage($this->projectPage)) {
             return;
         }
 
@@ -36,21 +37,21 @@ class ProjectPage extends TwackComponent {
                     'width' => 800
                 ),
                 'media' => array(
-					'(max-width: 500px)' => array(
-						'width' => 500
-					),
-					'(min-width: 1200px)' => array(
-						'width' => 1200
-					)
+                    '(max-width: 500px)' => array(
+                        'width' => 500
+                    ),
+                    '(min-width: 1200px)' => array(
+                        'width' => 1200
+                    )
                 )
             ));
         }
 
-        // Include CSS file for the project
-        $this->loadProjectCss($this->projectPage->name);
-
         // Sidebar components:
         $sidebar = $this->getGlobalComponent('sidebar');
+
+        // General data:
+        $sidebar->addComponent('GeneralDataBox');
 
         // Images slider:
         $sidebar->addComponent('ImagesBox');
@@ -61,14 +62,14 @@ class ProjectPage extends TwackComponent {
         // Share Buttons:
         $sidebar->addComponent('SharingBox');
 
-        // General data:
-        $sidebar->addComponent('GeneralDataBox');
-
         // Partners:
         $sidebar->addComponent('SponsorsBox', ['title' => $this->_('Our Partners'), 'useField' => 'partners']);
 
         //Sponsors:
         $sidebar->addComponent('SponsorsBox', ['title' => $this->_('Our Sponsors'), 'useField' => 'sponsors']);
+
+        // Include CSS file for the project
+        $this->loadProjectCss($this->projectPage->name);
     }
 
     /**

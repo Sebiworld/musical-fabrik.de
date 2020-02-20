@@ -4,14 +4,14 @@ article,
   position: relative;
 
   .tags {
-    margin-bottom: $padding-xs;
+    margin-bottom: 8px;
   }
 
   .main_image {
     display: block;
-    margin-bottom: $padding-sm;
+    margin-bottom: 24px;
     max-width: 100%;
-    width: 50rem + (2 * $padding-sm);
+    width: 670px;
   }
 
   .contents-container {
@@ -24,10 +24,10 @@ article,
     }
 
     .content_articles {
-      margin-top: $padding-md;
+      margin-top: 32px;
 
       .articles_carousel {
-        margin-top: $padding-y-xs;
+        margin-top: 8px;
       }
     }
   }
@@ -48,11 +48,8 @@ article,
 //   }
 
   .title {
-    margin-top: 0;
-    // margin-top: $padding-xs;
-    padding-top:8px;
-    margin-bottom: 16px;
-    padding-bottom: 8px;
+    margin-top: 4px;
+    margin-bottom: 24px;
     display: block;
     width: 16em;
     max-width: 100%;
@@ -60,18 +57,16 @@ article,
 
     @include media-breakpoint-down(sm) {
       @include font-size(1.5rem);
-      margin-bottom: 8px;
       line-height: 1.2;
     }
   }
   .intro {
-    margin-bottom: 16px;
+    margin-bottom: 32px;
     font-weight: bold;
   }
 
   .contents_component {
     .content_gallery {
-      // margin: $padding-md (-1 * $padding-sm);
       width: auto;
     }
   }
@@ -81,8 +76,8 @@ article,
     .intro,
     .meta,
     .contents_component {
-      padding-left: $padding-xs;
-      padding-right: $padding-xs;
+      padding-left: 8px;
+      padding-right: 8px;
     }
   }
 
@@ -91,8 +86,8 @@ article,
     .intro,
     .meta,
     .contents_component {
-      padding-left: $padding-sm;
-      padding-right: $padding-sm;
+      padding-left: 16px;
+      padding-right: 16px;
     }
   }
 

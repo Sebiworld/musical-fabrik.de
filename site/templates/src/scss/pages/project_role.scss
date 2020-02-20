@@ -1,305 +1,377 @@
 @import "./globals/index";
 
-.t-project_roles_container, .t-project_role{
-	.casts-description{
-		position: relative;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		text-align: left;
-		max-width: 100%;
-		width: 460px;
-		margin: 8px auto;
+.t-project_roles_container,
+.t-project_role {
+  .layout-wrapper {
+    & > .contents-wrapper {
+      @include media-breakpoint-down(xs) {
+        padding: 40px 20px 20px 20px;
+      }
+    }
+  }
+  .contents-container {
+    text-align: center;
 
-		.image-wrapper{
-			width: 90px;
-			max-width: 100%;
-			padding: 1.25rem 0 1.25rem .75rem;
+    .intro {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-			@include media-breakpoint-down(xs) {
-				width: 60px;
-				align-self: flex-start;
-			}
-		}
-		.content-wrapper{
-			flex-grow: 1;
-			flex-shrink: 1;
-		}
+    .main_image {
+      margin-left: auto;
+      margin-right: auto;
+      display: inline-block;
 
-		.cast-title{
-			@include font-size(0.85rem);
-			margin-bottom: 0;
-		}
-		.cast-description{
-			@include font-size(0.85rem);
+      .aspect-ratio > .ar-content.bg-image {
+        background-size: contain;
+        background-position: bottom center;
+        background-color: #fff;
+      }
+    }
 
-			&>*:last-child{
-				margin-bottom: 0;
-			}
-		}
+    .contents_component {
+      margin-bottom: 40px;
+    }
 
-		.card-body{
-			padding-bottom: 0;
-		}
-	}
+    .content_text {
+      & > p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
 
-	.contents-area{
-		text-align: center;
+    .title {
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-		.intro{
-			text-align: center;
-			margin-left: auto;
-			margin-right: auto;
-		}
-
-		.main_image{
-			margin-left: auto;
-			margin-right: auto;
-			display: inline-block;
-
-			.aspect-ratio > .ar-content.bg-image{
-				background-size: contain;
-				background-position: bottom center;
-				background-color: #fff;
-			}
-		}
-
-		.contents_component{
-			margin-bottom: 40px;
-		}
-
-		.content_text{
-			&>p{
-				margin-left: auto;
-				margin-right: auto;
-			}
-		}
-
-		.title{
-			margin-left: auto;
-			margin-right: auto;
-		}
-
-		.card{
-			.title{
-				padding-top: 0;
-				padding-bottom: 0;
-
-			}
-		}
-	}
+    .card {
+      .title {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+    }
+  }
 }
 
-.seasons-block{
-	&>.nav{
-		margin-bottom: 20px;
-	}
+.seasons-block {
+  & > .nav {
+    margin-bottom: 20px;
+  }
 }
 
-.project_role{
-	margin-top: $padding-sm;
-	width: 100%;
+.project_role {
+  max-width: 100%;
+  display: inline-flex;
+  flex-direction: column;
 
-	.card{
-		background: transparent;
-	}
+  @include media-breakpoint-down(sm) {
+    width: 100%;
 
-	&>.title-link{
-		.title{
-			@include fontsize("projectrole-list-title", 1.2);
-		}
-	}
+    .container-fluid {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
 
-	.title-link{
-		&:hover{
-			.title{
-				color: $brand-primary;
-			}
-		}
-	}
+    .portraits-row {
+      padding-left: 4px;
+      padding-right: 4px;
+      margin-left: -4px;
+      margin-right: -4px;
 
-	&>.card>.card-block, &>.title-link>.card>.card-block{
-		padding-top: $padding-xs;
-	}
+      & > .col {
+        padding: 4px;
+      }
+    }
+  }
 
-	.project_role{
-		margin-bottom: $padding-y-md;
+  .card {
+    background: transparent;
+  }
 
-		.role-head{
-			position: relative;
-			display: block;
-			margin-bottom: 24px;
+  & > .title-link {
+    .title {
+      @include fontsize("projectrole-list-title", 1.2);
+    }
+  }
 
-			.title{
-				padding-top: 0;
-				padding-bottom: 0;
-				margin-bottom: 8px;
-			}
-			.intro{
-				font-weight: normal;
-				margin-bottom: 8px;
-			}
-		}
+  .title-link {
+    &:hover {
+      .title {
+        color: $brand-primary;
+      }
+    }
+  }
 
-		&:last-child{
-			margin-bottom: $padding-y-xs;
-		}
-	}
+  & > .card > .card-block,
+  & > .title-link > .card > .card-block {
+    padding-top: 8px;
+  }
 
-	.project_role-container{
-		margin-bottom: $padding-md;
+  .project_role {
+    margin: 0 auto 40px auto;
 
-		&>.title{
-			display: block;
-			width: 100%;
-			font-weight: bold;
-			@include fontsize("projectrole-list-title", 1.2);
-		}
-	}
+    .role-head {
+      position: relative;
+      display: block;
+      margin-bottom: 24px;
+      text-align: center;
 
-	.casts-row{
-		display: flex;
-		justify-content: space-around;
-		margin-bottom: $padding-md;
+      .title {
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-bottom: 8px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .description {
+        font-weight: normal;
+        margin-bottom: 8px;
+      }
+    }
 
-		.cast-block{
-			width: 50%;
-			display: flex;
-			flex-direction: column;
-			flex-grow: 1;
-			flex-shrink: 0;
-			flex-basis: auto;
+    &:last-child {
+      margin-bottom: 8px;
+    }
+  }
 
-			&>.title{
-				display: flex;
-				flex-direction: column;
-				// flex-grow: 1;
-				flex-shrink: 0;
-				flex-basis: auto;
-				width: 100%;
-				text-align: center;
-				font-weight: light;
-				padding: 0 1.5rem;
-				border-left: 2px solid #000;
-				margin-left: -1px;
-				// border-right: 1px solid #000;
-				margin-bottom: $padding-sm;
-				@include fontsize("projectrole-cast-title", 1.2);
-			}
+  .project_role-container {
+    margin-bottom: 48px;
 
-			&:first-child{
-				border-left: 0 none;
+    & > .title {
+      display: block;
+      width: 100%;
+      font-weight: bold;
+      @include fontsize("projectrole-list-title", 1.2);
+    }
+  }
 
+  .casts-row {
+    display: flex;
+    justify-content: space-around;
 
-				padding-left: 0;
+    .cast-block {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      flex-shrink: 0;
+      flex-basis: auto;
 
-				&>.title{
-					text-align: right;
-					border-left: 0 none;
-				}
-			}
-			&:last-child{
-				border-right: 0 none;
-				padding-right: 0;
+      & > .title {
+        display: flex;
+        flex-direction: column;
+        // flex-grow: 1;
+        flex-shrink: 0;
+        flex-basis: auto;
+        width: 100%;
+        text-align: center;
+        font-weight: light;
+        padding: 0 16px;
+        border-left: 2px solid #000;
+        margin-left: -1px;
+        // border-right: 1px solid #000;
+        margin-bottom: 32px;
+        @include fontsize("projectrole-cast-title", 1.2);
 
-				&>.title{
-					text-align: left;
-					// border-right: 0 none;
-				}
-			}
+        @include media-breakpoint-down(sm) {
+          padding: 0 8px;
+          font-size: 12px;
+        }
+      }
 
-			.portrait-block{
-				padding-top: 0;
-			}
-		}
-	}
+      &:first-child {
+        border-left: 0 none;
 
-	.portrait-block{
-		max-width: 250px!important;
-	}
+        padding-left: 0;
 
-	.portrait{
-		max-width: 210px;
-		border: 0 none;
-		text-align: center;
-		background-color: transparent;
+        & > .title {
+          text-align: right;
+          border-left: 0 none;
+        }
+      }
+      &:last-child {
+        border-right: 0 none;
+        padding-right: 0;
 
-		.card-img-top>img, .card-img-top>picture{
-			max-width: 100%;
-			width: 100%;
-		}
+        & > .title {
+          text-align: left;
+          // border-right: 0 none;
+        }
+      }
 
-		.card-block{
-			border: 0 none;
-			border-top: 0px solid #000;
-			margin-top: $padding-xs;
-			padding: 0;
-			padding-top: $padding-xs;
-		}
+      .portrait-block {
+        padding-top: 0;
+      }
+    }
+  }
 
-		.card-title{
-			@include fontsize("portrait-title", 1.2);
-		}
-	}
+  .portrait-block {
+    max-width: 250px !important;
+  }
 
-	.project_role_subroles_teaser{
-		max-width: 600px;
-		margin-bottom: 100px;
+  .portrait {
+    max-width: 210px;
+    border: 0 none;
+    text-align: center;
+    background-color: transparent;
+    margin-left: auto;
+    margin-right: auto;
 
-		.card{
-			border: 0 none;
-		}
-	}
+    .card-img-top > img,
+    .card-img-top > picture {
+      max-width: 100%;
+      width: 100%;
+    }
 
-	.project_role_as_cast_block{
-		.cast-block{
-			margin-bottom: $padding-y-sm;
+    .card-block {
+      border: 0 none;
+      border-top: 0px solid #000;
+      margin-top: 8px;
+      padding: 0;
+      padding-top: 8px;
+    }
 
-			&>.title{
-				margin-top: $padding-y-xs;
-				margin-bottom: $padding-y-sm;
-				border-bottom: 2px solid #000;
+    .card-title {
+      @include fontsize("portrait-title", 1.2);
+      margin-bottom: 8px;
+    }
+  }
 
-				&>strong{
-					font-weight: normal;
+  .project_role_subroles_teaser {
+    max-width: 600px;
+    margin-bottom: 100px;
 
-					&:after{
-						content: ':'
-					}
-				}
-			}
-		}
-	}
+    .card {
+      border: 0 none;
+    }
+  }
+
+  .project_role_as_cast_block {
+    .cast-block {
+      margin-bottom: 32px;
+
+      & > .title {
+        margin-top: 8px;
+        margin-bottom: 32px;
+        border-bottom: 2px solid #000;
+
+        & > strong {
+          font-weight: normal;
+
+          &:after {
+            content: ":";
+          }
+        }
+      }
+    }
+  }
+
+  .casts-description-wrapper {
+    display: inline-block;
+    position: relative;
+    margin-top: 16px;
+  }
+  .casts-description.casts-description {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    max-width: 100%;
+    width: 460px;
+    margin: 8px auto;
+    background: theme-color("light");
+
+    .list-group-item {
+      background: transparent;
+    }
+
+    .image-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 90px;
+      max-width: 100%;
+      padding: 1.25rem 0 1.25rem 0.75rem;
+
+      & > img {
+        width: 90px;
+      }
+
+      @include media-breakpoint-down(xs) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        align-self: flex-start;
+        z-index: 0;
+        padding: 24px;
+        opacity: 0.3;
+
+        & > img {
+          width: 100%;
+        }
+      }
+    }
+    .content-wrapper {
+      flex-grow: 1;
+      flex-shrink: 1;
+
+      @include media-breakpoint-down(xs) {
+        z-index: 1;
+      }
+    }
+
+    .cast-title {
+      @include font-size(0.85rem);
+      margin-bottom: 0;
+    }
+    .cast-description {
+      @include font-size(0.85rem);
+
+      & > *:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .card-body {
+      padding-bottom: 0;
+    }
+  }
 }
 
-.group-portrait{
-	.project_role-group-portrait{
-		max-width: 800px;
-	}
-	.card-block{
-		border: 0 none;
-		margin-bottom: $padding-y-md;
-	}
+.group-portrait {
+  .project_role-group-portrait {
+    max-width: 800px;
+  }
+  .card-block {
+    border: 0 none;
+    margin-bottom: 48px;
+  }
 }
 
 // Seasons-row at top level, usually has no underrolls:
-.contents-area>.project_role{
-	margin-top: 0;
+.contents-container > .project_role {
+  margin-top: 0;
 
-	.cast-row{
-		margin-bottom: $padding-y-xs;
-	}
+  .cast-row {
+    margin-bottom: 8px;
+  }
 
-	.subroles{
-		&>.project_role{
-			&:first-child{
-				margin-top: $padding-y-xs;
-			}
-		}
+  .subroles {
+    & > .project_role {
+      &:first-child {
+        margin-top: 8px;
+      }
+    }
 
-		.portraits-row{
-			align-items: center;
-			justify-content: center;
-		}
-	}
+    .portraits-row {
+      align-items: center;
+      justify-content: center;
+    }
+  }
 }

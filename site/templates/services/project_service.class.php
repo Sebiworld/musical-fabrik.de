@@ -22,6 +22,13 @@ class ProjectService extends TwackComponent {
 		return $this->projectPage;
 	}
 
+	public function isProjectPage($page = false){
+		if(!($page instanceof Page)){
+			$page = $this->projectPage;
+		}
+		return $page instanceof Page && substr($page->template->name, 0, 7) === 'project' && $page->template->name !== 'project_role' && $page->template->name !== 'project_roles_container' && $page->template->name !== 'projects_container';
+	}
+
 	public function getPortraitsContainer(){
 		return wire('pages')->findOne('template.name=portraits_container, include=hidden, has_parent='.$this->projectPage->id);
 	}

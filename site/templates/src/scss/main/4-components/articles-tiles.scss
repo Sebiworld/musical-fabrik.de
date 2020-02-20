@@ -1,15 +1,15 @@
 @import "./globals/index";
 
 .articles_tiles{
-	margin-left: -1 * $padding-y-xs;
-	margin-right: -1 * $padding-y-xs;
+	margin-left: -8px;
+	margin-right: -8px;
 
 	.total-number{
-		margin: $padding-y-xs;
+		margin: 8px;
 	}
 
 	&>.btn-group{
-		margin: $padding-y-xs;
+		margin: 8px;
 		display: block;
 		text-align: center;
 	}
@@ -22,7 +22,7 @@
 		}
 
 		.masonry-grid-item {
-			padding: $padding-y-xs;
+			padding: 8px;
 		}
 
 		@include media-breakpoint-down('xl') {

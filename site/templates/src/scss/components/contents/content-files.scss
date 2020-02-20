@@ -16,12 +16,12 @@
 	align-self: flex-start;
 
 	.files {
-		margin: $padding-y-sm 0;
+		margin: 32px 0;
 	}
 	.file {
-		margin-top: $padding-y-xs;
-		margin-bottom: $padding-y-xs;
-		padding: $padding-xs $padding-sm $padding-xs 114px;
+		margin-top: 8px;
+		margin-bottom: 8px;
+		padding: 8px 32px 8px 128px;
 		background: $bg-light;
 		position: relative;
 		max-width: 100%;
@@ -36,7 +36,7 @@
 		}
 
 		& > .icon-wrapper {
-			font-size: 60px;
+			font-size: 64px;
 			margin: 0 auto;
 			display: flex;
 			position: absolute;
@@ -45,7 +45,7 @@
 			top: 0;
 			left: 0;
 			bottom: 0;
-			width: 114px;
+			width: 128px;
 			vertical-align: middle;
 			text-align: center;
 			align-items: center;
@@ -53,7 +53,7 @@
 
 			& > .icon {
 				display: block;
-				font-size: 60px;
+				font-size: 64px;
 				line-height: 1;
 				margin: 0 auto;
 				text-align: center;
@@ -68,18 +68,18 @@
 		}
 
 		.filename {
-			margin-top: $padding-y-xs;
+			margin-top: 8px;
 			margin-bottom: 0;
 			display: block;
 			word-wrap: break-word;
 		}
 
 		.file-meta {
-			margin-bottom: $padding-y-xs;
+			margin-bottom: 8px;
 		}
 
 		.audioplayer-wrapper {
-			margin-top: $padding-y-xs;
+			margin-top: 8px;
 			display: block;
 			position: relative;
 			width: 100%;
@@ -88,8 +88,6 @@
 		.audioplayer {
 			position: relative;
 			display: block;
-			// background: $bg-light;
-			// margin-top: $padding-y-xs;
 			width: 100%;
 			max-width: 100%;
 		}
@@ -97,11 +95,11 @@
 
 	@include media-breakpoint-down(xs) {
 		.file {
-			padding: $padding-xs 20px $padding-xs 70px;
+			padding: 8px 20px 8px 72px;
 
 			& > .icon-wrapper {
 				font-size: 40px;
-				width: 70px;
+				width: 72px;
 				& > .icon {
 					font-size: 40px;
 				}
@@ -112,11 +110,11 @@
 	&[data-depth="1"] {
 		@include media-breakpoint-down(sm) {
 			.file {
-				padding: $padding-xs 20px $padding-xs 70px;
+				padding:8px 20px 8px 72px;
 
 				& > .icon-wrapper {
 					font-size: 40px;
-					width: 70px;
+					width: 72px;
 					& > .icon {
 						font-size: 40px;
 					}
@@ -128,7 +126,7 @@
 	&[data-depth="2"] {
 		@include media-breakpoint-down(md) {
 			.file {
-				padding: $padding-xs 20px $padding-xs 70px;
+				padding: 8px 20px 8px 72px;
 
 				& > .icon-wrapper {
 					font-size: 40px;

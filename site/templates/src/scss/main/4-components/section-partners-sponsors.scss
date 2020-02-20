@@ -1,17 +1,17 @@
 @import "./globals/index";
 
 .section.section_partners_and_sponsors {
-  $grid-padding: $padding-xs * 2;
+  $grid-padding: 16px;
   padding-left: 0;
   padding-right: 0;
 
   .list {
-    padding-left: $padding-sm;
-    padding-right: $padding-sm;
+    padding-left: 32px;
+    padding-right: 32px;
 
     @include media-breakpoint-up(sm) {
-      padding-left: $padding-md;
-      padding-right: $padding-md;
+      padding-left: 48px;
+      padding-right: 48px;
     }
     // padding: 0 ($grid-padding / 2);
 
@@ -25,12 +25,12 @@
   }
 
   .subtitle {
-    padding-left: $padding-sm;
-    padding-right: $padding-sm;
+    padding-left: 32px;
+    padding-right: 32px;
 
     @include media-breakpoint-up(sm) {
-      padding-left: $padding-md;
-      padding-right: $padding-md;
+      padding-left: 48px;
+      padding-right: 48px;
     }
   }
 
@@ -93,7 +93,7 @@
 
     &.text-block {
       text-align: center;
-      padding: $padding-md;
+      padding: 48px;
 
       .content-block {
         margin: 0 auto;
@@ -115,7 +115,7 @@
     }
 
     .content-wrapper {
-      padding: $padding-xs;
+      padding: 8px;
       background: #fff;
       filter: none;
     }

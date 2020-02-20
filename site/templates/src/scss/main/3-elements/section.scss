@@ -4,8 +4,6 @@
   position: relative;
   display: block;
   background-color: $body-bg;
-  //   margin-top: $padding-md;
-  //   margin-bottom: $padding-md;
 
   padding-top: 48px;
   padding-bottom: 48px;
@@ -24,8 +22,8 @@
   }
 
   .section-title {
-    margin-top: $padding-y-md;
-    margin-bottom: $padding-y-sm;
+    margin-top: 48px;
+    margin-bottom: 32px;
     @include fontsize("section-title", 1.2);
     display: block;
     position: relative;
@@ -36,7 +34,7 @@
       margin-left: auto;
       margin-right: auto;
       border-bottom: 1px solid $body-color;
-      margin-bottom: $padding-y-sm;
+      margin-bottom: 32px;
       width: 100%;
       max-width: 100%;
     }

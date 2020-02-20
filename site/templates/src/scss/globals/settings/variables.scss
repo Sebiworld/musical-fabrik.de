@@ -14,16 +14,20 @@ $inverse-color: color("gray-lighter") !default;
 
 $component-active-bg: theme-color("primary") !default;
 
-$link-color: theme-color("primary") !default;
-$link-decoration: none !default;
-$link-hover-color: darken($link-color, 8%) !default;
-$link-hover-decoration: none !default;
+$link-color: $body-color !default;
+$link-decoration: underline !default;
+$link-hover-color: theme-color('primary') !default;
+$link-hover-decoration: underline !default;
 
-$font-family-sans-serif: "Aileron Light", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$font-family-sans-serif: Aileron, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
 $font-family-serif:      "Cardo", Georgia, "Times New Roman", Times, serif !default;
 $font-family-monospace:  Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+
 $font-family-base:       $font-family-sans-serif !default;
-$headings-font-family:   "Aileron Heavy", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+
+$headings-font-family:   $font-family-sans-serif !default;
+$headings-font-weight:   800 !default;
+// $headings-font-family:   "Aileron Heavy", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
 
 
 // The yiq lightness value that determines when the lightness of color changes from "dark" to "light". Acceptable values are between 0 and 255.

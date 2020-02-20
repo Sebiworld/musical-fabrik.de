@@ -1,7 +1,7 @@
 @import "./globals/index";
 
 .form_template {
-  $columnpadding: $padding-x-sm;
+  $columnpadding: 32px;
 
   .inputfields-wrapper {
     .inputfields {
@@ -22,15 +22,11 @@
           }
         }
 
-        padding: ($padding-y-sm / 2) ($columnpadding / 2);
+        padding: ($columnpadding / 2);
       }
 
       .form-group {
         margin-bottom: 0;
-        // margin-bottom: $padding-y-xs;
-        // @include media-breakpoint-up(sm) {
-        // 	margin-bottom: $padding-y-sm;
-        // }
 
         .icon-placeholder {
           display: none;
@@ -63,11 +59,11 @@
       .form-text {
         @include fontsize("form-text");
         margin-top: 0;
-        margin-bottom: $padding-xs * 2;
+        margin-bottom: 16px;
         max-width: 100%;
 
         p {
-          margin-bottom: $padding-xs;
+          margin-bottom: 8px;
 
           &:last-child {
             margin-bottom: 0;

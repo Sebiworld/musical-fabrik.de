@@ -2,12 +2,12 @@
 	&.without-border{
 		.list-group-item{
 			border: 0 none;
-			margin-bottom: $padding-y-sm;
+			margin-bottom: 32px;
 
-			padding-left: $padding-x-sm;
-			margin-left: -1 * $padding-x-sm;
-			padding-right: $padding-x-sm;
-			margin-right: -1 * $padding-x-sm;
+			padding-left: 32px;
+			margin-left: -32px;
+			padding-right: 32px;
+			margin-right: -32px;
 
 			&>p:last-child{
 				margin-bottom: 0;

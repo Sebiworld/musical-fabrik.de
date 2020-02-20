@@ -77,6 +77,17 @@ $configPage = $this->configurationService->getConfigurationPage();
 		<?= $this->component->getGlobalComponent('footer'); ?>
 	</div>
 
+	<div>
+		<!--   
+			,     ,
+			)\___/(
+			{(@)v(@)}    wuff wuff
+			{|~~~|}
+			{/^^^\}
+			m-m
+		~~~~~~~~~~~~~~~~~~-->
+	</div>
+
 	<?= $this->component->getGlobalComponent('modals'); ?>
 	<?= $this->component->getInlineStyles(); ?>
 

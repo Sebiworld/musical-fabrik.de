@@ -7,7 +7,7 @@ namespace ProcessWire;
 	<div class="container-fluid highlight light top">
 		<?= $this->breadcrumbs; ?>
 		<div class="row">
-			<div class="col-12">
+			<div class="col col-12">
 				<?= $this->contents; ?>
 			</div>
 		</div>
@@ -18,7 +18,7 @@ namespace ProcessWire;
 			<?php
 			if ($this->menu && count($this->menu) > 0) {
 				?>
-				<div class="col-xs-12 col-sm-4">
+				<div class="col col-12 col-sm-4">
 					<h4 class="title"><?= __('Menu:'); ?></h4>
 					<ul class="nav footer-nav-primary flex-column">
 						<?php
@@ -39,7 +39,7 @@ namespace ProcessWire;
 
 			if ($this->address) {
 				?>
-				<div class="col-xs-12 col-sm-4">
+				<div class="col col-12 col-sm-4">
 					<div class="block">
 						<?= $this->address; ?>
 					</div>
@@ -49,7 +49,7 @@ namespace ProcessWire;
 
 			if ($this->tags) {
 				?>
-				<div class="col-xs-12 col-sm-4">
+				<div class="col col-12 col-sm-4">
 					<h4><?= __('Tags:'); ?></h4>
 					<?= $this->tags; ?>
 				</div>
@@ -58,11 +58,11 @@ namespace ProcessWire;
 			?>
 		</div>
 
-		<div class="row border-top">
+		<div class="row">
 			<?php
 			if ($this->searchPage) {
 				?>
-				<div class="col-12 col-md-6 footer-search">
+				<div class="col col-12 col-md-6 footer-search">
 					<form action="<?= $this->searchPage->url; ?>" method="GET">
 						<div class="input-group">
 							<input type="text" class="form-control" placeholder="<?= __('Search for...'); ?>" aria-label="<?= __('Search for...'); ?>" name="q">
@@ -77,7 +77,7 @@ namespace ProcessWire;
 
 			if ($this->socialmedia_links) {
 				?>
-				<div class="col-12 col-md-6 socialmedia-links">
+				<div class="col col-12 col-md-6 socialmedia-links">
 					<h4 class="title">Social-Media:</h4>
 					<?php
 					foreach ($this->socialmedia_links as $mediaitem) {
@@ -111,7 +111,7 @@ namespace ProcessWire;
 
 	<div class="container-fluid bottom">
 		<div class="row">
-			<div class="col-12 col-sm-7">
+			<div class="col col-12 col-sm-7">
 				<ul class="nav footer-nav-tertiary">
 					<?php
 					if ($this->tertiary_navigation) {
@@ -128,7 +128,7 @@ namespace ProcessWire;
 					?>
 				</ul>
 			</div>
-			<div class="col-12 col-sm-5">
+			<div class="col col-12 col-sm-5">
 				<span class="copyright">
 					<?= $this->copyright; ?>
 				</span>

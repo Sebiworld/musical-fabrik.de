@@ -4,7 +4,7 @@
 .tags_box.tags_box{
 
 	&>.tag-cloud{
-		padding: $padding-y-xs 0;
+		padding: 8px 0;
 		margin: 0 -7px;
 		@include fontsize(0.8, 1.4);
 
@@ -14,6 +14,7 @@
 			margin-bottom: 7px;
 			margin-right: 7px;
 			color: $body-color;
+			text-decoration: none;
 
 			&.active{
 				// border: 3px solid theme-color('primary');
@@ -22,6 +23,7 @@
 
 			&:hover, &:focus{
 				color: theme-color('primary');
+				text-decoration: none;
 			}
 
 			&.has-background{

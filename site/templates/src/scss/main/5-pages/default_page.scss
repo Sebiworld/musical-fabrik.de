@@ -1,39 +1,25 @@
 @import "./globals/index";
 
-.default_page{
-	position: relative;
-	display: block;
-	padding-top: $padding-sm;
+.default_page {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
 
-	margin-bottom: $padding-md;
-	@include media-breakpoint-down(sm) {
-		margin-bottom: $padding-xs;
-	}
+  margin-bottom: 32px;
+  @include media-breakpoint-down(sm) {
+    margin-bottom: 8px;
+  }
+}
 
-	.row{
-		&>.sidebar{
-			padding: 0;
-		}
+.main-content>.default_page{
+  @include make-container();
+  padding: 60px 40px 40px 40px;
 
-		&>.contents-area{
-			padding: ($padding-md * 1.5) 0 ($padding-md * 1.5) $padding-md;
-
-			@include media-breakpoint-down(md) {
-				padding: ($padding-sm * 1.5) 0 ($padding-sm * 1.5) $padding-sm;
-			}
-
-			@include media-breakpoint-down(sm) {
-				padding: ($padding-xs * 1.5) $padding-xs;
-			}
-
-			&>.main_image{
-				margin-bottom: $padding-md;
-			}
-
-			&>.contents-area{
-				margin-top: 0;
-				// max-width: 1000px;
-			}
-		}
-	}
+  @include media-breakpoint-only(md) {
+    padding-left: 20px;
+  }
+  @include media-breakpoint-down(xs) {
+    padding: 40px 20px 20px 20px;
+  }
 }

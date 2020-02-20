@@ -1,13 +1,13 @@
 @import "./globals/index";
 
 .section.section_pages_grid{
-	$grid-padding: $padding-sm;
+	$grid-padding: 32px;
 
 	.pages-row{
 		padding: 0 0;
 
 		.page{
-			padding: ($grid-padding / 2) ($grid-padding / 2);
+			padding: ($grid-padding / 2);
 
 			.main_image{
 				margin-bottom: 0;

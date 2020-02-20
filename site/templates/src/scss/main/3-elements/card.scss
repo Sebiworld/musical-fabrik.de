@@ -15,20 +15,20 @@
 
 	.card-title{
 		@include fontsize('card-title', 1.1);
-		margin-bottom: $padding-y-xs * 1.5;
+		margin-bottom: 16px;
 	}
 	.card-text{
 		@include fontsize('card-content', 1.4);
 	}
 
 	.card-link{
-		margin-top: $padding-y-sm * 1.2;
+		margin-top: 40px;
 	}
 
 	.card-block{
 		display: block;
 		position: relative;
-		padding: $padding-y-sm $padding-x-sm;
+		padding: 32px;
 		// border: 1px solid $bg-light;
 		border: 0 none;
 
@@ -40,10 +40,10 @@
 	.card-meta{
 		@include fontsize('card-meta', 1.1);
 		position: absolute;
-		top: (-0.5 * (font-rem("card-meta") * 1.1 + ($padding-y-xs * 2)));
+		top: (-0.5 * (font-px("card-meta") * 1.1 + 16px));
 		right: 0;
 		font-weight: lighter;
-		padding: $padding-y-xs $padding-x-xs;
+		padding: 8px 8px;
 		background: $brand-primary;
 		color: text-color-over($brand-primary);
 	}
@@ -62,7 +62,7 @@
 			bottom: 0;
 			right: 0;
 			font-weight: lighter;
-			padding: $padding-y-xs $padding-x-xs;
+			padding: 8px;
 			background: $brand-primary;
 			color: text-color-over($brand-primary);
 			z-index: 1;
@@ -80,7 +80,7 @@
 
 	&.overlay{
 		.card-block{
-			padding: $padding-y-sm $padding-x-sm;
+			padding: 32px;
 
 			&>*:last-child{
 				margin-bottom: 0;
@@ -93,16 +93,16 @@
 		}
 
 		.card-title{
-			margin-bottom: $padding-y-xs * 1.7;
+			margin-bottom: 16px;
 		}
 
 		.card-meta{
 			@include fontsize('card-meta', 1.1);
 			position: absolute;
-			top: (-0.5 * (font-rem("card-meta") * 1.1 + ($padding-y-xs * 2)));
+			top: (-0.5 * (font-px("card-meta") * 1.1 + 16px));
 			right: 0;
 			font-weight: lighter;
-			padding: $padding-y-xs $padding-x-xs;
+			padding: 8px;
 			background: theme-color(primary);
 			color: text-color-over(theme-color(primary));
 			z-index: 10;
@@ -114,7 +114,7 @@
 		}
 
 		.card-link{
-			margin-top: $padding-xs * 1.5;
+			margin-top: 12px;
 		}
 
 		.card-header, .card-footer{
@@ -295,7 +295,7 @@
 
 			.card-title{
 				@include fontsize(1.3, 1.1);
-				margin-bottom: $padding-y-sm / 2;
+				margin-bottom: 16px;
 			}
 			.card-text{
 				@include fontsize(0.9);

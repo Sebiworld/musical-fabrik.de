@@ -1,0 +1,66 @@
+.layout-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: stretch;
+  width: 100%;
+  max-width: 100%;
+
+  & > .contents-wrapper {
+    position: relative;
+    max-width: 67%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    order: 2;
+    padding: 40px 40px 40px 40px;
+  }
+
+  & > .sidebar-wrapper {
+    position: relative;
+    width: 550px;
+    max-width: 33%;
+    order: 1;
+    padding: 20px 40px;
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+
+  @include media-breakpoint-only(md) {
+    & > .contents-wrapper {
+      padding-left: 20px;
+    }
+
+    & > .sidebar-wrapper {
+      padding-right: 8px;
+      padding-left: 20px;
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+
+    & > .contents-wrapper {
+      width: 100%;
+      max-width: 100%;
+      order: 1;
+    }
+
+    & > .sidebar-wrapper {
+      width: 100%;
+      max-width: 100%;
+      order: 2;
+    }
+  }
+  @include media-breakpoint-down(xs) {
+    & > .contents-wrapper {
+      padding: 60px 20px 20px 20px;
+    }
+
+    & > .sidebar-wrapper {
+      padding-right: 20px;
+      padding-left: 20px;
+    }
+  }
+}

@@ -7,7 +7,7 @@ namespace ProcessWire;
 		<?php
 		if ($this->tags) {
 			?>
-			<div class="col-12 col-md-6">
+			<div class="col col-12 col-md-6">
 				<label><?= __('Select keywords:'); ?></label>
 				<?= $this->tags; ?>
 			</div>
@@ -15,7 +15,7 @@ namespace ProcessWire;
 		}
 		?>
 
-		<div class="col-12 col-md-6">
+		<div class="col col-12 col-md-6">
 			<div class="form-group">
 				<label for="q"><?= __('Search'); ?></labƒel>
 				<input type="text" class="form-control" id="q" name="q" placeholder="<?= __('Enter your query'); ?>" value="<?= $this->q; ?>"/>

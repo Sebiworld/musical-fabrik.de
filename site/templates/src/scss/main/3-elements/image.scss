@@ -11,7 +11,7 @@
 	// background: $inverse-bg;
 	// color: $inverse-color;
 	
-	padding: $padding-y-xs $padding-x-xs;
+	padding: 8px;
 	font-style: italic;
 	border-top: 2px solid $inverse-bg;
 	@include fontsize(0.95, 1);

@@ -5,7 +5,7 @@
     .contents-area {
       .main_image {
         @include media-breakpoint-up(lg) {
-			margin-bottom: $padding-md;
+			margin-bottom: 48px;
         }
       }
       .title {

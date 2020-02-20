@@ -1,11 +1,11 @@
 @import "./globals/index";
 
 .articles_carousel{
-	margin-top: $padding-md;
-	margin-bottom: $padding-md;
+	margin-top: 48px;
+	margin-bottom: 48px;
 
 	&>h1, &>h2, &>h3, &>h4, &>h5, &>h6, &>.title{
-		margin-bottom: $padding-sm;
+		margin-bottom: 32px;
 	}
 	.swiper-wrapper{
 		display: flex;
@@ -34,5 +34,12 @@
 				flex-grow: 1;
 			}
 		}
+	}
+}
+
+.content_articles{
+	&>.articles_carousel{
+		margin-top: 0;
+		margin-bottom: 0;
 	}
 }

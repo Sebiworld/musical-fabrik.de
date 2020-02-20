@@ -1,235 +1,270 @@
-$project-primary-bg: theme-color("primary");
-$project-primary-color: text-color-over(theme-color("primary"));
-$project-primary-inverse-bg: #000;
-$project-primary-inverse-color: #fff;
+$project-primary-bg: theme-color("primary") !default;
+$project-primary-color: text-color-over(theme-color("primary")) !default;
+$project-primary-inverse-bg: #000 !default;
+$project-primary-inverse-color: #fff !default;
 $project-mainimage-color: #fff !default;
+$project-sidebar-border-color: $project-primary-bg !default;
 
 body {
-	a {
-		color: $project-primary-bg;
-	}
+  .breadcrumb > .breadcrumb-item > a {
+    color: $project-primary-bg;
+  }
 
-	.title-link,
-	.btn-link,
-	.general_data_box .data-item-link {
-		&:hover,
-		&:focus {
-			color: $project-primary-bg;
-		}
+  .btn-project-primary,
+  .CommentFormSubmit > button {
+    @include button-variant($project-primary-bg, $project-primary-bg);
+  }
 
-		&:focus {
-			box-shadow: 0 0 0 0px rgba($project-primary-bg, 0.25);
-		}
-	}
+  .bg-project-primary {
+    background-color: $project-primary-bg;
+    color: $project-primary-color;
+  }
 
-	.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
-		background: $project-primary-bg;
-		color: $project-primary-color;
-	}
+  .text-project-primary {
+    color: $project-primary-bg;
+  }
 
-	.project-title {
-		text-align: center;
+  .rolle-container > .title {
+    color: $project-primary-bg;
+  }
 
-		.project-title-link {
-			&:hover {
-				text-decoration: none;
-			}
+  .portrait {
+    .aspect-ratio:before {
+      padding-top: 133.33%;
+    }
+  }
 
-			h1 {
-				color: $project-primary-bg;
-			}
-			.lead {
-				color: $text-muted;
-			}
-		}
+  .portrait-image {
+    border: 3px solid #fff;
+  }
 
-		.title-text {
-			padding: $padding-sm;
-		}
+  .breadcrumb > .breadcrumb-item > a {
+    color: $project-primary-bg;
 
-		&.main_image {
-			position: relative;
-			padding-left: 0;
-			padding-right: 0;
-			padding-top: 0;
+    &:focus {
+      box-shadow: 0 0 0 2px rgba($project-primary-bg, 0.25);
+    }
+  }
 
-			margin-bottom: $padding-md;
-			@include media-breakpoint-down(md) {
-				margin-bottom: $padding-sm;
-			}
-		}
+  .btn-project-primary-inverse,
+  .sidebar.sidebar .box .btn-project-primary-inverse {
+    // @include button-variant($project-primary-inverse-color, $project-primary-inverse-bg, $project-primary-inverse-bg);
+    border-width: 1px;
+    border-style: solid;
 
-		.info-overlay {
-			position: absolute;
-			bottom: (-0.5 * (font-rem("info-overlay") * 1.1 + ($padding-y-sm * 2)));
-			left: 0;
-			@include fontsize("info-overlay", 1.1);
-			font-weight: lighter;
-			padding: $padding-y-sm $padding-x-sm;
-			background: $project-primary-bg;
-			color: $project-primary-color;
+    &:hover,
+    &:focus {
+      background-color: $project-primary-bg;
+      color: $project-primary-color;
+      border-color: $project-primary-bg;
+    }
 
-			@include media-breakpoint-down(sm) {
-				position: relative;
-				bottom: 0;
-			}
-		}
-	}
+    &:focus {
+      box-shadow: 0 0 0 2px rgba($project-primary-bg, 0.25);
+    }
+  }
 
-	.breadcrumb > .breadcrumb-item > a {
-		color: $project-primary-bg;
-	}
+  .image-caption {
+    border-color: $project-primary-bg;
+  }
 
-	.btn-project-primary, .CommentFormSubmit>button {
-		@include button-variant($project-primary-bg, $project-primary-bg);
-	}
+  .image-caption-top {
+    background-color: rgba($project-mainimage-color, 0.5);
+    color: text-color-over($project-mainimage-color);
+  }
 
-	.bg-project-primary {
-		background-color: $project-primary-bg;
-		color: $project-primary-color;
-	}
+  blockquote {
+    &:before {
+      color: $project-primary-bg;
+    }
+  }
 
-	.text-project-primary {
-		color: $project-primary-bg;
-	}
+  header {
+    .navbar-nav a.nav-link.nav-link,
+    .dropdown-menu .dropdown-item {
+      &.active,
+      &:active {
+        color: contrast($project-primary-bg, theme-color("dark"));
+      }
+    }
 
-	.sidebar,
-	.sidebar .box .title {
-		border-color: $project-primary-inverse-bg;
-	}
+    .nav-item {
+      &.active,
+      &:active {
+        color: contrast($project-primary-bg, theme-color("dark"));
+        & > a.nav-link.nav-link {
+          color: contrast($project-primary-bg, theme-color("dark"));
+        }
+      }
+    }
+  }
 
-	.project-title {
-		.project-title-link h1 {
-			color: $project-primary-bg;
-		}
-		.info-overlay {
-			background: $project-primary-bg;
-			color: $project-primary-color;
-		}
-	}
+  footer .nav-link.nav-link,
+  footer .highlight .nav-link.nav-link {
+    &:hover,
+    &:focus {
+      color: contrast($project-primary-bg, theme-color("dark"));
+    }
+  }
 
-	.rolle-container > .title {
-		color: $project-primary-bg;
-	}
+  .swiper-pagination-progress .swiper-pagination-progressbar {
+    background: $project-primary-bg;
+  }
 
-	.portrait {
-		.aspect-ratio:before {
-			padding-top: 133.33%;
-		}
-	}
+  .project_role .title-link {
+    &:hover {
+      .title {
+        color: $project-primary-bg;
+      }
+    }
+  }
 
-	.portrait-image {
-		border: 3px solid #fff;
-	}
+  .lSSlideOuter .lSPager.lSGallery li.active,
+  .lSSlideOuter .lSPager.lSGallery li:hover {
+    border-bottom-color: $project-primary-bg;
+  }
 
-	.breadcrumb > .breadcrumb-item > a {
-		color: $project-primary-bg;
+  .sharing-box .social-button .icon {
+    color: $project-primary-inverse-bg;
+  }
 
-		&:focus {
-			box-shadow: 0 0 0 2px rgba($project-primary-bg, 0.25);
-		}
-	}
+  .swiper-pagination-progress .swiper-pagination-progressbar {
+    background: $project-primary-bg;
+  }
+  .nav-link {
+    &:hover,
+    &:focus {
+      color: $project-primary-bg;
+    }
+  }
 
-	.badge-primary {
-		background: $project-primary-bg;
-		color: $project-primary-color;
-	}
+  .project_page {
+    .project-headbar {
+      .project-title-link h1 {
+        color: $project-primary-bg;
+      }
 
-	.sidebar.sidebar .box a {
-		&:hover,
-		&:focus {
-			color: theme-color("primary");
-		}
-	}
+      position: relative;
+      display: block;
+      text-align: right;
 
-	.btn-project-primary-inverse, .sidebar.sidebar .box .btn-project-primary-inverse{
-		// @include button-variant($project-primary-inverse-color, $project-primary-inverse-bg, $project-primary-inverse-bg);
-		border-width: 1px;
-		border-style: solid;
+      .project-title-link {
+        &:hover {
+          text-decoration: none;
+        }
 
-		&:hover,
-		&:focus {
-			background-color: $project-primary-bg;
-			color: $project-primary-color;
-			border-color: $project-primary-bg;
-		}
+        h1 {
+          color: $project-primary-bg;
+        }
+        .lead {
+          color: $text-muted;
+        }
+      }
 
-		&:focus {
-			box-shadow: 0 0 0 2px rgba($project-primary-bg, 0.25);
-		}
-	}
+      .title-text {
+        padding: 24px;
+      }
 
-	.image-caption {
-		border-color: $project-primary-bg;
-	}
+      .main_image {
+        position: relative;
+        display: block;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+        margin-bottom: 0.5 * (font-px("info-overlay") * 1.1 + (24 * 2));
 
-	.image-caption-top {
-		background-color: rgba($project-mainimage-color, 0.5);
-		color: text-color-over($project-mainimage-color);
-	}
+        @include media-breakpoint-down(sm) {
+          margin-bottom: 0;
+        }
+      }
 
-	blockquote {
-		&:before {
-			color: $project-primary-bg;
-		}
-	}
+      .info-overlay {
+        position: absolute;
+        display: inline-block;
+        left: 0;
+        bottom: (-0.5 * (font-px("info-overlay") * 1.1 + (24 * 2)));
+        @include fontsize("info-overlay", 1.1);
+        font-weight: lighter;
+        padding: 24px 32px;
+        background: $project-primary-bg;
+        color: $project-primary-color;
+        text-align: right;
 
-	header {
-		.navbar-nav a.nav-link.nav-link,
-		.dropdown-menu .dropdown-item {
-			&.active,
-			&:active {
-				color: contrast($project-primary-bg, theme-color("dark"));
-			}
-		}
+        @include media-breakpoint-down(sm) {
+          position: relative;
+          display: block;
+          bottom: 0;
+          text-align: center;
+          padding: 12px 24px;
+        }
+      }
 
-		.nav-item {
-			&.active,
-			&:active {
-				color: contrast($project-primary-bg, theme-color("dark"));
-				& > a.nav-link.nav-link {
-					color: contrast($project-primary-bg, theme-color("dark"));
-				}
-			}
-		}
-	}
+      .project-title-wrapper {
+        text-align: left;
+      }
 
-	footer .nav-link.nav-link,
-	footer .highlight .nav-link.nav-link {
-		&:hover,
-		&:focus {
-			color: contrast($project-primary-bg, theme-color("dark"));
-		}
-	}
+      .project-title {
+        display: block;
+        position: relative;
+        text-align: right;
+        display: block;
+        position: relative;
+        font-size: 24px;
+        line-height: 1;
+        font-weight: $headings-font-weight;
+        width: 550px;
+        max-width: 33%;
+        padding: 40px 83px 8px 40px;
 
-	.swiper-pagination-progress .swiper-pagination-progressbar {
-		background: $project-primary-bg;
-	}
+        @include media-breakpoint-down(sm) {
+          width: 100%;
+          max-width: 100%;
+          display: none;
+        }
 
-	.project_role .title-link {
-		&:hover {
-			.title {
-				color: $project-primary-bg;
-			}
-		}
-	}
+        @include media-breakpoint-down(md) {
+          padding-right: 43px;
+        }
 
-	.lSSlideOuter .lSPager.lSGallery li.active,
-	.lSSlideOuter .lSPager.lSGallery li:hover {
-		border-bottom-color: $project-primary-bg;
-	}
+        small {
+          display: block;
+          font-size: 70%;
+          line-height: 1.2;
+        }
+      }
+    }
 
-	.sharing-box .social-button .icon {
-		color: $project-primary-inverse-bg;
-	}
+    a:not(.btn):not(.nav-link),
+    .btn-link {
+      text-decoration-color: $project-primary-bg;
 
-	.swiper-pagination-progress .swiper-pagination-progressbar {
-		background: $project-primary-bg;
-	}
-	.nav-link {
-		&:hover,
-		&:focus {
-			color: $project-primary-bg;
-		}
-	}
+      &:hover,
+      &:focus {
+        color: $project-primary-bg;
+      }
+    }
+
+    .title-link,
+    .btn-link,
+    .general_data_box .data-item-link {
+      &:hover,
+      &:focus {
+        color: $project-primary-bg;
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 0px rgba($project-primary-bg, 0.25);
+      }
+    }
+
+    .nav-pills .nav-link.active,
+    .nav-pills .show > .nav-link {
+      background: $project-primary-bg;
+      color: $project-primary-color;
+    }
+    .badge-primary {
+      background: $project-primary-bg;
+      color: $project-primary-color;
+    }
+  }
 }

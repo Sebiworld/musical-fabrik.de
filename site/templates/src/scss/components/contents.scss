@@ -20,7 +20,7 @@
   }
 
   .content-block {
-    margin-bottom: $padding-y-sm;
+    margin-bottom: 32px;
     max-width: 100%;
 
     &:first-child,
@@ -34,8 +34,8 @@
     }
 
     .block-title {
-      margin-top: $padding-sm;
-      margin-bottom: $padding-xs;
+      margin-top: 32px;
+      margin-bottom: 8px;
     }
 
     .content_text {
@@ -116,8 +116,8 @@
   }
 
   .content_gallery {
-    margin-top: $padding-md;
-    margin-bottom: $padding-md;
+    margin-top: 48px;
+    margin-bottom: 48px;
     width: auto;
   }
 }

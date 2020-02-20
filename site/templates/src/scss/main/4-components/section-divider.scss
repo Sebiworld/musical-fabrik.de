@@ -2,8 +2,8 @@
 
 .section.section_divider {
 	text-align: center;
-	margin-top: -1 * $padding-md;
-	margin-bottom: -1 * $padding-md;
+	margin-top: -32px;
+	margin-bottom: -32px;
 	padding-top: 0;
 	padding-bottom: 0;
 	padding-left: 0;
@@ -31,10 +31,10 @@
 
 	.hero-image {
 		text-align: center;
-		margin: $padding-y-xs $padding-x-md;
+		margin: 8px 48px;
 
 		@include media-breakpoint-down(sm) {
-			margin: $padding-y-xs $padding-x-xs;
+			margin: 8px;
 		}
 
 		.main_image {

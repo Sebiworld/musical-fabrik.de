@@ -6,11 +6,9 @@ Loads all functions and variables that are to be used globally. Attention: NO Ht
 @import "functions/colors";
 
 // Variablen
-@import "settings/paddings";
 @import "settings/variables";
 
 // Mixins
-@import "mixins/angled-edge-better";
 @import "mixins/bootstrap";
 @import "mixins/button-variant-2";
 @import "mixins/font-size";

@@ -1,14 +1,14 @@
 @import "./globals/index";
 
 .content_gallery_grid{
-	margin-top: $padding-md;
+	margin-top: 32px;
 	// margin-left: $grid-gutter-width / -2;
 	// margin-right: $grid-gutter-width / -2;
 	@include make-container();
 
 	.grid{
-		margin-top: $padding-xs;
-		margin-bottom: $padding-md;
+		margin-top: 8px;
+		margin-bottom: 32px;
 	}
 
 	.masonry-grid {

@@ -107,10 +107,15 @@ class General extends TwackComponent {
         $this->addComponent('FormsComponent', ['globalName' => 'forms', 'directory' => '']);
 
         // Add default component automatically. Can be removed by $general->resetComponents(); again
-        $this->addComponent('ProjectPage', ['directory' => 'pages']);
-        $this->addComponent('DefaultPage', ['directory' => 'pages']);
-
-        if($this->wire('config')->noindex === true){
+        $projectservice = $this->getService('ProjectService');
+        if($projectservice->isProjectPage()){
+            $projectComponent = $this->addComponent('ProjectPage', ['directory' => 'pages']);
+            $projectComponent->addComponent('DefaultPage', ['directory' => 'pages']);
+        }else{
+            $this->addComponent('DefaultPage', ['directory' => 'pages']);
+        }
+        
+        if($this->wire('config')->noindex === true && $this->page->template->hasField('seo')){
             $this->page->seo->robots_noIndex = true;
             $this->page->seo->robots_noFollow = true;
 
