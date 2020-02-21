@@ -43,8 +43,12 @@ footer {
 
   .top {
     position: relative;
-    padding-top: 48px;
+    padding-top: 8px;
     padding-bottom: 150px;
+
+    .breadcrumb{
+      padding-bottom: 64px;
+    }
   }
 
   .mid {

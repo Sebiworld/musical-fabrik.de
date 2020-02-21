@@ -14,7 +14,7 @@ class BreadcrumbsComponent extends TwackComponent {
         $endstr = '&nbsp;…';
 
         foreach ($this->breadcrumbs as &$b) {
-            $b->title_kurz = Twack::wordLimiter($b->title, $limit, $endstr);
+            $b->title_short = Twack::wordLimiter($b->title, $limit, $endstr);
         }
     }
 }

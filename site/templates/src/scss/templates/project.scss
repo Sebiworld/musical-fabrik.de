@@ -6,10 +6,6 @@ $project-mainimage-color: #fff !default;
 $project-sidebar-border-color: $project-primary-bg !default;
 
 body {
-  .breadcrumb > .breadcrumb-item > a {
-    color: $project-primary-bg;
-  }
-
   .btn-project-primary,
   .CommentFormSubmit > button {
     @include button-variant($project-primary-bg, $project-primary-bg);
@@ -36,14 +32,6 @@ body {
 
   .portrait-image {
     border: 3px solid #fff;
-  }
-
-  .breadcrumb > .breadcrumb-item > a {
-    color: $project-primary-bg;
-
-    &:focus {
-      box-shadow: 0 0 0 2px rgba($project-primary-bg, 0.25);
-    }
   }
 
   .btn-project-primary-inverse,
@@ -76,34 +64,6 @@ body {
   blockquote {
     &:before {
       color: $project-primary-bg;
-    }
-  }
-
-  header {
-    .navbar-nav a.nav-link.nav-link,
-    .dropdown-menu .dropdown-item {
-      &.active,
-      &:active {
-        color: contrast($project-primary-bg, theme-color("dark"));
-      }
-    }
-
-    .nav-item {
-      &.active,
-      &:active {
-        color: contrast($project-primary-bg, theme-color("dark"));
-        & > a.nav-link.nav-link {
-          color: contrast($project-primary-bg, theme-color("dark"));
-        }
-      }
-    }
-  }
-
-  footer .nav-link.nav-link,
-  footer .highlight .nav-link.nav-link {
-    &:hover,
-    &:focus {
-      color: contrast($project-primary-bg, theme-color("dark"));
     }
   }
 

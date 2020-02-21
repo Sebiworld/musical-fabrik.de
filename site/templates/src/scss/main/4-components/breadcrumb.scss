@@ -7,22 +7,27 @@
 	flex-direction: row;
 	margin-bottom: 0;
 
-	@include media-breakpoint-down(sm) {
-		flex-direction: column;
-		justify-content: flex-start;
-	}
-
 	.breadcrumb-item{
 		color: color("gray");
 
 		&:before{
 			content: '-';
-			@include media-breakpoint-down(sm) {
-				display: none;
-			}
 		}
 		&:first-child:before{
 			display: none;
+		}
+	}
+
+	@include media-breakpoint-down(xs) {
+		flex-direction: column;
+		justify-content: flex-start;
+
+		.breadcrumb-item{
+			padding-left: 0;
+			
+			&:before{
+				display: none;
+			}
 		}
 	}
 }
