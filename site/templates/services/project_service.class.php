@@ -6,20 +6,37 @@ class ProjectService extends TwackComponent {
 	public function __construct($args) {
 		parent::__construct($args);
 
-		$this->projectPage = $this->page;
-		if ($this->projectPage->template->name != 'project') {
-			$this->projectPage = $this->page->closest('template.name^=project, template.name!=project_role, template.name!=project_roles_container, template.name!=projects_container');
-		}
+		$this->projectPage = $this->getProjectPage();
 		if (isset($args['projectPage']) && $args['projectPage'] instanceof Page && $args['projectPage']->id) {
 			$this->projectPage = $args['projectPage'];
 		}
+
 		if (!($this->projectPage instanceof Page) || !$this->projectPage->id) {
 			$this->projectPage = wire('pages')->get('/');
 		}
 	}
 
-	public function getProjectPage(){
-		return $this->projectPage;
+	public function getProjectPage($page = false){
+		if(!($page instanceof Page)){
+			$page = $this->page;
+		}
+
+		if (!$this->startsWith($page->template->name, 'project') || $page->template->name === 'project_role' || $page->template->name === 'project_roles_container' || $page->template->name === 'project_container') {
+			$page = $page->closest('template.name^=project, template.name!=project_role, template.name!=project_roles_container, template.name!=projects_container');
+		}
+
+        if ($page instanceof Page && $page->id) {
+            return $page;
+		}
+		return new NullPage();
+	}
+
+	public function getProjectPageWithFallback($page = false){
+		$page = $this->getProjectPage($page);
+        if ($page instanceof Page && $page->id) {
+            return $page;
+		}
+		return wire('pages')->get('/');
 	}
 
 	public function isProjectPage($page = false){
@@ -39,5 +56,10 @@ class ProjectService extends TwackComponent {
 
 	public function getCastsContainer(){
 		return wire('pages')->findOne('template.name=casts_container, include=hidden, has_parent='.$this->projectPage->id);
+	}
+
+	protected function startsWith($haystack, $needle) {
+		$length = strlen($needle);
+		return (substr($haystack, 0, $length) === $needle);
 	}
 }

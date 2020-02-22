@@ -33,7 +33,7 @@ class ArticlesTiles extends TwackComponent {
         $this->moreAvailable        = $articles->moreAvailable;
         $this->lastElementIndex     = $articles->lastElementIndex;
         $this->totalNumber          = $articles->totalNumber;
-        $articlesPages              = $articles->articles;
+        $articlesPages              = $articles->items;
 
         foreach ($articlesPages as $page) {
             $this->addComponent('ArticleCard', ['directory' => 'partials', 'page' => $page]);

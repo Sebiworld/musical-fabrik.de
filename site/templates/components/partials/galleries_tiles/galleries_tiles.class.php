@@ -20,7 +20,7 @@ class GalleriesTiles extends TwackComponent {
             $filters['q'] = wire('input')->get('q');
         }
 
-        if ($this->page->closest('template.name^=project, template.name!=project_role, template.name!=project_roles_container, template.name!=projects_container') instanceof NullPage) {
+        if ($this->getService('ProjectService')->getProjectPage() instanceof NullPage) {
             $this->addComponent('FiltersComponent', [
                 'directory' => 'partials',
                 'name'      => 'filters',
@@ -28,18 +28,18 @@ class GalleriesTiles extends TwackComponent {
             ]);
         }
 
-        $this->articlesService       = $this->getService('ArticlesService');
-        $galleries                   = $this->articlesService->getGalleries($filters);
+        $this->galleriesService       = $this->getService('GalleriesService');
+        $galleries                   = $this->galleriesService->getGalleries($filters);
         $this->moreAvailable         = $galleries->moreAvailable;
         $this->lastElementIndex      = $galleries->lastElementIndex;
         $this->totalNumber           = $galleries->totalNumber;
-        $galleriesPages              = $galleries->galleries;
+        $galleriesPages              = $galleries->items;
 
         foreach ($galleriesPages as $page) {
             $this->addComponent('GalleryCard', ['directory' => 'partials', 'page' => $page]);
         }
 
-        $this->galleriesPage = $this->articlesService->getGalleriesPage();
+        $this->galleriesPage = $this->galleriesService->getGalleriesPage();
         $this->addScript('ajaxmasonry.js', array(
             'path'     => wire('config')->urls->templates . 'assets/js/',
             'absolute' => true
@@ -51,6 +51,6 @@ class GalleriesTiles extends TwackComponent {
     }
 
     public function getAjax() {
-        return $this->articlesService->getAjax();
+        return $this->galleriesService->getAjax();
     }
 }

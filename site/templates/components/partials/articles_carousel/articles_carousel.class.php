@@ -8,7 +8,7 @@ class ArticlesCarousel extends TwackComponent {
 
 		$articlesService = $this->getService('ArticlesService');
 		$news = $articlesService->getArticles(['charLimit' => 150, 'limit' => 15]);
-		$articlePages = $news->articles;
+		$articlePages = $news->items;
 		foreach ($articlePages as $page) {
 			if ($page->projectPage instanceof Page && $page->projectPage->color) {
 				$page->color = $page->projectPage->color;

@@ -66,13 +66,13 @@ import { debounce, uniq, remove } from 'lodash-es';
 						console.log("Request was successfull: ", data);
 					}
 
-					if (typeof data.articles === 'object' && Array.isArray(data.articles)) {
+					if (typeof data.items === 'object' && Array.isArray(data.items)) {
 						if (getParams.offset !== undefined || getParams.start !== undefined) {
 							// An offset is set. The results should therefore only be added.
-							showArticleTiles(tileElement, grid, data.articles, false);
+							showArticleTiles(tileElement, grid, data.items, false);
 						} else {
 							// Compares the existing tiles, and inserts non-existing elements at the appropriate location:
-							showArticleTiles(tileElement, grid, data.articles, true);
+							showArticleTiles(tileElement, grid, data.items, true);
 						}
 					}
 
