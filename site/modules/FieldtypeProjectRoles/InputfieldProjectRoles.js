@@ -207,7 +207,7 @@
 	* Behandelt den Klick auf eine einzelne Checkbox-Zelle.
 	*/
 	function behandleCheckboxZelle(ausgangszelle, changed){
-		behandleCheckboxReihe(ausgangszelle, changed);
+		behandleCheckboxReihe(ausgangszelle);
 		behandleCheckboxSpalte(ausgangszelle, changed);
 	}
 

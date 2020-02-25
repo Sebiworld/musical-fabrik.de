@@ -7,7 +7,7 @@ import { debounce, uniq, remove } from 'lodash-es';
 	const elements = document.querySelectorAll('.results-container');
 	if (elements.length > 0) {
 		await import('./masonry.js');
-		const imagesloadedLoad = await import('imagesloaded');
+		await import('imagesloaded');
 		const msryLoad = await import(/* webpackChunkName: "masonry-import" */ 'masonry-layout');
 		const Masonry = msryLoad.default;
 		const progressively = await import(/* webpackChunkName: "bildtools" */ 'progressively');

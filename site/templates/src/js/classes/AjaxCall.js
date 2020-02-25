@@ -266,7 +266,7 @@ class AjaxCall {
 	 * @return string
 	 */
 	objectToQueryString(a) {
-		let prefix, add, name, r20, output;
+		let prefix, add, r20, output;
 		let s = [];
 		r20 = /%20/g;
 		add = function (key, value) {

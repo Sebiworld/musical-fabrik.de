@@ -146,7 +146,7 @@ let s = function () {
 
         set scrollOffset(value) {
             if (typeof value !== "number") {
-                return false;
+                return;
             }
             this._scrollOffset = value;
         }
@@ -158,12 +158,12 @@ let s = function () {
         set headerOffset(value) {
             const obj = this;
             if (value !== false && typeof value !== 'number' && !(value instanceof Element)) {
-                return false;
+                return;
             }
             this._headerOffset = value;
 
             if (!obj._isIntersectionObserverSupported()) {
-                return false;
+                return;
             }
 
             if (this._linktargetObserver instanceof IntersectionObserver) {
@@ -192,7 +192,7 @@ let s = function () {
 
         set activateLinkListener(value) {
             if (typeof value !== "boolean") {
-                return false;
+                return;
             }
             this._activateHashListener(!!value);
             this._activateLinkListener = !!value;
@@ -717,7 +717,7 @@ let s = function () {
                 return false;
             }
 
-            if (!targetSelector || !Array.isArray(obj._observedLinkElements[targetSelector])) {
+            if (!Array.isArray(obj._observedLinkElements[targetSelector])) {
                 return true;
             }
 

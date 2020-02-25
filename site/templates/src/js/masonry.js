@@ -1,5 +1,5 @@
 /* jshint -W024 */
-import { trigger, ready } from "./classes/helpers.js";
+import { ready } from "./classes/helpers.js";
 
 (async () => {
 	const elemente = document.querySelectorAll(".masonry-grid");
