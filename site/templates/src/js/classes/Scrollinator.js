@@ -429,7 +429,7 @@ let s = function () {
 
         set activeClass(value) {
             if (typeof value !== "string") {
-                return false;
+                return;
             }
             this._activeClass = value;
             this._refreshObservers();
@@ -441,7 +441,7 @@ let s = function () {
 
         set activeLinkClass(value) {
             if (typeof value !== "string") {
-                return false;
+                return;
             }
             this._activeLinkClass = value;
             this._refreshObservers();
@@ -453,7 +453,7 @@ let s = function () {
 
         set sectionInViewClass(value) {
             if (typeof value !== "string") {
-                return false;
+                return;
             }
             this._sectionInViewClass = value;
             this._refreshObservers();
@@ -466,7 +466,7 @@ let s = function () {
 
         set alternativeTargetAttribute(value) {
             if (typeof value !== "string") {
-                return false;
+                return;
             }
             this._alternativeTargetAttribute = value;
             this._refreshObservers();
@@ -482,7 +482,7 @@ let s = function () {
 
         set sectionSelector(value) {
             if (typeof value !== "string") {
-                return false;
+                return;
             }
             this._sectionSelector = value;
             this._refreshObservers();
@@ -494,7 +494,7 @@ let s = function () {
 
         set onlySingleSectionActive(value) {
             if (typeof value !== "boolean") {
-                return false;
+                return;
             }
             this._onlySingleSectionActive = !!value;
             this._refreshObservers();
@@ -506,7 +506,7 @@ let s = function () {
 
         set sectionToUrl(value) {
             if (typeof value !== "boolean") {
-                return false;
+                return;
             }
             this._sectionToUrl = !!value;
             this._refreshUrlHash();
@@ -518,7 +518,7 @@ let s = function () {
 
         set highlightOffset(value) {
             if (typeof value !== "number") {
-                return false;
+                return;
             }
             this._highlightOffset = value;
         }
@@ -710,13 +710,14 @@ let s = function () {
                 return false;
             }
 
+            let targetSelector = false;
             try {
-                const targetSelector = '#' + obj._getHashFromLink(element);
+                targetSelector = '#' + obj._getHashFromLink(element);
             } catch (err) {
                 return false;
             }
 
-            if (!Array.isArray(obj._observedLinkElements[targetSelector])) {
+            if (!targetSelector || !Array.isArray(obj._observedLinkElements[targetSelector])) {
                 return true;
             }
 

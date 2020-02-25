@@ -2,7 +2,6 @@ const webpack = require("webpack");
 const path = require("path");
 const glob = require("glob");
 const pkg = require('./package.json');
-const moment = require('moment');
 
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -45,10 +44,7 @@ module.exports = (env, options) => {
 					let entry = ENTRIES[filetype][index];
 					if (typeof entry !== "string") continue;
 
-					let key = entry;
-					if (typeof entry === "string") {
-						key = path.basename(entry, path.extname(entry));
-					}
+					let key = path.basename(entry, path.extname(entry));
 
 					if (typeof entries[key] !== "object") {
 						entries[key] = [];

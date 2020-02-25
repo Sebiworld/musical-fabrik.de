@@ -127,7 +127,7 @@
 	/**
 	* Aktiviert und deaktiviert die richtigen Felder in der Reihe der angeklickten Checkbox
 	*/
-	function behandleCheckboxReihe(ausgangszelle, changed){
+	function behandleCheckboxReihe(ausgangszelle){
 		var zellen = getReiheSiblings(ausgangszelle);
 
 		var checked = isChecked(ausgangszelle);
@@ -161,7 +161,6 @@
 	function behandleCheckboxSpalte(ausgangszelle, changed){
 		var gecheckt = isChecked(ausgangszelle);
 
-		var alle = !!ausgangszelle.hasClass('alle');
 		var elternElement = getSpaltenParent(ausgangszelle);
 
 		// Zähl- und Temp-Variablen:

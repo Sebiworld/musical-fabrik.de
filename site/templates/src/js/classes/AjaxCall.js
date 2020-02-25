@@ -65,7 +65,6 @@ class AjaxCall {
 			value = '' + value;
 		}
 		this._url = value;
-		return this._url;
 	}
 
 	get path() {
@@ -78,7 +77,6 @@ class AjaxCall {
 			value = '' + value;
 		}
 		this._path = value;
-		return this._path;
 	}
 
 	get method() {
@@ -91,7 +89,6 @@ class AjaxCall {
 			value = '' + value;
 		}
 		this._method = value;
-		return this._method;
 	}
 
 	get getParams() {
@@ -106,14 +103,11 @@ class AjaxCall {
 	set getParams(value) {
 		if (typeof value === 'string') {
 			this.importGet(value);
-			return true;
 		} else if (typeof value === 'object') {
 			this._getParams = value;
-			return true;
 		} else {
 			this.importGet(false);
 		}
-		return false;
 	}
 
 	setGetParam(key, value) {
@@ -239,9 +233,7 @@ class AjaxCall {
 	set postParams(value) {
 		if (typeof value === 'object') {
 			this._postParams = value;
-			return true;
 		}
-		return false;
 	}
 
 	setPostParam(key, value) {
@@ -283,9 +275,7 @@ class AjaxCall {
 			s[s.length] = encodeURIComponent(key) + "=" + encodeURIComponent(value);
 		};
 		if (a instanceof Array) {
-			for (name in a) {
-				add(name, a[name]);
-			}
+			a.forEach((value, key) => add(key, value));
 		} else {
 			for (prefix in a) {
 				this.buildParams(prefix, a[prefix], add);
@@ -324,9 +314,7 @@ class AjaxCall {
 	set headers(value) {
 		if (typeof value === 'object') {
 			this._headers = value;
-			return true;
 		}
-		return false;
 	}
 
 	setHeader(key, value) {

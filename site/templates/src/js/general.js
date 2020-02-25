@@ -1,6 +1,6 @@
 /* jshint -W024 */
 // import "@babel/polyfill";
-import { trigger, ready } from "./classes/helpers.js";
+import { ready } from "./classes/helpers.js";
 import Scrollinator from "./classes/Scrollinator.js";
 import './classes/animated-header';
 import './classes/events-box';

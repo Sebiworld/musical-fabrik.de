@@ -1,6 +1,6 @@
 /* jshint -W024 */
 (async () => {
-	const cookieconsent = await import("cookieconsent");
+	await import("cookieconsent");
 	window.cookieconsent.initialise({
 		container: document.getElementById("content"),
 		palette: {

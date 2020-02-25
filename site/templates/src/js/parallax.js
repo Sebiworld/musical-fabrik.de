@@ -28,7 +28,7 @@ import Rellax from 'rellax/rellax.min';
 				options.threshold = element.getAttribute("data-parallax-threshold");
 			}
 
-			const newRellax = new Rellax(element, options);
+			new Rellax(element, options);
 		}
 
 		ready(function() {

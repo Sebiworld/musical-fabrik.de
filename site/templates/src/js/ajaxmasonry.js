@@ -1,5 +1,5 @@
 /* jshint -W024 */
-import { ready, hasClass, addClass, removeClass, createElementFromHTML, removeElements, trigger, nextUntil } from './classes/helpers.js';
+import { ready, hasClass, addClass, removeClass, removeElements, trigger } from './classes/helpers.js';
 import AjaxCall from './classes/AjaxCall.js';
 import { debounce, uniq, remove } from 'lodash-es';
 
@@ -8,7 +8,6 @@ import { debounce, uniq, remove } from 'lodash-es';
 	if (elements.length > 0) {
 		await import('./masonry.js');
 		const imagesloadedLoad = await import('imagesloaded');
-		const ImagesLoaded = imagesloadedLoad.default;
 		const msryLoad = await import(/* webpackChunkName: "masonry-import" */ 'masonry-layout');
 		const Masonry = msryLoad.default;
 		const progressively = await import(/* webpackChunkName: "bildtools" */ 'progressively');

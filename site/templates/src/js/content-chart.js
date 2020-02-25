@@ -3,8 +3,8 @@ import AjaxCall from './classes/AjaxCall.js';
 import { isEmpty, isNumber, startsWith } from "lodash-es";
 
 (async () => {
-	const chartjs = await import(/* webpackChunkName: "chartjs" */ 'chart.js/dist/chart.js');
-	const chartjsPluginDeferred = await import(/* webpackChunkName: "chartjs" */ 'chartjs-plugin-deferred/src/plugin.js');
+	await import(/* webpackChunkName: "chartjs" */ 'chart.js/dist/chart.js');
+	await import(/* webpackChunkName: "chartjs" */ 'chartjs-plugin-deferred/src/plugin.js');
 
 	Chart.plugins.register({
 		deferred: {
@@ -222,10 +222,6 @@ import { isEmpty, isNumber, startsWith } from "lodash-es";
 			}
 		}
 
-		if(typeof chartConfig !== 'object' || isEmpty(chartConfig)){
-			return false;
-		}
-
 		// Canvas element. If no canvas picture exists, it is created again.
 		let canvasElement = element.querySelectorAll('canvas');
 		if(!canvasElement){
@@ -238,7 +234,7 @@ import { isEmpty, isNumber, startsWith } from "lodash-es";
 			canvasElement.className += ' chart';
 		}
 
-		let myChart = new Chart(canvasElement, chartConfig);
+		new Chart(canvasElement, chartConfig);
 	}
 
 	/**
