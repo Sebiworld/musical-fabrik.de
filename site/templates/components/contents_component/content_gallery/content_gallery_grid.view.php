@@ -19,12 +19,12 @@ if ($this->images && !empty($this->images)) {
 		<?= $this->description ? '<div class="block-description">' . $this->description . '</div>' : ''; ?>
 
 		<div class="masonry-grid lightgallery row">
-			<div class="masonry-grid-sizer col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2"></div>
+			<div class="masonry-grid-sizer col-12 col-sm-6 col-lg-4 col-xxl-3"></div>
 			<?php
             $counter = 1;
     		foreach ($this->images as $listenIndex => $image) {
         		?>
-				<div class="masonry-grid-item col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+				<div class="masonry-grid-item col-12 col-sm-6 col-lg-4 col-xxl-3">
 					<a class="lightgallery-item" href="<?= $image->url; ?>">
 						<?php
 						echo $this->component->getService('ImageService')->getPictureHtml(array(

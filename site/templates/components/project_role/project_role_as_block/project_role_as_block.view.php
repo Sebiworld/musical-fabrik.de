@@ -10,7 +10,7 @@ if (!empty($this->portraits)) {
 			$counter = 1;
 			foreach ($this->portraits->find('season_'.$this->season->id.'_project_role_'.$this->page->id.'=1') as $portrait) {
 				?>
-				<div class="col col-6 col-sm-6 col-lg-4 col-xl-3 portrait-block">
+				<div class="col col-6 col-sm-6 col-lg-4 col-xxl-3 portrait-block">
 					<?= $portrait; ?>
 				</div>
 

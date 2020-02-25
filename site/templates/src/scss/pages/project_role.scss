@@ -9,7 +9,7 @@
       }
     }
   }
-  .contents-container {
+  .contents-wrapper {
     text-align: center;
 
     .intro {
@@ -62,6 +62,7 @@
 }
 
 .project_role {
+  width: 100%;
   max-width: 100%;
   display: inline-flex;
   flex-direction: column;
@@ -110,6 +111,7 @@
   }
 
   .project_role {
+    width: auto;
     margin: 0 auto 40px auto;
 
     .role-head {
@@ -208,11 +210,12 @@
   }
 
   .portrait-block {
-    max-width: 250px !important;
+    // max-width: 250px !important;
   }
 
   .portrait {
-    max-width: 210px;
+    max-width: 100%;
+    width: 210px;
     border: 0 none;
     text-align: center;
     background-color: transparent;
@@ -357,6 +360,7 @@
 // Seasons-row at top level, usually has no underrolls:
 .contents-container > .project_role {
   margin-top: 0;
+  width: auto;
 
   .cast-row {
     margin-bottom: 8px;

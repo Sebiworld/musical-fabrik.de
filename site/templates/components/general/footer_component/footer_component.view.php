@@ -67,7 +67,7 @@ namespace ProcessWire;
 						<div class="input-group">
 							<input type="text" class="form-control" placeholder="<?= __('Search for...'); ?>" aria-label="<?= __('Search for...'); ?>" name="q">
 							<span class="input-group-btn">
-								<input class="btn btn-project-primary" type="submit" value="<?= __('Search!'); ?>">
+								<input class="btn btn-primary" type="submit" value="<?= __('Search!'); ?>">
 							</span>
 						</div>
 					</form>

@@ -8,7 +8,7 @@ if ($this->filters) {
 }
 
 ?>
-<div class="galleries_tiles">
+<div class="galleries_tiles results-container" data-request-url="<?= $this->requestUrl; ?>">
 	<?php
     if ($this->totalNumber) {
         ?>

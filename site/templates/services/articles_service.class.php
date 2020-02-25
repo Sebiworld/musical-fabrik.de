@@ -9,7 +9,7 @@ class ArticlesService extends TwackComponent {
 
     public function __construct($args) {
         parent::__construct($args);
-        $this->projectPage = $this->getService('ProjectService')->getProjectPageWithFallback();
+        $this->projectPage = $this->getService('ProjectService')->getProjectPage();
     }
 
     public function getArticlesPage() {

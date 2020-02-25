@@ -2,7 +2,7 @@
 namespace ProcessWire;
 
 ?>
-<div class="card article_card" data-id="<?= $this->page->id; ?>">
+<div class="card article_card <?= !empty($this->classes . '') ? $this->classes : ''; ?>" data-id="<?= $this->page->id; ?>">
 	<div class="aspect-ratio card-img-top ar-2-1">
 		<?php
 		if ($this->page->main_image) {

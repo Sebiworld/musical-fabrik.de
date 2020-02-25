@@ -4,7 +4,7 @@ namespace ProcessWire;
 
 if ($this->contentAvailable) {
     ?>
-	<div class="content_articles <?= !empty($this->page->classes . '') ? $this->page->classes : ''; ?>" <?= $this->page->depth ? 'data-depth="' . $this->page->depth . '"' : ''; ?>>
+	<div class="content_articles results-wrapper <?= !empty($this->page->classes . '') ? $this->page->classes : ''; ?>" <?= $this->page->depth ? 'data-depth="' . $this->page->depth . '"' : ''; ?>>
 		<?php
         if (!empty($this->title)) {
             $headingDepth = 2;

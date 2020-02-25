@@ -9,11 +9,14 @@ class ArticlesCarousel extends TwackComponent {
 		$articlesService = $this->getService('ArticlesService');
 		$news = $articlesService->getArticles(['charLimit' => 150, 'limit' => 15]);
 		$articlePages = $news->items;
+
+		$parameters = [];
+        if(!empty($args['cardClasses'])){
+            $parameters['classes'] = $args['cardClasses'];
+        }
+
 		foreach ($articlePages as $page) {
-			if ($page->projectPage instanceof Page && $page->projectPage->color) {
-				$page->color = $page->projectPage->color;
-			}
-			$this->addComponent('ArticleCard', ['directory' => 'partials', 'page' => $page]);
+			$this->addComponent('ArticleCard', ['directory' => 'partials', 'page' => $page, 'parameters' => $parameters]);
 		}
 
 		$this->sliderAlign = 'left';

@@ -125,10 +125,19 @@ a {
   transition: color 0.2s;
 }
 
-a:not(.btn):not(.nav-link), .btn-link{
+a:not(.btn):not(.nav-link):not(.no-underline), .btn-link{
   text-decoration-color: theme-color('primary');
   text-decoration-thickness: .125em;
   text-underline-offset: 1.5px;
+}
+
+.no-underline{
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
 }
 
 .title-link {

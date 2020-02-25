@@ -33,6 +33,19 @@
       margin-bottom: 0;
     }
 
+    .w-400 {
+      width: 400px;
+    }
+    .w-600 {
+      width: 600px;
+    }
+    .w-800 {
+      width: 800px;
+    }
+    .w-1000 {
+      width: 1000px;
+    }
+
     .block-title {
       margin-top: 32px;
       margin-bottom: 8px;
@@ -97,6 +110,9 @@
     width: 32em;
     max-width: 100%;
 
+    &.w-400 {
+      width: 400px;
+    }
     &.w-600 {
       width: 600px;
     }

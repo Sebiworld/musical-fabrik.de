@@ -49,6 +49,12 @@ img.lazyload:not([src]), picture.lazyload:not([src]) {
   visibility: hidden;
 }
 
+.image-wrapper{
+	position: relative;
+	display: block;
+	max-width: 100%;
+}
+
 // .ls-blur-up-img{
 //   position: absolute;
 //   top: 0;

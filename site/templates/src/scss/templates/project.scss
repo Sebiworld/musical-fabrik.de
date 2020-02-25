@@ -194,7 +194,7 @@ body {
       }
     }
 
-    a:not(.btn):not(.nav-link),
+    a:not(.btn):not(.nav-link):not(.no-underline),
     .btn-link {
       text-decoration-color: $project-primary-bg;
 

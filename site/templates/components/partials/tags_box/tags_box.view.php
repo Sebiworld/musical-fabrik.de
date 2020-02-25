@@ -3,7 +3,7 @@ namespace ProcessWire;
 
 if ($this->tags) {
 	?>
-	<div class="box tags_box tags <?= $this->selectable ? 'selectable' : ''; ?>">
+	<div class="box test tags_box tags <?= $this->selectable ? 'selectable' : ''; ?>">
 		<div class="tag-cloud">
 			<?php
 			$currentURL = $this->articlesPage->url;

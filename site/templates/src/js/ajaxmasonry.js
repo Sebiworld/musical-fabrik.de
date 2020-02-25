@@ -4,7 +4,7 @@ import AjaxCall from './classes/AjaxCall.js';
 import { debounce, uniq, remove } from 'lodash-es';
 
 (async () => {
-	const elements = document.querySelectorAll('.articles_tiles');
+	const elements = document.querySelectorAll('.results-container');
 	if (elements.length > 0) {
 		await import('./masonry.js');
 		const imagesloadedLoad = await import('imagesloaded');
@@ -36,7 +36,7 @@ import { debounce, uniq, remove } from 'lodash-es';
 			);
 
 			let existingIds = [];
-			const cards = grid.querySelectorAll('.article_card');
+			const cards = grid.querySelectorAll('.result-card');
 			for (let index in cards) {
 				const card = cards[index];
 				if (typeof card !== 'object' || !(card instanceof Element)) {
@@ -69,14 +69,14 @@ import { debounce, uniq, remove } from 'lodash-es';
 					if (typeof data.items === 'object' && Array.isArray(data.items)) {
 						if (getParams.offset !== undefined || getParams.start !== undefined) {
 							// An offset is set. The results should therefore only be added.
-							showArticleTiles(tileElement, grid, data.items, false);
+							showResultTiles(tileElement, grid, data.items, false);
 						} else {
 							// Compares the existing tiles, and inserts non-existing elements at the appropriate location:
-							showArticleTiles(tileElement, grid, data.items, true);
+							showResultTiles(tileElement, grid, data.items, true);
 						}
 					}
 
-					const container = grid.closest('.content_articles');
+					const container = grid.closest('.results-wrapper');
 					if (typeof container === 'object' && container instanceof Element) {
 						const filtersbox = container.querySelector('.filters_component');
 						if (typeof filtersbox === 'object' && filtersbox instanceof Element) {
@@ -163,21 +163,21 @@ import { debounce, uniq, remove } from 'lodash-es';
 				});
 		}
 
-		function showArticleTiles(tileElement, grid, articlesArray, compareElements) {
+		function showResultTiles(tileElement, grid, resultsArray, compareElements) {
 			if (typeof grid !== 'object' || !(grid instanceof Element)) {
 				return false;
 			}
 
-			if (typeof articlesArray !== 'object' || !Array.isArray(articlesArray)) {
+			if (typeof resultsArray !== 'object' || !Array.isArray(resultsArray)) {
 				return false;
 			}
 
 			if (logging) {
-				console.log("Show articles: ", articlesArray);
+				console.log("Show results: ", resultsArray);
 			}
 
 			let gridItems = grid.querySelectorAll('.masonry-grid-item');
-			if (articlesArray.length < 1 && (compareElements !== false || gridItems.length < 1)) {
+			if (resultsArray.length < 1 && (compareElements !== false || gridItems.length < 1)) {
 				// Delete all elements from the grid:
 				removeElements(gridItems);
 
@@ -190,8 +190,8 @@ import { debounce, uniq, remove } from 'lodash-es';
 				});
 
 				// Display message:
-				const keineErgebnisseElemente = tileElement.querySelectorAll('.no-results');
-				if (keineErgebnisseElemente.length < 1) {
+				const noResultsElements = tileElement.querySelectorAll('.no-results');
+				if (noResultsElements.length < 1) {
 					grid.insertAdjacentHTML('afterend', '<div class="alert alert-info no-results" role="alert"><strong>Keine Beiträge gefunden.</strong><br/>Erweitern Sie die Filtereinstellungen, um mehr Ergebnisse zu erhalten.</div>');
 				}
 
@@ -205,14 +205,14 @@ import { debounce, uniq, remove } from 'lodash-es';
 			let elementIterator = grid.querySelectorAll('.masonry-grid-item')[0];
 
 			if (compareElements === false) {
-				if (articlesArray.length < 1) {
+				if (resultsArray.length < 1) {
 					elementIterator = undefined;
 				} else {
 					// If first element already exists: Set as iterator
-					const articleFound = grid.querySelector('.article_card[data-id="' + articlesArray[0].id + '"]');
-					if (typeof articleFound === 'object' && articleFound instanceof Element) {
+					const resultFound = grid.querySelector('.result-card[data-id="' + resultsArray[0].id + '"]');
+					if (typeof resultFound === 'object' && resultFound instanceof Element) {
 						// The first element of the new tiles already exists.
-						elementIterator = articleFound.parentNode;
+						elementIterator = resultFound.parentNode;
 					} else {
 						elementIterator = undefined;
 						// const gridElements = grid.querySelectorAll('.masonry-grid-item');
@@ -221,13 +221,13 @@ import { debounce, uniq, remove } from 'lodash-es';
 				}
 			}
 
-			for (const article of articlesArray) {
+			for (const result of resultsArray) {
 				trigger(grid, 'elements-changed');
 				if (logging) {
-					console.log("Next Element: ", article);
+					console.log("Next Element: ", result);
 				}
 
-				if (typeof article !== 'object' || typeof article.html !== 'string' || article.html.length < 1 || article.id === undefined) {
+				if (typeof result !== 'object' || typeof result.html !== 'string' || result.html.length < 1 || result.id === undefined) {
 					// No valid element. Just skip it...
 					if (logging) {
 						console.log("No valid element. Just skip it...");
@@ -240,26 +240,26 @@ import { debounce, uniq, remove } from 'lodash-es';
 					if (logging) {
 						console.log("No iterator element available as reference. All other elements can simply be appended.");
 					}
-					grid.insertAdjacentHTML('beforeend', ('<div class="masonry-grid-item">' + article.html + '</div>'));
+					grid.insertAdjacentHTML('beforeend', ('<div class="masonry-grid-item">' + result.html + '</div>'));
 					continue;
 				}
 
-				if (elementIterator.querySelector('.article_card').getAttribute('data-id') + '' == article.id + '') {
+				if (elementIterator.querySelector('.result-card') && elementIterator.querySelector('.result-card').getAttribute('data-id') + '' == result.id + '') {
 					// The current result element exists. Next cycle!
 					if (logging) {
-						console.log("The current result element exists. Next cycle!", elementIterator.querySelector('.article_card').getAttribute('data-id'), article.id);
+						console.log("The current result element exists. Next cycle!", elementIterator.querySelector('.result-card').getAttribute('data-id'), result.id);
 					}
 					elementIterator = elementIterator.nextElementSibling;
 					continue;
 				}
 
-				let articleFound = grid.querySelector('.article_card[data-id="' + article.id + '"]');
-				if (typeof articleFound === 'object' && articleFound instanceof Element) {
+				let resultFound = grid.querySelector('.result-card[data-id="' + result.id + '"]');
+				if (typeof resultFound === 'object' && resultFound instanceof Element) {
 					// element exists, but there are still elements in between that need to be deleted.
 					if (logging) {
 						console.log("element exists, but there are still elements in between that need to be deleted.");
 					}
-					articleFound = articleFound.parentNode;
+					resultFound = resultFound.parentNode;
 
 					while (elementIterator) {
 						if (logging) {
@@ -268,7 +268,7 @@ import { debounce, uniq, remove } from 'lodash-es';
 						if (typeof elementIterator !== 'object' || !(elementIterator instanceof Element)) {
 							break;
 						}
-						if ((elementIterator.querySelector('.article_card').getAttribute('data-id') + "") === ("" + article.id)) {
+						if ((elementIterator.querySelector('.result-card').getAttribute('data-id') + "") === ("" + result.id)) {
 							if (logging) {
 								console.log("Current element: This should be deleted.");
 							}
@@ -280,14 +280,14 @@ import { debounce, uniq, remove } from 'lodash-es';
 					}
 
 
-					elementIterator = articleFound;
+					elementIterator = resultFound;
 					elementIterator = elementIterator.nextElementSibling;
 					continue;
 				}
 
 				// Element does not yet exist. Add it!
 				// console.log("Element does not yet exist. Add it!");
-				elementIterator.insertAdjacentHTML('beforebegin', ('<div class="masonry-grid-item">' + article.html + '</div>'));
+				elementIterator.insertAdjacentHTML('beforebegin', ('<div class="masonry-grid-item">' + result.html + '</div>'));
 			}
 
 			if (compareElements !== false) {
@@ -315,6 +315,16 @@ import { debounce, uniq, remove } from 'lodash-es';
 					continue;
 				}
 
+				const requestUrl = tileElement.getAttribute('data-request-url');
+				if(typeof requestUrl !== 'string'){
+					continue;
+				}
+
+				let apikey = 'SEawMksSM8AAKnbAroSyU';
+				if(tileElement.hasAttribute('data-apikey')){
+					apikey = tileElement.getAttribute('data-apikey');
+				}
+
 				const grid = tileElement.querySelector('.masonry-grid');
 				if (typeof grid !== 'object' || !(grid instanceof Element)) {
 					continue;
@@ -331,9 +341,9 @@ import { debounce, uniq, remove } from 'lodash-es';
 				});
 
 				const ajaxCall = new AjaxCall({
-					path: '/api/page' + window.location.pathname,
+					path: requestUrl,
 					headers: {
-						'X-API-KEY': 'SEawMksSM8AAKnbAroSyU'
+						'X-API-KEY': apikey
 					}
 				});
 				ajaxCall.importGet();
@@ -359,7 +369,7 @@ import { debounce, uniq, remove } from 'lodash-es';
 					}, 300));
 				}
 
-				const container = grid.closest('.content_articles');
+				const container = grid.closest('.results-wrapper');
 				if (typeof container === 'object' && container instanceof Element) {
 					const filtersbox = container.querySelector('.filters_component');
 					if (typeof filtersbox === 'object' && filtersbox instanceof Element) {

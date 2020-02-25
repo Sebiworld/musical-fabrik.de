@@ -1,46 +1,59 @@
 <?php
 namespace ProcessWire;
-
 ?>
-
-<form action="<?= $this->searchPage->url; ?>" method="GET">
-	<div class="input-group">
-		<input type="text" class="form-control" placeholder="<?= __('Search for...') ?>" name="q" value="<?= $this->query; ?>">
-		<span class="input-group-btn">
-			<button class="btn btn-primary" type="submit"><?= __('Search') ?></button>
-		</span>
-	</div>
-</form>
-
-<p class="lead">
-	<?= sprintf('%1$s results found', $this->results->count); ?>
-</p>
-
-<div class="list-group without-border">
+<div class="search_page results-wrapper">
 	<?php
-	foreach ($this->results as $result) {
+
+	// Output filter, if available:
+	if ($this->filters) {
+		echo $this->filters;
+	}
+	
+	?>
+	<div class="results-container" data-request-url="<?= $this->requestUrl; ?>">
+		<?php
+		if ($this->totalNumber) {
+			?>
+			<i class="total-number"><?= sprintf(_n("One result found", "%d results found", $this->totalNumber), $this->totalNumber); ?></i>
+			<?php
+		}
 		?>
-		<a href="<?= $result->url; ?>" class="list-group-item list-group-item-action flex-column align-items-start">
-			<div class="d-flex w-100 justify-content-between">
-				<h5><?= $result->title; ?></h5>
-				<small><?= $result->datetime_from; ?></small>
+	
+		<?php
+		if ($this->childComponents && count($this->childComponents) > 0) {
+			?>
+			<div class="masonry-grid">
+				<div class="masonry-grid-sizer"></div>
+				<?php
+				foreach ($this->childComponents as $result) {
+					?>
+					<div class="masonry-grid-item">
+						<?= $result; ?>
+					</div>
+					<?php
+				} ?>
+			</div>
+	
+			<?php
+			if ($this->moreAvailable) {
+				?>
+				<div class="btn-group" role="group">
+					<button type="button" class="btn btn-project-primary" data-action="load-more" data-offset="<?= $this->lastElementIndex + 1; ?>"><?= __('Load more...'); ?></button>
+				</div>
+				<?php
+			}
+		} else {
+			?>
+			<div class="masonry-grid">
+				<div class="masonry-grid-sizer"></div>
+			</div>
+	
+			<div class="alert alert-info no-results" role="alert">
+				<strong><?= __('No results found'); ?></strong><br/>
+				<?= __('Expand the filter settings to get more results.'); ?>
 			</div>
 			<?php
-			if ($result->intro) {
-				?>
-				<p>
-					<?= $result->intro; ?>
-				</p>
-				<?php
-			}
-			if ($result->authors_readable) {
-				?>
-				<small><?= sprintf(__('By %1$s'), $result->authors_readable); ?></small>
-				<?php
-			}
-			?>
-		</a>
-		<?php
-	}
-	?>
+		}
+		?>
+	</div>
 </div>

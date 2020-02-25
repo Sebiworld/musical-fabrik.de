@@ -8,7 +8,7 @@ namespace ProcessWire;
 	<?php
 	if ($this->mainImage) {
 		?>
-		<a class="main_image" data-open-imagelightbox="<?= $this->mainImage->url; ?>" href="<?= $this->mainImage->url; ?>" target="_blank">
+		<a class="main_image no-underline" data-open-imagelightbox="<?= $this->mainImage->url; ?>" href="<?= $this->mainImage->url; ?>" target="_blank">
 			<?php
 			if ($this->page->template->hasField('dont_crop_main_image') && $this->page->dont_crop_main_image) {
 				// The image should not be cropped ?>

@@ -9,18 +9,18 @@ class GalleriesService extends TwackComponent {
 
     public function __construct($args) {
         parent::__construct($args);
-        $this->projectPage = $this->getService('ProjectService')->getProjectPageWithFallback();
+        $this->projectPage = $this->getService('ProjectService')->getProjectPage();
     }
 
     public function getGalleriesPage() {
-        $galleriesPageg = wire('pages')->get('/')->children('template.name=galleries_container')->first();
+        $galleriesPage = wire('pages')->get('/')->children('template.name=galleries_container')->first();
         if ($this->projectPage instanceof Page && $this->projectPage->id) {
             $results = $this->projectPage->find('template.name=galleries_container');
             if ($results->count > 0) {
-                $galleriesPageg = $results->first();
+                $galleriesPage = $results->first();
             }
         }
-        return $galleriesPageg;
+        return $galleriesPage;
     }
 
     /**

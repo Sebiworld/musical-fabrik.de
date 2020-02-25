@@ -11,7 +11,7 @@ if (!empty($this->portraits)) {
 			$counter = 1;
 			foreach ($this->portraits->find('season_'.$this->season->id.'=1, root=1') as $portrait) {
 				?>
-				<div class="col col-6 col-sm-6 col-lg-4 col-xl-3 portrait-block">
+				<div class="col col-6 col-sm-6 col-lg-4 col-xxl-3 portrait-block">
 					<?= $portrait; ?>
 				</div>
 
@@ -34,7 +34,7 @@ if (!empty($this->portraits)) {
 					$counter = 1;
 					foreach ($this->portraits->find('season_'.$this->season->id.'_project_role_'.$projectRole->id.'=1, root!=1') as $portrait) {
 						?>
-						<div class="col col-6 col-sm-6 col-lg-4 col-xl-3 portrait-block">
+						<div class="col col-6 col-sm-6 col-lg-4 col-xxl-3 portrait-block">
 							<?= $portrait->renderWithSubtitle($projectRole->title); ?>
 						</div>
 

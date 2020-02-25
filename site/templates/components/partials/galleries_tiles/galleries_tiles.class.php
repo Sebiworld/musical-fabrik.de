@@ -10,24 +10,6 @@ class GalleriesTiles extends TwackComponent {
             'charLimit' => 150
         );
 
-        // Is a keyword filter set?
-        if (wire('input')->get('tags')) {
-            $filters['tags'] = wire('input')->get('tags');
-        }
-
-        // Is something entered in the free text search?
-        if (wire('input')->get('q')) {
-            $filters['q'] = wire('input')->get('q');
-        }
-
-        if ($this->getService('ProjectService')->getProjectPage() instanceof NullPage) {
-            $this->addComponent('FiltersComponent', [
-                'directory' => 'partials',
-                'name'      => 'filters',
-                'filters'   => $filters
-            ]);
-        }
-
         $this->galleriesService       = $this->getService('GalleriesService');
         $galleries                   = $this->galleriesService->getGalleries($filters);
         $this->moreAvailable         = $galleries->moreAvailable;
@@ -40,6 +22,8 @@ class GalleriesTiles extends TwackComponent {
         }
 
         $this->galleriesPage = $this->galleriesService->getGalleriesPage();
+        $this->requestUrl = '/api/page' . $this->galleriesPage->url;
+
         $this->addScript('ajaxmasonry.js', array(
             'path'     => wire('config')->urls->templates . 'assets/js/',
             'absolute' => true

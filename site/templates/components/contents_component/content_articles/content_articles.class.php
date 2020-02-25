@@ -8,9 +8,9 @@ class ContentArticles extends TwackComponent {
 
         $contents = '';
         if (isset($args['typ']) && $args['typ'] == 'tiles') {
-            $contents = $this->addComponent('ArticlesTiles', ['directory' => 'partials']);
+            $contents = $this->addComponent('ArticlesTiles', ['directory' => 'partials', 'cardClasses' => 'result-card']);
         } else {
-            $contents = $this->addComponent('ArticlesCarousel', ['directory' => 'partials']);
+            $contents = $this->addComponent('ArticlesCarousel', ['directory' => 'partials', 'cardClasses' => 'result-card']);
         }
 
         // Check if there is really outputable content available (HTML string not empty):

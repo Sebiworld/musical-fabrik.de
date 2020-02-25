@@ -10,24 +10,6 @@ class ArticlesTiles extends TwackComponent {
             'charLimit' => 150
         );
 
-        // Is a keyword filter set?
-        if (wire('input')->get('tags')) {
-            $filters['tags'] = wire('input')->get('tags');
-        }
-
-        // Is something entered in the free text search?
-        if (wire('input')->get('q')) {
-            $filters['q'] = wire('input')->get('q');
-        }
-
-        if ($this->page->closest('template.name^=project, template.name!=project_role, template.name!=project_roles_container, template.name!=projects_container') instanceof NullPage) {
-            $this->addComponent('FiltersComponent', [
-                'directory' => 'partials',
-                'name'      => 'filters',
-                'filters'   => $filters
-            ]);
-        }
-
         $this->articlesService      = $this->getService('ArticlesService');
         $articles                   = $this->articlesService->getArticles($filters);
         $this->moreAvailable        = $articles->moreAvailable;
@@ -35,11 +17,18 @@ class ArticlesTiles extends TwackComponent {
         $this->totalNumber          = $articles->totalNumber;
         $articlesPages              = $articles->items;
 
+        $parameters = [];
+        if(!empty($args['cardClasses'])){
+            $parameters['classes'] = $args['cardClasses'];
+        }
+
         foreach ($articlesPages as $page) {
-            $this->addComponent('ArticleCard', ['directory' => 'partials', 'page' => $page]);
+            $this->addComponent('ArticleCard', ['directory' => 'partials', 'page' => $page, 'parameters' => $parameters]);
         }
 
         $this->articlesPage = $this->articlesService->getArticlesPage();
+        $this->requestUrl = '/api/page' . $this->articlesPage->url;
+
         $this->addScript('ajaxmasonry.js', array(
             'path'     => wire('config')->urls->templates . 'assets/js/',
             'absolute' => true

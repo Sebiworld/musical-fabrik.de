@@ -32,7 +32,6 @@ class TagsBox extends TwackComponent {
 			shuffle($this->tags);
 		}
 
-		$articlesService = $this->getService('ArticlesService');
 		$this->articlesPage = wire('pages')->get('/')->children('template.name=articles_container')->first();
 
 		$this->showCount = isset($args['show_count']) && !!$args['show_count'];
@@ -98,7 +97,7 @@ class TagsBox extends TwackComponent {
 				$row['active'] = in_array($row['id'], $this->getActive());
 				$row['tags_on_click'] = $row['id'];
 
-				if ($this->selektierbar) {
+				if ($this->selectable) {
 					$row['tags_on_click'] = $this->getActive();
 					if ($row['active']) {
 						// The selected keyword is active, so it should be removed when you click on it.

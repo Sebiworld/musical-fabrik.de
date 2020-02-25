@@ -24,7 +24,11 @@ article,
     }
 
     .content_articles {
-      margin-top: 32px;
+      margin-top: 64px;
+
+      @include media-breakpoint-down(sm) {
+        margin-top: 48px;
+      }
 
       .articles_carousel {
         margin-top: 8px;
