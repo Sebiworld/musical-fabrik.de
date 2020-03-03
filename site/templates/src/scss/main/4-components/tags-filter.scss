@@ -1,0 +1,41 @@
+@import "~hover.css/scss/hover";
+
+.tags_filter.tags_filter{
+    .tag{
+        position: relative;
+        display: inline-block;
+        white-space: normal;
+        text-align: left;
+        margin-bottom: 2px;
+        margin-right: 2px;
+        text-decoration: none;
+        @include grow();
+        z-index: 0;
+
+        &:hover, &:focus{
+            z-index: 1;
+        }
+    }
+
+    .active-filters, .inactive-filters{
+        position: relative;
+        display: block;
+
+        &>label{
+            position: relative;
+            display: block;
+            @include fontsize(0.8, 1.4);
+            margin-bottom: 2px;
+        }
+    }
+
+    .active-filters{
+        margin-top: 12px;
+    }
+
+    .inactive-filters{
+        .close-indicator{
+            display: none;
+        }
+    }
+}

@@ -8,7 +8,7 @@ namespace ProcessWire;
 		if ($this->tags) {
 			?>
 			<div class="col col-12 col-md-6">
-				<label><?= __('Select keywords:'); ?></label>
+				<label class="mb-0"><?= __('Select keywords:'); ?></label>
 				<?= $this->tags; ?>
 			</div>
 			<?php

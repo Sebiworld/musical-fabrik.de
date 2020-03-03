@@ -16,7 +16,7 @@ class ArticlesCarousel extends TwackComponent {
         }
 
 		foreach ($articlePages as $page) {
-			$this->addComponent('ArticleCard', ['directory' => 'partials', 'page' => $page, 'parameters' => $parameters]);
+			$this->addComponent('PageCard', ['directory' => '', 'page' => $page, 'parameters' => $parameters]);
 		}
 
 		$this->sliderAlign = 'left';

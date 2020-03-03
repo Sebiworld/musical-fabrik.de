@@ -46,7 +46,7 @@ class FormTemplate extends TwackComponent {
         }
 
         if (!($this->containerPage instanceof Page) || !$this->containerPage->id) {
-            throw new ComponentNotInitializedException('FormTemplate', $this->_('No valid container page was passed to the form.'));
+            throw new ComponentNotInitializedException('FormTemplate', 'No valid container page was passed to the form.');
         }
 
         $this->formOrigin = $this->containerPage->id;
@@ -75,7 +75,7 @@ class FormTemplate extends TwackComponent {
         }
 
         if (!($this->template instanceof Template) || !$this->template->id) {
-            throw new ComponentNotInitializedException('FormTemplate', $this->_('No form template was defined on the container page.'));
+            throw new ComponentNotInitializedException('FormTemplate', 'No form template was defined on the container page.');
         }
 
         if ($this->template->hasField('antispam_code')) {
@@ -99,7 +99,7 @@ class FormTemplate extends TwackComponent {
         }
 
         if ($this->getComponent('formOutput') instanceof TwackNullComponent) {
-            throw new ComponentNotInitializedException('FormTemplate', $this->_('No output class was found.'));
+            throw new ComponentNotInitializedException('FormTemplate', 'No output class was found.');
         }
 
         // When the template is set, it is run through and it is evaluated which fields must be generated and validated:

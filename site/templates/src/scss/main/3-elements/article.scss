@@ -37,20 +37,12 @@ article,
   }
 
   .intro,
-  .content-block p,
+  .content-block p, .content-block blockquote,
   .content-block > .content_collapsible {
     max-width: 100%;
     width: 38em;
   }
   
-//   .intro:not(.no-capital-letter):first-of-type:first-letter {
-//     font-family: $font-family-serif;
-//     font-size: 5.5rem;
-//     float: left;
-//     line-height: 0.6; /* from 1 */
-//     margin-right: 0.05em;
-//   }
-
   .title {
     margin-top: 4px;
     margin-bottom: 24px;

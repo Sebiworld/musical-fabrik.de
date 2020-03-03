@@ -35,9 +35,17 @@
     }
 
     .content_text {
-      & > p {
+      & > p,
+      & > blockquote {
         margin-left: auto;
         margin-right: auto;
+      }
+
+      & > blockquote {
+        display: inline;
+        &>p{
+          display: inline;
+        }
       }
     }
 

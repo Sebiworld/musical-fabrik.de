@@ -79,27 +79,75 @@ import { debounce, uniq, remove } from 'lodash-es';
 					if (typeof container === 'object' && container instanceof Element) {
 						const filtersbox = container.querySelector('.filters_component');
 						if (typeof filtersbox === 'object' && filtersbox instanceof Element) {
+							const inactiveFiltersElement = filtersbox.querySelector('.inactive-filters');
+							const activeFiltersElement = filtersbox.querySelector('.active-filters');
+
+							let activeIds = [];
+							if (typeof getParams === 'object' && getParams.tags !== undefined) {
+								if (typeof getParams.tags === 'string' && getParams.tags.length > 0) {
+									activeIds.push(getParams.tags);
+								} else if (typeof getParams.tags === 'object' && Array.isArray(getParams.tags)) {
+									activeIds = getParams.tags;
+								}
+							}
 
 							// Set keyword active
-							const activeTags = filtersbox.querySelectorAll('.tags_box .tag');
+							const activeTags = filtersbox.querySelectorAll('.tags_filter .tag');
+							let flagHasActive = false;
+							let flagHasInactive = false;
+
 							for (let i in activeTags) {
 								const tag = activeTags[i];
 								if (typeof tag !== 'object' || !(tag instanceof Element)) {
 									continue;
 								}
-								removeClass(tag, 'active');
-							}
 
-							if (typeof getParams === 'object' && getParams.tags !== undefined) {
-								if (typeof getParams.tags === 'string' && getParams.tags.length > 0) {
-									addClass(filtersbox.querySelector('.tags_box .tag[data-id="' + getParams.tags + '"]'), 'active');
-								} else if (typeof getParams.tags === 'object' && Array.isArray(getParams.tags)) {
-									for (let i in getParams.tags) {
-										const tagId = getParams.tags[i];
-										addClass(filtersbox.querySelector('.tags_box .tag[data-id="' + tagId + '"]'), 'active');
+								if (activeIds.indexOf(tag.getAttribute('data-id')) > -1) {
+									flagHasActive = true;
+									
+									if (!hasClass(tag, 'active')) {
+										addClass(tag, 'active');
+
+										if (tag.hasAttribute('data-bgcolor')) {
+											tag.style['background-color'] = '#' + tag.getAttribute('data-bgcolor');
+										}
+										if (tag.hasAttribute('data-color')) {
+											tag.style.color = '#' + tag.getAttribute('data-color');
+										}
+
+										if (typeof activeFiltersElement === 'object' && activeFiltersElement instanceof Element) {
+											activeFiltersElement.appendChild(tag);
+										}
+									}
+								} else {
+									flagHasInactive = true;
+
+									if (hasClass(tag, 'active')) {
+										removeClass(tag, 'active');
+
+										tag.style['background-color'] = null;
+										tag.style.color = null;
+
+										if (typeof inactiveFiltersElement === 'object' && inactiveFiltersElement instanceof Element) {
+											inactiveFiltersElement.appendChild(tag);
+										}
 									}
 								}
+
+								removeClass(tag, 'd-none');
 							}
+
+							if (flagHasActive && typeof activeFiltersElement === 'object' && activeFiltersElement instanceof Element) {
+								removeClass(activeFiltersElement, 'd-none');
+							} else {
+								addClass(activeFiltersElement, 'd-none');
+							}
+							if (flagHasInactive && typeof inactiveFiltersElement === 'object' && inactiveFiltersElement instanceof Element) {
+								removeClass(inactiveFiltersElement, 'd-none');
+							} else {
+								addClass(inactiveFiltersElement, 'd-none');
+							}
+
 						}
 					}
 
@@ -128,28 +176,31 @@ import { debounce, uniq, remove } from 'lodash-es';
 						}
 					}
 
-					let buttongroup = tileElement.querySelector('.btn-group');
-					if (typeof buttongroup !== 'object' || !(buttongroup instanceof Element)) {
-						grid.insertAdjacentHTML('beforebegin', '<div class="btn-group" role="group"></div>');
-						buttongroup = tileElement.querySelector('.btn-group');
+					let buttongroupElement = tileElement.querySelector('.btn-group');
+					if (typeof buttongroupElement !== 'object' || !(buttongroupElement instanceof Element)) {
+						buttongroupElement = createElementFromHTML('<div class="btn-group" role="group"></div>');
+						grid.append(buttongroupElement);
 					}
 
-					let mehrButton = buttongroup.querySelector('[data-action="load-more"]');
-					if (typeof mehrButton !== 'object' || !(mehrButton instanceof Element)) {
-						buttongroup.insertAdjacentHTML('beforeend', '<button class="btn btn-secondary" data-action="load-more" type="button">Weitere laden...</button>');
-						mehrButton = buttongroup.querySelector('[data-action="load-more"]');
+					let loadMoreBtnElement = buttongroupElement.querySelector('[data-action="load-more"]');
+					if (typeof loadMoreBtnElement !== 'object' || !(loadMoreBtnElement instanceof Element)) {
+						loadMoreBtnElement = createElementFromHTML('<button class="btn btn-project-primary" data-action="load-more" type="button">Weitere laden...</button>');
+						buttongroupElement.append(loadMoreBtnElement);
 					}
+
 					if (data.moreAvailable === true) {
 						let offset = grid.querySelectorAll('.masonry-grid-item').length;
 						if (data.lastElementIndex && !isNaN(parseInt(data.lastElementIndex))) {
 							offset = parseInt(data.lastElementIndex) + 1;
 						}
 
-						mehrButton.setAttribute('data-offset', offset);
-						mehrButton.style.display = '';
+						loadMoreBtnElement.setAttribute('data-offset', offset);
+						removeClass(loadMoreBtnElement, 'd-none');
 					} else {
-						mehrButton.style.display = 'none';
+						addClass(loadMoreBtnElement, 'd-none');
 					}
+
+					trigger(container, 'reinit');
 				}, function (response) {
 					if (logging) {
 						console.error('Fetch Error :-S', response);
@@ -315,12 +366,12 @@ import { debounce, uniq, remove } from 'lodash-es';
 				}
 
 				const requestUrl = tileElement.getAttribute('data-request-url');
-				if(typeof requestUrl !== 'string'){
+				if (typeof requestUrl !== 'string') {
 					continue;
 				}
 
 				let apikey = 'SEawMksSM8AAKnbAroSyU';
-				if(tileElement.hasAttribute('data-apikey')){
+				if (tileElement.hasAttribute('data-apikey')) {
 					apikey = tileElement.getAttribute('data-apikey');
 				}
 
@@ -347,15 +398,15 @@ import { debounce, uniq, remove } from 'lodash-es';
 				});
 				ajaxCall.importGet();
 
-				const moreBtn = tileElement.querySelector('[data-action="load-more"]');
-				if (typeof moreBtn === 'object' && moreBtn instanceof Element) {
+				const moreBtnElement = tileElement.querySelector('[data-action="load-more"]');
+				if (typeof moreBtnElement === 'object' && moreBtnElement instanceof Element) {
 
-					moreBtn.addEventListener("click", debounce(function (event) {
+					moreBtnElement.addEventListener("click", debounce(function (event) {
 						event.preventDefault();
 
 						ajaxCall.importGet();
 						let getParams = ajaxCall.getParams;
-						let offset = moreBtn.getAttribute('data-offset');
+						let offset = moreBtnElement.getAttribute('data-offset');
 						if (typeof offset === 'string' && offset.length > 0) {
 							getParams.start = offset;
 						} else {
@@ -380,7 +431,7 @@ import { debounce, uniq, remove } from 'lodash-es';
 						}
 
 						// Clicks on the keywords are intercepted, and instead an Ajax request to reload the content is triggered:
-						const tags = filtersbox.querySelectorAll('.tags_box .tag');
+						const tags = filtersbox.querySelectorAll('.tags_filter .tag');
 						if (tags.length > 0) {
 							for (let i in tags) {
 								const tag = tags[i];
@@ -394,6 +445,8 @@ import { debounce, uniq, remove } from 'lodash-es';
 									if (tagId.length < 1) {
 										return false;
 									}
+
+									addClass(this, 'd-none');
 
 									ajaxCall.importGet();
 									let getParams = ajaxCall.getParams;

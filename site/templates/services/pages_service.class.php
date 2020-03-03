@@ -3,7 +3,6 @@
 namespace ProcessWire;
 
 class PagesService extends TwackComponent {
-
     public function __construct($args) {
         parent::__construct($args);
         $this->projectPage = $this->getService('ProjectService')->getProjectPageWithFallback();
@@ -40,13 +39,20 @@ class PagesService extends TwackComponent {
         }
 
         // Filtering by free text:
-        if (isset($args['query'])) {
-            if (is_string($args['query'])) {
-                $selector[] = ['title|name|intro|contents.text', '%=', $args['query'], 'text'];
-            }
-        }
+        $results = new PageArray();
+        if (isset($args['query']) && is_string($args['query'])) {
+            // Sort query-matches in title and name higher than matches in other fields:
+            $titleSelector = $selector;
+            $titleSelector[] = ['title|name', '%=', $args['query'], 'text'];
+            $results = $this->wire('pages')->find($titleSelector);
 
-        $results = $this->wire('pages')->find($selector);
+            $selector[] = ['title|name|intro|contents.text', '%=', $args['query'], 'text'];
+            $secondaryResults = $this->wire('pages')->find($selector);
+            $secondaryResults->removeItems($results);
+            $results->add($secondaryResults);
+        }else{
+            $results = $this->wire('pages')->find($selector);
+        }
 
         // Store original number of articles without limit:
         $output->totalNumber = $results->count;
@@ -54,25 +60,26 @@ class PagesService extends TwackComponent {
         // The index of the last element:
         $output->lastElementIndex = 0;
 
+        $sortSelector = [];
         if (isset($args['start'])) {
-            $selector[]                  = ['start', '=', $args['start'], 'int'];
+            $sortSelector[]                  = ['start', '=', $args['start'], 'int'];
             $output->lastElementIndex    = intval($args['start']);
         } elseif (isset($args['offset'])) {
-            $selector[]                  = ['start', '=', $args['offset'], 'int'];
+            $sortSelector[]                  = ['start', '=', $args['offset'], 'int'];
             $output->lastElementIndex    = intval($args['offset']);
         } else {
-            $selector[] = ['start', 0];
+            $sortSelector[] = ['start', 0];
         }
 
         if (isset($args['limit']) && $args['limit'] >= 0) {
-            $selector[]                  = ['limit', '=', $args['limit'], 'int'];
+            $sortSelector[]                  = ['limit', '=', $args['limit'], 'int'];
             $output->lastElementIndex    = $output->lastElementIndex + intval($args['limit']);
         } elseif (!isset($args['limit'])) {
-            $selector[]                  = ['limit', 12];
+            $sortSelector[]                  = ['limit', 12];
             $output->lastElementIndex    = $output->lastElementIndex + 12;
         }
 
-        $results = $this->wire('pages')->find($selector);
+        $results = $results->find($sortSelector);
 
         // Are there any more posts that can be downloaded?
         $output->moreAvailable = $output->lastElementIndex + 1 < $output->totalNumber;
@@ -127,7 +134,7 @@ class PagesService extends TwackComponent {
         // Deliver HTML card for each post:
         $ajaxOutput['items'] = array();
         foreach ($result->items as $item) {
-            $component = $this->addComponent('ArticleCard', ['directory' => 'partials', 'page' => $item]);
+            $component = $this->addComponent('PageCard', ['directory' => '', 'page' => $item]);
             if ($component instanceof TwackNullComponent) {
                 continue;
             }

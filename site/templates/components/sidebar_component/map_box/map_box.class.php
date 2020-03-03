@@ -7,7 +7,7 @@ class MapBox extends TwackComponent {
         parent::__construct($args);
 
         if (!isset($args['useField']) || empty($args['useField'])) {
-            throw new ComponentNotInitializedException('MapBox', $this->_('Please enter the name of the map field that is to be used.'));
+            throw new ComponentNotInitializedException('MapBox', 'Please enter the name of the map field that is to be used.');
         }
 
         $this->map = $this->page->get($args['useField']);

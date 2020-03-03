@@ -20,7 +20,7 @@ import { ready } from "./classes/helpers.js";
 				let masonryGrid = new Masonry(element, {
 					itemSelector: ".masonry-grid-item",
 					columnWidth: ".masonry-grid-sizer",
-					percentPosition: true,
+					percentPosition: true
 				});
 
 				ImagesLoaded(element).on("progress", function () {

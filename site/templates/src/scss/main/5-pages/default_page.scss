@@ -18,6 +18,7 @@
 
   @include media-breakpoint-only(md) {
     padding-left: 20px;
+    padding-right: 20px;
   }
   @include media-breakpoint-down(xs) {
     padding: 40px 20px 20px 20px;

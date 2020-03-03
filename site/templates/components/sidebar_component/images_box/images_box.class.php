@@ -17,7 +17,7 @@ class ImagesBox extends TwackComponent {
         if ($galleriesOutput->items instanceof PageArray && count($galleriesOutput->items) > 0) {
 			$this->galleriesPage   = $galleriesService->getGalleriesPage();
 			$this->sidebarGallery = $galleriesOutput->items->first();
-			$this->addComponent('GalleryCard', ['directory' => 'partials', 'page' => $this->sidebarGallery, 'autoplay' => true, 'loop' => true]); 
+			$this->addComponent('PageCard', ['directory' => '', 'page' => $this->sidebarGallery, 'autoplay' => true, 'loop' => true]); 
         }
 	}
 }

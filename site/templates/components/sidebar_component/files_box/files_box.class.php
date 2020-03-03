@@ -9,7 +9,7 @@ class FilesBox extends TwackComponent {
         if (!isset($args['useField']) || empty($args['useField'])) {
             throw new ComponentNotInitializedException(
                 'FilesBox',
-                $this->_('Please enter the name of the file field from which the download files are to be taken.')
+                'Please enter the name of the file field from which the download files are to be taken.'
             );
         }
 

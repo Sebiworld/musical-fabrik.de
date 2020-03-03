@@ -6,7 +6,7 @@ if ($this->tags) {
 	<div class="box test tags_box tags <?= $this->selectable ? 'selectable' : ''; ?>">
 		<div class="tag-cloud">
 			<?php
-			$currentURL = $this->articlesPage->url;
+			$currentURL = $this->searchPage->url;
 
 			foreach ($this->tags as $tag) {
 
@@ -15,12 +15,9 @@ if ($this->tags) {
 					continue;
 				}
 
-				$params = $_GET;
-				if (!empty($tag['tags_on_click'])) {
-					$params['tags'] = $tag['tags_on_click'];
-				} else {
-					unset($params['tags']);
-				}
+				$params = [
+					'tags' => $tag['tags_on_click']
+				];
 
 				$url = $currentURL . '?' . http_build_query($params);
 				?>

@@ -32,7 +32,7 @@ class TagsBox extends TwackComponent {
 			shuffle($this->tags);
 		}
 
-		$this->articlesPage = wire('pages')->get('/')->children('template.name=articles_container')->first();
+		$this->searchPage = wire('pages')->find('template.name=search_page')->first();
 
 		$this->showCount = isset($args['show_count']) && !!$args['show_count'];
 		$this->addCssClassForAmount = !isset($args['add_css_class_for_amount']) || !!$args['add_css_class_for_amount'];
@@ -69,7 +69,11 @@ class TagsBox extends TwackComponent {
 
 		$output = array();
 		try {
-			$result = wire('db')->query("
+			if(isset($args['limit'])){
+				$args['limit'] = (int) $this->wire('sanitizer')->intUnsigned($args['limit']);
+			}
+
+			$query = wire('database')->prepare("
 				SELECT
 				field_tags.data as id,
 				field_title.data as title,
@@ -80,7 +84,7 @@ class TagsBox extends TwackComponent {
 				SELECT count(pages_id) as amount FROM field_tags GROUP BY data
 				) as amount_sub) as maximum,
 				count(CASE page.status WHEN page.status < 1025 THEN 1 else NULL end) as amount
-				". (isset($page) ? ", SUM(CASE WHEN seite.id=".$page->id." THEN 1 ELSE 0 END) as contained": '') ."
+				". (isset($page) ? ", SUM(CASE WHEN page.id=:page_id THEN 1 ELSE 0 END) as contained": '') ."
 				FROM field_tags
 				INNER JOIN field_title ON (field_tags.data=field_title.pages_id)
 				INNER JOIN pages ON (field_tags.data=pages.id)
@@ -91,21 +95,24 @@ class TagsBox extends TwackComponent {
 				"
 				.(isset($page) ? ' AND contained > 0': '')
 				." ORDER BY amount DESC, title ASC"
-				.(isset($args['limit']) ? ' LIMIT '.$args['limit'] : ''));
+				.(isset($args['limit']) ? ' LIMIT ' . $args['limit'] : ''));
 
-			while ($row = $result->fetch_assoc()) {
+			$queryParams = [];
+			if(isset($page)){
+				$queryParams[':page_id'] = $page->id;
+			}
+
+			$query->execute($queryParams);
+
+			while ($row = $query->fetch(\PDO::FETCH_ASSOC)) {
 				$row['active'] = in_array($row['id'], $this->getActive());
 				$row['tags_on_click'] = $row['id'];
-
-				if ($this->selectable) {
-					$row['tags_on_click'] = $this->getActive();
-					if ($row['active']) {
-						// The selected keyword is active, so it should be removed when you click on it.
-						$row['tags_on_click'] = array_diff($row['tags_on_click'], [$row['id']]);
-					} elseif (!empty($this->getActive())) {
-						// The selected keyword is not active, but there are active keywords. When clicking, the keyword must be added.
-						$row['tags_on_click'][] = $row['id'];
-					}
+				if ($row['active']) {
+					// The selected keyword is active, so it should be removed when you click on it.
+					$row['tags_on_click'] = array_diff($row['tags_on_click'], [$row['id']]);
+				} elseif (!empty($this->getActive())) {
+					// The selected keyword is not active, but there are active keywords. When clicking, the keyword must be added.
+					$row['tags_on_click'][] = $row['id'];
 				}
 				$output[] = $row;
 			}

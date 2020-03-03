@@ -23,7 +23,7 @@ class ArticlesTiles extends TwackComponent {
         }
 
         foreach ($articlesPages as $page) {
-            $this->addComponent('ArticleCard', ['directory' => 'partials', 'page' => $page, 'parameters' => $parameters]);
+            $this->addComponent('PageCard', ['directory' => '', 'page' => $page, 'parameters' => $parameters]);
         }
 
         $this->articlesPage = $this->articlesService->getArticlesPage();

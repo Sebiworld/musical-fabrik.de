@@ -12,7 +12,7 @@ class SponsorsBox extends TwackComponent {
                 $projectPage = $args['projectPage'];
             }
             if (!($projectPage instanceof Page) || !$projectPage->id) {
-                throw new ComponentNotInitializedException('SponsorsBox', $this->_('No project page was found. '));
+                throw new ComponentNotInitializedException('SponsorsBox', 'No project page was found. ');
             }
 
             $this->title = $this->_('Sponsors');
@@ -26,7 +26,7 @@ class SponsorsBox extends TwackComponent {
             }
 
             if (!$projectPage->template->hasField($useField)) {
-                throw new ComponentNotInitializedException('SponsorsBox', sprintf($this->_('The required field was not found on the project page: "%1$s"'), $useField));
+                throw new ComponentNotInitializedException('SponsorsBox', sprintf('The required field was not found on the project page: "%1$s"'), $useField);
             }
 
             $sponsors = array();

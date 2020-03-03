@@ -22,6 +22,6 @@ class FiltersComponent extends TwackComponent {
         }
 
         // Add keyword selection:
-        $this->addComponent('TagsFilter', ['directory' => 'partials', 'name' => 'tags', 'active' => $this->tags, 'show_count' => true]);
+        $this->addComponent('TagsFilter', ['directory' => 'partials', 'name' => 'tags', 'active' => $this->tags, 'show_count' => false]);
     }
 }

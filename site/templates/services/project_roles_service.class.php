@@ -25,7 +25,7 @@ class ProjectRolesService extends TwackComponent {
 
         $this->portraitsContainer = wire('pages')->find('template.name=portraits_container, include=hidden, has_parent=' . $this->projectPage->id);
         if ($this->portraitsContainer->count < 1) {
-            throw new ComponentNotInitialisedException('ProjectRolesService', $this->_('No matching Portraits-Container were found.'));
+            throw new ComponentNotInitializedException('ProjectRolesService', 'No matching Portraits-Container were found.');
         }
     }
 

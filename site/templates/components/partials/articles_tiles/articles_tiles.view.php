@@ -33,13 +33,6 @@ if ($this->filters) {
 		</div>
 
 		<?php
-        if ($this->moreAvailable) {
-            ?>
-			<div class="btn-group" role="group">
-				<button type="button" class="btn btn-project-primary" data-action="load-more" data-offset="<?= $this->lastElementIndex + 1; ?>"><?= __('Load more...'); ?></button>
-			</div>
-			<?php
-        }
     } else {
         ?>
 		<div class="masonry-grid">
@@ -52,5 +45,10 @@ if ($this->filters) {
 		</div>
 		<?php
     }
-    ?>
+	?>
+	<div class="btn-group-wrapper">
+		<div class="btn-group" role="group">
+			<button type="button" class="btn btn-project-primary <?= !$this->moreAvailable ? 'd-none' : ''; ?>" data-action="load-more" data-offset="<?= $this->lastElementIndex + 1; ?>"><?= __('Load more...'); ?></button>
+		</div>
+	</div>
 </div>

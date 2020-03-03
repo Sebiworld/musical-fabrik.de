@@ -1,6 +1,8 @@
 @import "./globals/index";
 
 .results-wrapper{
+	position: relative;
+	display: block;
 	margin-left: -8px;
 	margin-right: -8px;
 
@@ -8,10 +10,11 @@
 		margin: 8px;
 	}
 
-	&>.btn-group{
-		margin: 8px;
+	.btn-group-wrapper{
 		display: block;
+		position: relative;
 		text-align: center;
+		margin: 8px;
 	}
 
 	.masonry-grid{
@@ -28,14 +31,14 @@
 		@include media-breakpoint-down('xl') {
 			.masonry-grid-sizer,
 			.masonry-grid-item {
-				width: 33%;
+				width: 33.3%;
 			}
 		}
 
 		@include media-breakpoint-down('lg') {
 			.masonry-grid-sizer,
 			.masonry-grid-item {
-				width: 33%;
+				width: 33.3%;
 			}
 		}
 

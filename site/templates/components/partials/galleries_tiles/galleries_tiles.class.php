@@ -18,7 +18,7 @@ class GalleriesTiles extends TwackComponent {
         $galleriesPages              = $galleries->items;
 
         foreach ($galleriesPages as $page) {
-            $this->addComponent('GalleryCard', ['directory' => 'partials', 'page' => $page]);
+            $this->addComponent('PageCard', ['directory' => '', 'page' => $page]);
         }
 
         $this->galleriesPage = $this->galleriesService->getGalleriesPage();

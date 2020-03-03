@@ -105,6 +105,14 @@ class ProjectPage extends TwackComponent {
             }
         }
 
+        if ($this->childComponents) {
+			foreach ($this->childComponents as $component) {
+				$ajax = $component->getAjax();
+				if(empty($ajax) || !is_array($ajax)) continue;
+				$output = array_merge($output, $ajax);
+			}
+		}
+
         return $output;
     }
 }

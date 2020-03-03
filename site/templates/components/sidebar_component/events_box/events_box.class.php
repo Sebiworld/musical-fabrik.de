@@ -20,19 +20,19 @@ class EventsBox extends TwackComponent {
             $projectPage = $args['projectPage'];
         }
         if (!($projectPage instanceof Page) || !$projectPage->id) {
-            throw new ComponentNotInitializedException('EventsBox', $this->_('No project page found.'));
+            throw new ComponentNotInitializedException('EventsBox', 'No project page found.');
         }
 
         if (!isset($args['useField']) || !is_string($args['useField']) || empty($args['useField'])) {
             $args['useField'] = 'datetime_from';
         }
         if (!wire('fields')->get($args['useField'])) {
-            throw new ComponentNotInitializedException('EventsBox', $this->_('There is no field with the name "%1$s"!'), $args['useField']);
+            throw new ComponentNotInitializedException('EventsBox', 'There is no field with the name "%1$s"!', $args['useField']);
         }
 
         $performanceCategory = wire('pages')->get('template.name=event_category, name=auffuehrung, include=all');
         if (!($performanceCategory->id . '')) {
-            throw new ComponentNotInitializedException('EventsBox', $this->_('No performance category page found.'));
+            throw new ComponentNotInitializedException('EventsBox', 'No performance category page found.');
         }
 
         $eventsService       = $this->getService('EventsService');

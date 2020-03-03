@@ -221,7 +221,7 @@ class EventsService extends TwackComponent {
 				continue;
 			}
 
-			$component = $this->addComponent('EventCard', ['directory' => 'partials', 'page' => $event]);
+			$component = $this->addComponent('PageCard', ['directory' => '', 'page' => $event]);
 			if ($component instanceof TwackNullComponent) {
 				continue;
 			}

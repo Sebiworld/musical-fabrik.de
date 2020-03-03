@@ -65,9 +65,16 @@ class TagsFilter extends TwackComponent {
 			$page = $args['use_page'];
 		}
 
-		$output = array();
+		$output = array(
+			'active' => [],
+			'inactive' => []
+		);
 		try {
-			$result = wire('db')->query("
+			if(isset($args['limit'])){
+				$args['limit'] = (int) $this->wire('sanitizer')->intUnsigned($args['limit']);
+			}
+
+			$query = wire('database')->prepare("
 				SELECT
 				field_tags.data as id,
 				field_title.data as title,
@@ -78,7 +85,7 @@ class TagsFilter extends TwackComponent {
 				SELECT count(pages_id) as amount FROM field_tags GROUP BY data
 				) as amount_sub) as maximum,
 				count(CASE page.status WHEN page.status < 1025 THEN 1 else NULL end) as amount
-				". (isset($page) ? ", SUM(CASE WHEN seite.id=".$page->id." THEN 1 ELSE 0 END) as contained": '') ."
+				". (isset($page) ? ", SUM(CASE WHEN page.id=:page_id THEN 1 ELSE 0 END) as contained": '') ."
 				FROM field_tags
 				INNER JOIN field_title ON (field_tags.data=field_title.pages_id)
 				INNER JOIN pages ON (field_tags.data=pages.id)
@@ -89,9 +96,17 @@ class TagsFilter extends TwackComponent {
 				"
 				.(isset($page) ? ' AND contained > 0': '')
 				." ORDER BY amount DESC, title ASC"
-				.(isset($args['limit']) ? ' LIMIT '.$args['limit'] : ''));
+				.(isset($args['limit']) ? ' LIMIT ' . $args['limit'] : ''));
+			$query->closeCursor();
 
-			while ($row = $result->fetch_assoc()) {
+			$queryParams = [];
+			if(isset($page)){
+				$queryParams[':page_id'] = $page->id;
+			}
+
+			$query->execute($queryParams);
+
+			while ($row = $query->fetch(\PDO::FETCH_ASSOC)) {
 				$row['active'] = in_array($row['id'], $this->getActive());
 				$row['tags_on_click'] = $row['id'];
 				$row['tags_on_click'] = $this->getActive();
@@ -102,7 +117,16 @@ class TagsFilter extends TwackComponent {
 					// The selected keyword is not active, but there are active keywords. When clicking, the keyword must be added.
 					$row['tags_on_click'][] = $row['id'];
 				}
-				$output[] = $row;
+
+				if(!empty($row['color'])){
+					$row['color_over'] = $this->hexToHsl($row['color'])->lightness > 0.49 ? '333333' : 'ffffff';
+				}
+
+				if($row['active']){
+					$output['active'][] = $row;
+				}else{
+					$output['inactive'][] = $row;
+				}
 			}
 		} catch (\Exception $e) {
 			Twack::devEcho($e->getMessage());
@@ -110,4 +134,39 @@ class TagsFilter extends TwackComponent {
 
 		return $output;
 	}
+
+	protected function hexToHsl($hex) {
+        $hex = array($hex[0].$hex[1], $hex[2].$hex[3], $hex[4].$hex[5]);
+        $rgb = array_map(function($part) {
+            return hexdec($part) / 255;
+        }, $hex);
+    
+        $max = max($rgb);
+        $min = min($rgb);
+    
+        $l = ($max + $min) / 2;
+    
+        if ($max == $min) {
+            $h = $s = 0;
+        } else {
+            $diff = $max - $min;
+            $s = $l > 0.5 ? $diff / (2 - $max - $min) : $diff / ($max + $min);
+    
+            switch($max) {
+                case $rgb[0]:
+                    $h = ($rgb[1] - $rgb[2]) / $diff + ($rgb[1] < $rgb[2] ? 6 : 0);
+                    break;
+                case $rgb[1]:
+                    $h = ($rgb[2] - $rgb[0]) / $diff + 2;
+                    break;
+                case $rgb[2]:
+                    $h = ($rgb[0] - $rgb[1]) / $diff + 4;
+                    break;
+            }
+    
+            $h /= 6;
+        }
+    
+        return (object) Array('hue' => $h, 'saturation' => $s, 'lightness' => $l);
+    }
 }

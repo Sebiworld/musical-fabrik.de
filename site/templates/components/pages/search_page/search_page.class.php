@@ -3,8 +3,6 @@
 namespace ProcessWire;
 
 class SearchPage extends TwackComponent {
-    protected $overviewPagesService;
-
     public function __construct($args) {
         parent::__construct($args);
 
@@ -14,7 +12,7 @@ class SearchPage extends TwackComponent {
         }
         $this->requestUrl = '/api/page' . $searchPage->url;
 
-        $this->searchableTemplates = array('article', 'project', 'project_voice_company', 'home', 'default_page', 'area', 'project_roles_container', 'project_role');
+        $this->searchableTemplates = array('article', 'gallery', 'project', 'project_voice_company', 'home', 'default_page', 'area', 'project_roles_container', 'project_role');
 
         $filters = array(
             'charLimit' => 150
@@ -51,7 +49,10 @@ class SearchPage extends TwackComponent {
         }
 
         foreach ($resultPages as $page) {
-            $this->addComponent('ArticleCard', ['directory' => 'partials', 'page' => $page, 'parameters' => $parameters]);
+            $attributes = array(
+                'data-id' => $page->id
+            );
+            $this->addComponent('PageCard', ['directory' => '', 'page' => $page, 'parameters' => $parameters, 'attributes' => $attributes, 'hoverAutoplay' => true]);
         }
 
         $this->addScript('ajaxmasonry.js', array(

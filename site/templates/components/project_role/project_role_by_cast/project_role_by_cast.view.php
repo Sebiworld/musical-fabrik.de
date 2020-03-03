@@ -7,9 +7,9 @@ foreach($this->allCasts as $cast){
 	// Check if this cast is at all in this season:
 	if($this->portraits->find('season_'.$this->season->id.'_'.$cast->id.'=1')->count > 0){
 		$casts->add($cast);
-		if(!empty($cast->text)){
+		// if(!empty($cast->text)){
 			$castInfosAvailable = true;
-		}
+		// }
 	}
 }
 

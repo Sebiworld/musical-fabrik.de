@@ -96,14 +96,6 @@ class General extends TwackComponent {
         $this->addComponent('FooterComponent', ['globalName' => 'footer']);
         $this->addComponent('SidebarComponent', ['globalName' => 'sidebar', 'directory' => '']);
 
-        $modalKomponente = $this->addComponent('Modals', ['globalName' => 'modals', 'directory' => '']);
-        $imagemodal       = $modalKomponente->addComponent('ImageModal', [
-            'id'         => 'singleimage_modal',
-            'globalName' => 'singleimage_modal',
-            'single' => true
-        ]);
-        $this->addGlobalParameters(['singleimageModalID' => $imagemodal->getID()]);
-
         $this->addComponent('FormsComponent', ['globalName' => 'forms', 'directory' => '']);
 
         // Add default component automatically. Can be removed by $general->resetComponents(); again
