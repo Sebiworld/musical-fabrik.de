@@ -12,7 +12,7 @@ class TagsField extends TwackComponent {
 		}
 	}
 
-	public function getAjax(){
+	public function getAjax($ajaxArgs = []){
 		$output = array();
 
 		if($this->tags instanceof PageArray){

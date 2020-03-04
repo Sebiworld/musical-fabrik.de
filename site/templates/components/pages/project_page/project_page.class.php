@@ -88,26 +88,28 @@ class ProjectPage extends TwackComponent {
         return false;
     }
 
-    public function getAjax() {
-        $output = array(
-            'isProjectPage' => $this->isProjectPage
-        );
+    public function getAjax($ajaxArgs = []) {
+        $output = array();
 
-        if ($this->isProjectPage) {
-            $output['project'] = $this->getAjaxOf($this->projectPage);
+        if (empty($ajaxArgs['showOnly']) || $ajaxArgs['showOnly'] === 'projectinfo') {
+            $output['isProjectPage'] = $this->isProjectPage;
 
-            if ($this->projectPage->main_image) {
-                $output['project']['main_image'] = $this->getAjaxOf($this->projectPage->main_image);
-            }
+            if ($this->isProjectPage) {
+                $output['project'] = $this->getAjaxOf($this->projectPage);
 
-            if ($this->projectPage->color) {
-                $output['color'] = $this->projectPage->color;
+                if ($this->projectPage->main_image) {
+                    $output['project']['main_image'] = $this->getAjaxOf($this->projectPage->main_image);
+                }
+
+                if ($this->projectPage->color) {
+                    $output['color'] = $this->projectPage->color;
+                }
             }
         }
 
         if ($this->childComponents) {
 			foreach ($this->childComponents as $component) {
-				$ajax = $component->getAjax();
+				$ajax = $component->getAjax($ajaxArgs);
 				if(empty($ajax) || !is_array($ajax)) continue;
 				$output = array_merge($output, $ajax);
 			}

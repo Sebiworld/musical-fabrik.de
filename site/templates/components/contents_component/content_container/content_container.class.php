@@ -7,7 +7,7 @@ class ContentContainer extends TwackComponent {
         parent::__construct($args);
     }
 
-    public function getAjax() {
+    public function getAjax($ajaxArgs = []) {
         $output = array(
             'type' => 'text',
             'depth' => $this->page->depth,

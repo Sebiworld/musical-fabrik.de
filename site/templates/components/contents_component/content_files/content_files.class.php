@@ -36,7 +36,7 @@ class ContentFiles extends TwackComponent {
         ));
     }
 
-    public function getAjax() {
+    public function getAjax($ajaxArgs = []) {
         $output = array(
             'type' => 'files',
             'depth' => $this->page->depth,

@@ -25,8 +25,7 @@ class TwackAccess {
             throw new InternalServererrorException('Twack module not found.');
         }
         $twackModule                       = wire('modules')->get('Twack');
-        $twackModule->forceAjax            = true;
-        $twackModule->forcePlainAjaxOutput = true;
+        $twackModule->enableAjaxResponse();
 
         if (!$page->viewable()) {
             throw new ForbiddenException();

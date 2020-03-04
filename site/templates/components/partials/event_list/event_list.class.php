@@ -8,7 +8,7 @@ class EventList extends TwackComponent {
 		$this->eventsService = $this->getService('EventsService');
 	}
 
-	public function getAjax() {
-		return $this->eventsService->getAjax();
+	public function getAjax($ajaxArgs = []) {
+		return $this->eventsService->getAjax($ajaxArgs);
 	}
 }

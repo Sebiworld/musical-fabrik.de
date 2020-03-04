@@ -12,7 +12,7 @@ class DefaultCard extends TwackComponent {
 		}
 	}
 
-	public function getAjax(){
+	public function getAjax($ajaxArgs = []){
 		$output = $this->getAjaxOf($this->page);
 		$output['datetime_from'] = $this->date;
 		$output['intro'] = $this->page->intro;

@@ -7,7 +7,7 @@ class ContentImage extends TwackComponent {
         parent::__construct($args);
     }
 
-    public function getAjax() {
+    public function getAjax($ajaxArgs = []) {
         $output = array(
             'type' => 'image',
             'depth' => $this->page->depth,

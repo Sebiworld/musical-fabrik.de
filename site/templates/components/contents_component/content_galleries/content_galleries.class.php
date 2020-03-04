@@ -23,12 +23,12 @@ class ContentGalleries extends TwackComponent {
         }
     }
 
-    public function getAjax() {
+    public function getAjax($ajaxArgs = []) {
         $output = array();
 
         if ($this->childComponents) {
             foreach ($this->childComponents as $component) {
-                $ajax = $component->getAjax();
+                $ajax = $component->getAjax($ajaxArgs);
                 if (empty($ajax)) {
                     continue;
                 }

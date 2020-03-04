@@ -15,8 +15,6 @@ scrollinator.addObservedElements('section');
 
 // Bootstrap will be reloaded:
 (async () => {
-	// const progressively = await import(/* webpackChunkName: "progressively" */ "progressively");
-	
 	await import (/* webpackChunkName: "bootstrap-js" */ 'bootstrap/js/src/util');
 	await import (/* webpackChunkName: "bootstrap-js" */ 'bootstrap/js/src/alert');
 	await import (/* webpackChunkName: "bootstrap-js" */ 'bootstrap/js/src/button');
@@ -30,18 +28,11 @@ scrollinator.addObservedElements('section');
 	// await import (/* webpackChunkName: "bootstrap-js" */ 'bootstrap/js/src/toast');
 	await import (/* webpackChunkName: "bootstrap-js" */ 'bootstrap/js/src/tooltip');
 
+	window.lazySizesConfig = window.lazySizesConfig || {};
+	window.lazySizesConfig.init = false;
+	const {ImageHandler: ImageHandler} = await import(/* webpackChunkName: "image-handler" */ './classes/ImageHandler');
+
 	ready(function() {
-		// Progressively for dynamically loading images:
-		// progressively.init({
-		// 	onLoad: function(elem) {
-		// 		trigger(elem, "img-loaded");
-		// 	},
-		// });
-
-		// $('a[data-toggle="pill"], a[data-toggle="tab"]').on("shown.bs.tab", function(e) {
-		// 	progressively.render();
-		// });
-
 		// Hamburgericon-Animation:
 		// Dropdowns:
 		$(".dropdown.has-hamburger").on("show.bs.dropdown", function() {
@@ -81,5 +72,7 @@ scrollinator.addObservedElements('section');
 				$(this).removeClass("not-active");
 			}
 		});
+
+		ImageHandler.init();
 	});
 })();

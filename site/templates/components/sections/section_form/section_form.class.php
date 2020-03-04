@@ -38,20 +38,4 @@ class SectionForm extends TwackComponent {
 				]);
 		}
 	}
-
-	// public function getAjax() {
-	// 	$output = array();
-		
-	// 	$output = $this->form->getAjax();
-
-	// 	if ($this->childComponents) {
-	// 		foreach ($this->childComponents as $component) {
-	// 			$ajax = $component->getAjax();
-	// 			if(empty($ajax)) continue;
-	// 			$output = array_merge($output, $ajax);
-	// 		}
-	// 	}
-
-	// 	return $output;
-	// }
 }

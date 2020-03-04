@@ -44,16 +44,6 @@ class General extends TwackComponent {
             'absolute' => true
         ));
 
-
-        $this->addScript('image-loading.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
-        $this->addScript('legacy/image-loading.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
-
         $this->addScript('general.js', array(
             'path'     => wire('config')->urls->templates . 'assets/js/',
             'absolute' => true
@@ -242,12 +232,17 @@ class General extends TwackComponent {
         }
     }
 
-    public function getAjax() {
+    public function getAjax($ajaxArgs = []) {
+
+        if(!empty($this->wire('input')->get->text('showOnly'))){
+            $ajaxArgs['showOnly'] = $this->wire('input')->text('showOnly');
+        }
+
         $output = $this->getAjaxOf($this->page);
 
         if ($this->childComponents) {
             foreach ($this->childComponents as $component) {
-                $ajax = $component->getAjax();
+                $ajax = $component->getAjax($ajaxArgs);
                 if (empty($ajax)) {
                     continue;
                 }

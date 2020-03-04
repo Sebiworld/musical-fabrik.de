@@ -39,7 +39,7 @@ class ArticlesTiles extends TwackComponent {
         ));
     }
 
-    public function getAjax() {
-        return $this->articlesService->getAjax();
+    public function getAjax($ajaxArgs = []) {
+        return $this->articlesService->getAjax($ajaxArgs);
     }
 }

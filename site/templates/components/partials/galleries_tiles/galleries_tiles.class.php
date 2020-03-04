@@ -34,7 +34,7 @@ class GalleriesTiles extends TwackComponent {
         ));
     }
 
-    public function getAjax() {
-        return $this->galleriesService->getAjax();
+    public function getAjax($ajaxArgs = []) {
+        return $this->galleriesService->getAjax($ajaxArgs);
     }
 }

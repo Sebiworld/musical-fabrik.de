@@ -31,7 +31,7 @@ class GalleriesService extends TwackComponent {
         return $this->getService('PagesService')->getResults($args, [['template', 'gallery']]);
     }
 
-    public function getAjax() {
-        return $this->getService('PagesService')->getAjax([['template', 'gallery']]);
+    public function getAjax($ajaxArgs = []) {
+        return $this->getService('PagesService')->getAjax(['selector' => [['template', 'gallery']]]);
     }
 }

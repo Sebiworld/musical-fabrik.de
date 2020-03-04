@@ -97,7 +97,7 @@ class PagesService extends TwackComponent {
         return $output;
     }
 
-    public function getAjax($selector = array()) {
+    public function getAjax($ajaxArgs = array()) {
         $ajaxOutput = array();
 
         $args = wire('input')->post('args');
@@ -125,6 +125,11 @@ class PagesService extends TwackComponent {
             $args['start'] = wire('input')->get('offset');
         }
 
+        $selector = [];
+        if(isset($ajaxArgs['selector']) && is_array($ajaxArgs['selector'])){
+            $selector = $ajaxArgs['selector'];
+        }
+
         $args['charLimit']                       = 150;
         $result                                  = $this->getResults($args, $selector);
         $ajaxOutput['totalNumber']               = $result->totalNumber;
@@ -139,7 +144,7 @@ class PagesService extends TwackComponent {
                 continue;
             }
 
-            $ajaxOutput['items'][] = $component->getAjax();
+            $ajaxOutput['items'][] = $component->getAjax($ajaxArgs);
         }
 
         return $ajaxOutput;

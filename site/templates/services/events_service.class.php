@@ -165,7 +165,7 @@ class EventsService extends TwackComponent {
 		return $output;
 	}
 
-	public function getAjax(){
+	public function getAjax($ajaxArgs = []){
 		$ajaxOutput = array();
 
 		$args = wire('input')->post('args');
@@ -226,7 +226,7 @@ class EventsService extends TwackComponent {
 				continue;
 			}
 
-			$ajaxOutput['events'][] = $component->getAjax();
+			$ajaxOutput['events'][] = $component->getAjax($ajaxArgs);
 
 			$locations->add(wire('pages')->find("template.name=location, location.owner.has_parent={$event->id}, check_access=0"));
 

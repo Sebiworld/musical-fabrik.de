@@ -77,7 +77,7 @@ class DefaultPage extends TwackComponent {
 		// Twack::devEcho($this->page->main_image->placeholder_svg);
 	}
 
-	public function getAjax() {
+	public function getAjax($ajaxArgs = []) {
 		$output = array(
 			'title' => $this->title
 		);
@@ -103,20 +103,20 @@ class DefaultPage extends TwackComponent {
 		}
 
 		if ($this->tags && $this->tags instanceof TwackComponent) {
-			$tagAjax = $this->tags->getAjax();
+			$tagAjax = $this->tags->getAjax($ajaxArgs);
 			if(!empty($tagAjax)){
 				$output['tags'] = $tagAjax;
 			}
 		}
 
 		if ($this->contents && $this->contents instanceof TwackComponent) {
-			$output['contents'] = $this->contents->getAjax();
+			$output['contents'] = $this->contents->getAjax($ajaxArgs);
 		}
 
 		// The component is registered under the global name "mainContent". From the template files some components are added manually.
 		if ($this->childComponents) {
 			foreach ($this->childComponents as $component) {
-				$ajax = $component->getAjax();
+				$ajax = $component->getAjax($ajaxArgs);
 				if(empty($ajax)) continue;
 				$output = array_merge($output, $ajax);
 			}

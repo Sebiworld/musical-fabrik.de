@@ -26,7 +26,7 @@ class ContentYoutubeVideo extends TwackComponent {
         ));
     }
 
-    public function getAjax() {
+    public function getAjax($ajaxArgs = []) {
         $output = array(
             'type'       => 'youtube-video',
             'depth'      => $this->page->depth,

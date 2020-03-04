@@ -74,7 +74,7 @@ class ContentGallery extends TwackComponent {
 		}
 	}
 
-	public function getAjax() {
+	public function getAjax($ajaxArgs = []) {
         $output = array(
             'type' => 'gallery',
             'depth' => $this->page->depth,

@@ -139,7 +139,7 @@ class FormTemplate extends TwackComponent {
         return wire('session')->get('antispam_code_' . $this->formOrigin);
     }
 
-    public function getAjax() {
+    public function getAjax($ajaxArgs = []) {
         // $this->evaluateRequest();
         return array();
     }

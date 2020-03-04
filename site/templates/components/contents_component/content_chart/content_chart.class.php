@@ -33,7 +33,7 @@ class ContentChart extends TwackComponent {
 	 * Returns information about a certain diagram via Ajax
 	 * @return array
 	 */
-	public function getAjax() {
+	public function getAjax($ajaxArgs = []) {
 		$ausgabe = array(
 			'type' => $this->chart->type
 		);

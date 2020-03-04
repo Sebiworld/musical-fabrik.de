@@ -9,7 +9,7 @@ class EventCard extends TwackComponent {
 		$this->projectService = $this->getService("ProjectService");
 	}
 
-	public function getAjax(){
+	public function getAjax($ajaxArgs = []){
 		$output = $this->getAjaxOf($this->page);
 		if(isset($output['url'])) unset($output['url']);
 		if(isset($output['httpUrl'])) unset($output['httpUrl']);

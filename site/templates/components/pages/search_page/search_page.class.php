@@ -65,7 +65,7 @@ class SearchPage extends TwackComponent {
         ));
     }
 
-    public function getAjax() {
-        return $this->pagesService->getAjax([['template', $this->searchableTemplates]]);
+    public function getAjax($ajaxArgs = []) {
+        return $this->pagesService->getAjax(['selector' => [['template', $this->searchableTemplates]]]);
     }
 }

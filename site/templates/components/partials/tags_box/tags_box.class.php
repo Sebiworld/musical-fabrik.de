@@ -38,7 +38,7 @@ class TagsBox extends TwackComponent {
 		$this->addCssClassForAmount = !isset($args['add_css_class_for_amount']) || !!$args['add_css_class_for_amount'];
 	}
 
-	public function getAjax() {
+	public function getAjax($ajaxArgs = []) {
 		$tags = $this->getTagsWithWeight();
 		return array(
 			'tags' => $tags

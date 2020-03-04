@@ -49,7 +49,7 @@ class ContentCollapsible extends TwackComponent {
 		}
 	}
 
-	public function getAjax() {
+	public function getAjax($ajaxArgs = []) {
         $output = array(
             'type' => 'collapsible',
 			'depth' => $this->page->depth,

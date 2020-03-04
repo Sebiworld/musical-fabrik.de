@@ -53,7 +53,7 @@ class GalleryCard extends TwackComponent {
 		return $images->slice(0, 10);
 	}
 
-	public function getAjax(){
+	public function getAjax($ajaxArgs = []){
 		$output = $this->getAjaxOf($this->page);
 		$output['datetime_from'] = $this->page->getUnformatted('datetime_from');
 		$output['intro'] = $this->page->intro;

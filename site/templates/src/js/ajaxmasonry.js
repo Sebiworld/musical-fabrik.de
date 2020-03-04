@@ -10,7 +10,10 @@ import { debounce, uniq, remove } from 'lodash-es';
 		await import('imagesloaded');
 		const msryLoad = await import(/* webpackChunkName: "masonry-import" */ 'masonry-layout');
 		const Masonry = msryLoad.default;
-		const progressively = await import(/* webpackChunkName: "bildtools" */ 'progressively');
+		// const progressively = await import(/* webpackChunkName: "bildtools" */ 'progressively');
+
+		const {MfSwiper: MfSwiper} = await import(/* webpackChunkName: "mf-slider" */ './classes/MfSwiper');
+		// const {ImageLoading: ImageLoading} = await import(/* webpackChunkName: "image-loading" */ './classes/ImageLoading');
 
 		const logging = false;
 
@@ -200,7 +203,7 @@ import { debounce, uniq, remove } from 'lodash-es';
 						addClass(loadMoreBtnElement, 'd-none');
 					}
 
-					trigger(container, 'reinit');
+					MfSwiper.initElements(container);
 				}, function (response) {
 					if (logging) {
 						console.error('Fetch Error :-S', response);
@@ -232,12 +235,12 @@ import { debounce, uniq, remove } from 'lodash-es';
 				removeElements(gridItems);
 
 				grid.masonry('reloadItems').masonry('layout');
-				progressively.drop();
-				progressively.init({
-					onLoad: function (elem) {
-						trigger(elem, "img-loaded");
-					}
-				});
+				// progressively.drop();
+				// progressively.init({
+				// 	onLoad: function (elem) {
+				// 		trigger(elem, "img-loaded");
+				// 	}
+				// });
 
 				// Display message:
 				const noResultsElements = tileElement.querySelectorAll('.no-results');
@@ -382,12 +385,12 @@ import { debounce, uniq, remove } from 'lodash-es';
 
 				let msnry = Masonry.data(grid);
 				msnry.on('layoutComplete', function () {
-					progressively.drop();
-					progressively.init({
-						onLoad: function (elem) {
-							trigger(elem, "img-loaded");
-						}
-					});
+					// progressively.drop();
+					// progressively.init({
+					// 	onLoad: function (elem) {
+					// 		trigger(elem, "img-loaded");
+					// 	}
+					// });
 				});
 
 				const ajaxCall = new AjaxCall({
