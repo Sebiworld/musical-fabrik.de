@@ -10,6 +10,8 @@ class TagsField extends TwackComponent {
 		if ($this->page->template->hasField($useField) && $this->page->get($useField) instanceof PageArray) {
 			$this->tags = $this->page->get($useField);
 		}
+
+		$this->searchPage = wire('pages')->find('template.name=search_page')->first();
 	}
 
 	public function getAjax($ajaxArgs = []){

@@ -28,7 +28,7 @@ class SebiMusicalFabrikFunctions extends WireData implements Module {
         // Reload Backend JS:
         $this->addHookBefore('Page::render', $this, 'hookPageRender');
 
-        $this->addHook('LazyCron::every30Seconds', $this, 'cleanup');
+        $this->addHook('LazyCron::every2Days', $this, 'cleanup');
     }
 
     public function cleanup(HookEvent $event) {

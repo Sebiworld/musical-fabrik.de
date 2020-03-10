@@ -37,6 +37,9 @@ yarn.lock
 # !/site/modules/CustomModul
 !/site/modules/SebiMusicalFabrikFunctions
 !/site/modules/FieldtypeProjectRoles
+!/site/modules/PageAccessApplications
+!/site/modules/PageAccessPermissions
+!/site/modules/PageAccessReleasetime
 
 /*.html
 /site/templates/entwicklung/external/progressively

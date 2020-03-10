@@ -1,0 +1,160 @@
+<?php
+
+namespace ProcessWire;
+
+class FieldtypePageAccessPermissions extends FieldtypeMulti {
+    public static function getModuleInfo() {
+        return array(
+            'title'     => 'Permission Reference (multiple)',
+            'version'   => 100,
+            'summary'   => 'Field that stores a reference to one or more permissions and makes them sortable.',
+            'permanent' => false,
+        );
+    }
+
+    public function getBlankValue(Page $page, Field $field) {
+        return array();
+    }
+
+    public function sanitizeValue(Page $page, Field $field, $value) {
+        if (!$value) {
+            return array();
+        }
+        if (!is_array($value)) {
+            $value = array($value);
+        }
+
+        foreach ($value as $k => $v) {
+            // we allow integers
+            if (is_int($v) && $this->permissions->get($v)) {
+                continue;
+            }
+
+            // we allow permissions
+            if ($v instanceof Permission) {
+                continue;
+            }
+
+            // but we don't allow anything else
+            unset($value[$k]);
+        }
+
+        return $value;
+    }
+
+    public function ___wakeupValue(Page $page, Field $field, $value) {
+        $v = $this->getBlankValue($page, $field);
+
+        if (empty($value)) {
+            return $v;
+        }
+
+        if (is_string($value)) {
+            $v[] = (int) $value;
+        } else {
+            foreach ($value as $permissionID) {
+                $v[] = (int) $permissionID;
+            }
+        }
+
+        return $v;
+    }
+
+    public function ___sleepValue(Page $page, Field $field, $value) {
+        $a = array();
+
+        foreach ($value as $permission) {
+            if (is_int($permission)) {
+                $permissionID = $permission;
+            } else {
+                $permissionID = $this->fuel('permissions')->get($permission)->id;
+            }
+            $a[] = $permissionID;
+        }
+
+        return $a;
+    }
+
+    /**
+     * Instantiate the permissions
+     *
+     * This method is only used when $page->outputFormatting is true.
+     *
+     */
+    public function ___formatValue(Page $page, Field $field, $value) {
+        foreach ($value as $k => $v) {
+            if (!is_int($v)) {
+                continue;
+            }
+            $permission = $this->fuel('permissions')->get($v);
+            if ($permission) {
+                $value[$k] = $permission;
+            } else {
+                unset($value[$k]);
+            }
+        }
+
+        return $value;
+    }
+
+    public function getInputfield(Page $page, Field $field) {
+        $inputfield = $this->modules->get('InputfieldAsmSelect');
+        $inputfield->attr('name', $field->name);
+
+        if (!empty($field->permissionTypes)) {
+            $selector = 'id=';
+
+            foreach ($field->permissionTypes as $permissionType) {
+                $selector .= $permissionType . '|';
+            }
+            $selector    = rtrim($selector, '|');
+            $permissions = $this->fuel('permissions')->find($selector);
+        } else {
+            $permissions = $this->fuel('permissions');
+        }
+
+        foreach ($permissions as $permission) {
+            $id    = $permission->id;
+            $label = $permission->name . ($permission->label ? ' (' . $permission->label . ')' : '');
+            $inputfield->addOption($id, $label);
+        }
+
+        return $inputfield;
+    }
+
+    public function getDatabaseSchema(Field $field) {
+        $schema                 = parent::getDatabaseSchema($field);
+        $schema['data']         = 'int NOT NULL';
+        $schema['keys']['data'] = 'KEY data (data, pages_id, sort)';
+        return $schema;
+    }
+
+    public function ___getCompatibleFieldtypes(Field $field) {
+        $fieldtypes = new Fieldtypes();
+        return $fieldtypes;
+    }
+
+    public function ___getConfigInputfields(Field $field) {
+        $inputfields     = parent::___getConfigInputfields($field);
+        $permissionTypes = array();
+        $lastType        = '';
+
+        $f = $this->modules->get('InputfieldCheckboxes');
+        $f->attr('name', 'permissionTypes');
+
+        foreach ($this->permissions as $permission) {
+            if ($permission->id == $lastType) {
+                continue;
+            }
+            $f->addOption($permission->id, $permission->name . ($permission->label ? ' (' . $permission->label . ')' : ''));
+            $lastType = $permission->id;
+        }
+
+        $f->attr('value', is_array($field->permissionTypes) ? $field->permissionTypes : array());
+        $f->label       = 'Permission Types';
+        $f->description = 'Check all of the permissions that may be selectable in this field. If none are selected, then all types will be allowed.';
+        $inputfields->append($f);
+
+        return $inputfields;
+    }
+}

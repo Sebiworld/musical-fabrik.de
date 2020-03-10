@@ -6,9 +6,14 @@ if ($this->tags) {
 	<div class="tags_field tags">
 		<?php
 		foreach ($this->tags as $tag) {
-			if ($tag->viewable()) {
+			$params = [
+				'tags' => [$tag->id]
+			];
+			$url = $this->searchPage->url . '?' . http_build_query($params);
+
+			if (!empty($url)) {
 				?>
-				<a href="<?= $tag->url; ?>">
+				<a href="<?= $url; ?>">
 					<span class="badge badge-primary">
 						<?= $tag->title; ?>
 					</span>

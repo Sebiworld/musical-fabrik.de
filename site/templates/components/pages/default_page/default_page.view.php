@@ -63,19 +63,21 @@ namespace ProcessWire;
 
 	<div class="contents-container">
 		<?php
-		if ($this->publishTimeString && $this->authors) {
-			?>
-			<div class="meta">
-				<?= sprintf(__('Published on %1$s from %2$s%3$s%4$s'), $this->publishTimeString, '<strong>', implode(' & ', $this->authors), '</strong>'); ?>
-			</div>
-			<?php
-		} elseif ($this->publishTimeString) {
-			?>
-			<div class="meta">
-				<?= sprintf(__('Published on %1$s'), $this->publishTimeString); ?>
-			</div>
-			<?php
-		}
+        if ($this->publishTimeString && $this->page->template->name !== 'default_page') {
+			if ($$this->authors ) {
+				?>
+				<div class="meta">
+					<?= sprintf(__('Published on %1$s from %2$s%3$s%4$s'), $this->publishTimeString, '<strong>', implode(' & ', $this->authors), '</strong>'); ?>
+				</div>
+				<?php
+			} else {
+				?>
+				<div class="meta">
+					<?= sprintf(__('Published on %1$s'), $this->publishTimeString); ?>
+				</div>
+				<?php
+			}
+        }
 		?>
 
 		<h1 class="title <?= $this->hideTitle ? 'sr-only' : ''; ?>">

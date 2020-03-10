@@ -54,6 +54,13 @@ class PagesService extends TwackComponent {
             $results = $this->wire('pages')->find($selector);
         }
 
+        // Filter pages that are not viewable by the current user:
+        foreach($results as $resultPage){
+            if(!$resultPage->viewable()){
+                $results->remove($resultPage);
+            }
+        }
+
         // Store original number of articles without limit:
         $output->totalNumber = $results->count;
 
