@@ -16,12 +16,13 @@ class PageCard extends TwackComponent {
         }
         $args['logging'] = false;
         $args['throwErrors'] = false;
+
         $cardComponent = false;
             $cardComponent = $this->addComponent(
             $this->viewType . '_card',
             $args
         );
-        
+
         if($cardComponent instanceof TwackNullComponent){
             $this->viewType = 'default';
             $this->addComponent(

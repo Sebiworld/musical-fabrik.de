@@ -45,7 +45,7 @@ class GalleryCard extends TwackComponent {
 			if($contentblock->template->hasField('image')){
 				$images->add($contentblock->image);
 			}
-			if($contentblock->template->hasField('images')){
+			if($contentblock->template->hasField('images') && !empty($contentblock->images) && $contentblock->images->count > 0){
 				$images->import($contentblock->images);
 			}
 		}

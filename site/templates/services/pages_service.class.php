@@ -54,10 +54,18 @@ class PagesService extends TwackComponent {
             $results = $this->wire('pages')->find($selector);
         }
 
+        $pwProtectionModule = $this->wire('modules')->get('PageAccessPassword');
+
         // Filter pages that are not viewable by the current user:
         foreach($results as $resultPage){
             if(!$resultPage->viewable()){
                 $results->remove($resultPage);
+                continue;
+            }
+            
+            if($pwProtectionModule && !$pwProtectionModule->isUnlocked($resultPage)){
+                $results->remove($resultPage);
+                continue;
             }
         }
 

@@ -18,7 +18,6 @@ class DefaultPage extends TwackComponent {
 		if ($this->page->template->hasField('headline') && !empty((string) $this->page->headline)) {
 			$this->title = $this->page->headline;
 		}
-
 		$this->hideTitle = false;
 
 		if ($this->page->template->hasField('intro') && !empty((string) $this->page->intro)) {
@@ -69,12 +68,11 @@ class DefaultPage extends TwackComponent {
 			$this->contents = $this->addComponent('ContentsComponent', ['directory' => '']);
 		}
 
-		// $this->addStyle('default_page.css', array(
-        //     'path'     => wire('config')->urls->templates . 'assets/css/',
-		// 	'absolute' => true
-		// ));
-		
-		// Twack::devEcho($this->page->main_image->placeholder_svg);
+		$pwProtectionModule = $this->wire('modules')->get('PageAccessPassword');
+		$this->locked = !$pwProtectionModule->isUnlocked($this->page);
+		if($this->locked && !empty($this->wire('input')->post->text('pw_input'))){
+			$this->locked = !$pwProtectionModule->validatePassword($this->page, $this->wire('input')->post->text('pw_input'));
+		}
 	}
 
 	public function getAjax($ajaxArgs = []) {

@@ -219,8 +219,11 @@ class ImageService extends TwackComponent {
             return false;
         }
 
-        if ($image->ext === 'svg' && empty($image->placeholder_svg)) {
-            return false;
+        if ($image->ext === 'svg') {
+            $svg = $this->getPlaceholderSvg($image);
+            if(empty($svg)){
+                return false;
+            }
         }
 
         return true;
@@ -361,16 +364,39 @@ class ImageService extends TwackComponent {
     }
 
     /**
+     * await query("INSERT INTO image_placeholders (pages_id, filename, fieldname, svg, created, modified) VALUES(" + image.pages_id + ", \"" + image.data + "\", \"" + tablename + "\", \"" + escapedSvg + "\", now(), now())");
+     */
+    protected function getPlaceholderSvg(Pagefile $image){
+        $db        = $this->wire('database');
+        $query     = $db->prepare('SELECT * FROM `image_placeholders` WHERE `pages_id`=:pages_id AND `filename`=:filename AND `fieldname`=:fieldname;');
+        $query->closeCursor();
+
+        $query->execute(array(
+            ':pages_id' => $image->page->id,
+            ':filename' => $image->basename,
+            'fieldname' => $image->field->name
+        ));
+        $placeholderData    = $query->fetch(\PDO::FETCH_ASSOC);
+        if(!empty($placeholderData) && is_array($placeholderData) && !empty($placeholderData['svg'])){
+            return $this->svgUrlEncode($placeholderData['svg']);
+        }
+
+        return NULL;
+    }
+
+    /**
      * Retrieves a small image that can be shown while the full sized image is been loaded
      */
     protected function getLoadingImage($image, $args = array(), $inline = false, $ext = false) {
         if ($ext === 'webp') {
             $args['webp'] = true;
         }
+
         if ($image instanceof Pageimage) {
-            if (!empty($image->placeholder_svg)) {
+            $svg = $this->getPlaceholderSvg($image);
+            if (!empty($svg)) {
                 // A svg-placeholder is defined
-                return 'data:image/svg+xml,' . $this->svgUrlEncode($image->placeholder_svg);
+                return 'data:image/svg+xml,' . $svg;
             } elseif ($inline) {
                 if (is_array($args) && isset($args['default']['width']) && isset($args['default']['height'])) {
                     // Width and height are set -> preserve aspect ratio:
