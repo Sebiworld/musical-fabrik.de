@@ -26,7 +26,7 @@ class FieldtypePageAccessApplications extends FieldtypeMulti {
 
         foreach ($value as $k => $v) {
             // we allow integers
-            if (is_int($v) && $this->wire('modules')->get('RestApi')->getApplication($v)) {
+            if (is_int($v) && $this->wire('modules')->get('AppApi')->getApplication($v)) {
                 continue;
             }
 
@@ -66,7 +66,7 @@ class FieldtypePageAccessApplications extends FieldtypeMulti {
         foreach ($value as $application) {
             try {
                 if (!is_int($application)) {
-                    $application = $this->wire('modules')->get('RestApi')->getApplication($application)->getID();
+                    $application = $this->wire('modules')->get('AppApi')->getApplication($application)->getID();
                 }
                 $a[] = $application;
             }catch(\Throwable $e){
@@ -88,7 +88,7 @@ class FieldtypePageAccessApplications extends FieldtypeMulti {
             if (!is_int($v)) {
                 continue;
             }
-            $application = $this->wire('modules')->get('RestApi')->getApplication($v);
+            $application = $this->wire('modules')->get('AppApi')->getApplication($v);
             if ($application) {
                 $value[$k] = $application;
             } else {
@@ -110,9 +110,9 @@ class FieldtypePageAccessApplications extends FieldtypeMulti {
                 $selector .= $appType . '|';
             }
             $selector    = rtrim($selector, '|');
-            $applications = $this->wire('modules')->get('RestApi')->getApplications()->find($selector);
+            $applications = $this->wire('modules')->get('AppApi')->getApplications()->find($selector);
         } else {
-            $applications = $this->wire('modules')->get('RestApi')->getApplications();
+            $applications = $this->wire('modules')->get('AppApi')->getApplications();
         }
 
         foreach ($applications as $application) {
@@ -144,7 +144,7 @@ class FieldtypePageAccessApplications extends FieldtypeMulti {
         $f = $this->modules->get('InputfieldCheckboxes');
         $f->attr('name', 'applicationTypes');
 
-        foreach ($this->wire('modules')->get('RestApi')->getApplications() as $application) {
+        foreach ($this->wire('modules')->get('AppApi')->getApplications() as $application) {
             if ($application->getID() == $lastType) {
                 continue;
             }

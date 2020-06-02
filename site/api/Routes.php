@@ -2,8 +2,8 @@
 
 namespace ProcessWire;
 
-require_once wire('config')->paths->RestApi . 'vendor/autoload.php';
-require_once wire('config')->paths->RestApi . 'classes/RestApiHelper.php';
+require_once wire('config')->paths->AppApi . 'vendor/autoload.php';
+require_once wire('config')->paths->AppApi . 'classes/AppApiHelper.php';
 
 require_once __DIR__ . '/TwackAccess.class.php';
 

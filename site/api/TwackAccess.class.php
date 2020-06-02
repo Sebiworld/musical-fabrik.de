@@ -4,7 +4,7 @@ namespace ProcessWire;
 
 class TwackAccess {
     public static function pageIDRequest($data) {
-        $data = RestApiHelper::checkAndSanitizeRequiredParameters($data, ['id|int']);
+        $data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['id|int']);
         $page = wire('pages')->get('id=' . $data->id);
         return self::pageRequest($page);
     }
@@ -15,7 +15,7 @@ class TwackAccess {
     }
 
     public static function pagePathRequest($data) {
-        $data = RestApiHelper::checkAndSanitizeRequiredParameters($data, ['path|pagePathName']);
+        $data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['path|pagePathName']);
         $page = wire('pages')->get('/' . $data->path);
         return self::pageRequest($page);
     }
@@ -37,7 +37,7 @@ class TwackAccess {
     }
 
     public static function pageIDFileRequest($data) {
-        $data = RestApiHelper::checkAndSanitizeRequiredParameters($data, ['id|int']);
+        $data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['id|int']);
         $page = wire('pages')->get('id=' . $data->id);
         return self::fileRequest($page);
     }
@@ -48,7 +48,7 @@ class TwackAccess {
     }
 
     public static function pagePathFileRequest($data) {
-        $data = RestApiHelper::checkAndSanitizeRequiredParameters($data, ['path|pagePathName']);
+        $data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['path|pagePathName']);
         $page = wire('pages')->get('/' . $data->path);
         return self::fileRequest($page);
     }
@@ -76,7 +76,7 @@ class TwackAccess {
             $maxHeight = wire('input')->get('maxheight', 'intUnsigned', 0);
             $cropX     = wire('input')->get('cropx', 'intUnsigned', 0);
             $cropY     = wire('input')->get('cropy', 'intUnsigned', 0);
-            
+
             $options = array(
                 'webpAdd' => true
             );
@@ -103,7 +103,7 @@ class TwackAccess {
 		$filepath = $file->filename;
 		$fileinfo = pathinfo($filepath);
         $filename = $fileinfo['basename'];
-        
+
 		$isStreamable = !!isset($_REQUEST['stream']);
 
 		if (!is_file($filepath)) {
@@ -179,7 +179,7 @@ class TwackAccess {
 				$extraRanges = $rangeOrigParts[1];
 			}
         }
-        
+
 		$rangeParts = explode('-', $range, 2);
 
 		$filestart = '';
@@ -230,7 +230,7 @@ class TwackAccess {
 				exit;
 			}
         }
-        
+
 		@fclose($openfile);
 		exit;
     }

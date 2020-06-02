@@ -15,7 +15,7 @@ class PageAccessApplications extends WireData implements Module {
 			'singular' => true,
 			'autoload' => true,
 			'icon' => 'unlock-alt',
-			'requires' => array('PHP>=5.5.3', 'ProcessWire>=3.0.0', 'FieldtypePageAccessApplications', 'RestApi>=1.0.0'),
+			'requires' => array('PHP>=5.5.3', 'ProcessWire>=3.0.0', 'FieldtypePageAccessApplications', 'AppApi>=1.0.0'),
 			'installs' => 'FieldtypePageAccessApplications',
 			'uninstalls' => 'FieldtypePageAccessApplications'
 		);
@@ -192,13 +192,13 @@ class PageAccessApplications extends WireData implements Module {
 	 */
 	public function isUnlockedSingle(Page $page){
 		if($page->template->hasField('pageaccess_applications') && (!$page->template->hasField('pageaccess_applications_activate') || $page->pageaccess_applications_activate == true)){
-			if($this->wire('modules')->get('RestApi')->isApiCall()){
+			if($this->wire('modules')->get('AppApi')->isApiCall()){
 				// Check if the current application can access the page
-				return is_array($page->pageaccess_applications) && in_array($this->wire('modules')->get('RestApi')->getAuth()->getApplication()->getID(), $page->pageaccess_applications);
+				return is_array($page->pageaccess_applications) && in_array($this->wire('modules')->get('AppApi')->getAuth()->getApplication()->getID(), $page->pageaccess_applications);
 			}else if($page->template->hasField('pageaccess_applications_block_traditional') && $page->pageaccess_applications_block_traditional != true){
 				return true;
 			}
-			
+
 			return false;
 		}
 
