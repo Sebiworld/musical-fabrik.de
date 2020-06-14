@@ -1,6 +1,5 @@
 <?php
 namespace ProcessWire;
 
-$twack = wire('modules')->get('Twack');
-$general = $twack->getNewComponent('General');
+$general = wire('twack')->getNewComponent('General');
 echo $general->render();

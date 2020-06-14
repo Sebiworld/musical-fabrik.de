@@ -1,9 +1,8 @@
 <?php
 namespace ProcessWire;
 
-$twack = wire('modules')->get('Twack');
-$general = $twack->getNewComponent('General');
-$content = $twack->getComponent('mainContent');
+$general = wire('twack')->getNewComponent('General');
+$content = wire('twack')->getComponent('mainContent');
 $content->addComponent('ContentArticles', ['directory' => 'contents_component', 'title' => '', 'typ' => 'tiles']);
 
 echo $general->render();

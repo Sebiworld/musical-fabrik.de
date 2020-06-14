@@ -292,7 +292,7 @@ class FormTemplate extends TwackComponent {
             $output['error']['csrf_error']   = $this->_('This request was apparently forged and therefore aborted.');
             $output['submission_blocked']    = true;
             $output['status']                = false;
-            if ($this->twack->isTwackAjaxCall()) {
+            if ($this->wire('twack')->isTwackAjaxCall()) {
                 Twack::sendResponse($output, 403);
             }
             return $output;
@@ -301,7 +301,7 @@ class FormTemplate extends TwackComponent {
             $output['submission_blocked']       = true;
             $output['status']                   = false;
 
-            if ($this->twack->isTwackAjaxCall()) {
+            if ($this->wire('twack')->isTwackAjaxCall()) {
                 Twack::sendResponse($output, 400);
             }
             return $output;
@@ -310,7 +310,7 @@ class FormTemplate extends TwackComponent {
             $output['submission_blocked']       = false;
             $output['status']                   = false;
 
-            if ($this->twack->isTwackAjaxCall()) {
+            if ($this->wire('twack')->isTwackAjaxCall()) {
                 Twack::sendResponse($output, 400);
             }
             return $output;
@@ -319,7 +319,7 @@ class FormTemplate extends TwackComponent {
             $output['submission_blocked']       = false;
             $output['status']                   = false;
 
-            if ($this->twack->isTwackAjaxCall()) {
+            if ($this->wire('twack')->isTwackAjaxCall()) {
                 Twack::sendResponse($output, 400);
             }
             return $output;
@@ -340,7 +340,7 @@ class FormTemplate extends TwackComponent {
         $output['status']                = true;
         $output['success']['finished']   = $this->_('Your request was processed successfully.');
 
-        if ($this->twack->isTwackAjaxCall()) {
+        if ($this->wire('twack')->isTwackAjaxCall()) {
             Twack::sendResponse($output, 200);
         }
 

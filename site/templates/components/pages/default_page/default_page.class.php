@@ -10,7 +10,7 @@ class DefaultPage extends TwackComponent {
 		$this->imageService = $this->getService('ImageService');
 
 		// Content can be added to the global component 'mainContent':
-		$this->twack->makeComponentGlobal($this, 'mainContent');
+		wire('twack')->makeComponentGlobal($this, 'mainContent');
 
 		$this->singleimageModalId = $this->getGlobalParameter('singleimageModalId');
 

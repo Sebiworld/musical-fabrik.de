@@ -1,10 +1,9 @@
 <?php
 namespace ProcessWire;
 
-$twack = wire('modules')->get('Twack');
-$general = $twack->getNewComponent('General');
+$general = wire('twack')->getNewComponent('General');
 
-$content = $twack->getComponent('mainContent');
+$content = wire('twack')->getComponent('mainContent');
 if ($content) {
 	$content->addComponent('ProjectRole', ['directory' => '']);
 } else {

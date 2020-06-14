@@ -12,7 +12,7 @@ class General extends TwackComponent {
         $this->metas = new WireData();
 
         // general should be globally available
-        $this->twack->makeComponentGlobal($this, 'general');
+        wire('twack')->makeComponentGlobal($this, 'general');
 
         // Add main scripts for all pages:
         $this->addStyle('bootstrap.css', array(
@@ -79,7 +79,7 @@ class General extends TwackComponent {
 
         // Custom Dev output
         $devOutput = $this->addComponent('DevOutput', ['globalName' => 'dev_output']);
-        $this->twack->registerDevEchoComponent($devOutput);
+        wire('twack')->registerDevEchoComponent($devOutput);
 
         // Create Layout Components:
         $this->addComponent('HeaderComponent', ['globalName' => 'header']);
@@ -96,7 +96,7 @@ class General extends TwackComponent {
         }else{
             $this->addComponent('DefaultPage', ['directory' => 'pages']);
         }
-        
+
         if($this->wire('config')->noindex === true && $this->page->template->hasField('seo')){
             $this->page->seo->robots_noIndex = true;
             $this->page->seo->robots_noFollow = true;
@@ -224,7 +224,7 @@ class General extends TwackComponent {
 
     /**
      * Adds an additional meta tag
-     * @param string $metatag  	Metatag string (including html) 
+     * @param string $metatag  	Metatag string (including html)
      */
     public function addMeta($metaname, $metatag) {
         if (is_string($metaname) && !empty($metaname) && is_string($metatag) && !empty($metatag)) {
