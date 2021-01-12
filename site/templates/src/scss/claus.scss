@@ -1,0 +1,13 @@
+$project-primary-bg: #B3000C;
+$project-primary-color: #fff;
+
+$brand-primary: $project-primary-bg !default;
+
+@import "globals/index";
+@import "templates/project";
+
+.portrait.portrait {
+	.aspect-ratio:before {
+		padding-top: 133.33%;
+	}
+}

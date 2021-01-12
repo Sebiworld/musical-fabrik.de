@@ -107,7 +107,7 @@ import { debounce, uniq, remove } from 'lodash-es';
 
 								if (activeIds.indexOf(tag.getAttribute('data-id')) > -1) {
 									flagHasActive = true;
-									
+
 									if (!hasClass(tag, 'active')) {
 										addClass(tag, 'active');
 

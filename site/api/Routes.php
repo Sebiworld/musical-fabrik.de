@@ -6,8 +6,15 @@ require_once wire('config')->paths->AppApi . 'vendor/autoload.php';
 require_once wire('config')->paths->AppApi . 'classes/AppApiHelper.php';
 
 require_once __DIR__ . '/TwackAccess.class.php';
+require_once __DIR__ . '/AppApiTest.class.php';
 
 $routes = [
+    'v1' => [
+        'test' => [
+            ['OPTIONS', '', ['GET']],
+            ['GET', '', AppApiTest::class, 'test']
+        ]
+    ],
     'page' => [
         ['OPTIONS', '{id:\d+}', ['GET', 'POST', 'UPDATE', 'DELETE']],
         ['OPTIONS', '{path:.+}', ['GET', 'POST', 'UPDATE', 'DELETE']],
