@@ -57,7 +57,7 @@
     "lg-zoom": "^1.1.0",
     "lightgallery": "^1.6.12",
     "lightslider": "^1.1.6",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "lodash-es": "^4.17.15",
     "mysql": "^2.17.1",
     "masonry-layout": "^4.2.2",
