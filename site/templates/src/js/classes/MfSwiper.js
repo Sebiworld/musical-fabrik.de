@@ -1,4 +1,4 @@
-import { Swiper, Navigation, Virtual, Keyboard, Pagination, Lazy, HashNavigation, History, Autoplay, EffectFade, A11y } from 'swiper/js/swiper.esm.js';
+import { Swiper, Navigation, Virtual, Keyboard, Pagination, Lazy, HashNavigation, History, Autoplay, EffectFade, A11y } from 'swiper/swiper.esm.js';
 Swiper.use([Navigation, Virtual, Keyboard, Pagination, Lazy, HashNavigation, History, Autoplay, EffectFade, A11y]);
 
 export const MfSwiper = {
@@ -79,7 +79,7 @@ export const MfSwiper = {
         if (elements.length <= 0) {
             return false;
         }
-    
+
         for (let index in elements) {
             const element = elements[index];
             if (typeof element !== 'object' || !(element instanceof Element)) {

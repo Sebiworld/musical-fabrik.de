@@ -97,14 +97,6 @@ module.exports = (env, options) => {
 						}
 					}
 				},
-				{
-					test: require.resolve("progressively"),
-					use: "imports-loader?this=>window",
-				},
-				{
-					test: require.resolve("chart.js"),
-					use: "imports-loader?this=>window",
-				},
 				// {
 				// 	// Exposes jQuery for use outside Webpack build
 				// 	test: require.resolve("jquery"),
@@ -126,7 +118,7 @@ module.exports = (env, options) => {
 						{
 							loader: MiniCssExtractPlugin.loader,
 							options: {
-								publicPath: PATHS.public
+								// publicPath: PATHS.public
 							}
 						},
 						{
@@ -139,15 +131,17 @@ module.exports = (env, options) => {
 						{
 							loader: "postcss-loader",
 							options: {
-								ident: "postcss",
-								sourceMap: !isProduction,
-								plugins: loader => [
-									require("postcss-discard-comments")({
-										removeAll: true,
-									}),
-									require("postcss-preset-env")(),
-									require("postcss-short")
-								],
+								postcssOptions: {
+									ident: "postcss",
+									sourceMap: !isProduction,
+									plugins: loader => [
+										require("postcss-discard-comments")({
+											removeAll: true,
+										}),
+										require("postcss-preset-env")(),
+										require("postcss-short")
+									],
+								}
 							},
 						},
 						{
@@ -247,9 +241,8 @@ module.exports = (env, options) => {
 			symlinks: true
 		},
 		mode: isProduction ? 'production' : 'development',
-		devtool: isProduction ? '' : 'cheap-module-eval-source-map',
+		devtool: isProduction ? 'hidden-nosources-source-map' : 'eval-cheap-module-source-map',
 		optimization: {
-			moduleIds: 'hashed',
 			minimize: isProduction,
 			usedExports: true,
 			// runtimeChunk: 'single',
@@ -264,10 +257,11 @@ module.exports = (env, options) => {
 						discardComments: true
 					}
 				}),
+				//  test?, include?, exclude?, terserOptions?, extractComments?, parallel?, minify?
 				new TerserPlugin({
-					cache: true,
+					// cache: true,
 					parallel: true,
-					sourceMap: !isProduction,
+					// sourceMap: !isProduction,
 					terserOptions: {
 						output: {
 							comments: isProduction ? false : true,
@@ -279,12 +273,11 @@ module.exports = (env, options) => {
 		},
 		plugins: [
 			new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de/),
-            new LodashModuleReplacementPlugin({
-                'collections': true,
-                'paths': true,
-                'shorthands': true
-            }),
-            new webpack.HashedModuleIdsPlugin(),
+			new LodashModuleReplacementPlugin({
+				'collections': true,
+				'paths': true,
+				'shorthands': true
+			}),
 			new WebpackAssetsManifest({
 				merge: true,
 				customize(entry, original, manifest, asset) {
@@ -293,7 +286,8 @@ module.exports = (env, options) => {
 					}
 					return entry;
 				},
-				writeToDisk: true
+				writeToDisk: true,
+				output: 'manifest.json'
 			}),
 			(options.clear !== 'false' && isProduction ?
 				new CleanWebpackPlugin({
@@ -327,13 +321,13 @@ module.exports = (env, options) => {
 			}),
 			new CompressionPlugin(),
 			(isProduction ?
-                new BundleAnalyzerPlugin(
-                    {
-                        analyzerMode: 'static',
-                        reportFilename: 'report-' + options.browser_env + '.html',
-                    }
-                ) : new LiveReloadPlugin()
-            )
+				new BundleAnalyzerPlugin(
+					{
+						analyzerMode: 'static',
+						reportFilename: 'report-' + options.browser_env + '.html',
+					}
+				) : new LiveReloadPlugin()
+			)
 		],
 	};
 };
