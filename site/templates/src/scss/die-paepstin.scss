@@ -1,7 +1,7 @@
 $project-primary-bg: #a80f6e;
 $project-primary-color: #fff;
 
-$brand-primary: $project-primary-bg !default;
+$primary: $project-primary-bg !default;
 
 @import "globals/index";
 @import "templates/project";

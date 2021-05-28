@@ -8,7 +8,7 @@ namespace ProcessWire;
 	<?php
     if (!empty($this->title)) {
         ?>
-		<h2 class="section-title <?= $this->page->hide_title ? 'sr-only sr-only-focusable' : ''; ?>">
+		<h2 class="section-title <?= $this->page->hide_title ? 'visually-hidden visually-hidden-focusable' : ''; ?>">
 		<?= $this->title; ?>
 	</h2>
 	<?php
@@ -25,19 +25,18 @@ namespace ProcessWire;
 				<article class="col <?= $this->gridClasses; ?> page">
                     <figure class="io42-img-overlay io42-border-bottom-left io42-gradient-bottom-right w-100">
                         <?php
-                        echo $this->imageService->getPictureHtml(array(
+                        echo $this->imageService->getPictureHtml([
                             'image' => $page->gridImage,
                             'alt' => $page->title,
-                            'pictureclasses' => array('aspect-ratio', 'ar-'.$this->imageRatio),
-                            'classes' => array('ar-content'),
-                            'styles'     => $page->color ? 'background-color: #' . $page->color . ';' : '',
+                            'pictureclasses' => ['aspect-ratio', 'ar-' . $this->imageRatio],
+                            'classes' => ['ar-content'],
+                            'styles' => $page->color ? 'background-color: #' . $page->color . ';' : '',
                             'loadAsync' => true,
-                            'default' => array(
+                            'default' => [
                                 'width' => 500,
                                 'height' => 500 * $this->imageFactor
-                            )
-                        ));
-                        ?>
+                            ]
+                        ]); ?>
                         <figcaption class="">
                             <div class="io42-fade-up io42-delay-100 d-block mb-1">
                                 <h4 class="mb-2 card-title"><?= $page->title; ?></h4>
@@ -59,17 +58,7 @@ namespace ProcessWire;
                         </figcaption>
                     </figure>
 				</article>
-
 				<?php
-                if (($listindex + 1) % 2 === 0) {
-                    echo '<div class="clearfix hidden-sm-down.hidden-sm-up"></div>';
-                }
-                if (($listindex + 1) % 3 === 0) {
-                    echo '<div class="clearfix hidden-md-down.hidden-md-up"></div>';
-                }
-                if (($listindex + 1) % 4 === 0) {
-                    echo '<div class="clearfix hidden-lg-down"></div>';
-                }
             }
         }
         ?>

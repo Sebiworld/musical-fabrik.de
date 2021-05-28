@@ -126,7 +126,7 @@ a {
 }
 
 a:not(.btn):not(.nav-link):not(.no-underline), .btn-link{
-  text-decoration-color: theme-color('primary');
+  text-decoration-color: $primary;
   text-decoration-thickness: .125em;
   text-underline-offset: 1.5px;
 }
@@ -146,7 +146,7 @@ a:not(.btn):not(.nav-link):not(.no-underline), .btn-link{
 
   &:hover,
   &:focus {
-    color: $brand-primary;
+    color: $primary;
   }
 }
 

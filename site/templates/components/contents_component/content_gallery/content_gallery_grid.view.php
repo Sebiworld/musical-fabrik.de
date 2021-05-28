@@ -11,7 +11,7 @@ if ($this->images && !empty($this->images)) {
             if ($this->page->depth && intval($this->page->depth)) {
                 $headingDepth = $headingDepth + intval($this->page->depth);
             } ?>
-			<h<?= $headingDepth; ?> class="block-title <?= $this->page->hide_title ? 'sr-only sr-only-focusable' : ''; ?>">
+			<h<?= $headingDepth; ?> class="block-title <?= $this->page->hide_title ? 'visually-hidden visually-hidden-focusable' : ''; ?>">
 				<?= $this->title; ?>
 			</h<?= $headingDepth; ?>>
 			<?php

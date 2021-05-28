@@ -35,43 +35,43 @@ scrollinator.addObservedElements('section');
 	ready(function() {
 		// Hamburgericon-Animation:
 		// Dropdowns:
-		$(".dropdown.has-hamburger").on("show.bs.dropdown", function() {
-			$(this)
-				.find(".hamburger.dropdown-toggle")
-				.addClass("is-active");
-		});
-		$(".dropdown.has-hamburger").on("hide.bs.dropdown", function() {
-			$(this)
-				.find(".hamburger.dropdown-toggle")
-				.removeClass("is-active");
-		});
+		// $(".dropdown.has-hamburger").on("show.bs.dropdown", function() {
+		// 	$(this)
+		// 		.find(".hamburger.dropdown-toggle")
+		// 		.addClass("is-active");
+		// });
+		// $(".dropdown.has-hamburger").on("hide.bs.dropdown", function() {
+		// 	$(this)
+		// 		.find(".hamburger.dropdown-toggle")
+		// 		.removeClass("is-active");
+		// });
 
 		// Collapse:
-		$(".collapse.has-hamburger[id]").on("show.bs.collapse", function() {
-			$(
-				'.hamburger[data-toggle="collapse"][data-target="#' +
-					$(this).attr("id") +
-					'"]'
-			).addClass("is-active");
-		});
-		$(".collapse.has-hamburger[id]").on("hide.bs.collapse", function() {
-			$(
-				'.hamburger[data-toggle="collapse"][data-target="#' +
-					$(this).attr("id") +
-					'"]'
-			).removeClass("is-active");
-		});
+		// $(".collapse.has-hamburger[id]").on("show.bs.collapse", function() {
+		// 	$(
+		// 		'.hamburger[data-toggle="collapse"][data-target="#' +
+		// 			$(this).attr("id") +
+		// 			'"]'
+		// 	).addClass("is-active");
+		// });
+		// $(".collapse.has-hamburger[id]").on("hide.bs.collapse", function() {
+		// 	$(
+		// 		'.hamburger[data-toggle="collapse"][data-target="#' +
+		// 			$(this).attr("id") +
+		// 			'"]'
+		// 	).removeClass("is-active");
+		// });
 
 		// Cards should remain active at the click of a mouse. Only with Hover are they otherwise not operable on touch devices.
-		$(document).on("click touchstart", ".card", function() {
-			if ($(this).hasClass("active")) {
-				$(this).removeClass("active");
-				$(this).addClass("not-active");
-			} else {
-				$(this).addClass("active");
-				$(this).removeClass("not-active");
-			}
-		});
+		// $(document).on("click touchstart", ".card", function() {
+		// 	if ($(this).hasClass("active")) {
+		// 		$(this).removeClass("active");
+		// 		$(this).addClass("not-active");
+		// 	} else {
+		// 		$(this).addClass("active");
+		// 		$(this).removeClass("not-active");
+		// 	}
+		// });
 
 		ImageHandler.init();
 	});

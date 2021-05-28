@@ -11,7 +11,7 @@ if ($this->page->image) {
             if ($this->page->depth && intval($this->page->depth)) {
                 $headingDepth = $headingDepth + intval($this->page->depth);
             } ?>
-			<h<?= $headingDepth; ?> class="block-title <?= $this->page->hide_title ? 'sr-only sr-only-focusable' : ''; ?>">
+			<h<?= $headingDepth; ?> class="block-title <?= $this->page->hide_title ? 'visually-hidden visually-hidden-focusable' : ''; ?>">
 				<?= $this->page->title; ?>
 			</h<?= $headingDepth; ?>>
 			<?php
@@ -35,7 +35,7 @@ if ($this->page->image) {
 
             if ($this->page->image->caption && !empty($this->page->image->caption . '')) {
                 echo '<div class="image-caption">' . $this->page->image->caption . '</div>';
-            } 
+            }
         ?>
 		</div>
     </a>

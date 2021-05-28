@@ -8,7 +8,7 @@
 	margin-bottom: 0;
 
 	.breadcrumb-item{
-		color: color("gray");
+		color: $gray;
 
 		&:before{
 			content: '-';
@@ -18,13 +18,13 @@
 		}
 	}
 
-	@include media-breakpoint-down(xs) {
+	@include media-breakpoint-only(xs) {
 		flex-direction: column;
 		justify-content: flex-start;
 
 		.breadcrumb-item{
 			padding-left: 0;
-			
+
 			&:before{
 				display: none;
 			}

@@ -11,23 +11,23 @@ if ($this->images && !empty($this->images)) {
             if ($this->page->depth && intval($this->page->depth)) {
                 $headingDepth = $headingDepth + intval($this->page->depth);
             } ?>
-			<h<?= $headingDepth; ?> class="block-title <?= $this->page->hide_title ? 'sr-only sr-only-focusable' : ''; ?>">
+			<h<?= $headingDepth; ?> class="block-title <?= $this->page->hide_title ? 'visually-hidden visually-hidden-focusable' : ''; ?>">
 				<?= $this->title; ?>
 			</h<?= $headingDepth; ?>>
 			<?php
         } ?>
 		<?= $this->description ? '<div class="block-description">' . $this->description . '</div>' : ''; ?>
 
-		<div class="lSSlideOuter">
-			<div class="lSSlideWrapper usingCss">
-				<ul class="lightslider lightSlider">
+		<div class="aspect-ratio ar-4-3">
+			<div class="ar-content">
+				<ul class="lightslider">
 					<?php
 					$counter = 1;
 					foreach ($this->images as $image) {
 						?>
-						<li class="lightslider-item" data-thumb="<?= $image->height(300)->url; ?>" data-src="<?= $image->url; ?>" data-responsive="<?= $image->height(300)->url; ?> 400w, <?= $image->height(1000)->url; ?> 1000w">
+						<li class="lightslider-item" data-external-thumb-image="<?= $image->height(300)->url; ?>" data-src="<?= $image->url; ?>" data-responsive="<?= $image->height(300)->url; ?> 400w, <?= $image->height(1000)->url; ?> 1000w">
 							<?php
-							 echo $this->component->getService('ImageService')->getPictureHtml(array(
+								echo $this->component->getService('ImageService')->getPictureHtml(array(
 								'image' => $image,
 								'alt' => sprintf(__('Gallery %1$s, slide %2$s'), $this->title, (string)$counter),
 								'pictureclasses' => array('gallery-image', $image->classes ? $image->classes : ''),
@@ -40,7 +40,8 @@ if ($this->images && !empty($this->images)) {
 									'(max-width: 500px)' => array(
 										'height' => 200
 									)
-								)
+								),
+								// 'svgPlaceholder' => false
 							));
 							?>
 						</li>

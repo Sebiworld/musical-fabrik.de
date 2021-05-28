@@ -41,18 +41,12 @@ if (!empty($this->portraits) && !empty($casts)) {
 					<div class="container-fluid">
 						<div class="row portraits-row <?= $bCounter === 1 ? 'justify-content-end' : ($bCounter === count($casts) ? 'justify-content-start' : 'justify-content-around'); ?>">
 							<?php
-							$pCounter = 1;
 							foreach ($this->portraits->find('season_' . $this->season->id . '_' . $cast->id . '=1, root=1') as $portrait) {
 								?>
 								<div class="col col-12 <?= $this->portraits->find('season_' . $this->season->id . '_' . $cast->id . '=1, root=1')->count > 1 ? 'col-xl-6' : ''; ?> portrait-block">
 									<?= $portrait ?>
 								</div>
 								<?php
-								if ($pCounter % 2 === 0) {
-									echo '<div class="clearfix hidden-xl-down"></div>';
-								}
-
-								$pCounter++;
 							} ?>
 						</div>
 					</div>
@@ -98,7 +92,7 @@ if (!empty($this->portraits) && !empty($casts)) {
 							<div class="title">
 								<i>
 									<?= $cast->title; ?>
-									<?php 
+									<?php
 									if($castInfosAvailable){
 										?>
 										 &nbsp; <a href="#casts-description_<?= $this->season->id; ?>"><span class="icon ion-ios-information-circle-outline"></span></a>
@@ -110,20 +104,12 @@ if (!empty($this->portraits) && !empty($casts)) {
 
 							<div class="row portraits-row <?= $bCounter === 1 ? 'justify-content-end' : ($bCounter === count($casts) ? 'justify-content-start' : 'justify-content-around'); ?>">
 								<?php
-								$pCounter = 1;
 								foreach ($this->portraits->find('season_'.$this->season->id.'_'.$cast->id.'_'.$projectRole->id.'=1') as $portrait) {
 									?>
 									<div class="col col-12 <?= $this->portraits->find('season_'.$this->season->id.'_'.$cast->id.'_'.$projectRole->id.'=1')->count > 1 ? 'col-xl-6' : ''; ?> portrait-block">
 										<?= $portrait ?>
 									</div>
 									<?php
-									if ($pCounter % 2 === 0) {
-										?>
-										<div class="clearfix hidden-xl-down"></div>
-										<?php
-									}
-
-									$pCounter++;
 								}
 								?>
 							</div>
@@ -137,7 +123,7 @@ if (!empty($this->portraits) && !empty($casts)) {
 			<?php
 		}
 	}
-	
+
     if ($castInfosAvailable) {
 		?>
 		<div class="casts-description-wrapper">

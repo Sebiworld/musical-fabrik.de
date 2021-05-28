@@ -34,8 +34,8 @@ input.btn[type="submit"] {
 input[type="submit"],
 button[type="submit"] {
 	@include button-variant(
-		text-color-over(theme-color("primary")),
-		theme-color("primary"),
+		text-color-over($primary),
+		$primary,
 		transparent
 	);
 	padding: 10px 20px;
@@ -77,82 +77,82 @@ a.social-button, .container-fluid.highlight.highlight a.social-button {
 		text-decoration: none;
 
 		.icon {
-			color: theme-color("primary");
+			color: $primary;
 		}
 
 		.ion-logo-twitter,
 		.ion-logo-twitter-outline {
-			color: color('twitter');
+			color: $twitter;
 		}
 		.ion-logo-facebook,
 		.ion-logo-facebook-outline {
-			color: color('facebook');
+			color: $facebook;
 		}
 		.ion-logo-googleplus,
 		.ion-logo-googleplus-outline {
-			color: color('googleplus');
+			color: $googleplus;
 		}
 		.ion-logo-google,
 		.ion-logo-google-outline {
-			color: color('google');
+			color: $google;
 		}
 		.ion-logo-dribbble,
 		.ion-logo-dribbble-outline {
-			color: color('dribbble');
+			color: $dribbble;
 		}
 		.ion-logo-octocat {
-			color: color('octocat');
+			color: $octocat;
 		}
 		.ion-logo-github,
 		.ion-logo-github-outline {
-			color: color('github');
+			color: $github;
 		}
 		.ion-logo-instagram,
 		.ion-logo-instagram-outline {
-			color: color('instagram');
+			color: $instagram;
 		}
 		.ion-logo-whatsapp,
 		.ion-logo-whatsapp-outline {
-			color: color('whatsapp');
+			color: $whatsapp;
 		}
 		.ion-logo-snapchat,
 		.ion-logo-snapchat-outline {
-			color: color('snapchat');
+			color: $snapchat;
 		}
 		.ion-logo-foursquare,
 		.ion-logo-foursquare-outline {
-			color: color('foursquare');
+			color: $foursquare;
 		}
 		.ion-logo-pinterest,
 		.ion-logo-pinterest-outline {
-			color: color('pinterest');
+			color: $pinterest;
 		}
 		.ion-logo-rss,
 		.ion-logo-rss-outline {
-			color: color('rss');
+			color: $rss;
 		}
 		.ion-logo-tumblr,
 		.ion-logo-tumblr-outline {
-			color: color('tumblr');
+			color: $tumblr;
 		}
 		.ion-logo-wordpress,
 		.ion-logo-wordpress-outline {
-			color: color('wordpress');
+			color: $wordpress;
 		}
 		.ion-logo-reddit,
 		.ion-logo-reddit-outline {
-			color: color('reddit');
+			color: $reddit;
 		}
 		.ion-logo-youtube,
 		.ion-logo-youtube-outline {
-			color: color('youtube');
+			color: $youtube;
 		}
 		.ion-logo-linkedin,
 		.ion-logo-linkedin-outline {
-			color: color('linkedin');
+			color: $linkedin;
 		}
 		.ion-logo-steam {
-			color: color('steam');
+			color: $steam;
 		}
 
 		@each $color, $value in $colors {
@@ -178,7 +178,7 @@ a.social-button, .container-fluid.highlight.highlight a.social-button {
 
 .btn.background {
 	color: #fff;
-	background-color: theme-color("secondary");
+	background-color: $secondary;
 	transition: 0.5s ease-in-out;
 
 	&:hover,
@@ -219,6 +219,6 @@ a.social-button, .container-fluid.highlight.highlight a.social-button {
 
 .highlight {
 	.social-button .icon {
-		color: theme-color("dark");
+		color: $dark;
 	}
 }

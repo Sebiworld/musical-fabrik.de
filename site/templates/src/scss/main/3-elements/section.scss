@@ -48,7 +48,7 @@
       height: 1px;
     }
 
-    @include media-breakpoint-down(xs) {
+    @include media-breakpoint-only(xs) {
       @include fontsize("section-title-xs", 1.4);
     }
   }
@@ -143,16 +143,16 @@
 
     &:hover,
     &:focus {
-      @if $color != theme-color("primary") {
-        color: contrast(theme-color("primary"), $color);
+      @if $color != $primary {
+        color: contrast($primary, $color);
       }
       else {
         @include grow();
       }
 
       .icon {
-        @if $color != theme-color("primary") {
-          color: contrast(theme-color("primary"), $color);
+        @if $color != $primary {
+          color: contrast($primary, $color);
         }
         else {
           @include grow();
@@ -175,8 +175,8 @@
 
       &:hover,
       &:focus {
-        @if $color != theme-color("primary") {
-          color: contrast(theme-color("primary"), $color);
+        @if $color != $primary {
+          color: contrast($primary, $color);
         }
         else {
           @include grow();
@@ -190,7 +190,7 @@
 .container,
 .container-fluid {
   &.highlight {
-    @include section-variant(theme-color("primary"));
+    @include section-variant($primary);
 
     // All colors defined in $colors are selectable as background colors.
     @each $color, $value in $colors {

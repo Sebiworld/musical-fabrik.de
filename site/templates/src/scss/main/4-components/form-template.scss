@@ -1,4 +1,4 @@
-@import "./globals/index";
+@import './globals/index';
 
 .form_template {
   $columnpadding: 32px;
@@ -37,8 +37,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: "Ionicons";
-            speak: none;
+            font-family: 'Ionicons';
             font-style: normal;
             font-weight: normal;
             font-variant: normal;
@@ -50,14 +49,14 @@
 
             &:after {
               // content: "\20AC";
-              content: "\f235";
+              content: '\f235';
             }
           }
         }
       }
 
       .form-text {
-        @include fontsize("form-text");
+        @include fontsize('form-text');
         margin-top: 0;
         margin-bottom: 16px;
         max-width: 100%;
@@ -79,9 +78,9 @@
         label {
           display: inline-block;
           position: relative;
-          padding-left: font-px("form-text") * 1.6;
+          padding-left: font-px('form-text') * 1.6;
           cursor: pointer;
-          font-size: font-px("form-text");
+          font-size: font-px('form-text');
 
           input {
             position: absolute;
@@ -89,7 +88,7 @@
             opacity: 0;
 
             &:checked ~ .control__indicator {
-              background: theme-color("primary");
+              background: $primary;
 
               &:after {
                 display: block;
@@ -104,7 +103,7 @@
 
           &:hover input:not([disabled]):checked ~ .control__indicator,
           input:checked:focus ~ .control__indicator {
-            background: darken(theme-color("primary"), 10%);
+            background: darken($primary, 10%);
           }
         }
 
@@ -112,19 +111,19 @@
           position: absolute;
           top: 2px;
           left: 0;
-          height: font-px("form-text");
-          width: font-px("form-text");
+          height: font-px('form-text');
+          width: font-px('form-text');
           background: $input-color;
           transition: background 0.1s ease-out;
 
           &:after {
-            content: "";
+            content: '';
             position: absolute;
             display: none;
-            left: font-px("form-text") / 3;
-            top: font-px("form-text") / 5;
-            width: font-px("form-text") / 3;
-            height: font-px("form-text") / 1.6;
+            left: font-px('form-text') / 3;
+            top: font-px('form-text') / 5;
+            width: font-px('form-text') / 3;
+            height: font-px('form-text') / 1.6;
             border: solid #fff;
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
@@ -134,12 +133,12 @@
 
       .form-group.required label {
         &:after {
-          content: " *";
+          content: ' *';
           @include fontsize(0.75);
           position: relative;
           vertical-align: top;
           display: inline-block;
-          color: $brand-primary;
+          color: $primary;
         }
       }
 
@@ -161,7 +160,7 @@
     margin-left: -5px;
 
     > .col,
-    > [class*="col-"] {
+    > [class*='col-'] {
       padding-right: 5px;
       padding-left: 5px;
     }
@@ -190,16 +189,16 @@
   .antispam-code {
     .code {
       position: relative;
-	  display: flex;
-	  flex-direction: column;
-	  justify-content: center;
-	  align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       font-weight: bold;
-      background: theme-color("light");
-	  color: text-color-over(theme-color("light"));
-	  font-family: $font-family-monospace;
-	  padding: 2px 8px;
-	  margin-right: 8px;
+      background: $light;
+      color: text-color-over($light);
+      font-family: $font-family-monospace;
+      padding: 2px 8px;
+      margin-right: 8px;
     }
   }
 }

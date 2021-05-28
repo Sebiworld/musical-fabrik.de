@@ -23,7 +23,7 @@ export default class AjaxForm {
 			method: 'POST',
 			path: '/api/page' + pathname,
 			headers: {
-				'X-API-KEY': 'SEawMksSM8AAKnbAroSyU'
+				'X-API-KEY': VAR_APIKEY
 			}
 		});
 		if (typeof options === 'object') {

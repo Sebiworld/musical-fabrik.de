@@ -6,7 +6,6 @@ if (!empty($this->subroles)) {
 	<div class="container-fluid project_role_subroles_teaser">
 		<div class="row">
 			<?php
-			$counter = 1;
 			foreach ($this->subroles as $projectRole) {
 				?>
 				<div class="col col-12 card group-portrait">
@@ -40,18 +39,7 @@ if (!empty($this->subroles)) {
 						</a>
 					</div>
 				</div>
-
 				<?php
-				// if ($counter % 2 === 0) {
-				// 	echo '<div class="clearfix hidden-md-up"></div>';
-				// }
-				// if ($counter % 3 === 0) {
-				// 	echo '<div class="clearfix hidden-lg-down.hidden-lg-up"></div>';
-				// }
-				// if ($counter % 4 === 0) {
-				// 	echo '<div class="clearfix hidden-xl-down"></div>';
-				// }
-				$counter++;
 			}
 			?>
 		</div>

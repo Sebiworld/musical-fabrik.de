@@ -44,8 +44,8 @@
 		right: 0;
 		font-weight: lighter;
 		padding: 8px 8px;
-		background: $brand-primary;
-		color: text-color-over($brand-primary);
+		background: $primary;
+		color: text-color-over($primary);
 	}
 
 	.article-image, .gallery-image{
@@ -63,8 +63,8 @@
 			right: 0;
 			font-weight: lighter;
 			padding: 8px;
-			background: $brand-primary;
-			color: text-color-over($brand-primary);
+			background: $primary;
+			color: text-color-over($primary);
 			z-index: 1;
 		}
 		.swiper-slide{
@@ -103,8 +103,8 @@
 			right: 0;
 			font-weight: lighter;
 			padding: 8px;
-			background: theme-color(primary);
-			color: text-color-over(theme-color(primary));
+			background: $primary;
+			color: text-color-over($primary);
 			z-index: 10;
 
 			// @include media-breakpoint-down(sm) {
@@ -128,7 +128,7 @@
 			}
 
 			a{
-				color: text-color-over(theme-color("dark"));
+				color: text-color-over($dark);
 			}
 		}
 
@@ -182,8 +182,8 @@
 			.card-img-overlay{
 				height: 100%;
 				width: 55%;
-				background: theme-color("dark");
-				color: text-color-over(theme-color("dark"));
+				background: $dark;
+				color: text-color-over($dark);
 				opacity: 0;
 				backface-visibility: hidden;
 				transform-origin: 0 0;
@@ -210,7 +210,7 @@
 					width: 90%;
 				}
 
-				@include media-breakpoint-down(xs) {
+				@include media-breakpoint-only(xs) {
 					.card-title{
 						@include fontsize(0.9);
 					}
@@ -269,7 +269,6 @@
 				.card-link{
 					position: relative;
 					display: inline-block;
-					float: right;
 					white-space: normal;
 					text-align: center;
 					@include fontsize(0.9);

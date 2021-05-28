@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const glob = require("glob");
 const pkg = require('./package.json');
+const envVars = require('./bin/environment/prod.json');
 
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -97,20 +98,6 @@ module.exports = (env, options) => {
 						}
 					}
 				},
-				// {
-				// 	// Exposes jQuery for use outside Webpack build
-				// 	test: require.resolve("jquery"),
-				// 	use: [
-				// 		{
-				// 			loader: "expose-loader",
-				// 			options: "jQuery",
-				// 		},
-				// 		{
-				// 			loader: "expose-loader",
-				// 			options: "$",
-				// 		},
-				// 	],
-				// },
 				{
 					test: /\.(sass|scss|css)$/,
 
@@ -272,6 +259,7 @@ module.exports = (env, options) => {
 			],
 		},
 		plugins: [
+			new webpack.DefinePlugin(envVars),
 			new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de/),
 			new LodashModuleReplacementPlugin({
 				'collections': true,
@@ -304,11 +292,6 @@ module.exports = (env, options) => {
 			new MiniCssExtractPlugin({
 				filename: "css/[name]-[hash:8].min.css",
 				chunkFilename: "css/[id]-[chunkhash].min.css",
-			}),
-			new webpack.ProvidePlugin({
-				$: "jquery",
-				jQuery: "jquery",
-				"window.jQuery": "jquery"
 			}),
 			new OptimizeCSSAssetsPlugin({
 				cssProcessor: CleanCSS,

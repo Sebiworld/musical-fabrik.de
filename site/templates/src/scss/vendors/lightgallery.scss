@@ -1,15 +1,124 @@
-@import "./globals/index";
+@import './globals/index';
 
 $lg-border-radius-base: 0px;
 
-@import "~lightgallery/src/sass/lightgallery";
-@import "~lightslider/dist/css/lightslider.min.css";
+// This files contains lightGallery and all plugins
 
-.lg-outer .lg-thumb-item{
-	border-radius: 0px;
-	border-width: 0px;
+// Example For white theme
+$lg-theme-color: $body-bg;
+$lg-theme-highlight: $body-color;
+$lg-thumb-bg: #fcfcfc;
+$lg-next-prev-bg: rgba(0, 0, 0, 0.03);
+$lg-next-prev-color: #000000;
+$lg-next-next-color: #000000;
 
-	&.active, &:hover, &:focus{
-		border-width: 2px;
-	}
+$lg-icon-color: #000;
+$lg-next-prev-hover-color: #555;
+$lg-toolbar-icon-color: #000;
+$lg-toolbar-icon-hover-color: #555;
+$lg-progress-bar-bg: #999;
+
+$lg-sub-html-color: #000;
+
+// Core variables and mixins
+@import '~lightgallery/scss/lg-variables';
+@import '~lightgallery/scss/lg-mixins';
+@import '~lightgallery/scss/lg-fonts';
+@import '~lightgallery/scss/lg-theme-default';
+@import '~lightgallery/scss/lg-thumbnail';
+@import '~lightgallery/scss/lg-video';
+@import '~lightgallery/scss/lg-autoplay';
+@import '~lightgallery/scss/lg-zoom';
+@import '~lightgallery/scss/lg-pager';
+@import '~lightgallery/scss/lg-fullscreen';
+@import '~lightgallery/scss/lg-share';
+@import '~lightgallery/scss/lg-comments';
+@import '~lightgallery/scss/lg-rotate';
+
+// Core
+@import '~lightgallery/scss/lightgallery-core';
+
+.lg-outer .lg-thumb-item {
+  border-radius: 0px;
+  //   border-width: 0px;
+
+  //   &.active,
+  //   &:hover,
+  //   &:focus {
+  //     border-width: 2px;
+  //   }
+}
+
+.lg-container {
+  .lg-toolbar .lg-icon,
+  .lg .lg-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    padding: 4px 0;
+    vertical-align: middle;
+    background-color: rgba(#fff, 0.65);
+    border-width: 2px;
+    transition: background-color 0.5s;
+    animation-fill-mode: both;
+    color: #000000;
+
+    &:hover,
+    &:focus {
+      background-color: rgba(#fff, 0.9);
+      color: #111111;
+    }
+  }
+
+  .lg-toolbar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 0px;
+  }
+
+  .lg-counter {
+    background-color: rgba(#fff, 0.65);
+    padding: 12px 16px;
+  }
+
+  .lg-sub-html {
+    background-color: rgba(#fff, 0.65);
+    display: inline-block;
+  }
+
+  &.lg-inline {
+    .lg-inner {
+      top: 0;
+    }
+
+    .lg-sub-html {
+      display: none;
+    }
+
+    .lg-toolbar {
+      & > *:not(.lg-maximize) {
+        display: none;
+      }
+
+      //   & > .lg-maximize {
+      //     display: flex;
+      //     justify-content: center;
+      //     align-items: center;
+      //     z-index: 100;
+      //     width: 40px;
+      //     height: 40px;
+      //     text-align: center;
+      //     padding: 4px 0;
+      //     vertical-align: middle;
+      //     background-color: rgba(#fff, 0.65);
+      //     border-width: 2px;
+      //     transition: background-color 0.5s;
+      //     animation-fill-mode: both;
+      //   }
+    }
+  }
 }

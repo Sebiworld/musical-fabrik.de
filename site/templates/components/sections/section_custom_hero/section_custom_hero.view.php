@@ -5,7 +5,7 @@ namespace ProcessWire;
 ?>
 <section class="container-fluid section section_custom_hero <?= !empty($this->page->classes . '') ? $this->page->classes : ''; ?>" <?= $this->sectionId ? 'id="' . $this->sectionId . '"' : ''; ?>>
 
-	<h2 class="section-title sr-only sr-only-focusable"><?= $this->page->title; ?></h2>
+	<h2 class="section-title visually-hidden visually-hidden-focusable"><?= $this->page->title; ?></h2>
 	<div class="background aspect-ratio ar-2-1 vue-comp">
 		<div class="ar-content"></div>
 	</div>

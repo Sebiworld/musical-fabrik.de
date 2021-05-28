@@ -89,10 +89,11 @@ class ImageService extends TwackComponent {
             return '';
         }
 
-        $attributes        = array(
-            'data-caption' => $this->mergeArgs('caption', $args, $image)
-        );
-
+        $attributes = array();
+        if (isset($args['attributes'])) {
+            $attributes = $this->getClassArray($args['attributes']);
+        }
+        $attributes['data-caption'] = $this->mergeArgs('caption', $args, $image);
         $attributes['alt'] = $this->mergeArgs('alt', $image, $attributes['data-caption'], $args);
 
         $styles            = array();
@@ -394,7 +395,7 @@ class ImageService extends TwackComponent {
 
         if ($image instanceof Pageimage) {
             $svg = $this->getPlaceholderSvg($image);
-            if (!empty($svg)) {
+            if (!empty($svg) && (!isset($args['svgPlaceholder']) || !!$args['svgPlaceholder']) ) {
                 // A svg-placeholder is defined
                 return 'data:image/svg+xml,' . $svg;
             } elseif ($inline) {
