@@ -7,6 +7,7 @@ class SectionPagesGrid extends TwackComponent {
         parent::__construct($args);
 
         $this->imageService = $this->getService('ImageService');
+				$this->projectService = $this->getService('ProjectService');
 
         // Determine the ID of the one-page section:
         $this->sectionId = '';
@@ -47,7 +48,7 @@ class SectionPagesGrid extends TwackComponent {
         }
 
         $this->imageFactor = 1;
-        $ratioParts        = explode('-', $this->imageRatio);
+        $ratioParts = explode('-', $this->imageRatio);
         if (is_array($ratioParts) && count($ratioParts) === 2) {
             $this->imageFactor = floatval($ratioParts[1]) / floatval($ratioParts[0]);
         }
@@ -64,8 +65,8 @@ class SectionPagesGrid extends TwackComponent {
         }
 
         $this->gridClasses = '';
-        $cardSizes         = [1, 2, 3, 4, 6, 12];
-        $bootstrapSizes    = ['xl', 'lg', 'md', 'sm', 'xs'];
+        $cardSizes = [1, 2, 3, 4, 6, 12];
+        $bootstrapSizes = ['xl', 'lg', 'md', 'sm', 'xs'];
 
         foreach ($cardSizes as $key => $size) {
             if ($size < $this->cardSize) {
@@ -76,14 +77,14 @@ class SectionPagesGrid extends TwackComponent {
         }
 
         foreach ($bootstrapSizes as $key => $bootstrapSize) {
-            if($bootstrapSize === 'md' && count($cardSizes) <= 1){
+            if ($bootstrapSize === 'md' && count($cardSizes) <= 1) {
                 $size = 6;
-            }else{
+            } else {
                 $size = array_shift($cardSizes);
             }
-            
+
             if ($size === null) {
-                $this->gridClasses = 'col-12 '.$this->gridClasses;
+                $this->gridClasses = 'col-12 ' . $this->gridClasses;
                 break;
             }
 
@@ -91,12 +92,11 @@ class SectionPagesGrid extends TwackComponent {
                 $this->gridClasses = ' ' . $this->gridClasses;
             }
 
-            if($bootstrapSize === 'xs'){
+            if ($bootstrapSize === 'xs') {
                 $this->gridClasses = 'col-' . $size . $this->gridClasses;
-            }else{
+            } else {
                 $this->gridClasses = 'col-' . $bootstrapSize . '-' . $size . $this->gridClasses;
             }
-            
 
             unset($bootstrapSizes[$key]);
         }

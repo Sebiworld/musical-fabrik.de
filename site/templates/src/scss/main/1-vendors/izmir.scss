@@ -12,8 +12,8 @@ $border-width: 3px;
 $border-color: #fff;
 $border-radius: 3px;
 
-$primary-color: theme-color-level('dark', -1);
-$secondary-color: theme-color-level('dark', 10);
+$primary-color: lighten($dark, 2%);
+$secondary-color: #000000;
 $text-color: #fff;
 
 // @import "~@ciar4n/izmir/scss/base/base";

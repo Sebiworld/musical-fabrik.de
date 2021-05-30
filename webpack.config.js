@@ -59,8 +59,8 @@ module.exports = (env, options) => {
 		output: {
 			path: PATHS.build,
 			publicPath: PATHS.public,
-			filename: "js/[name]-[hash:8]" + (options.browser_env && options.browser_env !== 'modern' ? '.' + options.browser_env : '') + ".min.js",
-			chunkFilename: "js/chunk-[name]-[chunkhash]" + (options.browser_env && options.browser_env !== 'modern' ? '.' + options.browser_env : '') + ".min.js",
+			filename: "js/[name]-[chunkhash]" + (env.browser_env && env.browser_env !== 'modern' ? '.' + env.browser_env : '') + ".min.js",
+			chunkFilename: "js/chunk-[name]-[chunkhash]" + (env.browser_env && env.browser_env !== 'modern' ? '.' + env.browser_env : '') + ".min.js",
 		},
 		module: {
 			rules: [
@@ -81,7 +81,7 @@ module.exports = (env, options) => {
 										useBuiltIns: 'usage',
 										corejs: 3,
 										targets: {
-											browsers: (options.browser_env === 'modern' ? pkg.browserslist.modernBrowsers : pkg.browserslist.legacyBrowsers),
+											browsers: (env.browser_env === 'modern' ? pkg.browserslist.modernBrowsers : pkg.browserslist.legacyBrowsers),
 										},
 										debug: false
 									}
@@ -163,7 +163,7 @@ module.exports = (env, options) => {
 					use: [{
 						loader: "file-loader",
 						options: {
-							name: "[name].[hash:8].[ext]",
+							name: "[name].[chunkhash].[ext]",
 							outputPath: "img/",
 							emitFile: true,
 							useRelativePath: false
@@ -177,7 +177,7 @@ module.exports = (env, options) => {
 					use: [{
 						loader: "file-loader",
 						options: {
-							name: "[name].[hash:8].[ext]",
+							name: "[name].[chunkhash].[ext]",
 							outputPath: "img/",
 							emitFile: true,
 							useRelativePath: false
@@ -215,7 +215,7 @@ module.exports = (env, options) => {
 					use: [{
 						loader: "file-loader",
 						options: {
-							name: "[name].[hash:8].[ext]",
+							name: "[name].[chunkhash].[ext]",
 							outputPath: "fonts/",
 							emitFile: true,
 							useRelativePath: false
@@ -269,15 +269,15 @@ module.exports = (env, options) => {
 			new WebpackAssetsManifest({
 				merge: true,
 				customize(entry, original, manifest, asset) {
-					if (options.browser_env !== 'modern' && options.browser_env !== undefined) {
-						entry.key = options.browser_env + '/' + entry.key;
+					if (env.browser_env !== 'modern' && env.browser_env !== undefined) {
+						entry.key = env.browser_env + '/' + entry.key;
 					}
 					return entry;
 				},
 				writeToDisk: true,
 				output: 'manifest.json'
 			}),
-			(options.clear !== 'false' && isProduction ?
+			(env.clear !== 'false' && isProduction ?
 				new CleanWebpackPlugin({
 					cleanOnceBeforeBuildPatterns: [
 						"./img/*",
@@ -290,7 +290,7 @@ module.exports = (env, options) => {
 			),
 			new webpack.ProgressPlugin(),
 			new MiniCssExtractPlugin({
-				filename: "css/[name]-[hash:8].min.css",
+				filename: "css/[name]-[chunkhash].min.css",
 				chunkFilename: "css/[id]-[chunkhash].min.css",
 			}),
 			new OptimizeCSSAssetsPlugin({
@@ -307,7 +307,7 @@ module.exports = (env, options) => {
 				new BundleAnalyzerPlugin(
 					{
 						analyzerMode: 'static',
-						reportFilename: 'report-' + options.browser_env + '.html',
+						reportFilename: 'report-' + env.browser_env + '.html',
 					}
 				) : new LiveReloadPlugin()
 			)

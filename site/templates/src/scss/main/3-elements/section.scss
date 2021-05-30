@@ -128,17 +128,17 @@
   }
   background-color: $color;
   //   background-image: linear-gradient(315deg, $gradientcolor 0%, $color 74%);
-  color: text-color-over($color);
+  color: color-contrast($color);
 
   .section-title > span {
-    border-color: text-color-over($color);
+    border-color: color-contrast($color);
   }
 
   a:not(.btn):not(.social-button) {
-    color: text-color-over($color);
+    color: color-contrast($color);
 
     .icon {
-      color: text-color-over($color);
+      color: color-contrast($color);
     }
 
     &:hover,
@@ -162,16 +162,16 @@
   }
 
   a.social-button:not(.btn) {
-    color: text-color-over($color);
+    color: color-contrast($color);
 
     .icon {
-      color: text-color-over($color);
+      color: color-contrast($color);
     }
   }
 
   .nav {
     .nav-link {
-      color: text-color-over($color);
+      color: color-contrast($color);
 
       &:hover,
       &:focus {

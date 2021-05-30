@@ -37,6 +37,7 @@ $accordion-button-active-color: text-color-over($dark);
 
 // The yiq lightness value that determines when the lightness of color changes from "dark" to "light". Acceptable values are between 0 and 255.
 $yiq-contrasted-threshold: 160;
+$min-contrast-ratio:   2.3 !default;
 
 $code-color: #ff6188;
 

@@ -34,7 +34,7 @@ input.btn[type="submit"] {
 input[type="submit"],
 button[type="submit"] {
 	@include button-variant(
-		text-color-over($primary),
+		color-contrast($primary),
 		$primary,
 		transparent
 	);
@@ -194,11 +194,11 @@ a.social-button, .container-fluid.highlight.highlight a.social-button {
 	@each $color, $value in $colors {
 		&.#{$color} {
 			background-color: $value;
-			color: text-color-over($value);
+			color: color-contrast($value);
 			&:hover,
 			&:focus {
 				background-color: darken($value, 10%);
-				color: text-color-over(darken($value, 10%));
+				color: color-contrast(darken($value, 10%));
 			}
 		}
 	}
@@ -207,11 +207,11 @@ a.social-button, .container-fluid.highlight.highlight a.social-button {
 	@each $color, $value in $theme-colors {
 		&.#{$color} {
 			background-color: $value;
-			color: text-color-over($value);
+			color: color-contrast($value);
 			&:hover,
 			&:focus {
 				background-color: darken($value, 10%);
-				color: text-color-over(darken($value, 10%));
+				color: color-contrast(darken($value, 10%));
 			}
 		}
 	}

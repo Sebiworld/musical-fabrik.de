@@ -45,7 +45,7 @@
 		font-weight: lighter;
 		padding: 8px 8px;
 		background: $primary;
-		color: text-color-over($primary);
+		color: color-contrast($primary);
 	}
 
 	.article-image, .gallery-image{
@@ -64,7 +64,7 @@
 			font-weight: lighter;
 			padding: 8px;
 			background: $primary;
-			color: text-color-over($primary);
+			color: color-contrast($primary);
 			z-index: 1;
 		}
 		.swiper-slide{
@@ -104,7 +104,7 @@
 			font-weight: lighter;
 			padding: 8px;
 			background: $primary;
-			color: text-color-over($primary);
+			color: color-contrast($primary);
 			z-index: 10;
 
 			// @include media-breakpoint-down(sm) {
@@ -128,7 +128,7 @@
 			}
 
 			a{
-				color: text-color-over($dark);
+				color: color-contrast($dark);
 			}
 		}
 
@@ -183,7 +183,7 @@
 				height: 100%;
 				width: 55%;
 				background: $dark;
-				color: text-color-over($dark);
+				color: color-contrast($dark);
 				opacity: 0;
 				backface-visibility: hidden;
 				transform-origin: 0 0;
