@@ -25,7 +25,7 @@ if ($this->images && !empty($this->images)) {
     		foreach ($this->images as $listenIndex => $image) {
         		?>
 				<div class="masonry-grid-item col-12 col-sm-6 col-lg-4 col-xxl-3">
-					<a class="lightgallery-item" href="<?= $image->url; ?>">
+					<a class="lightgallery-item" data-external-thumb-image="<?= $image->height(300)->url; ?>"  href="<?= $image->url; ?>">
 						<?php
 						echo $this->component->getService('ImageService')->getPictureHtml(array(
 							'image' => $image,

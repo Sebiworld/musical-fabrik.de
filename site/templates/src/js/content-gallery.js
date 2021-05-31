@@ -64,7 +64,8 @@ import { ready, trigger } from './classes/helpers.js';
 						selector: '.lightgallery-item',
 						galleryId: ++lightGalleryCounter,
 						plugins: [lgZoom, lgThumbnail, lgHash, lgFullscreen, lgAutoplay, lgVideo],
-						licenseKey: VAR_LIGHTGALLERY_KEY
+						exThumbImage: 'data-external-thumb-image',
+						licenseKey: VAR_LIGHTGALLERY_KEY,
 					});
 				}
 			});

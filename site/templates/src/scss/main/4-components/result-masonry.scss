@@ -18,7 +18,6 @@
 	}
 
 	.masonry-grid{
-
 		.masonry-grid-sizer,
 		.masonry-grid-item {
 			width: 20%;
@@ -49,7 +48,7 @@
 			}
 		}
 
-		@include media-breakpoint-down('xs') {
+		@include media-breakpoint-only('xs') {
 			.masonry-grid-sizer,
 			.masonry-grid-item {
 				width: 100%;
