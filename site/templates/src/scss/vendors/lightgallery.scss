@@ -50,6 +50,8 @@ $lg-sub-html-color: #000;
 }
 
 .lg-container {
+  z-index: 30;
+
   .lg-toolbar .lg-icon,
   .lg .lg-icon {
     display: flex;
@@ -91,6 +93,8 @@ $lg-sub-html-color: #000;
   }
 
   &.lg-inline {
+    z-index: inherit;
+
     .lg-inner {
       top: 0;
     }

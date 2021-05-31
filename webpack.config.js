@@ -6,7 +6,7 @@ const envVars = require('./bin/environment/prod.json');
 
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
@@ -121,12 +121,13 @@ module.exports = (env, options) => {
 								postcssOptions: {
 									ident: "postcss",
 									sourceMap: !isProduction,
-									plugins: loader => [
-										require("postcss-discard-comments")({
+									plugins: [
+										["postcss-discard-comments", {
 											removeAll: true,
-										}),
-										require("postcss-preset-env")(),
-										require("postcss-short")
+										}],
+										"postcss-preset-env",
+										"autoprefixer",
+										"postcss-short"
 									],
 								}
 							},
@@ -234,14 +235,14 @@ module.exports = (env, options) => {
 			usedExports: true,
 			// runtimeChunk: 'single',
 			minimizer: [
-				new OptimizeCSSAssetsPlugin({
-					cssProcessorOptions: {
-						map: {
-							inline: false,
-							annotation: !isProduction,
-						},
-						safe: true,
-						discardComments: true
+				new CssMinimizerPlugin({
+					minimizerOptions: {
+						preset: [
+							'default',
+							{
+								discardComments: { removeAll: true },
+							},
+						],
 					}
 				}),
 				//  test?, include?, exclude?, terserOptions?, extractComments?, parallel?, minify?
@@ -293,15 +294,15 @@ module.exports = (env, options) => {
 				filename: "css/[name]-[chunkhash].min.css",
 				chunkFilename: "css/[id]-[chunkhash].min.css",
 			}),
-			new OptimizeCSSAssetsPlugin({
-				cssProcessor: CleanCSS,
-				cssProcessorPluginOptions: {
-					format: isProduction ? 'beautify' : 'keep-breaks',
-					sourceMap: !isProduction,
-					level: 2
-				},
-				canPrint: true
-			}),
+			// new OptimizeCSSAssetsPlugin({
+			// 	cssProcessor: CleanCSS,
+			// 	cssProcessorPluginOptions: {
+			// 		format: isProduction ? 'beautify' : 'keep-breaks',
+			// 		sourceMap: !isProduction,
+			// 		level: 2
+			// 	},
+			// 	canPrint: true
+			// }),
 			new CompressionPlugin(),
 			(isProduction ?
 				new BundleAnalyzerPlugin(
