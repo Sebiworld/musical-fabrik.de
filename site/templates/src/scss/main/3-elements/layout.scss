@@ -54,7 +54,7 @@
       padding-bottom: 60px;
     }
   }
-  @include media-breakpoint-down(xs) {
+  @include media-breakpoint-only(xs) {
     & > .contents-wrapper {
       padding: 60px 20px 20px 20px;
     }

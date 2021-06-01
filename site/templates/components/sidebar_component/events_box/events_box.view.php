@@ -35,7 +35,7 @@ if (($this->performances && count($this->performances) > 0) || ($this->performan
 								<?php
 							}
 							?>
-							
+
 							<?= sprintf(__('%1$s, %2$s - %3$s o\'clock'), $performance->weekday, $performance->date, $performance->time); ?>&nbsp;
 						</h6>
 						<p class="event-cast"><?= $performance->cast; ?></p>

@@ -4,34 +4,40 @@ $enable-gradients: false !default;
 $enable-transitions: true !default;
 $enable-hover-media-query: false !default;
 $enable-grid-classes: true !default;
-$enable-print-styles: true !default;
 
-$body-bg: color("white") !default;
+$body-bg: $white !default;
 $bg-light: #f1f4f9;
-$body-color: color("gray-dark") !default;
-$inverse-bg: theme-color("dark") !default;
-$inverse-color: color("gray-lighter") !default;
+$body-color: $gray-dark !default;
+$inverse-bg: $dark !default;
+$inverse-color: $gray-lighter !default;
 
-$component-active-bg: theme-color("primary") !default;
+$component-active-bg: $primary !default;
 
 $link-color: $body-color !default;
 $link-decoration: underline !default;
-$link-hover-color: theme-color('primary') !default;
+$link-hover-color: $primary !default;
 $link-hover-decoration: underline !default;
 
-$font-family-sans-serif: Aileron, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
-$font-family-serif:      "Cardo", Georgia, "Times New Roman", Times, serif !default;
-$font-family-monospace:  Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-sans-serif: Aileron, -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+  Arial, sans-serif !default;
+$font-family-serif: 'Cardo', Georgia, 'Times New Roman', Times, serif !default;
+$font-family-monospace: Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !default;
 
-$font-family-base:       $font-family-sans-serif !default;
+$font-family-base: $font-family-sans-serif !default;
 
-$headings-font-family:   $font-family-sans-serif !default;
-$headings-font-weight:   800 !default;
+$headings-font-family: $font-family-sans-serif !default;
+$headings-font-weight: 800 !default;
 // $headings-font-family:   "Aileron Heavy", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
 
+$accordion-button-bg: $dark;
+$accordion-button-color: text-color-over($dark);
+$accordion-icon-color: text-color-over($dark);
+$accordion-button-active-bg: $dark;
+$accordion-button-active-color: text-color-over($dark);
 
 // The yiq lightness value that determines when the lightness of color changes from "dark" to "light". Acceptable values are between 0 and 255.
 $yiq-contrasted-threshold: 160;
+$min-contrast-ratio:   2.3 !default;
 
 $code-color: #ff6188;
 
@@ -41,7 +47,7 @@ $grid-breakpoints: (
   md: 768px,
   lg: 992px,
   xl: 1200px,
-  xxl: 1500px
+  xxl: 1500px,
 ) !default;
 
-@import "~bootstrap/scss/_variables";
+@import '~bootstrap/scss/_variables';

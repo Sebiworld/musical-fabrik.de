@@ -5,6 +5,9 @@ article,
 
   .tags {
     margin-bottom: 8px;
+    a{
+      text-decoration: none;
+    }
   }
 
   .main_image {
@@ -42,7 +45,7 @@ article,
     max-width: 100%;
     width: 38em;
   }
-  
+
   .title {
     margin-top: 4px;
     margin-bottom: 24px;

@@ -1,24 +1,22 @@
-@function brightness($color) {
-	@return (
-		(red($color) * 0.299) + (green($color) * 0.587) + (blue($color) * 0.114)
-	);
+@function custom-brightness($color) {
+  @return ((red($color) * 0.299) + (green($color) * 0.587) + (blue($color) * 0.114));
 }
 
 @function contrast($color1, $color2) {
-	@if (abs(brightness($color1) - brightness($color2)) < 120) {
-		@return scale-color($color1, $lightness: 25%); // do something to color1
-	} @else {
-		@return $color1; // don't do anything, use color1
-	}
+  @if (abs(custom-brightness($color1) - custom-brightness($color2)) < 120) {
+    @return scale-color($color1, $lightness: 25%); // do something to color1
+  } @else {
+    @return $color1; // don't do anything, use color1
+  }
 }
 
 // Calculate optimal text color over a background:
 @function text-color-over($bgcolor) {
-	@if (lightness($bgcolor) > 60) {
-		@return #333; // Light background -> Dark font color
-	} @else {
-		@return #f1f1f1; // Dark background -> Light font color
-	}
+  @if (lightness($bgcolor) > 60) {
+    @return #333; // Light background -> Dark font color
+  } @else {
+    @return #f1f1f1; // Dark background -> Light font color
+  }
 }
 
 // Start with assigning color names to specific hex values.
@@ -43,6 +41,10 @@ $gray-600: #868e96 !default;
 $gray-700: #495057 !default;
 $gray-800: #343a40 !default;
 $gray-900: #212529 !default;
+$gray: $gray-600 !default;
+$gray-dark: $gray-800 !default;
+$gray-light: $gray-400 !default;
+$gray-lighter: $gray-200 !default;
 $black: #000 !default;
 
 // Colors
@@ -55,7 +57,7 @@ $mf-grau: #434857;
 $mf-hellgrau: darken(#f7f7f9, 2%);
 $mf-primary: $mf-orange;
 
-$claus-primary: #B3000C;
+$claus-primary: #b3000c;
 
 $medicus-primary: #3d2712;
 
@@ -83,87 +85,120 @@ $oliver-primary: $oliver-blue;
 $beauty-purple: #854363;
 $beauty-primary: $beauty-purple;
 
-$brand-primary: $mf-orange !default;
-$brand-secondary: $mf-rot !default;
-$brand-tertiary: $mf-grau !default;
+$primary: $mf-orange !default;
+$secondary: $mf-rot !default;
+$tertiary: $mf-grau !default;
+$success: $green !default;
+$info: $cyan !default;
+$warning: $yellow !default;
+$danger: $red !default;
+$light: #f1f1f5 !default;
+$dark: #000000 !default;
+
+$twitter: #00aced !default;
+$facebook: #3b5997 !default;
+$googleplus: #dd4b39 !default;
+$google: #ea4335 !default;
+$dribbble: #ea4c89 !default;
+$octocat: #6e5494 !default;
+$github: #6e5494 !default;
+$instagram: #e94d5e !default;
+$whatsapp: #43d854 !default;
+$snapchat: #fffc00 !default;
+$foursquare: #f94877 !default;
+$pinterest: #bd081c !default;
+$rss: #f26522 !default;
+$tumblr: #35465c !default;
+$wordpress: #21759b !default;
+$reddit: #ff4500 !default;
+$youtube: #cd201f !default;
+$linkedin: #0074a1 !default;
+$steam: #000 !default;
+$xing: #026466 !default;
+$stackoverflow: #f48024 !default;
+$sebiworld: #871c14 !default;
+$musical-fabrik: #fd8e00 !default;
+$the-voice-company: #472a78 !default;
+$dieschoeneunddasbiest: $beauty-primary !default;
+$oliver: $oliver-primary !default;
+$zauberervonoz: $wizard-primary !default;
+$paepstin: $paepstin-primary !default;
+$medicus: $medicus-primary !default;
+$claus: $claus-primary !default;
 
 $grays: (
-	100: $gray-100,
-	200: $gray-200,
-	300: $gray-300,
-	400: $gray-400,
-	500: $gray-500,
-	600: $gray-600,
-	700: $gray-700,
-	800: $gray-800,
-	900: $gray-900,
+  100: $gray-100,
+  200: $gray-200,
+  300: $gray-300,
+  400: $gray-400,
+  500: $gray-500,
+  600: $gray-600,
+  700: $gray-700,
+  800: $gray-800,
+  900: $gray-900,
 );
 
 $colors: (
-	blue: $blue,
-	indigo: $indigo,
-	purple: $purple,
-	pink: $pink,
-	red: $red,
-	orange: $orange,
-	yellow: $yellow,
-	green: $green,
-	teal: $teal,
-	cyan: $cyan,
-	white: $white,
-	gray: $gray-600,
-	gray-dark: $gray-800,
-	gray-light: $gray-400,
-	gray-lighter: $gray-200,
-	twitter: #00aced,
-	facebook: #3b5997,
-	// googleplus: #dd4b39,
-	// google: #ea4335,
-	// dribbble: #ea4c89,
-	// octocat: #6e5494,
-	// github: #6e5494,
-	instagram: #e94d5e,
-	whatsapp: #43d854,
-	// snapchat: #fffc00,
-	// foursquare: #f94877,
-	// pinterest: #bd081c,
-	// rss: #f26522,
-	// tumblr: #35465c,
-	// wordpress: #21759b,
-	// reddit: #ff4500,
-	youtube: #cd201f,
-	// linkedin: #0074a1,
-	// steam: #000,
-	// xing: #026466,
-	// stackoverflow: #f48024,
-	// sebiworld: #871c14,
-	musical-fabrik: #fd8e00,
-	the-voice-company: #472a78,
-	dieschoeneunddasbiest: $beauty-primary,
-	oliver: $oliver-primary,
-	zauberervonoz: $wizard-primary,
-	paepstin: $paepstin-primary,
-	medicus: $medicus-primary
+  blue: $blue,
+  indigo: $indigo,
+  purple: $purple,
+  pink: $pink,
+  red: $red,
+  orange: $orange,
+  yellow: $yellow,
+  green: $green,
+  teal: $teal,
+  cyan: $cyan,
+  white: $white,
+  gray: $gray,
+  gray-dark: $gray-dark,
+  gray-light: $gray-light,
+  gray-lighter: $gray-lighter,
+  twitter: $twitter,
+  facebook: $facebook,
+  // googleplus: $googleplus,
+  // google: $google,
+  // dribbble: $dribbble,
+  // octocat: $octocat,
+  // github: $github,
+  instagram: $instagram,
+  whatsapp: $whatsapp,
+  // snapchat: $snapchat,
+  // foursquare: $foursquare,
+  // pinterest: $pinterest,
+  // rss: $rss,
+  // tumblr: $tumblr,
+  // wordpress: $wordpress,
+  // reddit: $reddit,
+  youtube: $youtube,
+  // linkedin: $linkedin,
+  // steam: $steam,
+  // xing: $xing,
+  // stackoverflow: $stackoverflow,
+  // sebiworld: $sebiworld,
+  musical-fabrik: $musical-fabrik,
+  the-voice-company: $the-voice-company,
+  dieschoeneunddasbiest: $dieschoeneunddasbiest,
+  oliver: $oliver,
+  zauberervonoz: $zauberervonoz,
+  paepstin: $paepstin,
+  medicus: $medicus,
+  claus: $claus,
 );
 
 $theme-colors: (
-	primary: $brand-primary,
-	secondary: $brand-secondary,
-	tertiary: $brand-tertiary,
-	success: $green,
-	info: $cyan,
-	warning: $yellow,
-	danger: $red,
-	light: #f1f1f5,
-	dark: #000000,
-	// project-primary: $mf-orange,
-	// dieschoeneunddasbiest: $beauty-primary,
-		// oliver: $oliver-primary,
-		// zauberervonoz: $wizard-primary,
-		// paepstin: $paepstin-primary,
+  primary: $primary,
+  secondary: $secondary,
+  tertiary: $tertiary,
+  success: $success,
+  info: $info,
+  warning: $warning,
+  danger: $danger,
+  light: $light,
+  dark: $dark,
 );
 
-$btn-link-disabled-color: color("gray-light") !default;
+$btn-link-disabled-color: $gray-light !default;
 
 $navbar-dark-color: rgba($white, 0.5) !default;
 $navbar-dark-hover-color: rgba($white, 0.75) !default;

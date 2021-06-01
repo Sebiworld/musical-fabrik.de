@@ -4,7 +4,7 @@
 .t-project_role {
   .layout-wrapper {
     & > .contents-wrapper {
-      @include media-breakpoint-down(xs) {
+      @include media-breakpoint-only(xs) {
         padding: 40px 20px 20px 20px;
       }
     }
@@ -108,7 +108,7 @@
   .title-link {
     &:hover {
       .title {
-        color: $brand-primary;
+        color: $primary;
       }
     }
   }
@@ -217,10 +217,6 @@
     }
   }
 
-  .portrait-block {
-    // max-width: 250px !important;
-  }
-
   .portrait {
     max-width: 100%;
     width: 210px;
@@ -293,7 +289,7 @@
     max-width: 100%;
     width: 460px;
     margin: 8px auto;
-    background: theme-color("light");
+    background: $light;
 
     .list-group-item {
       background: transparent;
@@ -312,7 +308,7 @@
         width: 90px;
       }
 
-      @include media-breakpoint-down(xs) {
+      @include media-breakpoint-only(xs) {
         position: absolute;
         top: 0;
         left: 0;
@@ -332,7 +328,7 @@
       flex-grow: 1;
       flex-shrink: 1;
 
-      @include media-breakpoint-down(xs) {
+      @include media-breakpoint-only(xs) {
         z-index: 1;
       }
     }

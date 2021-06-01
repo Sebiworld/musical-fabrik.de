@@ -5,6 +5,7 @@ namespace ProcessWire;
 
 <header>
 	<nav class="navbar navbar-dark navbar-expand-md bg-faded fixed-top highlight-navigation">
+	<div class="container-fluid">
 		<a class="navbar-brand" href="<?= (string) wire('pages')->get(1)->httpUrl; ?>">
 			<img class="logo" src="<?= $this->logo->url; ?>" alt="<?= $this->logo->description; ?>"/>
 		</a>
@@ -33,12 +34,12 @@ namespace ProcessWire;
 					// Dropdown for desktop menu:
 					?>
 					<li class="nav-item dropdown d-none d-xs-none d-md-inline-block has-hamburger" id="#<?= $this->dropdownId; ?>">
-						<button class="nav-link dropdown-toggle hamburger hamburger--spring" type="button" aria-label="<?= __('Menu'); ?>" aria-controls="<?= $this->dropdownLabelId; ?>" aria-expanded="false" id="<?= $this->dropdownLabelId; ?>" data-toggle="dropdown" >
+						<button class="nav-link dropdown-toggle hamburger hamburger--spring" type="button" aria-label="<?= __('Menu'); ?>" aria-controls="<?= $this->dropdownLabelId; ?>" aria-expanded="false" id="<?= $this->dropdownLabelId; ?>" data-bs-toggle="dropdown">
 							<span class="hamburger-box">
 								<span class="hamburger-inner"></span>
 							</span>
 						</button>
-						<div class="dropdown-menu" aria-labelledby="<?= $this->dropdownLabelId; ?>">
+						<div class="dropdown-menu dropdown-menu-end" aria-labelledby="<?= $this->dropdownLabelId; ?>">
 							<?php
 							foreach ($this->secondaryNavigation as $navItem) {
 								?>
@@ -63,6 +64,7 @@ namespace ProcessWire;
 			<!-- <div class="float-lg-right">
 				<button class="btn align-middle btn-sm btn-outline-primary" type="button">Login</button>
 			</div> -->
+		</div>
 		</div>
 	</nav>
 </header>

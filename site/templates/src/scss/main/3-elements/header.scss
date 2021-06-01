@@ -1,196 +1,201 @@
-header{
-	height: 90px;
-	background-color: theme-color("dark");
-	transition: height 0.5s;
+header {
+  height: 90px;
+  background-color: $dark;
+  transition: height 0.5s;
 
-	@include media-breakpoint-down(sm) {
-		background-color: theme-color("dark");
-	}
+  @include media-breakpoint-down(sm) {
+    background-color: $dark;
+  }
 
-	// .bg-dark{
-	// 	background-color: theme-color("dark");
-	// }
+  // .bg-dark{
+  // 	background-color: $dark;
+  // }
 
-	// background-color: transparent;
+  // background-color: transparent;
 
-	.navbar{
-		min-height: 65px;
-		height: 90px;
-		transition: all 0.5s;
-		padding-top: 10px;
-		padding-bottom: 10px;
+  .navbar {
+    min-height: 65px;
+    height: 90px;
+    transition: all 0.5s;
+    padding-top: 10px;
+    padding-bottom: 10px;
 
-		.navbar-brand{
-			.logo{
-				width: auto;
-				height: 50px;
-				transition: height 0.5s;
+    .navbar-brand {
+      .logo {
+        width: auto;
+        height: 50px;
+        transition: height 0.5s;
 
-				@include media-breakpoint-only(md) {
-					height: 40px;
-				}
+        @include media-breakpoint-only(md) {
+          height: 40px;
+        }
 
-				@include media-breakpoint-down(xs) {
-					height: 40px;
-				}
-			}
-		}
-	}
+        @include media-breakpoint-only(xs) {
+          height: 40px;
+        }
+      }
+    }
+  }
 
-	.navbar{
-		background-color: theme-color("dark");
-		@include media-breakpoint-down(sm) {
-			background-color: theme-color("dark");
-		}
+  .navbar {
+    background-color: $dark;
+    @include media-breakpoint-down(sm) {
+      background-color: $dark;
+    }
 
-		&>.hamburger{
-			max-height: 100%;
-		}
-	}
+    & > .hamburger {
+      max-height: 100%;
+    }
+  }
 
-	.navbar-nav{
-		align-items: center;
-		justify-content: center;
+  .navbar-nav {
+    align-items: center;
+    justify-content: center;
 
-		a.nav-link.nav-link{
-			color: #eee;
-			&.active, &:active{
-				color: contrast(theme-color("primary"), theme-color("dark"));
-			}
-		}
-	}
+    a.nav-link.nav-link {
+      color: #eee;
+      &.active,
+      &:active {
+        color: contrast($primary, $dark);
+      }
+    }
+  }
 
-	.navbar-collapse{
-		max-height: 100%;
+  .navbar-collapse {
+    max-height: 100%;
 
-		@include media-breakpoint-down(sm) {
-			&>:first-child{
-				padding-top: 15px;
-			}
+    @include media-breakpoint-down(sm) {
+      & > :first-child {
+        padding-top: 15px;
+      }
 
-			&>:last-child{
-				padding-bottom: 15px;
-			}
+      & > :last-child {
+        padding-bottom: 15px;
+      }
 
-			.nav-item{
-				display: block;
-				width: 100%;
-				text-align: center;
-			}
-		}
-	}
+      .nav-item {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
 
-	@include media-breakpoint-down(sm) {
-		.nav-link{
-			background-color: theme-color("dark");
-		}
-	}
+  @include media-breakpoint-down(sm) {
+    .nav-link {
+      background-color: $dark;
+    }
+  }
 
-	.nav-item{
-		position: relative;
-		height: 100%;
-		outline: 0;
+  .nav-item {
+    position: relative;
+    height: 100%;
+    outline: 0;
 
-		button{
-			outline: 0;
-		}
+    button {
+      outline: 0;
+    }
 
-		&.active, &:active{
-			color: contrast(theme-color("primary"), theme-color("dark"));
-			&>a.nav-link.nav-link{
-				color: contrast(theme-color("primary"), theme-color("dark"));
-			}
-		}
+    &.active,
+    &:active {
+      color: contrast($primary, $dark);
+      & > a.nav-link.nav-link {
+        color: contrast($primary, $dark);
+      }
+    }
 
-		padding-left: 0;
-		padding-right: 0;
+    padding-left: 0;
+    padding-right: 0;
 
-		@include media-breakpoint-up('md') {
-			&:first-child{
-				border-left: 0 none;
-			}
+    @include media-breakpoint-up('md') {
+      &:first-child {
+        border-left: 0 none;
+      }
 
-			&.has-hamburger{
-				border-left: 0 none;
+      &.has-hamburger {
+        border-left: 0 none;
 
-				.hamburger-box{
-					margin-left: 5px;
-					margin-top: 7px;
-				}
-			}
-		}
-	}
+        .hamburger-box {
+          margin-left: 5px;
+          margin-top: 7px;
+        }
+      }
+    }
+  }
 
-	.hamburger-inner{
-		background-color: $inverse-color;
+  .hamburger-inner {
+    background-color: $inverse-color;
 
-		&:before, &:after{
-			background-color: $inverse-color;
-		}
-	}
+    &:before,
+    &:after {
+      background-color: $inverse-color;
+    }
+  }
 
-	.navbar-dark .navbar-toggler{
-		border: 0 none;
-	}
+  .navbar-dark .navbar-toggler {
+    border: 0 none;
+  }
 
-	.navbar-collapse{
-		justify-content: flex-end;
-	}
+  .navbar-collapse {
+    justify-content: flex-end;
+  }
 
-	.dropdown-menu{
-		background: rgba($white, 1);
-		padding: 0;
-		left: auto;
-		right: 0;
-		margin-top: $navbar-padding-y * 2;
-		transition: margin-top 0.5s;
-		border: 0 none;
+  .dropdown-menu {
+    background: rgba($white, 1);
+    padding: 0;
+    left: auto;
+    right: 0;
+    margin-top: $navbar-padding-y * 2;
+    transition: margin-top 0.5s;
+    border: 0 none;
 
-		&:before{
-			position: absolute;
-			width: 0;
-			height: 0;
-			border-color: transparent;
-			border-style: solid;
-			top: -15px;
-			right: 15px;
-			// margin-left: -5px;
-			content: "";
-			border-width: 0 15px 15px;
-			border-bottom-color: rgba($white, 1);
-		}
+    &:before {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-color: transparent;
+      border-style: solid;
+      top: -15px;
+      right: 15px;
+      // margin-left: -5px;
+      content: '';
+      border-width: 0 15px 15px;
+      border-bottom-color: rgba($white, 1);
+    }
 
-		.dropdown-item{
-			padding: 8px 32px;
-			&.active, &:active{
-				color: $brand-primary;
-				background-color: transparent;
-			}
-		}
-	}
+    .dropdown-item {
+      padding: 8px 32px;
+      &.active,
+      &:active {
+        color: $primary;
+        background-color: transparent;
+      }
+    }
+  }
 
-	&.mini{
-		height: 65px;
-		background-color: theme-color("dark");
+  &.mini {
+    height: 65px;
+    background-color: $dark;
 
-		.navbar{
-			background-color: theme-color("dark");
-			height: 65px;
-			padding-top: 8px;
-			padding-bottom: 8px;
+    .navbar {
+      background-color: $dark;
+      height: 65px;
+      padding-top: 8px;
+      padding-bottom: 8px;
 
-			.logo{
-				height: 30px;
-			}
-		}
-		.dropdown-menu{
-			margin-top: $navbar-padding-y;
-		}
-	}
+      .logo {
+        height: 30px;
+      }
+    }
+    .dropdown-menu {
+      margin-top: $navbar-padding-y;
+    }
+  }
 }
 
-body.sub-page{
-	header, header>.navbar{
-		background-color: theme-color("dark");
-	}
+body.sub-page {
+  header,
+  header > .navbar {
+    background-color: $dark;
+  }
 }

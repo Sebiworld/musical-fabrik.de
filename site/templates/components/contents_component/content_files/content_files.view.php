@@ -11,7 +11,7 @@ if ($this->files && !empty($this->files)) {
 		<?php
         if (!empty($this->title)) {
             ?>
-			<h<?= $headingDepth; ?> class="block-title <?= $this->page->hide_title ? 'sr-only sr-only-focusable' : ''; ?>">
+			<h<?= $headingDepth; ?> class="block-title <?= $this->page->hide_title ? 'visually-hidden visually-hidden-focusable' : ''; ?>">
 				<?= $this->title; ?>
 			</h<?= $headingDepth; ?>>
 			<?php

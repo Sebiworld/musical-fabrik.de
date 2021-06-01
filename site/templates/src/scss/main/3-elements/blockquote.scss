@@ -16,7 +16,7 @@ blockquote, blockquote.blockquote{
 
 	&:before {
 		content: '\201C';
-		color: lighten($brand-primary, 30%);
+		color: lighten($primary, 30%);
 		font-size: 7.5em;
 		font-weight: 700;
 		// opacity: .4;

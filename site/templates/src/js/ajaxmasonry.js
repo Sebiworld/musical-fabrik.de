@@ -373,7 +373,7 @@ import { debounce, uniq, remove } from 'lodash-es';
 					continue;
 				}
 
-				let apikey = 'SEawMksSM8AAKnbAroSyU';
+				let apikey = VAR_APIKEY;
 				if (tileElement.hasAttribute('data-apikey')) {
 					apikey = tileElement.getAttribute('data-apikey');
 				}

@@ -1,5 +1,5 @@
-$project-primary-bg: theme-color("primary") !default;
-$project-primary-color: text-color-over(theme-color("primary")) !default;
+$project-primary-bg: $primary !default;
+$project-primary-color: color-contrast($primary) !default;
 $project-primary-inverse-bg: #000 !default;
 $project-primary-inverse-color: #fff !default;
 $project-mainimage-color: #fff !default;
@@ -58,7 +58,7 @@ body {
 
   .image-caption-top {
     background-color: rgba($project-mainimage-color, 0.5);
-    color: text-color-over($project-mainimage-color);
+    color: color-contrast($project-mainimage-color);
   }
 
   blockquote {
