@@ -125,13 +125,14 @@ a {
   transition: color 0.2s;
 }
 
-a:not(.btn):not(.nav-link):not(.no-underline), .btn-link{
+a:not(.btn):not(.nav-link):not(.no-underline),
+.btn-link {
   text-decoration-color: $primary;
-  text-decoration-thickness: .125em;
+  text-decoration-thickness: 0.125em;
   text-underline-offset: 1.5px;
 }
 
-.no-underline{
+.no-underline {
   text-decoration: none;
 
   &:hover,
@@ -162,9 +163,9 @@ a:not(.btn):not(.nav-link):not(.no-underline), .btn-link{
   .btn-#{$color},
   input.btn-#{$color},
   button.btn-#{$color} {
-    &[type="submit"],
-    &[type="button"],
-    &[type="reset"] {
+    &[type='submit'],
+    &[type='button'],
+    &[type='reset'] {
       @include button-variant($value, $value);
     }
   }
@@ -183,7 +184,8 @@ a:not(.btn):not(.nav-link):not(.no-underline), .btn-link{
   font-family: $font-family-sans-serif;
 }
 
-p.capital-letter, .capital-letter p:first-of-type{
+p.capital-letter,
+.capital-letter p:first-of-type {
   &:first-letter {
     font-family: $font-family-serif;
     font-size: 5.5rem;
@@ -193,4 +195,18 @@ p.capital-letter, .capital-letter p:first-of-type{
   }
 }
 
-@import "./fonts";
+.badge {
+  @each $color, $value in $theme-colors {
+    &.badge-#{$color} {
+      background-color: $value;
+      color: color-contrast($value);
+      &:hover,
+      &:focus {
+        background-color: darken($value, 10%);
+        color: color-contrast(darken($value, 10%));
+      }
+    }
+  }
+}
+
+@import './fonts';
