@@ -26,7 +26,7 @@ namespace ProcessWire;
       foreach ($this->pages as $listindex => $page) {
         ?>
 		<article class="col <?= $this->gridClasses; ?> page">
-			<figure class="io42-img-overlay io42-border-bottom-left io42-gradient-bottom-right w-100">
+			<figure class="io42-img-overlay io42-border-bottom-left io42-gradient-bottom-right w-100" tabindex="0">
 				<?php
 					echo $this->imageService->getPictureHtml([
 							'image' => $page->gridImage,
