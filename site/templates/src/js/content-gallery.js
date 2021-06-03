@@ -1,5 +1,5 @@
 /* jshint -W024 */
-import { ready, trigger } from './classes/helpers.js';
+import { ready } from './classes/helpers.js';
 
 (async () => {
 	let lightGalleryCounter = 0;
@@ -12,7 +12,7 @@ import { ready, trigger } from './classes/helpers.js';
 		const { default: lgAutoplay } = await import('lightgallery/plugins/autoplay/lg-autoplay.es5');
 		const { default: lgFullscreen } = await import('lightgallery/plugins/fullscreen/lg-fullscreen.es5');
 		const { default: lgHash } = await import('lightgallery/plugins/hash/lg-hash.es5');
-		const { default: lgPager } = await import('lightgallery/plugins/pager/lg-pager.es5');
+		// const { default: lgPager } = await import('lightgallery/plugins/pager/lg-pager.es5');
 		// const { default: lgShare } = await import('lightgallery/plugins/share/lg-share.es5');
 		const { default: lgThumbnail } = await import('lightgallery/plugins/thumbnail/lg-thumbnail.es5');
 		const { default: lgVideo } = await import('lightgallery/plugins/video/lg-video.es5');
