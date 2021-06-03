@@ -79,7 +79,7 @@ namespace ProcessWire;
 				}
 			} ?>
 
-			<h1 class="title <?= $this->hideTitle ? 'sr-only' : ''; ?>">
+			<h1 class="title <?= $this->hideTitle ? 'visually-hidden' : ''; ?>">
 				<?= $this->title; ?>
 			</h1>
 
@@ -122,7 +122,7 @@ namespace ProcessWire;
 					"dateModified": "<?= date(DATE_ATOM, wire('page')->modified); ?>",
 					"description": "<?= htmlentities($this->page->intro); ?>",
 
-					"author": 
+					"author":
 					<?php
 					if ($this->authors && !empty($this->authors)) {
 						echo '[';
@@ -148,7 +148,7 @@ namespace ProcessWire;
 						<?php
 					} ?>
 
-					"publisher": { 
+					"publisher": {
 						"@type": "Organization",
 						"name": "Musical-Fabrik",
 						"legalName": "Musical-Fabrik e. V.",
@@ -176,7 +176,7 @@ namespace ProcessWire;
 				"@type": "WebPage",
 				"name": "<?= htmlentities($this->page->title); ?> (eine Produktion der Musical-Fabrik e. V.)",
 				"description": "<?= htmlentities($this->page->intro); ?>",
-				"publisher": { 
+				"publisher": {
 					"@type": "Organization",
 					"name": "Musical-Fabrik",
 					"legalName": "Musical-Fabrik e. V.",
@@ -212,7 +212,7 @@ namespace ProcessWire;
 				}
 			} ?>
 
-			<h1 class="title <?= $this->hideTitle ? 'sr-only' : ''; ?>">
+			<h1 class="title <?= $this->hideTitle ? 'visually-hidden' : ''; ?>">
 				<?= $this->title; ?>
 			</h1>
 		</div>

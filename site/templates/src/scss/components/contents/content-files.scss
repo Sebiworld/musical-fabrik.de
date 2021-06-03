@@ -93,7 +93,7 @@
 		}
 	}
 
-	@include media-breakpoint-down(xs) {
+	@include media-breakpoint-only(xs) {
 		.file {
 			padding: 8px 20px 8px 72px;
 

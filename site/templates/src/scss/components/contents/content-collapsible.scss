@@ -1,27 +1,24 @@
 .content_collapsible {
-  & > .card,
-  & > .collapsible-element > .card {
-    margin-bottom: 3px;
+  .accordion-item {
+    & > h1,
+    & > h2,
+    & > h3,
+    & > h4,
+    & > h5,
+    & > h6 {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
 
-    & > .card-header {
-      padding: 0;
+    .accordion-button {
+      font-weight: bold;
+    }
 
-      & > a {
-        padding: 0.75rem 1.25rem;
-        display: block;
+    .accordion-body {
+      padding: 32px 16px 28px 16px;
 
-        & > h1,
-        & > h2,
-        & > h3,
-        & > h4,
-        & > h5,
-        & > h6 {
-          display: block;
-          padding: 0;
-          margin-top: 0;
-          margin-bottom: 0;
-          color: #fff;
-        }
+      & > *:last-child {
+        margin-bottom: 0;
       }
     }
   }

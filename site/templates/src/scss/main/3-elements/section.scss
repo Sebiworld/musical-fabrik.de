@@ -48,7 +48,7 @@
       height: 1px;
     }
 
-    @include media-breakpoint-down(xs) {
+    @include media-breakpoint-only(xs) {
       @include fontsize("section-title-xs", 1.4);
     }
   }
@@ -128,31 +128,31 @@
   }
   background-color: $color;
   //   background-image: linear-gradient(315deg, $gradientcolor 0%, $color 74%);
-  color: text-color-over($color);
+  color: color-contrast($color);
 
   .section-title > span {
-    border-color: text-color-over($color);
+    border-color: color-contrast($color);
   }
 
   a:not(.btn):not(.social-button) {
-    color: text-color-over($color);
+    color: color-contrast($color);
 
     .icon {
-      color: text-color-over($color);
+      color: color-contrast($color);
     }
 
     &:hover,
     &:focus {
-      @if $color != theme-color("primary") {
-        color: contrast(theme-color("primary"), $color);
+      @if $color != $primary {
+        color: contrast($primary, $color);
       }
       else {
         @include grow();
       }
 
       .icon {
-        @if $color != theme-color("primary") {
-          color: contrast(theme-color("primary"), $color);
+        @if $color != $primary {
+          color: contrast($primary, $color);
         }
         else {
           @include grow();
@@ -162,21 +162,21 @@
   }
 
   a.social-button:not(.btn) {
-    color: text-color-over($color);
+    color: color-contrast($color);
 
     .icon {
-      color: text-color-over($color);
+      color: color-contrast($color);
     }
   }
 
   .nav {
     .nav-link {
-      color: text-color-over($color);
+      color: color-contrast($color);
 
       &:hover,
       &:focus {
-        @if $color != theme-color("primary") {
-          color: contrast(theme-color("primary"), $color);
+        @if $color != $primary {
+          color: contrast($primary, $color);
         }
         else {
           @include grow();
@@ -190,7 +190,7 @@
 .container,
 .container-fluid {
   &.highlight {
-    @include section-variant(theme-color("primary"));
+    @include section-variant($primary);
 
     // All colors defined in $colors are selectable as background colors.
     @each $color, $value in $colors {

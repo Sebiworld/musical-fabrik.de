@@ -1,4 +1,4 @@
-@import "./globals/index";
+@import './globals/index';
 
 .default_page {
   position: relative;
@@ -6,13 +6,13 @@
   width: 100%;
   max-width: 100%;
 
-  margin-bottom: 32px;
-  @include media-breakpoint-down(sm) {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
+  @include media-breakpoint-up(md) {
+    margin-bottom: 32px;
   }
 }
 
-.main-content>.default_page{
+.main-content > .default_page {
   @include make-container();
   padding: 60px 40px 40px 40px;
 
@@ -20,7 +20,7 @@
     padding-left: 20px;
     padding-right: 20px;
   }
-  @include media-breakpoint-down(xs) {
+  @include media-breakpoint-only(xs) {
     padding: 40px 20px 20px 20px;
   }
 }

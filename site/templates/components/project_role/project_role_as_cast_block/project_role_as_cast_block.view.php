@@ -28,24 +28,12 @@ if (!empty($this->portraits) && !empty($casts)) {
 				<div class="container-fluid">
 					<div class="row portraits-row">
 						<?php
-						$pCounter = 1;
 						foreach ($this->portraits->find('season_'.$this->season->id.'_'.$cast->id.'=1, root=1') as $portrait) {
 							?>
 							<div class="col col-6 col-sm-6 col-lg-4 col-xxl-3 portrait-block">
 								<?= $portrait ?>
 							</div>
 							<?php
-							if ($pCounter % 2 === 0) {
-								echo '<div class="clearfix hidden-md-up"></div>';
-							}
-							if ($pCounter % 3 === 0) {
-								echo '<div class="clearfix hidden-lg-down.hidden-lg-up"></div>';
-							}
-							if ($pCounter % 4 === 0) {
-								echo '<div class="clearfix hidden-xl-down"></div>';
-							}
-
-							$pCounter++;
 						}
 						?>
 					</div>

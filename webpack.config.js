@@ -2,10 +2,11 @@ const webpack = require("webpack");
 const path = require("path");
 const glob = require("glob");
 const pkg = require('./package.json');
+const envVars = require('./bin/environment/prod.json');
 
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
@@ -58,8 +59,8 @@ module.exports = (env, options) => {
 		output: {
 			path: PATHS.build,
 			publicPath: PATHS.public,
-			filename: "js/[name]-[hash:8]" + (options.browser_env && options.browser_env !== 'modern' ? '.' + options.browser_env : '') + ".min.js",
-			chunkFilename: "js/chunk-[name]-[chunkhash]" + (options.browser_env && options.browser_env !== 'modern' ? '.' + options.browser_env : '') + ".min.js",
+			filename: "js/[name]-[chunkhash]" + (env.browser_env && env.browser_env !== 'modern' ? '.' + env.browser_env : '') + ".min.js",
+			chunkFilename: "js/chunk-[name]-[chunkhash]" + (env.browser_env && env.browser_env !== 'modern' ? '.' + env.browser_env : '') + ".min.js",
 		},
 		module: {
 			rules: [
@@ -80,7 +81,7 @@ module.exports = (env, options) => {
 										useBuiltIns: 'usage',
 										corejs: 3,
 										targets: {
-											browsers: (options.browser_env === 'modern' ? pkg.browserslist.modernBrowsers : pkg.browserslist.legacyBrowsers),
+											browsers: (env.browser_env === 'modern' ? pkg.browserslist.modernBrowsers : pkg.browserslist.legacyBrowsers),
 										},
 										debug: false
 									}
@@ -97,20 +98,6 @@ module.exports = (env, options) => {
 						}
 					}
 				},
-				// {
-				// 	// Exposes jQuery for use outside Webpack build
-				// 	test: require.resolve("jquery"),
-				// 	use: [
-				// 		{
-				// 			loader: "expose-loader",
-				// 			options: "jQuery",
-				// 		},
-				// 		{
-				// 			loader: "expose-loader",
-				// 			options: "$",
-				// 		},
-				// 	],
-				// },
 				{
 					test: /\.(sass|scss|css)$/,
 
@@ -134,12 +121,13 @@ module.exports = (env, options) => {
 								postcssOptions: {
 									ident: "postcss",
 									sourceMap: !isProduction,
-									plugins: loader => [
-										require("postcss-discard-comments")({
+									plugins: [
+										["postcss-discard-comments", {
 											removeAll: true,
-										}),
-										require("postcss-preset-env")(),
-										require("postcss-short")
+										}],
+										"postcss-preset-env",
+										"autoprefixer",
+										"postcss-short"
 									],
 								}
 							},
@@ -176,7 +164,7 @@ module.exports = (env, options) => {
 					use: [{
 						loader: "file-loader",
 						options: {
-							name: "[name].[hash:8].[ext]",
+							name: "[name].[chunkhash].[ext]",
 							outputPath: "img/",
 							emitFile: true,
 							useRelativePath: false
@@ -190,7 +178,7 @@ module.exports = (env, options) => {
 					use: [{
 						loader: "file-loader",
 						options: {
-							name: "[name].[hash:8].[ext]",
+							name: "[name].[chunkhash].[ext]",
 							outputPath: "img/",
 							emitFile: true,
 							useRelativePath: false
@@ -228,7 +216,7 @@ module.exports = (env, options) => {
 					use: [{
 						loader: "file-loader",
 						options: {
-							name: "[name].[hash:8].[ext]",
+							name: "[name].[chunkhash].[ext]",
 							outputPath: "fonts/",
 							emitFile: true,
 							useRelativePath: false
@@ -247,14 +235,14 @@ module.exports = (env, options) => {
 			usedExports: true,
 			// runtimeChunk: 'single',
 			minimizer: [
-				new OptimizeCSSAssetsPlugin({
-					cssProcessorOptions: {
-						map: {
-							inline: false,
-							annotation: !isProduction,
-						},
-						safe: true,
-						discardComments: true
+				new CssMinimizerPlugin({
+					minimizerOptions: {
+						preset: [
+							'default',
+							{
+								discardComments: { removeAll: true },
+							},
+						],
 					}
 				}),
 				//  test?, include?, exclude?, terserOptions?, extractComments?, parallel?, minify?
@@ -272,6 +260,7 @@ module.exports = (env, options) => {
 			],
 		},
 		plugins: [
+			new webpack.DefinePlugin(envVars),
 			new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de/),
 			new LodashModuleReplacementPlugin({
 				'collections': true,
@@ -281,15 +270,15 @@ module.exports = (env, options) => {
 			new WebpackAssetsManifest({
 				merge: true,
 				customize(entry, original, manifest, asset) {
-					if (options.browser_env !== 'modern' && options.browser_env !== undefined) {
-						entry.key = options.browser_env + '/' + entry.key;
+					if (env.browser_env !== 'modern' && env.browser_env !== undefined) {
+						entry.key = env.browser_env + '/' + entry.key;
 					}
 					return entry;
 				},
 				writeToDisk: true,
 				output: 'manifest.json'
 			}),
-			(options.clear !== 'false' && isProduction ?
+			(env.clear !== 'false' && isProduction ?
 				new CleanWebpackPlugin({
 					cleanOnceBeforeBuildPatterns: [
 						"./img/*",
@@ -302,29 +291,24 @@ module.exports = (env, options) => {
 			),
 			new webpack.ProgressPlugin(),
 			new MiniCssExtractPlugin({
-				filename: "css/[name]-[hash:8].min.css",
+				filename: "css/[name]-[chunkhash].min.css",
 				chunkFilename: "css/[id]-[chunkhash].min.css",
 			}),
-			new webpack.ProvidePlugin({
-				$: "jquery",
-				jQuery: "jquery",
-				"window.jQuery": "jquery"
-			}),
-			new OptimizeCSSAssetsPlugin({
-				cssProcessor: CleanCSS,
-				cssProcessorPluginOptions: {
-					format: isProduction ? 'beautify' : 'keep-breaks',
-					sourceMap: !isProduction,
-					level: 2
-				},
-				canPrint: true
-			}),
+			// new OptimizeCSSAssetsPlugin({
+			// 	cssProcessor: CleanCSS,
+			// 	cssProcessorPluginOptions: {
+			// 		format: isProduction ? 'beautify' : 'keep-breaks',
+			// 		sourceMap: !isProduction,
+			// 		level: 2
+			// 	},
+			// 	canPrint: true
+			// }),
 			new CompressionPlugin(),
 			(isProduction ?
 				new BundleAnalyzerPlugin(
 					{
 						analyzerMode: 'static',
-						reportFilename: 'report-' + options.browser_env + '.html',
+						reportFilename: 'report-' + env.browser_env + '.html',
 					}
 				) : new LiveReloadPlugin()
 			)

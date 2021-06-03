@@ -7,7 +7,7 @@ if ($this->images && count($this->images) > 0) {
 		<div class="modal-dialog modal-xlg" role="document">
 			<div class="modal-content">
 				<div class="modal-body">
-					<h4 class="modal-title sr-only" id="<?= $this->id ?>Label"><?= __('Gallery details'); ?></h4>
+					<h4 class="modal-title visually-hidden" id="<?= $this->id ?>Label"><?= __('Gallery details'); ?></h4>
 					<div class="image-gallery">
 						<div class="swiper-modal-container" data-align="<?= $this->sliderAlign; ?>">
 							<div class="swiper-wrapper">
@@ -48,7 +48,7 @@ if ($this->images && count($this->images) > 0) {
 	<div class="modal fade image-modal single-image" id="<?= $this->id ?>" tabindex="-1" role="dialog" aria-labelledby="<?= $this->id ?>Label">
 		<div class="modal-dialog modal-xlg" role="document">
 			<div class="modal-content">
-				<h4 class="modal-title sr-only" id="<?= $this->id ?>Label"><?= __('Image details'); ?></h4>
+				<h4 class="modal-title visually-hidden" id="<?= $this->id ?>Label"><?= __('Image details'); ?></h4>
 				<div class="modal-body">
 				</div>
 				<div class="modal-footer">

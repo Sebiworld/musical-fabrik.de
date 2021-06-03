@@ -8,7 +8,7 @@ namespace ProcessWire;
 	<?php
     if (!empty($this->title)) {
         ?>
-		<h2 class="section-title <?= $this->page->hide_title ? 'sr-only sr-only-focusable' : ''; ?>">
+		<h2 class="section-title <?= $this->page->hide_title ? 'visually-hidden visually-hidden-focusable' : ''; ?>">
 			<?= $this->title; ?>
 		</h2>
 		<?php
@@ -48,16 +48,8 @@ namespace ProcessWire;
 						</div>
 					</div>
 					<?php
-                    if (($listIndex + 1) % 2 === 0) {
-                        echo '<div class="clearfix hidden-sm-down.hidden-sm-up"></div>';
-                    }
-                    if (($listIndex + 1) % 3 === 0) {
-                        echo '<div class="clearfix hidden-md-down.hidden-md-up"></div>';
-                    }
-                    if (($listIndex + 1) % 4 === 0) {
-                        echo '<div class="clearfix hidden-lg-down"></div>';
-                    }
-                } ?>
+                }
+								?>
 			</div>
 		</div>
 		<?php
@@ -97,19 +89,6 @@ namespace ProcessWire;
 						</div>
 					</div>
 					<?php
-                    if (($listIndex + 1) % 2 === 0) {
-                        echo '<div class="clearfix hidden-xs-up"></div>';
-                    }
-                    if (($listIndex + 1) % 3 === 0) {
-                        echo '<div class="clearfix hidden-sm-down.hidden-sm-up"></div>';
-                    }
-                    if (($listIndex + 1) % 4 === 0) {
-                        echo '<div class="clearfix hidden-md-down.hidden-md-up"></div>';
-                    }
-                    if (($listIndex + 1) % 6 === 0) {
-                        echo '<div class="clearfix hidden-lg-down"></div>';
-                    }
-                    // if(($listIndex + 1) % 12 === 0) echo '<div class="clearfix hidden-xl-down"></div>';
                 } ?>
 			</div>
 		</div>

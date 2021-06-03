@@ -11,26 +11,24 @@ if ($this->tabs && count($this->tabs) > 0) {
             if ($this->page->depth && intval($this->page->depth)) {
                 $headingDepth = $headingDepth + intval($this->page->depth);
             } ?>
-			<h<?= $headingDepth; ?> class="block-title <?= $this->page->hide_title ? 'sr-only sr-only-focusable' : ''; ?>">
+			<h<?= $headingDepth; ?> class="block-title <?= $this->page->hide_title ? 'visually-hidden visually-hidden-focusable' : ''; ?>">
 				<?= $this->title; ?>
 			</h<?= $headingDepth; ?>>
 			<?php
         } ?>
-		<div class="collapsible-element" id="<?= $this->id; ?>">
+		<div class="accordion" id="<?= $this->id; ?>">
 			<?php
             foreach ($this->tabs as $tab) {
                 ?>
-				<div class="card">
-					<div class="card-header bg-dark" id="heading-<?= $tab->id; ?>">
-						<a data-toggle="collapse" data-target="#<?= $tab->id; ?>" data-parent="#<?= $this->id; ?>" href="#<?= $tab->id; ?>" aria-controls="<?= $tab->id; ?>" data-expanded="false">
-							<h2 class="collapsible-label">
-								<?= $tab->title; ?>
-							</h2>
-						</a>
-					</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="heading-<?= $tab->id; ?>">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $tab->id; ?>" aria-expanded="false" aria-controls="<?= $tab->id; ?>">
+							<?= $tab->title; ?>
+						</button>
+					</h2>
 
-					<div id="<?= $tab->id; ?>" class="collapse" role="tabpanel" aria-labelledby="heading-<?= $tab->id; ?>" data-parent="#<?= $this->id; ?>">
-						<div class="card-block">
+					<div id="<?= $tab->id; ?>" class="accordion-collapse collapse" aria-labelledby="heading-<?= $tab->id; ?>" data-bs-parent="#<?= $this->id; ?>">
+      			<div class="accordion-body">
 							<?= $tab->content; ?>
 						</div>
 					</div>

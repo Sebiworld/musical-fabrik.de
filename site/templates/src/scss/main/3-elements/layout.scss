@@ -1,7 +1,7 @@
 .layout-wrapper {
   position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: stretch;
@@ -10,26 +10,48 @@
 
   & > .contents-wrapper {
     position: relative;
-    max-width: 67%;
+    width: 100%;
+    max-width: 100%;
     flex-grow: 1;
     flex-shrink: 1;
-    order: 2;
-    padding: 40px 40px 40px 40px;
+    order: 1;
+    padding: 60px 20px 20px 20px;
   }
 
   & > .sidebar-wrapper {
     position: relative;
-    width: 550px;
-    max-width: 33%;
-    order: 1;
-    padding: 20px 40px;
+    width: 100%;
+    max-width: 100%;
+    order: 2;
+    padding: 20px;
     flex-shrink: 0;
     flex-grow: 0;
+    padding-bottom: 60px;
+  }
+
+  @include media-breakpoint-up(sm) {
+  }
+
+  @include media-breakpoint-up(md) {
+    flex-direction: row;
+
+    & > .contents-wrapper {
+      width: auto;
+      max-width: 67%;
+      order: 2;
+    }
+
+    & > .sidebar-wrapper {
+      order: 1;
+      margin-bottom: 0;
+      width: 550px;
+      max-width: 33%;
+    }
   }
 
   @include media-breakpoint-only(md) {
     & > .contents-wrapper {
-      padding-left: 20px;
+      padding: 40px 40px 40px 20px;
     }
 
     & > .sidebar-wrapper {
@@ -38,30 +60,9 @@
     }
   }
 
-  @include media-breakpoint-down(sm) {
-    flex-direction: column;
-
-    & > .contents-wrapper {
-      width: 100%;
-      max-width: 100%;
-      order: 1;
-    }
-
+  @include media-breakpoint-up(lg) {
     & > .sidebar-wrapper {
-      width: 100%;
-      max-width: 100%;
-      order: 2;
-      padding-bottom: 60px;
-    }
-  }
-  @include media-breakpoint-down(xs) {
-    & > .contents-wrapper {
-      padding: 60px 20px 20px 20px;
-    }
-
-    & > .sidebar-wrapper {
-      padding-right: 20px;
-      padding-left: 20px;
+      padding: 20px 40px;
     }
   }
 }

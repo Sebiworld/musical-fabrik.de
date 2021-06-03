@@ -1,196 +1,206 @@
-header{
-	height: 90px;
-	background-color: theme-color("dark");
-	transition: height 0.5s;
+header {
+  height: 90px;
+  background-color: $dark;
+  transition: height 0.5s;
 
-	@include media-breakpoint-down(sm) {
-		background-color: theme-color("dark");
-	}
+  .navbar {
+    min-height: 65px;
+    height: 90px;
+    transition: all 0.5s;
+    padding-top: 10px;
+    padding-bottom: 10px;
 
-	// .bg-dark{
-	// 	background-color: theme-color("dark");
-	// }
+    .navbar-brand {
+      .logo {
+        width: auto;
+        height: 50px;
+        transition: height 0.5s;
 
-	// background-color: transparent;
+        @include media-breakpoint-only(md) {
+          height: 40px;
+        }
 
-	.navbar{
-		min-height: 65px;
-		height: 90px;
-		transition: all 0.5s;
-		padding-top: 10px;
-		padding-bottom: 10px;
+        @include media-breakpoint-only(xs) {
+          height: 40px;
+        }
+      }
+    }
+  }
 
-		.navbar-brand{
-			.logo{
-				width: auto;
-				height: 50px;
-				transition: height 0.5s;
+  .navbar {
+    background-color: $dark;
 
-				@include media-breakpoint-only(md) {
-					height: 40px;
-				}
+    & > .hamburger {
+      max-height: 100%;
+    }
+  }
 
-				@include media-breakpoint-down(xs) {
-					height: 40px;
-				}
-			}
-		}
-	}
+  .navbar-nav {
+    align-items: center;
+    justify-content: center;
 
-	.navbar{
-		background-color: theme-color("dark");
-		@include media-breakpoint-down(sm) {
-			background-color: theme-color("dark");
-		}
+    a.nav-link.nav-link {
+      color: #eee;
+      background-color: $dark;
 
-		&>.hamburger{
-			max-height: 100%;
-		}
-	}
+      &.active,
+      &:active {
+        color: contrast($primary, $dark);
+      }
 
-	.navbar-nav{
-		align-items: center;
-		justify-content: center;
+      @include media-breakpoint-up(md) {
+        background-color: transparent;
+      }
+    }
+  }
 
-		a.nav-link.nav-link{
-			color: #eee;
-			&.active, &:active{
-				color: contrast(theme-color("primary"), theme-color("dark"));
-			}
-		}
-	}
+  .navbar-collapse {
+    max-height: 100%;
 
-	.navbar-collapse{
-		max-height: 100%;
+    & > :first-child {
+      padding-top: 15px;
+    }
 
-		@include media-breakpoint-down(sm) {
-			&>:first-child{
-				padding-top: 15px;
-			}
+    & > :last-child {
+      padding-bottom: 15px;
+    }
 
-			&>:last-child{
-				padding-bottom: 15px;
-			}
+    .nav-item {
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
 
-			.nav-item{
-				display: block;
-				width: 100%;
-				text-align: center;
-			}
-		}
-	}
+    @include media-breakpoint-up(md) {
+      & > :first-child {
+        padding-top: 15px;
+      }
 
-	@include media-breakpoint-down(sm) {
-		.nav-link{
-			background-color: theme-color("dark");
-		}
-	}
+      & > :last-child {
+        padding-bottom: 15px;
+      }
 
-	.nav-item{
-		position: relative;
-		height: 100%;
-		outline: 0;
+      .nav-item {
+        display: list-item;
+        width: auto;
+        text-align: center;
+      }
+    }
+  }
 
-		button{
-			outline: 0;
-		}
+  .nav-item {
+    position: relative;
+    height: 100%;
+    outline: 0;
 
-		&.active, &:active{
-			color: contrast(theme-color("primary"), theme-color("dark"));
-			&>a.nav-link.nav-link{
-				color: contrast(theme-color("primary"), theme-color("dark"));
-			}
-		}
+    button {
+      outline: 0;
+    }
 
-		padding-left: 0;
-		padding-right: 0;
+    &.active,
+    &:active {
+      color: contrast($primary, $dark);
+      & > a.nav-link.nav-link {
+        color: contrast($primary, $dark);
+      }
+    }
 
-		@include media-breakpoint-up('md') {
-			&:first-child{
-				border-left: 0 none;
-			}
+    padding-left: 0;
+    padding-right: 0;
 
-			&.has-hamburger{
-				border-left: 0 none;
+    .hamburger-box {
+      margin-top: 4px;
+    }
 
-				.hamburger-box{
-					margin-left: 5px;
-					margin-top: 7px;
-				}
-			}
-		}
-	}
+    @include media-breakpoint-up('md') {
+      &:first-child {
+        border-left: 0 none;
+      }
 
-	.hamburger-inner{
-		background-color: $inverse-color;
+      &.has-hamburger {
+        border-left: 0 none;
 
-		&:before, &:after{
-			background-color: $inverse-color;
-		}
-	}
+        .hamburger-box {
+          margin-left: 5px;
+          margin-top: 4px;
+        }
+      }
+    }
+  }
 
-	.navbar-dark .navbar-toggler{
-		border: 0 none;
-	}
+  .hamburger-inner {
+    background-color: $inverse-color;
 
-	.navbar-collapse{
-		justify-content: flex-end;
-	}
+    &:before,
+    &:after {
+      background-color: $inverse-color;
+    }
+  }
 
-	.dropdown-menu{
-		background: rgba($white, 1);
-		padding: 0;
-		left: auto;
-		right: 0;
-		margin-top: $navbar-padding-y * 2;
-		transition: margin-top 0.5s;
-		border: 0 none;
+  .navbar-dark .navbar-toggler {
+    border: 0 none;
+  }
 
-		&:before{
-			position: absolute;
-			width: 0;
-			height: 0;
-			border-color: transparent;
-			border-style: solid;
-			top: -15px;
-			right: 15px;
-			// margin-left: -5px;
-			content: "";
-			border-width: 0 15px 15px;
-			border-bottom-color: rgba($white, 1);
-		}
+  .navbar-collapse {
+    justify-content: flex-end;
+  }
 
-		.dropdown-item{
-			padding: 8px 32px;
-			&.active, &:active{
-				color: $brand-primary;
-				background-color: transparent;
-			}
-		}
-	}
+  .dropdown-menu {
+    background: rgba($white, 1);
+    padding: 0;
+    left: auto;
+    right: 0;
+    margin-top: $navbar-padding-y * 2;
+    transition: margin-top 0.5s;
+    border: 0 none;
 
-	&.mini{
-		height: 65px;
-		background-color: theme-color("dark");
+    &:before {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-color: transparent;
+      border-style: solid;
+      top: -15px;
+      right: 15px;
+      // margin-left: -5px;
+      content: '';
+      border-width: 0 15px 15px;
+      border-bottom-color: rgba($white, 1);
+    }
 
-		.navbar{
-			background-color: theme-color("dark");
-			height: 65px;
-			padding-top: 8px;
-			padding-bottom: 8px;
+    .dropdown-item {
+      padding: 8px 32px;
+      &.active,
+      &:active {
+        color: $primary;
+        background-color: transparent;
+      }
+    }
+  }
 
-			.logo{
-				height: 30px;
-			}
-		}
-		.dropdown-menu{
-			margin-top: $navbar-padding-y;
-		}
-	}
+  &.mini {
+    height: 65px;
+    background-color: $dark;
+
+    .navbar {
+      background-color: $dark;
+      height: 65px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+
+      .logo {
+        height: 30px;
+      }
+    }
+    .dropdown-menu {
+      margin-top: $navbar-padding-y;
+    }
+  }
 }
 
-body.sub-page{
-	header, header>.navbar{
-		background-color: theme-color("dark");
-	}
+body.sub-page {
+  header,
+  header > .navbar {
+    background-color: $dark;
+  }
 }

@@ -16,7 +16,8 @@ sess_*
 .svn
 /*.html
 gulpfile.js
-sitemap.xml 
+sitemap.xml
+.vscode/
 
 # node_modules ausnehmen. node_modules enthält externe Node-Plugins, die in der package.json als dependencies aufgeführt sind. Mit 'yarn install' oder 'npm install' können diese Plugins lokal nachinstalliert werden.
 node_modules/
@@ -30,6 +31,12 @@ yarn.lock
 /site/config-dev.php
 /site/config.php
 /index.php
+/site/templates/assets/css/
+/site/templates/assets/fonts/
+/site/templates/assets/img/
+/site/templates/assets/js/
+/site/templates/assets/manifest.json
+/site/templates/assets/manifest.json.gz
 
 # Don't add modules to the git... #
 /site/modules/*
