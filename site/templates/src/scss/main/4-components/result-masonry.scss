@@ -1,91 +1,65 @@
-@import "./globals/index";
+@import './globals/index';
 
-.results-wrapper{
-	position: relative;
-	display: block;
-	margin-left: -8px;
-	margin-right: -8px;
+.results-wrapper {
+  position: relative;
+  display: block;
+  margin-left: -8px;
+  margin-right: -8px;
 
-	.total-number{
-		margin: 8px;
-	}
+  .total-number {
+    margin: 8px;
+  }
 
-	.btn-group-wrapper{
-		display: block;
-		position: relative;
-		text-align: center;
-		margin: 8px;
-	}
+  .btn-group-wrapper {
+    display: block;
+    position: relative;
+    text-align: center;
+    margin: 8px;
+  }
 
-	.masonry-grid{
-		.masonry-grid-sizer,
-		.masonry-grid-item {
-			width: 20%;
-		}
+  .masonry-grid {
+    .masonry-grid-sizer,
+    .masonry-grid-item {
+      width: 100%;
 
-		.masonry-grid-item {
-			padding: 8px;
-		}
+      @include media-breakpoint-up(sm) {
+        width: 50%;
+      }
 
-		@include media-breakpoint-down('xl') {
-			.masonry-grid-sizer,
-			.masonry-grid-item {
-				width: 33.3%;
-			}
-		}
+      @include media-breakpoint-up(lg) {
+        width: 33.3%;
+      }
 
-		@include media-breakpoint-down('lg') {
-			.masonry-grid-sizer,
-			.masonry-grid-item {
-				width: 33.3%;
-			}
-		}
+      @include media-breakpoint-up(xxl) {
+        width: 20%;
+      }
+    }
 
-		@include media-breakpoint-down('sm') {
-			.masonry-grid-sizer,
-			.masonry-grid-item {
-				width: 50%;
-			}
-		}
-
-		@include media-breakpoint-only('xs') {
-			.masonry-grid-sizer,
-			.masonry-grid-item {
-				width: 100%;
-			}
-		}
-	}
+    .masonry-grid-item {
+      padding: 8px;
+    }
+  }
 }
 
-.has-sidebar{
-	.results-wrapper{
-		.masonry-grid{
+.has-sidebar {
+  .results-wrapper {
+    .masonry-grid {
+      .masonry-grid-sizer,
+      .masonry-grid-item {
+        width: 100%;
 
-			.masonry-grid-sizer,
-			.masonry-grid-item {
-				width: 20%;
-			}
+        @include media-breakpoint-up(lg) {
+          width: 50%;
+        }
 
-			@include media-breakpoint-down('xl') {
-				.masonry-grid-sizer,
-				.masonry-grid-item {
-					width: 33%;
-				}
-			}
+        @include media-breakpoint-up(xl) {
+          width: 33%;
+        }
 
-			@include media-breakpoint-down('lg') {
-				.masonry-grid-sizer,
-				.masonry-grid-item {
-					width: 50%;
-				}
-			}
-
-			@include media-breakpoint-down('md') {
-				.masonry-grid-sizer,
-				.masonry-grid-item {
-					width: 100%;
-				}
-			}
-		}
-	}
+        @include media-breakpoint-up(xxl) {
+          width: 20%;
+        }
+      }
+    }
+  }
 }

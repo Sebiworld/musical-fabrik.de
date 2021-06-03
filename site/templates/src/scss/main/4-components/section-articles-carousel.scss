@@ -1,27 +1,27 @@
-@import "./globals/index";
+@import './globals/index';
 
-.section.section_articles_carousel{
-	.section-title.section-title{
-		margin-bottom: 8px;
-	}
+.section.section_articles_carousel {
+  .section-title.section-title {
+    margin-bottom: 8px;
+  }
 
-	.carousel{
-		margin-top: 32px;
-		margin-bottom: 8px;
+  .carousel {
+    margin-top: 32px;
+    margin-bottom: 8px;
 
-		.carousel-cell {
-			margin-right: 10px;
+    .carousel-cell {
+      margin-right: 10px;
 
-			width: 20%;
-			@include media-breakpoint-down(lg) {
-				width: 30%;
-			}
-			@include media-breakpoint-down(md) {
-				width: 45%;
-			}
-			@include media-breakpoint-down(sm) {
-				width: 100%;
-			}
-		}
-	}
+      width: 100%;
+      @include media-breakpoint-up(md) {
+        width: 45%;
+      }
+      @include media-breakpoint-up(lg) {
+        width: 30%;
+      }
+      @include media-breakpoint-up(xl) {
+        width: 20%;
+      }
+    }
+  }
 }

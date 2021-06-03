@@ -1,89 +1,51 @@
-@import "./globals/index";
+@import './globals/index';
 
-.galleries_tiles{
-	margin-left: -8px;
-	margin-right: -8px;
+.galleries_tiles {
+  margin-left: -8px;
+  margin-right: -8px;
 
-	.total-number{
-		margin: 8px;
-	}
+  .total-number {
+    margin: 8px;
+  }
 
-	&>.btn-group{
-		margin: 8px;
-		display: block;
-		text-align: center;
-	}
+  & > .btn-group {
+    margin: 8px;
+    display: block;
+    text-align: center;
+  }
 
-	.masonry-grid{
+  .masonry-grid {
+    .masonry-grid-sizer,
+    .masonry-grid-item {
+      width: 100%;
 
-		.masonry-grid-sizer,
-		.masonry-grid-item {
-			width: 33%;
-		}
+      @include media-breakpoint-up('sm') {
+        width: 50%;
+      }
+      @include media-breakpoint-up('xxl') {
+        width: 33%;
+      }
+    }
 
-		.masonry-grid-item {
-			padding: 8px;
-		}
-
-		@include media-breakpoint-down('xl') {
-			.masonry-grid-sizer,
-			.masonry-grid-item {
-				width: 50%;
-			}
-		}
-
-		@include media-breakpoint-down('lg') {
-			.masonry-grid-sizer,
-			.masonry-grid-item {
-				width: 50%;
-			}
-		}
-
-		@include media-breakpoint-down('sm') {
-			.masonry-grid-sizer,
-			.masonry-grid-item {
-				width: 50%;
-			}
-		}
-
-		@include media-breakpoint-down('xs') {
-			.masonry-grid-sizer,
-			.masonry-grid-item {
-				width: 100%;
-			}
-		}
-	}
+    .masonry-grid-item {
+      padding: 8px;
+    }
+  }
 }
 
-.has-sidebar{
-	.galleries_tiles{
-		.masonry-grid{
-
-			.masonry-grid-sizer,
-			.masonry-grid-item {
-				width: 33%;
-			}
-
-			@include media-breakpoint-down('xl') {
-				.masonry-grid-sizer,
-				.masonry-grid-item {
-					width: 50%;
-				}
-			}
-
-			@include media-breakpoint-down('lg') {
-				.masonry-grid-sizer,
-				.masonry-grid-item {
-					width: 50%;
-				}
-			}
-
-			@include media-breakpoint-down('md') {
-				.masonry-grid-sizer,
-				.masonry-grid-item {
-					width: 100%;
-				}
-			}
-		}
-	}
+.has-sidebar {
+  .galleries_tiles {
+    .masonry-grid {
+      .masonry-grid-sizer,
+      .masonry-grid-item {
+        width: 100%;
+        @include media-breakpoint-up('sm') {
+          width: 50%;
+        }
+        @include media-breakpoint-up('xxl') {
+          width: 33%;
+        }
+      }
+    }
+  }
 }

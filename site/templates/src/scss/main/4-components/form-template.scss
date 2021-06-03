@@ -109,7 +109,7 @@
 
         .control__indicator {
           position: absolute;
-          top: 2px;
+          top: 3px;
           left: 0;
           height: font-px('form-text');
           width: font-px('form-text');
@@ -144,6 +144,7 @@
 
       label {
         font-weight: bold;
+        margin-bottom: 4px;
 
         &.form-check-label {
           font-weight: normal;

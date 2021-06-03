@@ -5,7 +5,7 @@ article,
 
   .tags {
     margin-bottom: 8px;
-    a{
+    a {
       text-decoration: none;
     }
   }
@@ -27,10 +27,10 @@ article,
     }
 
     .content_articles {
-      margin-top: 64px;
+      margin-top: 48px;
 
-      @include media-breakpoint-down(sm) {
-        margin-top: 48px;
+      @include media-breakpoint-up(md) {
+        margin-top: 64px;
       }
 
       .articles_carousel {
@@ -40,7 +40,8 @@ article,
   }
 
   .intro,
-  .content-block p, .content-block blockquote,
+  .content-block p,
+  .content-block blockquote,
   .content-block > .content_collapsible {
     max-width: 100%;
     width: 38em;
@@ -53,9 +54,11 @@ article,
     width: 16em;
     max-width: 100%;
     hyphens: auto;
+    @include font-size(1.5rem);
+    line-height: 1.2;
 
-    @include media-breakpoint-down(sm) {
-      @include font-size(1.5rem);
+    @include media-breakpoint-up(md) {
+      @include font-size(2.5rem);
       line-height: 1.2;
     }
   }
@@ -91,23 +94,23 @@ article,
   }
 
   h2 {
-    @include fontsize("content-h2", 1.1);
-    margin-bottom: font-px("content-h2");
+    @include fontsize('content-h2', 1.1);
+    margin-bottom: font-px('content-h2');
   }
   h3 {
-    @include fontsize("content-h3", 1.1);
-    margin-bottom: font-px("content-h3");
+    @include fontsize('content-h3', 1.1);
+    margin-bottom: font-px('content-h3');
   }
   h4 {
-    @include fontsize("content-h4", 1.1);
-    margin-bottom: font-px("content-h4");
+    @include fontsize('content-h4', 1.1);
+    margin-bottom: font-px('content-h4');
   }
   h5 {
-    @include fontsize("content-h5", 1.1);
-    margin-bottom: font-px("content-h5");
+    @include fontsize('content-h5', 1.1);
+    margin-bottom: font-px('content-h5');
   }
   h6 {
-    @include fontsize("content-h6", 1.1);
-    margin-bottom: font-px("content-h6");
+    @include fontsize('content-h6', 1.1);
+    margin-bottom: font-px('content-h6');
   }
 }

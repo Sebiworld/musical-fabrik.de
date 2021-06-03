@@ -31,10 +31,10 @@
 
 	.hero-image {
 		text-align: center;
-		margin: 8px 48px;
+		margin: 8px;
 
-		@include media-breakpoint-down(sm) {
-			margin: 8px;
+		@include media-breakpoint-up(md) {
+			margin: 8px 48px;
 		}
 
 		.main_image {

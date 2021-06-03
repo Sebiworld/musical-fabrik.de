@@ -131,31 +131,32 @@ body {
         padding-left: 0;
         padding-right: 0;
         padding-top: 0;
-        margin-bottom: 0.5 * (font-px("info-overlay") * 1.1 + (24 * 2));
+        margin-bottom: 0;
 
-        @include media-breakpoint-down(sm) {
-          margin-bottom: 0;
+        @include media-breakpoint-up(md) {
+          margin-bottom: 0.5 * (font-px('info-overlay') * 1.1 + (24 * 2));
         }
       }
 
       .info-overlay {
-        position: absolute;
-        display: inline-block;
-        left: 0;
-        bottom: (-0.5 * (font-px("info-overlay") * 1.1 + (24 * 2)));
-        @include fontsize("info-overlay", 1.1);
+        @include fontsize('info-overlay', 1.1);
         font-weight: lighter;
-        padding: 24px 32px;
         background: $project-primary-bg;
         color: $project-primary-color;
-        text-align: right;
+        position: relative;
+        display: block;
+        bottom: 0;
+        left: 0;
+        text-align: center;
+        padding: 12px 24px;
 
-        @include media-breakpoint-down(sm) {
-          position: relative;
-          display: block;
-          bottom: 0;
-          text-align: center;
-          padding: 12px 24px;
+        @include media-breakpoint-up(md) {
+          position: absolute;
+          display: inline-block;
+          left: 0;
+          bottom: (-0.5 * (font-px('info-overlay') * 1.1 + (24 * 2)));
+          text-align: right;
+          padding: 24px 32px;
         }
       }
 
@@ -167,23 +168,23 @@ body {
         display: block;
         position: relative;
         text-align: right;
-        display: block;
         position: relative;
         font-size: 24px;
         line-height: 1;
         font-weight: $headings-font-weight;
-        width: 550px;
-        max-width: 33%;
-        padding: 40px 83px 8px 40px;
+        width: 100%;
+        max-width: 100%;
+        display: none;
+        padding: 40px 43px 8px 40px;
 
-        @include media-breakpoint-down(sm) {
-          width: 100%;
-          max-width: 100%;
-          display: none;
+        @include media-breakpoint-up(md) {
+          display: block;
+          width: 550px;
+          max-width: 33%;
         }
 
-        @include media-breakpoint-down(md) {
-          padding-right: 43px;
+        @include media-breakpoint-up(lg) {
+          padding-right: 83px;
         }
 
         small {

@@ -3,16 +3,6 @@ header {
   background-color: $dark;
   transition: height 0.5s;
 
-  @include media-breakpoint-down(sm) {
-    background-color: $dark;
-  }
-
-  // .bg-dark{
-  // 	background-color: $dark;
-  // }
-
-  // background-color: transparent;
-
   .navbar {
     min-height: 65px;
     height: 90px;
@@ -39,9 +29,6 @@ header {
 
   .navbar {
     background-color: $dark;
-    @include media-breakpoint-down(sm) {
-      background-color: $dark;
-    }
 
     & > .hamburger {
       max-height: 100%;
@@ -54,9 +41,15 @@ header {
 
     a.nav-link.nav-link {
       color: #eee;
+      background-color: $dark;
+
       &.active,
       &:active {
         color: contrast($primary, $dark);
+      }
+
+      @include media-breakpoint-up(md) {
+        background-color: transparent;
       }
     }
   }
@@ -64,7 +57,21 @@ header {
   .navbar-collapse {
     max-height: 100%;
 
-    @include media-breakpoint-down(sm) {
+    & > :first-child {
+      padding-top: 15px;
+    }
+
+    & > :last-child {
+      padding-bottom: 15px;
+    }
+
+    .nav-item {
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+
+    @include media-breakpoint-up(md) {
       & > :first-child {
         padding-top: 15px;
       }
@@ -74,16 +81,10 @@ header {
       }
 
       .nav-item {
-        display: block;
-        width: 100%;
+        display: list-item;
+        width: auto;
         text-align: center;
       }
-    }
-  }
-
-  @include media-breakpoint-down(sm) {
-    .nav-link {
-      background-color: $dark;
     }
   }
 
@@ -107,6 +108,10 @@ header {
     padding-left: 0;
     padding-right: 0;
 
+    .hamburger-box {
+      margin-top: 4px;
+    }
+
     @include media-breakpoint-up('md') {
       &:first-child {
         border-left: 0 none;
@@ -117,7 +122,7 @@ header {
 
         .hamburger-box {
           margin-left: 5px;
-          margin-top: 7px;
+          margin-top: 4px;
         }
       }
     }

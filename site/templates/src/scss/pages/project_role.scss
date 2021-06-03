@@ -1,4 +1,4 @@
-@import "./globals/index";
+@import './globals/index';
 
 .t-project_roles_container,
 .t-project_role {
@@ -43,7 +43,7 @@
 
       & > blockquote {
         display: inline;
-        &>p{
+        & > p {
           display: inline;
         }
       }
@@ -75,33 +75,13 @@
   display: inline-flex;
   flex-direction: column;
 
-  @include media-breakpoint-down(sm) {
-    width: 100%;
-
-    .container-fluid {
-      padding-left: 4px;
-      padding-right: 4px;
-    }
-
-    .portraits-row {
-      padding-left: 4px;
-      padding-right: 4px;
-      margin-left: -4px;
-      margin-right: -4px;
-
-      & > .col {
-        padding: 4px;
-      }
-    }
-  }
-
   .card {
     background: transparent;
   }
 
   & > .title-link {
     .title {
-      @include fontsize("projectrole-list-title", 1.2);
+      @include fontsize('projectrole-list-title', 1.2);
     }
   }
 
@@ -153,7 +133,7 @@
       display: block;
       width: 100%;
       font-weight: bold;
-      @include fontsize("projectrole-list-title", 1.2);
+      @include fontsize('projectrole-list-title', 1.2);
     }
   }
 
@@ -178,16 +158,15 @@
         width: 100%;
         text-align: center;
         font-weight: light;
-        padding: 0 16px;
         border-left: 2px solid #000;
         margin-left: -1px;
-        // border-right: 1px solid #000;
         margin-bottom: 32px;
-        @include fontsize("projectrole-cast-title", 1.2);
+        padding: 0 8px;
+        font-size: 12px;
 
-        @include media-breakpoint-down(sm) {
-          padding: 0 8px;
-          font-size: 12px;
+        @include media-breakpoint-up(md) {
+          padding: 0 16px;
+          @include fontsize('projectrole-cast-title', 1.2);
         }
       }
 
@@ -241,7 +220,7 @@
     }
 
     .card-title {
-      @include fontsize("portrait-title", 1.2);
+      @include fontsize('portrait-title', 1.2);
       margin-bottom: 8px;
     }
   }
@@ -268,7 +247,7 @@
           font-weight: normal;
 
           &:after {
-            content: ":";
+            content: ':';
           }
         }
       }
