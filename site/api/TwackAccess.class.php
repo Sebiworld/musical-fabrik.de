@@ -3,105 +3,105 @@
 namespace ProcessWire;
 
 class TwackAccess {
-    public static function pageIDRequest($data) {
-        $data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['id|int']);
-        $page = wire('pages')->get('id=' . $data->id);
-        return self::pageRequest($page);
-    }
+	public static function pageIDRequest($data) {
+		$data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['id|int']);
+		$page = wire('pages')->get('id=' . $data->id);
+		return self::pageRequest($page);
+	}
 
-    public static function dashboardRequest() {
-        $page = wire('pages')->get('/');
-        return self::pageRequest($page);
-    }
+	public static function dashboardRequest() {
+		$page = wire('pages')->get('/');
+		return self::pageRequest($page);
+	}
 
-    public static function pagePathRequest($data) {
-        $data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['path|pagePathName']);
-        $page = wire('pages')->get('/' . $data->path);
-        return self::pageRequest($page);
-    }
+	public static function pagePathRequest($data) {
+		$data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['path|pagePathName']);
+		$page = wire('pages')->get('/' . $data->path);
+		return self::pageRequest($page);
+	}
 
-    protected static function pageRequest(Page $page) {
-        if (!wire('modules')->isInstalled('Twack')) {
-            throw new InternalServererrorException('Twack module not found.');
-        }
-        wire('twack')->enableAjaxResponse();
+	protected static function pageRequest(Page $page) {
+		if (!wire('modules')->isInstalled('Twack')) {
+			throw new InternalServererrorException('Twack module not found.');
+		}
+		wire('twack')->enableAjaxResponse();
 
-        if (!$page->viewable()) {
-            throw new ForbiddenException();
-        }
+		if (!$page->viewable()) {
+			throw new ForbiddenException();
+		}
 
-        $ajaxOutput   = $page->render();
-        $results      = json_decode($ajaxOutput, true);
-        return $results;
-    }
+		$ajaxOutput = $page->render();
+		$results = json_decode($ajaxOutput, true);
+		return $results;
+	}
 
-    public static function pageIDFileRequest($data) {
-        $data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['id|int']);
-        $page = wire('pages')->get('id=' . $data->id);
-        return self::fileRequest($page);
-    }
+	public static function pageIDFileRequest($data) {
+		$data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['id|int']);
+		$page = wire('pages')->get('id=' . $data->id);
+		return self::fileRequest($page);
+	}
 
-    public static function dashboardFileRequest($data) {
-        $page = wire('pages')->get('/');
-        return self::fileRequest($page);
-    }
+	public static function dashboardFileRequest($data) {
+		$page = wire('pages')->get('/');
+		return self::fileRequest($page);
+	}
 
-    public static function pagePathFileRequest($data) {
-        $data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['path|pagePathName']);
-        $page = wire('pages')->get('/' . $data->path);
-        return self::fileRequest($page);
-    }
+	public static function pagePathFileRequest($data) {
+		$data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['path|pagePathName']);
+		$page = wire('pages')->get('/' . $data->path);
+		return self::fileRequest($page);
+	}
 
-    protected static function fileRequest(Page $page) {
-        // if (!$page->viewable()) {
-        //     throw new ForbiddenException();
-        // }
+	protected static function fileRequest(Page $page) {
+		if (!$page->viewable()) {
+			throw new ForbiddenException();
+		}
 
-        $filename = wire('input')->get('file', 'filename');
-        if (!$filename || !is_string($filename)) {
-            throw new BadRequestException('No valid filename.');
-        }
+		$filename = wire('input')->get('file', 'filename');
+		if (!$filename || !is_string($filename)) {
+			throw new BadRequestException('No valid filename.');
+		}
 
-        $file = $page->filesManager->getFile($filename);
-        if (!$file || empty($file)) {
-            throw new NotFoundException('File not found: ' . $filename);
-        }
+		$file = $page->filesManager->getFile($filename);
+		if (!$file || empty($file)) {
+			throw new NotFoundException('File not found: ' . $filename);
+		}
 
-        if ($file instanceof Pageimage) {
-            // Modify image-size:
-            $width     = wire('input')->get('width', 'intUnsigned', 0);
-            $height    = wire('input')->get('height', 'intUnsigned', 0);
-            $maxWidth  = wire('input')->get('maxwidth', 'intUnsigned', 0);
-            $maxHeight = wire('input')->get('maxheight', 'intUnsigned', 0);
-            $cropX     = wire('input')->get('cropx', 'intUnsigned', 0);
-            $cropY     = wire('input')->get('cropy', 'intUnsigned', 0);
+		if ($file instanceof Pageimage) {
+			// Modify image-size:
+			$width = wire('input')->get('width', 'intUnsigned', 0);
+			$height = wire('input')->get('height', 'intUnsigned', 0);
+			$maxWidth = wire('input')->get('maxwidth', 'intUnsigned', 0);
+			$maxHeight = wire('input')->get('maxheight', 'intUnsigned', 0);
+			$cropX = wire('input')->get('cropx', 'intUnsigned', 0);
+			$cropY = wire('input')->get('cropy', 'intUnsigned', 0);
 
-            $options = array(
-                'webpAdd' => true
-            );
+			$options = [
+				'webpAdd' => true
+			];
 
-            if ($cropX > 0 && $cropY > 0 && $width > 0 && $height > 0) {
-                $file = $file->crop($cropX, $cropY, $width, $height, $options);
-            }else if ($width > 0 && $height > 0) {
-                $file = $file->size($width, $height, $options);
-            }else if ($width > 0) {
-                $file = $file->width($width, $options);
-            }else if ($height > 0) {
-                $file = $file->height($height, $options);
-            }
+			if ($cropX > 0 && $cropY > 0 && $width > 0 && $height > 0) {
+				$file = $file->crop($cropX, $cropY, $width, $height, $options);
+			} elseif ($width > 0 && $height > 0) {
+				$file = $file->size($width, $height, $options);
+			} elseif ($width > 0) {
+				$file = $file->width($width, $options);
+			} elseif ($height > 0) {
+				$file = $file->height($height, $options);
+			}
 
-            if ($maxWidth > 0 && $maxHeight > 0) {
-                $file = $file->maxSize($maxWidth, $maxHeight, $options);
-            }else if ($maxWidth > 0) {
-                $file = $file->maxWidth($maxWidth, $options);
-            }else if ($maxHeight > 0) {
-                $file = $file->maxHeight($maxHeight, $options);
-            }
-        }
+			if ($maxWidth > 0 && $maxHeight > 0) {
+				$file = $file->maxSize($maxWidth, $maxHeight, $options);
+			} elseif ($maxWidth > 0) {
+				$file = $file->maxWidth($maxWidth, $options);
+			} elseif ($maxHeight > 0) {
+				$file = $file->maxHeight($maxHeight, $options);
+			}
+		}
 
 		$filepath = $file->filename;
 		$fileinfo = pathinfo($filepath);
-        $filename = $fileinfo['basename'];
+		$filename = $fileinfo['basename'];
 
 		$isStreamable = !!isset($_REQUEST['stream']);
 
@@ -110,28 +110,28 @@ class TwackAccess {
 		}
 
 		$filesize = filesize($filepath);
-		$openfile    = @fopen($filepath, "rb");
+		$openfile = @fopen($filepath, 'rb');
 
 		if (!$openfile) {
 			throw new InternalServererrorException();
 		}
 
-		header('Date: ' . gmdate("D, d M Y H:i:s", time()) . " GMT");
-		header('Last-Modified: ' . gmdate("D, d M Y H:i:s", filemtime($filepath)) . " GMT");
+		header('Date: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
+		header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($filepath)) . ' GMT');
 		header('ETag: "' . md5_file($filepath) . '"');
 		header('Accept-Encoding: gzip, deflate');
 
-        // Is Base64 requested?
+		// Is Base64 requested?
 		if (wire('input')->get('format', 'name', '') === 'base64') {
 			$data = file_get_contents($filepath);
 			echo 'data:' . mime_content_type($filepath) . ';base64,' . base64_encode($data);
 			exit();
 		}
 
-		header("Pragma: public");
-		header("Expires: -1");
+		header('Pragma: public');
+		header('Expires: -1');
 		// header("Cache-Control: public,max-age=14400,public");
-		header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
+		header('Cache-Control: public, must-revalidate, post-check=0, pre-check=0');
 		// header("Content-Disposition: attachment; filename=\"$filename\"");
 		header('Content-type: ' . mime_content_type($filepath));
 		header('Content-Transfer-Encoding: binary');
@@ -144,9 +144,9 @@ class TwackAccess {
 
 		$range = '';
 		if (isset($_SERVER['HTTP_RANGE']) || isset($_SERVER['HTTP_CONTENT_RANGE'])) {
-			if(isset($_SERVER['HTTP_CONTENT_RANGE'])){
+			if (isset($_SERVER['HTTP_CONTENT_RANGE'])) {
 				$rangeParts = explode(' ', $_SERVER['HTTP_CONTENT_RANGE'], 2);
-			}else{
+			} else {
 				$rangeParts = explode('=', $_SERVER['HTTP_RANGE'], 2);
 			}
 
@@ -161,7 +161,7 @@ class TwackAccess {
 			}
 
 			if ($sizeUnit != 'bytes') {
-				throw new RestApiException("Requested Range Not Satisfiable", 416);
+				throw new RestApiException('Requested Range Not Satisfiable', 416);
 			}
 
 			//multiple ranges could be specified at the same time, but for simplicity only serve the first range
@@ -177,7 +177,7 @@ class TwackAccess {
 			if (isset($rangeOrigParts[1])) {
 				$extraRanges = $rangeOrigParts[1];
 			}
-        }
+		}
 
 		$rangeParts = explode('-', $range, 2);
 
@@ -228,9 +228,9 @@ class TwackAccess {
 				@fclose($openfile);
 				exit;
 			}
-        }
+		}
 
 		@fclose($openfile);
 		exit;
-    }
+	}
 }
