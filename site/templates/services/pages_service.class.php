@@ -62,7 +62,7 @@ class PagesService extends TwackComponent {
                 $results->remove($resultPage);
                 continue;
             }
-            
+
             if($pwProtectionModule && !$pwProtectionModule->isUnlocked($resultPage)){
                 $results->remove($resultPage);
                 continue;
@@ -145,8 +145,14 @@ class PagesService extends TwackComponent {
             $selector = $ajaxArgs['selector'];
         }
 
-        $args['charLimit']                       = 150;
+        if (wire('input')->get('charLimit') && is_int(wire('input')->get('charLimit'))) {
+            $args['charLimit'] = wire('input')->get('charLimit');
+        } elseif (wire('input')->get('charLimit') !== 'none') {
+            $args['charLimit']                       = 150;
+        }
+
         $result                                  = $this->getResults($args, $selector);
+
         $ajaxOutput['totalNumber']               = $result->totalNumber;
         $ajaxOutput['moreAvailable']             = $result->moreAvailable;
         $ajaxOutput['lastElementIndex']          = $result->lastElementIndex;
@@ -181,7 +187,7 @@ class PagesService extends TwackComponent {
                 }
             }
 
-            if (isset($args['limit']) && $page->template->hasField('intro')) {
+            if (isset($args['limit']) && is_int($args['limit']) && $page->template->hasField('intro')) {
                 $limit  = $args['limit'];
                 $endstr = '&nbsp;…';
                 if (isset($args['endstr'])) {

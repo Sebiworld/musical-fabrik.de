@@ -6,9 +6,10 @@ class ArticlesTiles extends TwackComponent {
   public function __construct($args) {
     parent::__construct($args);
 
-    $filters = [
-      'charLimit' => 150
-    ];
+    $filters = [];
+    if(!$this->wire('twack')->isTwackAjaxCall()){
+      $filters['charLimit'] = 150;
+    }
 
     $this->articlesService = $this->getService('ArticlesService');
     $articles = $this->articlesService->getArticles($filters);
