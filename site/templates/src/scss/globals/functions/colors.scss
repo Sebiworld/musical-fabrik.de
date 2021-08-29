@@ -57,6 +57,8 @@ $mf-grau: #434857;
 $mf-hellgrau: darken(#f7f7f9, 2%);
 $mf-primary: $mf-orange;
 
+$wieimhimmel-primary: #004b87;
+
 $claus-primary: #b3000c;
 
 $medicus-primary: #3d2712;
@@ -125,6 +127,7 @@ $zauberervonoz: $wizard-primary !default;
 $paepstin: $paepstin-primary !default;
 $medicus: $medicus-primary !default;
 $claus: $claus-primary !default;
+$wieimhimmel: #004b87;
 
 $grays: (
   100: $gray-100,
@@ -184,6 +187,7 @@ $colors: (
   paepstin: $paepstin,
   medicus: $medicus,
   claus: $claus,
+  wieimhimmel: $wieimhimmel
 );
 
 $theme-colors: (
