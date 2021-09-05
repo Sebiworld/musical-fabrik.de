@@ -70,6 +70,8 @@ class GalleryCard extends TwackComponent {
 			$output['color'] = $this->page->color;
 		}
 
+		$output['hash'] = md5(serialize($output));
+
 		return $output;
 	}
 }

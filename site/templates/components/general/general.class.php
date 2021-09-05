@@ -250,6 +250,8 @@ class General extends TwackComponent {
             }
         }
 
+        $output['hash'] = md5(serialize($output));
+
         return $output;
     }
 }

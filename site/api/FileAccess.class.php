@@ -21,7 +21,11 @@ class FileAccess {
 	}
 
 	protected static function fileRequest(Page $page) {
-		if (!$page->viewable()) {
+		if($page instanceof RepeaterPage){
+			if(!$page->getForPage()->viewable()){
+				throw new ForbiddenException();
+			}
+		}else if (!$page->viewable()) {
 			throw new ForbiddenException();
 		}
 
