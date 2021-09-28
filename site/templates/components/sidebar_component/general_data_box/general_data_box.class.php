@@ -57,7 +57,11 @@ class GeneralDataBox extends TwackComponent {
                 $this->addData('', $roleText);
 
                 foreach ($projectRolesPage->children('template.name=project_role') as $projectRole) {
-                    $this->addData($projectRole->title, '', $projectRole->url, $projectRole->title, 1);
+                    if($projectRole->viewable()){
+                        $this->addData($projectRole->title, '', $projectRole->url, $projectRole->title, 1);
+                    }else{
+                        $this->addData($projectRole->title, '', '', $projectRole->title, 1);
+                    }
                 }
             }
         }
