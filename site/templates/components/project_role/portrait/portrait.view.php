@@ -15,7 +15,8 @@ Show single actor portrait
 				'pictureclasses' => array('ar-content', 'portrait-image'),
                 'loadAsync' => true,
                 'default' => array(
-                    'width' => 400
+                    'width' => $this->portraitWidth,
+										'height' => $this->portraitHeight
                 )
             ));
 		} else {

@@ -36,6 +36,18 @@ class Portrait extends TwackComponent {
 		$castsContainer = $this->projectService->getCastsContainer();
 		$this->allCasts = $castsContainer->children();
 
+		$this->portraitWidth = 400;
+		$this->portraitHeight = 0;
+		$projectPage = $this->projectService->getProjectPage();
+		if ($projectPage instanceof Page && $projectPage->id) {
+			if($projectPage->template->hasField('portrait_width') && $projectPage->portrait_width){
+				$this->portraitWidth = $projectPage->portrait_width;
+			}
+			if($projectPage->template->hasField('portrait_height') && $projectPage->portrait_height){
+				$this->portraitHeight = $projectPage->portrait_height;
+			}
+		}
+
 		// TODO: Popover at click with detailed information about the portrait
 	}
 
