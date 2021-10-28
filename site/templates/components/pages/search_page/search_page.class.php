@@ -10,7 +10,7 @@ class SearchPage extends TwackComponent {
         if (!($searchPage instanceof Page) || !$searchPage->id) {
             return false;
         }
-        $this->requestUrl = '/api/page' . $searchPage->url;
+        $this->requestUrl = '/api/tpage' . $searchPage->url;
 
         $this->searchableTemplates = array('article', 'gallery', 'project', 'project_voice_company', 'home', 'default_page', 'area', 'project_roles_container', 'project_role');
 

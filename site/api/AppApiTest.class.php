@@ -3,11 +3,12 @@
 namespace ProcessWire;
 
 class AppApiTest {
-    public static function test($data) {
-        return [
-          'test' => true,
-          'success' => 'YEAH!',
-          'responseCode' => 202
-        ];
-    }
+	public static function test($data) {
+		return [
+			'data' => $data,
+			'test' => true,
+			'success' => 'YEAH!',
+			'responseCode' => 202
+		];
+	}
 }

@@ -16,7 +16,7 @@ ready(function(){
 			ajaxForm.addPayload({
 				// action: "getComponent",
 				// component: "FormTemplate",
-				page: formularElement.getAttribute('data-page'),
+				tpage: formularElement.getAttribute('data-page'),
 				// directory: "forms_component"
 			});
 

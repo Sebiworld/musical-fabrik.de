@@ -22,7 +22,7 @@ class GalleriesTiles extends TwackComponent {
         }
 
         $this->galleriesPage = $this->galleriesService->getGalleriesPage();
-        $this->requestUrl = '/api/page' . $this->galleriesPage->url;
+        $this->requestUrl = '/api/tpage' . $this->galleriesPage->url;
 
         $this->addScript('ajaxmasonry.js', array(
             'path'     => wire('config')->urls->templates . 'assets/js/',

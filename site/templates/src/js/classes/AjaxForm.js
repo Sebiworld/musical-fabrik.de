@@ -21,7 +21,7 @@ export default class AjaxForm {
 
 		this.ajaxCall = new AjaxCall({
 			method: 'POST',
-			path: '/api/page' + pathname,
+			path: '/api/tpage' + pathname,
 			headers: {
 				'X-API-KEY': VAR_APIKEY
 			}

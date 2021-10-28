@@ -28,7 +28,7 @@ class ArticlesTiles extends TwackComponent {
     }
 
     $this->articlesPage = $this->articlesService->getArticlesPage();
-    $this->requestUrl = '/api/page' . $this->articlesPage->url;
+    $this->requestUrl = '/api/tpage' . $this->articlesPage->url;
 
     $this->addScript('ajaxmasonry.js', [
       'path' => wire('config')->urls->templates . 'assets/js/',
