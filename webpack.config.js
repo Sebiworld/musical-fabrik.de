@@ -58,8 +58,8 @@ module.exports = (env, options) => {
 		output: {
 			path: PATHS.build,
 			publicPath: PATHS.public,
-			filename: "js/[name]-[chunkhash]" + (env.browser_env && env.browser_env !== 'modern' ? '.' + env.browser_env : '') + ".min.js",
-			chunkFilename: "js/chunk-[name]-[chunkhash]" + (env.browser_env && env.browser_env !== 'modern' ? '.' + env.browser_env : '') + ".min.js",
+			filename: "js/[name]-[contenthash]" + (env.browser_env && env.browser_env !== 'modern' ? '.' + env.browser_env : '') + ".min.js",
+			chunkFilename: "js/chunk-[name]-[contenthash]" + (env.browser_env && env.browser_env !== 'modern' ? '.' + env.browser_env : '') + ".min.js",
 		},
 		module: {
 			rules: [
@@ -135,8 +135,7 @@ module.exports = (env, options) => {
 							loader: "resolve-url-loader",
 							options: {
 								debug: false,
-								sourceMap: !isProduction,
-								absolute: false
+								sourceMap: !isProduction
 							},
 						},
 						{
@@ -163,7 +162,7 @@ module.exports = (env, options) => {
 					use: [{
 						loader: "file-loader",
 						options: {
-							name: "[name].[chunkhash].[ext]",
+							name: "[name].[contenthash].[ext]",
 							outputPath: "img/",
 							emitFile: true,
 							useRelativePath: false
@@ -177,7 +176,7 @@ module.exports = (env, options) => {
 					use: [{
 						loader: "file-loader",
 						options: {
-							name: "[name].[chunkhash].[ext]",
+							name: "[name].[contenthash].[ext]",
 							outputPath: "img/",
 							emitFile: true,
 							useRelativePath: false
@@ -210,18 +209,18 @@ module.exports = (env, options) => {
 					}
 					],
 				},
-				{
-					test: /\.(woff|ttf|eot|otf)(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-					use: [{
-						loader: "file-loader",
-						options: {
-							name: "[name].[chunkhash].[ext]",
-							outputPath: "fonts/",
-							emitFile: true,
-							useRelativePath: false
-						},
-					}],
-				}
+				// {
+				// 	test: /\.(woff|ttf|eot|otf)(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+				// 	use: [{
+				// 		loader: "file-loader",
+				// 		options: {
+				// 			name: "[name].[contenthash].[ext]",
+				// 			outputPath: "fonts/",
+				// 			emitFile: true,
+				// 			useRelativePath: false
+				// 		},
+				// 	}],
+				// }
 			],
 		},
 		resolve: {
@@ -290,8 +289,8 @@ module.exports = (env, options) => {
 			),
 			new webpack.ProgressPlugin(),
 			new MiniCssExtractPlugin({
-				filename: "css/[name]-[chunkhash].min.css",
-				chunkFilename: "css/[id]-[chunkhash].min.css",
+				filename: "css/[name]-[contenthash].min.css",
+				chunkFilename: "css/[id]-[contenthash].min.css",
 			}),
 			// new OptimizeCSSAssetsPlugin({
 			// 	cssProcessor: CleanCSS,

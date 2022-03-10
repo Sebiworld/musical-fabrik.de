@@ -1,4 +1,4 @@
-import { Swiper, Navigation, Virtual, Keyboard, Pagination, Lazy, HashNavigation, History, Autoplay, EffectFade, A11y } from 'swiper/swiper.esm.js';
+import Swiper, { Navigation, Virtual, Keyboard, Pagination, Lazy, HashNavigation, History, Autoplay, EffectFade, A11y } from "swiper";
 Swiper.use([Navigation, Virtual, Keyboard, Pagination, Lazy, HashNavigation, History, Autoplay, EffectFade, A11y]);
 
 export const MfSwiper = {

@@ -1,2 +1,9 @@
-@import "./globals/index";
-@import "~swiper/swiper";
+@import './globals/index';
+
+$themeColor: $primary;
+
+@import '~swiper/scss';
+
+.swiper-container {
+  overflow: hidden;
+}
