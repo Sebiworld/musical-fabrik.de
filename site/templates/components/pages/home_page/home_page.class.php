@@ -17,8 +17,21 @@ class HomePage extends TwackComponent {
 		}
 
 		// $this->addStyle('home_page.css', array(
-        //     'path'     => wire('config')->urls->templates . 'assets/css/',
+		//     'path'     => wire('config')->urls->templates . 'assets/css/',
 		// 	'absolute' => true
-        // ));
+		// ));
+	}
+
+	public function getAjax($ajaxArgs = []) {
+		$articles = $this->getService('PagesService')->getAjax([
+			'selector' => [['template', 'article']],
+			'args' => [
+				'limit' => 6
+			]
+		]);
+
+		return [
+			'articles' => $articles
+		];
 	}
 }

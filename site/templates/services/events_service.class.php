@@ -5,7 +5,6 @@ namespace ProcessWire;
  * Provides methods for reading events.
  */
 class EventsService extends TwackComponent {
-
 	protected $projectPage = false;
 
 	public function __construct($args) {
@@ -35,17 +34,17 @@ class EventsService extends TwackComponent {
 	 * Returns all appointments whose periods match a selector.
 	 * @return PageArray
 	 */
-	public function getEvents($args = array()) {
+	public function getEvents($args = []) {
 		$output = new \StdClass();
 		$events = new PageArray();
 
-		if(!is_array($args)){
+		if (!is_array($args)) {
 			$args = [];
 		}
 
-		$eventsSelectorParts = array(
+		$eventsSelectorParts = [
 			'template.name=event'
-		);
+		];
 		if ($this->projectPage instanceof Page && $this->projectPage->id) {
 			// If project page: Include all sub-dates of the project
 			// Search all global dates:
@@ -72,27 +71,27 @@ class EventsService extends TwackComponent {
 			}
 		}
 
-		if(!empty($args['start_date'])){
-			if(strtolower((string)$args['start_date']) === 'TODAY'){
+		if (!empty($args['start_date'])) {
+			if (strtolower((string)$args['start_date']) === 'TODAY') {
 				$startDatetime = time();
-			}else{
+			} else {
 				$startDatetime = wire('sanitizer')->date($args['start_date']);
 			}
 
-			if($startDatetime > 0){
+			if ($startDatetime > 0) {
 				$eventsSelectorParts[] = "datetime_from>={$startDatetime}";
 			}
 		}
 
 		// Criteria for subperiods:
-		$timeperiodSelectorParts = array('template.name=time_period');
-		if(!empty($args['guestuser']) && $args['guestuser'] || wire('user')->isGuest()){
+		$timeperiodSelectorParts = ['template.name=time_period'];
+		if (!empty($args['guestuser']) && $args['guestuser'] || wire('user')->isGuest()) {
 			$timeperiodSelectorParts[] = 'accessable_for_guests=1';
 		}
 
-		if(!empty($args['categories']) && is_array($args['categories'])){
+		if (!empty($args['categories']) && is_array($args['categories'])) {
 			// Categories have an AND connection:
-			foreach($args['categories'] as $category){
+			foreach ($args['categories'] as $category) {
 				$timeperiodSelectorParts[] = 'event_categories=' . $category;
 			}
 		}
@@ -107,7 +106,7 @@ class EventsService extends TwackComponent {
 		// Should the dates be sorted specially?
 		if (isset($args['sort'])) {
 			$eventsSelectorParts[] = 'sort=' . $args['sort'];
-		}else if (isset($args['sort_by'])) {
+		} else if (isset($args['sort_by'])) {
 			$eventsSelectorParts[] = 'sort=' . $args['sort_by'];
 		} else {
 			$eventsSelectorParts[] = 'sort=-datetime_from';
@@ -143,15 +142,15 @@ class EventsService extends TwackComponent {
 		$output->moreAvailable = $output->lastElementIndex + 1 < $output->totalNumber;
 
 		$eventsSelector = implode(', ', $eventsSelectorParts);
-		foreach(wire('pages')->find($eventsSelector) as $event){
+		foreach (wire('pages')->find($eventsSelector) as $event) {
 
 			// Only play the periods that match the period selector (if specified):
 			if ($timeperiodSelector) {
 				$event->time_periods = $event->time_periods->filter($timeperiodSelector);
 			}
 
-			$options = array();
-			if(!empty($args['characterLimit'])){
+			$options = [];
+			if (!empty($args['characterLimit'])) {
 				$options['limit'] = $args['characterLimit'];
 			}
 
@@ -165,12 +164,12 @@ class EventsService extends TwackComponent {
 		return $output;
 	}
 
-	public function getAjax($ajaxArgs = []){
-		$ajaxOutput = array();
+	public function getAjax($ajaxArgs = []) {
+		$ajaxOutput = [];
 
 		$args = wire('input')->post('args');
 		if (!is_array($args)) {
-			$args = array();
+			$args = [];
 		}
 
 		// Is a tag filter set?
@@ -215,9 +214,9 @@ class EventsService extends TwackComponent {
 		$locations = new PageArray();
 
 		// Deliver HTML card for each post:
-		$ajaxOutput['events'] = array();
+		$ajaxOutput['events'] = [];
 		foreach ($result->events as $event) {
-			if(!$event->viewable()){
+			if (!$event->viewable()) {
 				continue;
 			}
 
@@ -231,7 +230,7 @@ class EventsService extends TwackComponent {
 			$locations->add(wire('pages')->find("template.name=location, location.owner.has_parent={$event->id}, check_access=0"));
 
 			$categorySelector = "template.name=event_category, event_categories.owner.has_parent={$event->id}, check_access=0";
-			if(wire('user')->isGuest()){
+			if (wire('user')->isGuest()) {
 				$categorySelector .= ', fuer_gaeste_freigegeben=1';
 			}
 			$categories->add(wire('pages')->find($categorySelector));

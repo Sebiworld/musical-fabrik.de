@@ -12,7 +12,8 @@ $routes = [
 		'test' => [
 			['OPTIONS', '', ['GET', 'POST']],
 			['GET', '', AppApiTest::class, 'test', ['auth' => true]],
-			['POST', '', AppApiTest::class, 'test', ['auth' => true]]
+			['POST', '', AppApiTest::class, 'test'],
+			['PUT', '', AppApiTest::class, 'test']
 		]
 	]
 ];
