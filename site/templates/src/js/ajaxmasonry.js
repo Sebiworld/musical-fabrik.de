@@ -65,7 +65,7 @@ import { debounce, uniq, remove } from 'lodash-es';
 				})
 				.then(function (data) {
 					if (logging) {
-						console.log("Request was successfull: ", data);
+						console.log("Request was successful: ", data);
 					}
 
 					if (typeof data.items === 'object' && Array.isArray(data.items)) {
