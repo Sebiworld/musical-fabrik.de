@@ -51,3 +51,5 @@ yarn.lock
 /*.html
 /site/templates/entwicklung/external/progressively
 /bin
+/site/templates/assets/report-legacy.html
+/site/templates/assets/report-modern.html

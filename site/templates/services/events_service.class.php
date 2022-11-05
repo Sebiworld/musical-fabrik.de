@@ -10,10 +10,10 @@ class EventsService extends TwackComponent {
 	public function __construct($args) {
 		parent::__construct($args);
 
-		if ($this->startsWith($this->page->template->name, 'project')) {
+		if ($this->page->template->name === 'project' || $this->page->template->name === 'home') {
 			$this->projectPage = $this->page;
 		} else {
-			$this->projectPage = $this->page->closest('template.name^=project, template.name!=project_role, template.name!=project_roles_container, template.name!=projects_container');
+			$this->projectPage = $this->page->closest('template.name=project|home');
 		}
 
 		$this->overviewPagesService = $this->getService('OverviewPagesService');

@@ -1,5 +1,4 @@
 <?php
-
 namespace ProcessWire;
 
 class EventsBox extends TwackComponent {
@@ -82,7 +81,7 @@ class EventsBox extends TwackComponent {
 				if ($a->timestamp === $b->timestamp) {
 					return 0;
 				}
-				return $a->timestamp > $b->timestamp ? -1 : 1;
+				return $a->timestamp > $b->timestamp ? 1 : -1;
 			});
 		}
 
@@ -103,14 +102,14 @@ class EventsBox extends TwackComponent {
 		}
 
 		// if (($this->performances && count($this->performances) > 0) || ($this->performancesOld && count($this->performancesOld) > 0)) {
-			// $this->addScript('performances-box.js', array(
-			// 	'path'     => wire('config')->urls->templates . 'assets/js/',
-			// 	'absolute' => true
-			// ));
-			// $this->addScript('legacy/performances-box.js', array(
-			// 	'path'     => wire('config')->urls->templates . 'assets/js/',
-			// 	'absolute' => true
-			// ));
+		// $this->addScript('performances-box.js', array(
+		// 	'path'     => wire('config')->urls->templates . 'assets/js/',
+		// 	'absolute' => true
+		// ));
+		// $this->addScript('legacy/performances-box.js', array(
+		// 	'path'     => wire('config')->urls->templates . 'assets/js/',
+		// 	'absolute' => true
+		// ));
 		// }
 	}
 }
