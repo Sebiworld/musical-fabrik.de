@@ -24,24 +24,27 @@
     max-width: 100%;
 
     &:first-child,
-    & > *:first-child {
+    &>*:first-child {
       margin-top: 0;
     }
 
     &:last-child,
-    & > *:last-child {
+    &>*:last-child {
       margin-bottom: 0;
     }
 
     .w-400 {
       width: 400px;
     }
+
     .w-600 {
       width: 600px;
     }
+
     .w-800 {
       width: 800px;
     }
+
     .w-1000 {
       width: 1000px;
     }
@@ -53,6 +56,11 @@
 
     .content_text {
       width: 100%;
+
+      &.alert {
+        width: 38em;
+        max-width: 100%;
+      }
     }
 
     .content_collapsible {
@@ -80,21 +88,25 @@
       margin-top: font-px("content-h2");
     }
   }
+
   h3 {
     @include fontsize("content-h3", 1.1);
     margin-top: font-px("content-h3") * 2;
     margin-bottom: font-px("content-h3");
   }
+
   h4 {
     @include fontsize("content-h4", 1.1);
     margin-top: font-px("content-h4") * 2;
     margin-bottom: font-px("content-h4");
   }
+
   h5 {
     @include fontsize("content-h5", 1.1);
     margin-top: font-px("content-h5") * 2;
     margin-bottom: font-px("content-h5");
   }
+
   h6 {
     @include fontsize("content-h6", 1.1);
     margin-top: font-px("content-h6") * 2;
@@ -113,19 +125,22 @@
     &.w-400 {
       width: 400px;
     }
+
     &.w-600 {
       width: 600px;
     }
+
     &.w-800 {
       width: 800px;
     }
+
     &.w-1000 {
       width: 1000px;
     }
   }
 
   .center,
-  .center > p {
+  .center>p {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -140,8 +155,9 @@
 
 .center {
   .contents_component {
+
     .content-block,
-    .content-block > *,
+    .content-block>*,
     p {
       margin-left: auto;
       margin-right: auto;
