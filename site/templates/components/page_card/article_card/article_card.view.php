@@ -58,7 +58,7 @@ namespace ProcessWire;
 		if (!empty($this->page->external_link)) {
 			?>
 	<a href="<?= $this->page->external_link; ?>" target="_blank"
-		rel=“nofollow” class="btn background facebook btn-inlinecolor hvr-grow">
+		rel=“nofollow” class="btn btn-light btn-inlinecolor hvr-grow">
 		<i class="icon ion-logo-facebook"></i>
 		<?= __('More on Facebook...'); ?>
 	</a>

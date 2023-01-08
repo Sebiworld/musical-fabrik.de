@@ -161,25 +161,25 @@ class MfFacebookImport extends Process implements Module {
 				if (empty($tag['name'])) {
 					continue;
 				}
-				if (str_contains(strtolower($tag['name']), 'wie im himmel') || str_contains(strtolower($tag['name']), 'wieimhimmel')) {
+				if (strpos(strtolower($tag['name']), 'wie im himmel') !== false || strpos(strtolower($tag['name']), 'wieimhimmel') !== false) {
 					$page->parent = $this->pages->get('/projekte/wie-im-himmel/aktuelles/');
 					break;
-				} else if (str_contains(strtolower($tag['name']), 'claus')) {
+				} else if (strpos(strtolower($tag['name']), 'claus') !== false) {
 					$page->parent = $this->pages->get('/projekte/claus/aktuelles/');
 					break;
-				} else if (str_contains(strtolower($tag['name']), 'medicus')) {
+				} else if (strpos(strtolower($tag['name']), 'medicus') !== false) {
 					$page->parent = $this->pages->get('/projekte/der-medicus/aktuelles/');
 					break;
-				} else if (str_contains(strtolower($tag['name']), 'päpstin') || str_contains(strtolower($tag['name']), 'paepstin')) {
+				} else if (strpos(strtolower($tag['name']), 'päpstin') !== false || strpos(strtolower($tag['name']), 'paepstin') !== false) {
 					$page->parent = $this->pages->get('/projekte/die-paepstin/aktuelles/');
 					break;
-				} else if (str_contains(strtolower($tag['name']), 'zauberer von oz') || str_contains(strtolower($tag['name']), 'zauberervonoz')) {
+				} else if (strpos(strtolower($tag['name']), 'zauberer von oz') !== false || strpos(strtolower($tag['name']), 'zauberervonoz') !== false) {
 					$page->parent = $this->pages->get('/projekte/der-zauberer-von-oz/aktuelles/');
 					break;
-				} else if (str_contains(strtolower($tag['name']), 'oliver')) {
+				} else if (strpos(strtolower($tag['name']), 'oliver') !== false) {
 					$page->parent = $this->pages->get('/projekte/oliver/aktuelles/');
 					break;
-				} else if (str_contains(strtolower($tag['name']), 'schöne und das biest') || str_contains(strtolower($tag['name']), 'schoene und das biest')) {
+				} else if (strpos(strtolower($tag['name']), 'schöne und das biest') !== false || strpos(strtolower($tag['name']), 'schoene und das biest') !== false) {
 					$page->parent = $this->pages->get('/projekte/die-schoene-und-das-biest/aktuelles/');
 					break;
 				}
@@ -231,6 +231,7 @@ class MfFacebookImport extends Process implements Module {
 
 			$aborted = false;
 			$logCollection[] = '';
+			$importedPostsCounter = 0;
 
 			foreach ($posts as $post) {
 				if (empty($post['id'])) {
@@ -257,6 +258,7 @@ class MfFacebookImport extends Process implements Module {
 
 				try {
 					$this->importPost($post);
+					$importedPostsCounter++;
 
 					$msg = 'Post successfully imported: ' . $post['id'];
 					$logCollection[] = $msg;
@@ -273,6 +275,10 @@ class MfFacebookImport extends Process implements Module {
 			$msg = 'importPosts() finished.';
 			$logCollection[] = $msg;
 			$this->wire('log')->save(MfFacebookImport::logName, $msg, ['url' => $moduleUrl]);
+
+			if ($importedPostsCounter === 0) {
+				$logCollection[] = 'NO EVENTS';
+			}
 		} catch (\Exception $e) {
 			$msg = 'Import failed: ' . $e->getMessage();
 			$logCollection[] = $msg;
@@ -300,7 +306,7 @@ class MfFacebookImport extends Process implements Module {
 		$ch = curl_init();
 
 
-		$fieldsQuery = 'published_posts.limit(20).offset(0){id,call_to_action,event,created_time,updated_time,from,message,message_tags,privacy,place,parent_id,is_published,permalink_url,width,height,target,likes,story,story_tags,status_type,is_hidden,is_expired,is_popular}';
+		$fieldsQuery = 'published_posts.limit(20).offset(0){id,call_to_action,event,created_time,updated_time,from,message,message_tags,privacy,place,parent_id,is_published,permalink_url,full_picture,width,height,target,likes,story,story_tags,status_type,is_hidden,is_expired,is_popular}';
 
 		// set url
 		curl_setopt($ch, CURLOPT_URL, 'https://graph.facebook.com/' . $requestPath . '?access_token=' . $accessToken . '&fields=' . urlencode($fieldsQuery));
