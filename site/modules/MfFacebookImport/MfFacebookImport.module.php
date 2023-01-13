@@ -306,7 +306,7 @@ class MfFacebookImport extends Process implements Module {
 		$ch = curl_init();
 
 
-		$fieldsQuery = 'published_posts.limit(20).offset(0){id,call_to_action,event,created_time,updated_time,from,message,message_tags,privacy,place,parent_id,is_published,permalink_url,full_picture,width,height,target,likes,story,story_tags,status_type,is_hidden,is_expired,is_popular}';
+		$fieldsQuery = 'published_posts.limit(20).offset(0){id,call_to_action,event,created_time,updated_time,from,message,message_tags,privacy,place,parent_id,is_published,permalink_url,full_picture,width,height,target,story,story_tags,status_type,is_hidden,is_expired}';
 
 		// set url
 		curl_setopt($ch, CURLOPT_URL, 'https://graph.facebook.com/' . $requestPath . '?access_token=' . $accessToken . '&fields=' . urlencode($fieldsQuery));
