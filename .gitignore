@@ -48,6 +48,7 @@ yarn.lock
 !/site/modules/PageAccessPermissions
 !/site/modules/PageAccessReleasetime
 !/site/modules/MfFacebookImport
+!/site/modules/MfAuth
 
 /*.html
 /site/templates/entwicklung/external/progressively

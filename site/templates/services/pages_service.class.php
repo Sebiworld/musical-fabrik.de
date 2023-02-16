@@ -201,7 +201,7 @@ class PagesService extends TwackComponent {
 			if ($page->template->hasField('authors') && $page->authors instanceof PageArray) {
 				$authors = [];
 				foreach ($page->authors as $author) {
-					$authors[] = $author->first_name . ' ' . $author->surname;
+					$authors[] = $author->first_name . ' ' . $author->last_name;
 				}
 				$page->authors_readable = implode(' & ', $authors);
 			}
@@ -236,7 +236,7 @@ class PagesService extends TwackComponent {
 		if ($page->template->hasField('authors') && $page->authors instanceof PageArray) {
 			$authors = [];
 			foreach ($page->authors as $author) {
-				$authors[] = $author->first_name . ' ' . $author->surname;
+				$authors[] = $author->first_name . ' ' . $author->last_name;
 			}
 			$page->authors_readable = implode(' & ', $authors);
 		}
