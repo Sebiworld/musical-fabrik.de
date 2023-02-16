@@ -240,7 +240,7 @@ class MfFacebookImport extends Process implements Module {
 
 				$logCollection[] = '---------------------';
 
-				$msg = 'Importing post: ' . $post['id'];
+				$msg = 'Importing post: ' . $post['id'] . ' [' . md5(json_encode($post)) . ' / ' . $pageFound->external_modification_hash . ']';
 				$logCollection[] = $msg;
 				$this->wire('log')->save(MfFacebookImport::logName, $msg, ['url' => $moduleUrl]);
 

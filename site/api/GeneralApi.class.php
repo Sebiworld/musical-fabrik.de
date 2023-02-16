@@ -21,10 +21,4 @@ class GeneralApi {
 
 		return $output;
 	}
-
-	public static function register($data) {
-		return [
-			'test' => 4242
-		];
-	}
 }
