@@ -24,8 +24,6 @@ class MfAuth extends WireData implements Module {
 	}
 
 	public function ___install() {
-		parent::___install();
-
 		$this->createDBTables();
 	}
 
