@@ -62,9 +62,9 @@ class MfAuth extends WireData implements Module {
 					['OPTIONS', '', ['POST']],
 					['POST', '', MfAuth::class, 'register', ['handle_authentication' => false]]
 				],
-				'register_confirm' => [
+				'registration_confirm' => [
 					['OPTIONS', '', ['POST']],
-					['POST', '', MfAuth::class, 'registerConfirm', ['handle_authentication' => false]]
+					['POST', '', MfAuth::class, 'registrationConfirm', ['handle_authentication' => false]]
 				]
 			]
 		);
@@ -132,6 +132,7 @@ class MfAuth extends WireData implements Module {
 				);
 			} else {
 				$user = wire('users')->add($username);
+				$user->email = wire('sanitizer')->email($data->email);
 			}
 		}
 
@@ -155,11 +156,11 @@ class MfAuth extends WireData implements Module {
 		try {
 			$email = wireMail();
 			$email->header('X-Mailer', wire('pages')->get(1)->httpUrl . '');
-			$email->to(wire('sanitizer')->email($data->email));
+			$email->to($user->email);
 
 			$email->subject('Willkommen in der Musical-Fabrik App!');
 
-			$url = 'https://app.musical-fabrik.de/confirmRegister?code=' . $token;
+			$url = 'https://app.musical-fabrik.de/?registration_confirm=' . $token;
 
 			$plainContent= file_get_contents(wire('config')->paths->MfAuth . '/templates/registration-confirm.txt');
 			if (!empty($plainContent)) {
@@ -221,10 +222,16 @@ class MfAuth extends WireData implements Module {
 		return true;
 	}
 
-	public static function checkRegistrationConfirm($data) {
+	public static function registrationConfirm($data) {
 		$token = $data->token;
 		if (empty($token)) {
-			return false;
+			throw new BadRequestException(
+				'Please provide a valid confirmation token.',
+				400,
+				[
+					'code' => 'missing token [1]'
+				]
+			);
 		}
 
 		try {
@@ -239,12 +246,24 @@ class MfAuth extends WireData implements Module {
 			$result = $query->fetch(\PDO::FETCH_ASSOC);
 
 			if (empty($result['user_id'])) {
-				return false;
+				throw new BadRequestException(
+					'Please provide a valid confirmation token.',
+					400,
+					[
+						'code' => 'missing token [2]'
+					]
+				);
 			}
 
 			$user = wire('users')->get('id=' . $result['user_id']);
 			if (!($user instanceof User) && !$user->id) {
-				return false;
+				throw new BadRequestException(
+					'Please provide a valid confirmation token.',
+					400,
+					[
+						'code' => 'missing token [3]'
+					]
+				);
 			}
 
 			$of = $user->of();
@@ -285,10 +304,18 @@ class MfAuth extends WireData implements Module {
 			$query->closeCursor();
 			$query->execute($queryVars);
 
-			return true;
+			return [
+				'success' => true
+			];
 		} catch (\Exception $e) {
 		}
 
-		return false;
+		throw new BadRequestException(
+			'Please provide a valid confirmation token.',
+			400,
+			[
+				'code' => 'missing token [4]'
+			]
+		);
 	}
 }
