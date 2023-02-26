@@ -58,9 +58,9 @@ class MfAuth extends WireData implements Module {
 		$module->registerRoute(
 			'auth',
 			[
-				'register' => [
+				'registration' => [
 					['OPTIONS', '', ['POST']],
-					['POST', '', MfAuth::class, 'register', ['handle_authentication' => false]]
+					['POST', '', MfAuth::class, 'registration', ['handle_authentication' => false]]
 				],
 				'registration_confirm' => [
 					['OPTIONS', '', ['POST']],
@@ -70,7 +70,7 @@ class MfAuth extends WireData implements Module {
 		);
 	}
 
-	public static function register($data) {
+	public static function registration($data) {
 		if (empty(wire('sanitizer')->email($data->email))) {
 			throw new BadRequestException(
 				'Please provide an email address.',
