@@ -1,0 +1,12 @@
+$project-primary-bg: #C69801;
+$project-primary-color: #fff;
+
+$primary: $project-primary-bg !default;
+
+@import "globals/index";
+@import "templates/project";
+
+// .events_box .event .event-title{
+//     text-decoration: line-through;
+//     color: $danger;
+// }
