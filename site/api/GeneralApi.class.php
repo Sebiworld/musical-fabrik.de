@@ -8,11 +8,21 @@ class GeneralApi {
 			'name' => wire('user')->name,
 			'loggedIn' => wire('user')->isLoggedIn(),
 			'nickname' => wire('user')->short_description,
-			'roles' => []
+			'roles' => [],
+			'permissions' => []
 		];
 
 		foreach (wire('user')->roles as $item) {
 			$output['roles'][] = [
+				'id' => $item['id'],
+				'name' => $item['name'],
+				'title' => $item['title'],
+				'description' => $item['short_description']
+			];
+		}
+
+		foreach (wire('user')->getPermissions() as $item) {
+			$output['permissions'][] = [
 				'id' => $item['id'],
 				'name' => $item['name'],
 				'title' => $item['title']
