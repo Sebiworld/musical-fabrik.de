@@ -1,5 +1,4 @@
 <?php
-
 namespace ProcessWire;
 
 /**
@@ -17,7 +16,7 @@ class ImageService extends TwackComponent {
 	/**
 	 * Returns <img> html for an image with the given args. Automatically creates srcsets for multiple resolutions
 	 */
-	public function getImgHtml($args = array()) {
+	public function getImgHtml($args = []) {
 		$output = '';
 
 		$image = $this->getImage($args);
@@ -25,18 +24,18 @@ class ImageService extends TwackComponent {
 			return '';
 		}
 
-		$attributes        = array(
+		$attributes        = [
 			'data-caption' => $this->mergeArgs('caption', $args, $image)
-		);
+		];
 
 		$attributes['alt'] = $this->mergeArgs('alt', $image, $attributes['data-caption'], $args);
 
-		$styles            = array();
+		$styles            = [];
 		if (isset($args['styles'])) {
 			$styles = $this->getStylesArray($args['styles']);
 		}
 
-		$classes = array();
+		$classes = [];
 		if (isset($args['classes'])) {
 			$classes = $this->getClassArray($args['classes']);
 		}
@@ -46,7 +45,7 @@ class ImageService extends TwackComponent {
 		$src = $image->url;
 		if ($image->ext !== 'svg') {
 			if (!isset($args['default'])) {
-				$args['default'] = array('width' => 1000);
+				$args['default'] = ['width' => 1000];
 			}
 			$src = $this->getImageWithOptions($image, $args['default']);
 		}
@@ -61,7 +60,7 @@ class ImageService extends TwackComponent {
 			$attributes['src']      = $this->getLoadingImage($image, $args);
 			$attributes['class']    = implode(' ', $classes);
 
-			if(!empty($srcset)){
+			if (!empty($srcset)) {
 				$attributes['data-srcset'] = implode(', ', $srcset);
 			}
 
@@ -71,7 +70,7 @@ class ImageService extends TwackComponent {
 		$attributes['src']      = $src;
 		$attributes['class']    = implode(' ', $classes);
 
-		if(!empty($srcset)){
+		if (!empty($srcset)) {
 			$attributes['srcset'] = implode(', ', $srcset);
 		}
 
@@ -81,7 +80,7 @@ class ImageService extends TwackComponent {
 	/**
 	 * Returns <picture> html for an image with the given args. Automatically creates srcsets for multiple resolutions and webp alternatives
 	 */
-	public function getPictureHtml($args = array()) {
+	public function getPictureHtml($args = []) {
 		$output = '';
 
 		$image = $this->getImage($args);
@@ -89,24 +88,24 @@ class ImageService extends TwackComponent {
 			return '';
 		}
 
-		$attributes = array();
+		$attributes = [];
 		if (isset($args['attributes'])) {
 			$attributes = $this->getClassArray($args['attributes']);
 		}
 		$attributes['data-caption'] = $this->mergeArgs('caption', $args, $image);
 		$attributes['alt'] = $this->mergeArgs('alt', $image, $attributes['data-caption'], $args);
 
-		$styles            = array();
+		$styles            = [];
 		if (isset($args['styles'])) {
 			$styles = $this->getStylesArray($args['styles']);
 		}
 
-		$classes = array();
+		$classes = [];
 		if (isset($args['classes'])) {
 			$classes = $this->getClassArray($args['classes']);
 		}
 
-		$pictureclasses = array();
+		$pictureclasses = [];
 		if (isset($args['pictureclasses'])) {
 			$pictureclasses = $this->getClassArray($args['pictureclasses']);
 		}
@@ -116,7 +115,7 @@ class ImageService extends TwackComponent {
 		$src = $image->url;
 		if ($image->ext !== 'svg') {
 			if (!isset($args['default'])) {
-				$args['default'] = array('width' => 1000);
+				$args['default'] = ['width' => 1000];
 			}
 			$src = $this->getImageWithOptions($image, $args['default']);
 		}
@@ -215,16 +214,13 @@ class ImageService extends TwackComponent {
 		return true;
 	}
 
-	protected function shouldLoadAsync(Pageimage $image, $args = array()) {
+	protected function shouldLoadAsync(Pageimage $image, $args = []) {
 		if (isset($args['loadAsync']) && !$args['loadAsync']) {
 			return false;
 		}
 
 		if ($image->ext === 'svg') {
-			$svg = $this->getPlaceholderSvg($image);
-			if(empty($svg)){
-				return false;
-			}
+			return false;
 		}
 
 		return true;
@@ -274,7 +270,7 @@ class ImageService extends TwackComponent {
 	 */
 	protected function getClassArray($classes) {
 		if (is_array($classes)) {
-			$output = array();
+			$output = [];
 			foreach ($classes as $cssclass) {
 				if (!is_string($cssclass)) {
 					continue;
@@ -299,7 +295,7 @@ class ImageService extends TwackComponent {
 		if (is_string($classes)) {
 			return array_unique(explode(' ', $classes));
 		}
-		return array();
+		return [];
 	}
 
 	/**
@@ -311,7 +307,7 @@ class ImageService extends TwackComponent {
 		}
 
 		if (is_string($styles)) {
-			$output     = array();
+			$output     = [];
 			$styleparts = explode(';', $styles);
 			foreach ($styleparts as $stylepart) {
 				$style = explode(':', $stylepart);
@@ -325,7 +321,7 @@ class ImageService extends TwackComponent {
 			}
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -365,52 +361,27 @@ class ImageService extends TwackComponent {
 	}
 
 	/**
-	 * await query("INSERT INTO image_placeholders (pages_id, filename, fieldname, svg, created, modified) VALUES(" + image.pages_id + ", \"" + image.data + "\", \"" + tablename + "\", \"" + escapedSvg + "\", now(), now())");
-	 */
-	protected function getPlaceholderSvg(Pagefile $image){
-		$db        = $this->wire('database');
-		$query     = $db->prepare('SELECT * FROM `image_placeholders` WHERE `pages_id`=:pages_id AND `filename`=:filename AND `fieldname`=:fieldname;');
-		$query->closeCursor();
-
-		$query->execute(array(
-			':pages_id' => $image->page->id,
-			':filename' => $image->basename,
-			'fieldname' => $image->field->name
-		));
-		$placeholderData    = $query->fetch(\PDO::FETCH_ASSOC);
-		if(!empty($placeholderData) && is_array($placeholderData) && !empty($placeholderData['svg'])){
-			return $this->svgUrlEncode($placeholderData['svg']);
-		}
-
-		return NULL;
-	}
-
-	/**
 	 * Retrieves a small image that can be shown while the full sized image is been loaded
 	 */
-	protected function getLoadingImage($image, $args = array(), $inline = false, $ext = false) {
+	protected function getLoadingImage($image, $args = [], $inline = false, $ext = false) {
 		if ($ext === 'webp') {
 			$args['webp'] = true;
 		}
 
 		if ($image instanceof Pageimage) {
-			$svg = $this->getPlaceholderSvg($image);
-			if (!empty($svg) && (!isset($args['svgPlaceholder']) || !!$args['svgPlaceholder']) ) {
-				// A svg-placeholder is defined
-				return 'data:image/svg+xml,' . $svg;
-			} elseif ($inline) {
+			if ($inline) {
 				if (is_array($args) && isset($args['default']['width']) && isset($args['default']['height'])) {
 					// Width and height are set -> preserve aspect ratio:
-					return $this->getImageWithOptions($image, array('width' => 10, 'height' => round($args['default']['width'] / $args['default']['height']) * 10));
+					return $this->getImageWithOptions($image, ['width' => 10, 'height' => round($args['default']['width'] / $args['default']['height']) * 10]);
 				} else {
-					return $this->getImageWithOptions($image, array('width' => 10));
+					return $this->getImageWithOptions($image, ['width' => 10]);
 				}
 			} else {
 				if (is_array($args) && isset($args['default']['width']) && isset($args['default']['height'])) {
 					// Width and height are set -> preserve aspect ratio:
-					return $this->getImageWithOptions($image, array('width' => 100, 'height' => round($args['default']['width'] / $args['default']['height']) * 100));
+					return $this->getImageWithOptions($image, ['width' => 100, 'height' => round($args['default']['width'] / $args['default']['height']) * 100]);
 				} else {
-					return $this->getImageWithOptions($image, array('width' => 100));
+					return $this->getImageWithOptions($image, ['width' => 100]);
 				}
 			}
 		}
@@ -427,24 +398,24 @@ class ImageService extends TwackComponent {
 		return 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=';
 	}
 
-	protected function getSrcset(Pageimage $image, $args = array(), $webp = false) {
+	protected function getSrcset(Pageimage $image, $args = [], $webp = false) {
 		if ((empty($args['width']) || !is_integer($args['width'])) && (empty($args['height']) || !is_integer($args['height']))) {
-			return array();
+			return [];
 		}
 
 		if ($webp) {
 			$args['webp'] = true;
 		}
 
-		return array(
+		return [
 			$this->getImageWithOptions($image, $args) . ' 1x',
 			$this->getImageWithOptions($image, $this->getMultipliedSizeoptions($args, 2)) . ' 2x'
-		);
+		];
 	}
 
 	protected function getMultipliedSizeoptions($args, $factor) {
 		if (!is_array($args)) {
-			return array();
+			return [];
 		}
 
 		if (!is_numeric($factor)) {
@@ -464,13 +435,13 @@ class ImageService extends TwackComponent {
 	/**
 	 * Returns an array with media-attributes for generating different <source>-Tags in a picture element.
 	 */
-	protected function getMedia($args = array()) {
+	protected function getMedia($args = []) {
 		if (!is_array($args) || !isset($args['media']) || !is_array($args['media'])) {
-			return array();
+			return [];
 		}
 
 		// Only allow valid values:
-		$output = array();
+		$output = [];
 		foreach ($args['media'] as $key => $value) {
 			if (empty($key) || !is_string($key)) {
 				continue;
@@ -494,7 +465,7 @@ class ImageService extends TwackComponent {
 	 * @param  array  $args
 	 * @return PageImage
 	 */
-	public function getImage($args = array()) {
+	public function getImage($args = []) {
 		if (!is_array($args)) {
 			return null;
 		}
@@ -532,24 +503,24 @@ class ImageService extends TwackComponent {
 	/**
 	 * Returns a pageimage with options
 	 */
-	protected function getImageWithOptions(Pageimage $image, $options = array()) {
+	protected function getImageWithOptions(Pageimage $image, $options = []) {
 		if (!is_array($options)) {
 			if ($options === 'original') {
 				return $image->url;
 			}
-			$options = array();
+			$options = [];
 		}
 
 		if (!isset($options['width']) && !isset($options['height'])) {
 			$options['width'] = 100;
 		}
 		if (!isset($options['options'])) {
-			$options['options'] = array(
+			$options['options'] = [
 				'cropping'      => true,
 				'cleanFilename' => true,
 				// 'forceNew' => true,
 				// 'upscaling'     => false
-			);
+			];
 		}
 
 		if (isset($options['image']) && $options['image'] instanceof Pageimage) {
@@ -594,12 +565,12 @@ class ImageService extends TwackComponent {
 		return null;
 	}
 
-	public function getPlaceholderImageHtml($args = array()) {
+	public function getPlaceholderImageHtml($args = []) {
 		$args['image'] = $this->getPlaceholderImage();
 		return $this->getImgHtml($args);
 	}
 
-	public function getPlaceholderPictureHtml($args = array()) {
+	public function getPlaceholderPictureHtml($args = []) {
 		$args['image'] = $this->getPlaceholderImage();
 		return $this->getPictureHtml($args);
 	}
