@@ -1,18 +1,16 @@
 <?php
 namespace ProcessWire;
 
-
 class Portrait extends TwackComponent {
-
 	public function __construct($args) {
 		parent::__construct($args);
 
-		if($this->page->template->name !== 'portrait'){
-			throw new ComponentNotInitializedException("No valid portrait page was transferred.");
+		if ($this->page->template->name !== 'portrait') {
+			throw new ComponentNotInitializedException('No valid portrait page was transferred.');
 		}
 
 		$this->root = false;
-		if(isset($args['root']) && $args['root']){
+		if (isset($args['root']) && $args['root']) {
 			$this->root = true;
 		}
 
@@ -40,10 +38,10 @@ class Portrait extends TwackComponent {
 		$this->portraitHeight = 0;
 		$projectPage = $this->projectService->getProjectPage();
 		if ($projectPage instanceof Page && $projectPage->id) {
-			if($projectPage->template->hasField('portrait_width') && $projectPage->portrait_width){
+			if ($projectPage->template->hasField('portrait_width') && $projectPage->portrait_width) {
 				$this->portraitWidth = $projectPage->portrait_width;
 			}
-			if($projectPage->template->hasField('portrait_height') && $projectPage->portrait_height){
+			if ($projectPage->template->hasField('portrait_height') && $projectPage->portrait_height) {
 				$this->portraitHeight = $projectPage->portrait_height;
 			}
 		}
@@ -51,33 +49,33 @@ class Portrait extends TwackComponent {
 		// TODO: Popover at click with detailed information about the portrait
 	}
 
-	public function addSeasonCastCombination($seasons, $casts, $projectRoles = false){
+	public function addSeasonCastCombination($seasons, $casts, $projectRoles = false) {
 		// If no season page array is passed, the role applies to all seasons:
-		if(!($seasons instanceof PageArray)){
+		if (!($seasons instanceof PageArray) || $seasons->count() <= 0) {
 			$seasons = $this->allSeasons;
 		}
 
 		// If no cast page array is passed, the role applies to all casts:
-		if(!($casts instanceof PageArray)){
+		if (!($casts instanceof PageArray) || $casts->count() <= 0) {
 			$casts = $this->allCasts;
 		}
 
-		if($projectRoles instanceof Page && $projectRoles->id){
+		if ($projectRoles instanceof Page && $projectRoles->id) {
 			$tmpRole = $projectRoles;
 			$projectRoles = new PageArray();
 			$projectRoles->add($tmpRole);
-		}elseif(!($projectRoles instanceof PageArray)){
+		} elseif (!($projectRoles instanceof PageArray)) {
 			$projectRoles = new PageArray();
 		}
 
-		foreach($seasons as $seasonPage){
+		foreach ($seasons as $seasonPage) {
 			// Sub-selectors don't work on elements,
 			// which are only present in the memory. In order to use sub-selectors
 			//, they should be stored in the DB. Therefore
 			// The casts and seasons are stored at the first level.
-			$this->{'season_'.$seasonPage->id} = 1;
+			$this->{'season_' . $seasonPage->id} = 1;
 
-			if(!$this->seasons->has('id=' . $seasonPage->id)){
+			if (!$this->seasons->has('id=' . $seasonPage->id)) {
 				$season = new WireData();
 				$season->setArray($seasonPage->getArray());
 				$season->id = $seasonPage->id;
@@ -87,11 +85,11 @@ class Portrait extends TwackComponent {
 				$this->seasons->add($season);
 			}
 
-			foreach($casts as $castPage){
-				$this->{'cast_'.$castPage->id} = 1;
-				$this->{'season_'.$seasonPage->id.'_'.$castPage->id} = 1;
+			foreach ($casts as $castPage) {
+				$this->{'cast_' . $castPage->id} = 1;
+				$this->{'season_' . $seasonPage->id . '_' . $castPage->id} = 1;
 
-				if(!$this->seasons->get('id=' . $seasonPage->id)->casts->has('id='.$castPage->id)){
+				if (!$this->seasons->get('id=' . $seasonPage->id)->casts->has('id=' . $castPage->id)) {
 					$cast = new WireData();
 					$cast->setArray($castPage->getArray());
 					$cast->id = $castPage->id;
@@ -100,20 +98,20 @@ class Portrait extends TwackComponent {
 					$cast->projectRoles = new WireArray();
 					$this->seasons->get('id=' . $seasonPage->id)->casts->add($cast);
 
-					if(!($this->{'season_'.$seasonPage->id.'_casts'} instanceof WireArray)){
-						$this->{'season_'.$seasonPage->id.'_casts'} = new WireArray();
+					if (!($this->{'season_' . $seasonPage->id . '_casts'} instanceof WireArray)) {
+						$this->{'season_' . $seasonPage->id . '_casts'} = new WireArray();
 					}
-					$this->{'season_'.$seasonPage->id.'_casts'}->add($cast);
+					$this->{'season_' . $seasonPage->id . '_casts'}->add($cast);
 				}
 
 				// Add roles to the cast:
-				foreach($projectRoles as $projectRolePage){
-					$this->{'project_role_'.$projectRolePage->id} = 1;
-					$this->{'season_'.$seasonPage->id.'_'.$castPage->id.'_'.$projectRolePage->id} = 1;
-					$this->{'season_'.$seasonPage->id.'_project_role_'.$projectRolePage->id} = 1;
-					$this->{'cast_'.$castPage->id.'_project_role_'.$projectRolePage->id} = 1;
+				foreach ($projectRoles as $projectRolePage) {
+					$this->{'project_role_' . $projectRolePage->id} = 1;
+					$this->{'season_' . $seasonPage->id . '_' . $castPage->id . '_' . $projectRolePage->id} = 1;
+					$this->{'season_' . $seasonPage->id . '_project_role_' . $projectRolePage->id} = 1;
+					$this->{'cast_' . $castPage->id . '_project_role_' . $projectRolePage->id} = 1;
 
-					if($this->seasons->get('id=' . $seasonPage->id)->casts->get('id='.$castPage->id)->projectRoles->has('id='.$projectRolePage->id)){
+					if ($this->seasons->get('id=' . $seasonPage->id)->casts->get('id=' . $castPage->id)->projectRoles->has('id=' . $projectRolePage->id)) {
 						continue;
 					}
 					$projectRole = new WireData();
@@ -121,33 +119,33 @@ class Portrait extends TwackComponent {
 					$projectRole->id = $projectRolePage->id;
 					$projectRole->name = $projectRolePage->name;
 					$projectRole->title = $projectRolePage->title;
-					$this->seasons->get('id=' . $seasonPage->id)->casts->get('id='.$castPage->id)->projectRoles->add($projectRole);
+					$this->seasons->get('id=' . $seasonPage->id)->casts->get('id=' . $castPage->id)->projectRoles->add($projectRole);
 
-					if(!($this->{'season_'.$seasonPage->id.'_'.$castPage->id.'_project_roles'} instanceof WireArray)){
-						$this->{'season_'.$seasonPage->id.'_'.$castPage->id.'_project_roles'} = new WireArray();
+					if (!($this->{'season_' . $seasonPage->id . '_' . $castPage->id . '_project_roles'} instanceof WireArray)) {
+						$this->{'season_' . $seasonPage->id . '_' . $castPage->id . '_project_roles'} = new WireArray();
 					}
-					$this->{'season_'.$seasonPage->id.'_'.$castPage->id.'_project_roles'}->add($projectRole);
+					$this->{'season_' . $seasonPage->id . '_' . $castPage->id . '_project_roles'}->add($projectRole);
 
-					if(!($this->{'season_'.$seasonPage->id.'_project_roles'} instanceof WireArray)){
-						$this->{'season_'.$seasonPage->id.'_project_roles'} = new WireArray();
+					if (!($this->{'season_' . $seasonPage->id . '_project_roles'} instanceof WireArray)) {
+						$this->{'season_' . $seasonPage->id . '_project_roles'} = new WireArray();
 					}
-					$this->{'season_'.$seasonPage->id.'_project_roles'}->add($projectRole);
+					$this->{'season_' . $seasonPage->id . '_project_roles'}->add($projectRole);
 
-					if(!($this->{'cast_'.$castPage->id.'_project_roles'} instanceof WireArray)){
-						$this->{'cast_'.$castPage->id.'_project_roles'} = new WireArray();
+					if (!($this->{'cast_' . $castPage->id . '_project_roles'} instanceof WireArray)) {
+						$this->{'cast_' . $castPage->id . '_project_roles'} = new WireArray();
 					}
-					$this->{'cast_'.$castPage->id.'_project_roles'}->add($projectRole);
+					$this->{'cast_' . $castPage->id . '_project_roles'}->add($projectRole);
 				}
 			}
 		}
 	}
 
-	public function renderWithSubtitle($subtitle){
+	public function renderWithSubtitle($subtitle) {
 		$this->subtitle = $subtitle;
 		return parent::render();
 	}
 
-	public function render(){
+	public function render() {
 		$this->subtitle = false;
 		return parent::render();
 	}
