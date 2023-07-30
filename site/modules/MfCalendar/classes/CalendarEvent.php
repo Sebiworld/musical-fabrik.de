@@ -440,6 +440,29 @@ class CalendarEvent extends WireData {
 		return true;
 	}
 
+	public function ___getData() {
+		$output =  [
+			'id' => $this->getID(),
+			'title' => $this->getTitle(),
+			'description' => $this->getDescription(),
+			'created' => $this->getCreated(),
+			'created_user' => AppApi::getAjaxOf($this->getCreatedUser()),
+			'modified' => $this->getModified(),
+			'modified_user' => AppApi::getAjaxOf($this->getModifiedUser()),
+			'status' => $this->getStatus(),
+			'timespans' => []
+		];
+
+		foreach ($this->getTimespans() as $timespan) {
+			if (!$timespan->getID()) {
+				continue;
+			}
+			$output['timespans'][] = $timespan->getData();
+		}
+
+		return $output;
+	}
+
 	public static function getAll() {
 		$events = new WireArray();
 		try {

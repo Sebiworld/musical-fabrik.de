@@ -59,12 +59,36 @@ class MfAuth extends WireData implements Module {
 			'auth',
 			[
 				'registration' => [
-					['OPTIONS', '', ['POST']],
-					['POST', '', MfAuth::class, 'registration', ['handle_authentication' => false]]
+					['OPTIONS', '', ['POST'], [], [], [
+						'summary' => 'Preflight options',
+						'tags' => ['Authentication'],
+						'security' => [
+							['apiKey' => []]
+						],
+					]],
+					['POST', '', MfAuth::class, 'registration', ['handle_authentication' => false], [
+						'summary' => 'Register user',
+						'tags' => ['Authentication'],
+						'security' => [
+							['apiKey' => []]
+						],
+					]]
 				],
 				'registration_confirm' => [
-					['OPTIONS', '', ['POST']],
-					['POST', '', MfAuth::class, 'registrationConfirm', ['handle_authentication' => false]]
+					['OPTIONS', '', ['POST'], [], [], [
+						'summary' => 'Preflight options',
+						'tags' => ['Authentication'],
+						'security' => [
+							['apiKey' => []]
+						],
+					]],
+					['POST', '', MfAuth::class, 'registrationConfirm', ['handle_authentication' => false], [
+						'summary' => 'Confirm registration',
+						'tags' => ['Authentication'],
+						'security' => [
+							['apiKey' => []]
+						],
+					]]
 				]
 			]
 		);

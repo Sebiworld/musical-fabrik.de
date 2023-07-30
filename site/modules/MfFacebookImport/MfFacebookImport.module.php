@@ -161,7 +161,10 @@ class MfFacebookImport extends Process implements Module {
 				if (empty($tag['name'])) {
 					continue;
 				}
-				if (strpos(strtolower($tag['name']), 'wie im himmel') !== false || strpos(strtolower($tag['name']), 'wieimhimmel') !== false) {
+				if (strpos(strtolower($tag['name']), '9to5') !== false) {
+					$page->parent = $this->pages->get('/projekte/9to5/aktuelles/');
+					break;
+				} else if (strpos(strtolower($tag['name']), 'wie im himmel') !== false || strpos(strtolower($tag['name']), 'wieimhimmel') !== false) {
 					$page->parent = $this->pages->get('/projekte/wie-im-himmel/aktuelles/');
 					break;
 				} else if (strpos(strtolower($tag['name']), 'claus') !== false) {

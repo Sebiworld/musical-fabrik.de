@@ -133,6 +133,13 @@ class CalendarStatus extends WireData {
 		return true;
 	}
 
+	public function ___getData() {
+		return [
+			'name' => $this->getName(),
+			'title' => $this->getTitle()
+		];
+	}
+
 	public static function getAll() {
 		$options = new WireArray();
 		try {

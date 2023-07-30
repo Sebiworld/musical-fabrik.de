@@ -193,6 +193,15 @@ class CalendarCategory extends WireData {
 		return true;
 	}
 
+	public function ___getData() {
+		return [
+			'id' => $this->getID(),
+			'name' => $this->getName(),
+			'title' => $this->getTitle(),
+			'description' => $this->getDescription()
+		];
+	}
+
 	public static function getAll() {
 		$options = new WireArray();
 		try {

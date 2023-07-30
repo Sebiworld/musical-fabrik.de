@@ -132,14 +132,16 @@ class MfCalendar extends Process implements Module {
 		$module->registerRoute(
 			'calendar',
 			[
-				// 'registration' => [
-				// 	['OPTIONS', '', ['POST']],
-				// 	['POST', '', MfAuth::class, 'registration', ['handle_authentication' => false]]
-				// ],
-				// 'registration_confirm' => [
-				// 	['OPTIONS', '', ['POST']],
-				// 	['POST', '', MfAuth::class, 'registrationConfirm', ['handle_authentication' => false]]
-				// ]
+				['OPTIONS', '', ['GET']],
+				['GET', '', SELF::class, 'apiCalendarEvents', [], [
+					'summary' => 'Get a list of current calendar events.',
+					'operationId' => 'getCurrentUser',
+					'tags' => ['Authentication'],
+					'security' => [
+						['apiKey' => []],
+						['bearerAuth' => []]
+					]
+				]]
 			]
 		);
 	}
@@ -250,5 +252,36 @@ class MfCalendar extends Process implements Module {
 		$templateParams['locked'] = true;
 
 		return $templateParams;
+	}
+
+	public static function apiCalendarEvents() {
+		$output = [
+			'events' => [],
+			'stati' => [],
+			'categories' => []
+		];
+
+		foreach (CalendarEvent::getAll() as $event) {
+			if (!$event) {
+				continue;
+			}
+			$output['events'][] = $event->getData();
+		}
+
+		foreach (CalendarStatus::getAll() as $status) {
+			if (!$status) {
+				continue;
+			}
+			$output['stati'][] = $status->getData();
+		}
+
+		foreach (CalendarCategory::getAll() as $category) {
+			if (!$category) {
+				continue;
+			}
+			$output['categories'][] = $category->getData();
+		}
+
+		return $output;
 	}
 }

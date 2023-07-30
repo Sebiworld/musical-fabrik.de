@@ -427,6 +427,14 @@ class CalendarTimespan extends WireData {
 		return true;
 	}
 
+	public function ___getData() {
+		return [
+			'id' => $this->getID(),
+			'title' => $this->getTitle(),
+			'description' => $this->getDescription()
+		];
+	}
+
 	public static function getAll() {
 		$timespans = new WireArray();
 		try {
