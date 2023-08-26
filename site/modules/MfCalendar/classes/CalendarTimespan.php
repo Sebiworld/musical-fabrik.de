@@ -2,9 +2,9 @@
 namespace ProcessWire;
 
 class CalendarTimespan extends WireData {
-	private $initiated = false;
+	private $initialized = false;
 
-	public function __construct($import = [], $event = null) {
+	public function __construct(array $data = [], $event = null) {
 		$this->set('id', null);
 		$this->set('eventID', null);
 		$this->set('title', '');
@@ -14,6 +14,7 @@ class CalendarTimespan extends WireData {
 		$this->set('modifiedUser', null);
 		$this->set('status', null);
 		$this->set('description', '');
+		$this->set('participants', '');
 		$this->set('linkedPage', null);
 		$this->set('timeFrom', null);
 		$this->set('timeUntil', null);
@@ -27,13 +28,13 @@ class CalendarTimespan extends WireData {
 			$this->set('eventID', (int)$event);
 		}
 
-		if (is_array($import) && wireCount($import) > 0) {
-			$this->import($import);
+		if (is_array($data) && wireCount($data) > 0) {
+			$this->initializeWithArray($data);
 		}
 
-		if (!$this->isEventIDValid()) {
-			throw new \Exception('You cannot create a timespan without an event-id.');
-		}
+		// if (!$this->isEventIDValid()) {
+		// 	throw new \Exception('You cannot create a timespan without an event-id.');
+		// }
 
 		if ($this->isNew()) {
 			$this->set('created', time());
@@ -41,10 +42,10 @@ class CalendarTimespan extends WireData {
 			$this->set('modified', time());
 			$this->set('modifiedUser', $this->wire('user'));
 		}
-		$this->initiated = true;
+		$this->initialized = true;
 	}
 
-	protected function import(array $values) {
+	protected function initializeWithArray(array $values) {
 		if (!isset($values['event_id'])) {
 			throw new \Exception('You cannot import a timespan without an event-id.');
 		}
@@ -62,15 +63,15 @@ class CalendarTimespan extends WireData {
 		if (isset($values['created'])) {
 			$this->___setCreated($values['created']);
 		}
-		if (isset($values['created_user_id'])) {
-			$this->___setCreatedUser($values['created_user_id']);
+		if (isset($values['created_user'])) {
+			$this->___setCreatedUser($values['created_user']);
 		}
 
 		if (isset($values['modified'])) {
 			$this->___setModified($values['modified']);
 		}
-		if (isset($values['modified_user_id'])) {
-			$this->___setModifiedUser($values['modified_user_id']);
+		if (isset($values['modified_user'])) {
+			$this->___setModifiedUser($values['modified_user']);
 		}
 
 		if (isset($values['status'])) {
@@ -79,6 +80,10 @@ class CalendarTimespan extends WireData {
 
 		if (isset($values['description'])) {
 			$this->___setDescription($values['description']);
+		}
+
+		if (isset($values['participants'])) {
+			$this->___setParticipants($values['participants']);
 		}
 
 		if (isset($values['linked_page'])) {
@@ -98,6 +103,29 @@ class CalendarTimespan extends WireData {
 		}
 	}
 
+	public function ___importData($data) {
+		if (is_object($data)) {
+			if (isset($data->title)) {
+				$this->___setTitle($data->title);
+			}
+			if (isset($data->description)) {
+				$this->___setDescription($data->description);
+			}
+			if (isset($data->participants)) {
+				$this->___setParticipants($data->participants);
+			}
+			if (isset($data->status)) {
+				$this->___setStatus($data->status);
+			}
+			if (isset($data->timeFrom)) {
+				$this->___setTimeFrom($data->timeFrom);
+			}
+			if (isset($data->timeUntil)) {
+				$this->___setTimeUntil($data->timeUntil);
+			}
+		}
+	}
+
 	public function ___isSaveable() {
 		if (!$this->isValid()) {
 			return false;
@@ -106,7 +134,7 @@ class CalendarTimespan extends WireData {
 	}
 
 	public function ___isValid() {
-		return $this->isEventIDValid() && $this->isIDValid() && $this->isTitleValid() && $this->isCreatedValid() && $this->isCreatedUserValid() && $this->isModifiedValid() && $this->isModifiedUserValid() && $this->isStatusValid() && $this->isDescriptionValid() && $this->isLinkedPageValid() && $this->isTimeFromValid() && $this->isTimeUntilValid() && $this->isLocationValid();
+		return $this->isIDValid() && $this->isTitleValid() && $this->isCreatedValid() && $this->isCreatedUserValid() && $this->isModifiedValid() && $this->isModifiedUserValid() && $this->isStatusValid() && $this->isDescriptionValid() && $this->isParticipantsValid() && $this->isLinkedPageValid() && $this->isTimeFromValid() && $this->isTimeUntilValid() && $this->isLocationValid();
 	}
 
 	public function ___isAccessable() {
@@ -116,6 +144,19 @@ class CalendarTimespan extends WireData {
 
 	public function ___isNew() {
 		return empty($this->id);
+	}
+
+	public function ___setEventID($eventID) {
+		if (!$this->isEventIDValid($eventID)) {
+			throw new \Exception('No valid title');
+		}
+
+		if ($this->eventID === $eventID) {
+			return $this->eventID;
+		}
+
+		$this->set('eventID', $eventID);
+		return $this->eventID;
 	}
 
 	public function getEventID() {
@@ -142,14 +183,21 @@ class CalendarTimespan extends WireData {
 
 	public function ___setTitle($title) {
 		$title = $this->sanitizer->text($title);
+
 		if (!$this->isTitleValid($title)) {
 			throw new \Exception('No valid title');
 		}
+
+		if ($this->title === $title) {
+			return $this->title;
+		}
+
 		$this->set('title', $title);
-		if ($this->initiated) {
+		if ($this->initialized) {
 			$this->set('modified', time());
 			$this->set('modifiedUser', $this->wire('user'));
 		}
+
 		return $this->title;
 	}
 
@@ -157,7 +205,7 @@ class CalendarTimespan extends WireData {
 		if ($value === false) {
 			$value = $this->title;
 		}
-		return is_string($value) && strlen($value) > 0;
+		return is_string($value);
 	}
 
 	public function getTitle() {
@@ -167,6 +215,10 @@ class CalendarTimespan extends WireData {
 	public function ___setCreated($created) {
 		if (is_string($created)) {
 			$created = strtotime($created);
+		}
+
+		if ($this->created === $created) {
+			return $this->created;
 		}
 
 		if (!$this->isCreatedValid($created)) {
@@ -192,9 +244,15 @@ class CalendarTimespan extends WireData {
 		if (!$createdUser instanceof User || !$createdUser->id) {
 			$createdUser = wire('users')->get($createdUser);
 		}
+
 		if (!$this->isCreatedUserValid($createdUser)) {
 			throw new \Exception('No valid user');
 		}
+
+		if ($this->createdUser instanceof User && $this->createdUser->id && $this->createdUser->id === $createdUser->id) {
+			return $this->createdUser;
+		}
+
 		$this->set('createdUser', $createdUser);
 		return $this->createdUser;
 	}
@@ -231,6 +289,10 @@ class CalendarTimespan extends WireData {
 			throw new \Exception('No valid modified date');
 		}
 
+		if ($this->modified === $modified) {
+			return $this->modified;
+		}
+
 		$this->set('modified', $modified);
 		return $this->modified;
 	}
@@ -250,9 +312,15 @@ class CalendarTimespan extends WireData {
 		if (!$modifiedUser instanceof User || !$modifiedUser->id) {
 			$modifiedUser = wire('users')->get($modifiedUser);
 		}
+
 		if (!$this->isModifiedUserValid($modifiedUser)) {
 			throw new \Exception('No valid user');
 		}
+
+		if ($this->modifiedUser instanceof User && $this->modifiedUser->id && $this->modifiedUser->id === $modifiedUser->id) {
+			return $this->modifiedUser;
+		}
+
 		$this->set('modifiedUser', $modifiedUser);
 		return $this->modifiedUser;
 	}
@@ -281,8 +349,16 @@ class CalendarTimespan extends WireData {
 	}
 
 	public function ___setStatus($status) {
+		if (!$this->isStatusValid($status)) {
+			throw new \Exception('No valid status');
+		}
+
+		if ($this->status === $status) {
+			return $this->status;
+		}
+
 		$this->set('status', $this->sanitizer->text($status));
-		if ($this->initiated) {
+		if ($this->initialized) {
 			$this->set('modified', time());
 			$this->set('modifiedUser', $this->wire('user'));
 		}
@@ -299,12 +375,18 @@ class CalendarTimespan extends WireData {
 	}
 
 	public function ___setDescription($description) {
-		$description = $this->sanitizer->textarea($description);
+		$description = $this->sanitizer->purify($description);
+
 		if (!$this->isDescriptionValid($description)) {
 			throw new \Exception('No valid description');
 		}
+
+		if ($this->description === $description) {
+			return $this->description;
+		}
+
 		$this->set('description', $description);
-		if ($this->initiated) {
+		if ($this->initialized) {
 			$this->set('modified', time());
 			$this->set('modifiedUser', $this->wire('user'));
 		}
@@ -322,19 +404,54 @@ class CalendarTimespan extends WireData {
 		return $this->description;
 	}
 
+	public function ___setParticipants($participants) {
+		$participants = $this->sanitizer->purify($participants);
+
+		if (!$this->isParticipantsValid($participants)) {
+			throw new \Exception('No valid participants');
+		}
+
+		if ($this->participants === $participants) {
+			return $this->participants;
+		}
+
+		$this->set('participants', $participants);
+		if ($this->initialized) {
+			$this->set('modified', time());
+			$this->set('modifiedUser', $this->wire('user'));
+		}
+		return $this->participants;
+	}
+
+	public function isParticipantsValid($value = false) {
+		if ($value === false) {
+			$value = $this->participants;
+		}
+		return is_string($value);
+	}
+
+	public function getParticipants() {
+		return $this->participants;
+	}
+
 	public function ___setLinkedPage($linkedPage) {
 		if (!$linkedPage instanceof Page || !$linkedPage->id) {
 			$linkedPage = wire('pages')->findOne('id=' . $linkedPage);
 		}
+
 		if (!$this->isLinkedPageValid($linkedPage)) {
 			throw new \Exception('No linked page');
 		}
+
+		if ($this->linkedPage instanceof Page && $this->linkedPage->id && $this->linkedPage->id === $linkedPage->id) {
+			return $this->linkedPage;
+		}
+
 		$this->set('linkedPage', $linkedPage);
-		if ($this->initiated) {
+		if ($this->initialized) {
 			$this->set('modified', time());
 			$this->set('modifiedUser', $this->wire('user'));
 		}
-
 		return $this->linkedPage;
 	}
 
@@ -350,6 +467,97 @@ class CalendarTimespan extends WireData {
 			return null;
 		}
 		return $this->linkedPage;
+	}
+
+	public function ___setTimeFrom($timeFrom) {
+		if (is_string($timeFrom)) {
+			$timeFrom = strtotime($timeFrom);
+		}
+
+		if (!$this->isTimeFromValid($timeFrom)) {
+			throw new \Exception('No valid time from date');
+		}
+
+		if ($this->timeFrom === $timeFrom) {
+			return $this->timeFrom;
+		}
+
+		$this->set('timeFrom', $timeFrom);
+		return $this->timeFrom;
+	}
+
+	public function isTimeFromValid($value = false) {
+		if ($value === false) {
+			$value = $this->timeFrom;
+		}
+		return is_integer($value) && $value > 0;
+	}
+
+	public function getTimeFrom() {
+		return $this->timeFrom;
+	}
+
+	public function ___setTimeUntil($timeUntil) {
+		if (is_string($timeUntil)) {
+			$timeUntil = strtotime($timeUntil);
+		}
+
+		if (!$this->isTimeUntilValid($timeUntil)) {
+			throw new \Exception('No valid time until date');
+		}
+
+		if ($this->timeUntil === $timeUntil) {
+			return $this->timeUntil;
+		}
+
+		$this->set('timeUntil', $timeUntil);
+		return $this->timeUntil;
+	}
+
+	public function isTimeUntilValid($value = false) {
+		if ($value === false) {
+			$value = $this->timeUntil;
+		}
+		return is_integer($value) && $value > 0;
+	}
+
+	public function getTimeUntil() {
+		return $this->timeUntil;
+	}
+
+	public function ___setLocation($location) {
+		if (!$location instanceof Page || !$location->id) {
+			$location = wire('pages')->findOne('id=' . $location);
+		}
+
+		if (!$this->isLocationValid($location)) {
+			throw new \Exception('No valid location');
+		}
+
+		if ($this->location instanceof Page && $this->location->id && $this->location->id === $location->id) {
+			return $this->location;
+		}
+
+		$this->set('location', $location);
+		if ($this->initialized) {
+			$this->set('modified', time());
+			$this->set('modifiedUser', $this->wire('user'));
+		}
+		return $this->location;
+	}
+
+	public function isLocationValid($value = false) {
+		if ($value === false) {
+			$value = $this->location;
+		}
+		return $value === null || ($value instanceof Page && $value->id);
+	}
+
+	public function getLocation() {
+		if (!$this->isLocationValid()) {
+			return null;
+		}
+		return $this->location;
 	}
 
 	public function ___delete() {
@@ -384,15 +592,16 @@ class CalendarTimespan extends WireData {
 		$queryVars = [
 			':event_id' => $this->getEventID(),
 			':title' => $this->getTitle(),
-			':created_user_id' => $this->getCreatedUser()->id,
+			':created_user' => $this->getCreatedUser()->id,
 			':created' => date('Y-m-d G:i:s', $this->getCreated() === null ? 0 : $this->getCreated()),
-			':modified_user_id' => $this->getModifiedUser()->id,
+			':modified_user' => $this->getModifiedUser()->id,
 			':modified' => date('Y-m-d G:i:s', $this->getModified() === null ? 0 : $this->getModified()),
 			':status' => $this->getStatus(),
 			':description' => $this->getDescription(),
+			':participants' => $this->getParticipants(),
 			':linked_page' => $this->getLinkedPage(),
-			':time_until' => $this->getTimeUntil() === null ? null : date('Y-m-d G:i:s', $this->getTimeUntil()),
 			':time_from' => $this->getTimeFrom() === null ? null : date('Y-m-d G:i:s', $this->getTimeFrom()),
+			':time_until' => $this->getTimeUntil() === null ? null : date('Y-m-d G:i:s', $this->getTimeUntil()),
 			':location' => $this->getLocation(),
 		];
 
@@ -402,7 +611,7 @@ class CalendarTimespan extends WireData {
 			$queryVars[':id'] = $this->getID();
 
 			try {
-				$query = $db->prepare('UPDATE `' . MfCalendar::tableTimespans . '` SET `event_id`=:event_id, `title`=:title, `created_user_id`=:created_user_id, `created`=:created, `modified_user_id`=:modified_user_id, `modified`=:modified, `status`=:status, `description`=:description, `linked_page`=:linked_page, `timespan_until`=:timespan_until, `timespan_from`=:timespan_from, `location`=:location WHERE `id`=:id;');
+				$query = $db->prepare('UPDATE `' . MfCalendar::tableTimespans . '` SET `event_id`=:event_id, `title`=:title, `created_user`=:created_user, `created`=:created, `modified_user`=:modified_user, `modified`=:modified, `status`=:status, `description`=:description, `participants`=:participants, `linked_page`=:linked_page, `time_from`=:time_from, `time_until`=:time_until, `location`=:location WHERE `id`=:id;');
 				$query->closeCursor();
 				$query->execute($queryVars);
 			} catch (\Exception $e) {
@@ -415,10 +624,12 @@ class CalendarTimespan extends WireData {
 
 		// New timespan should be saved into db:
 		try {
-			$query = $db->prepare('INSERT INTO `' . MfCalendar::tableTimespans . '` (`event_id`, `id`, `title`, `created_user_id`, `created`,`modified_user_id`, `modified`, `status`, `description`, `linked_page`,`timespan_until`, `timespan_from`, `location`) VALUES (:event_id, NULL, :title, :created_user_id, :created, :modified_user_id, :modified, :status, :description, :linked_page, :timespan_until, :timespan_from, :location);');
+			$createStatement = 'INSERT INTO `' . MfCalendar::tableTimespans . '` (`id`,`event_id`, `title`, `created_user`, `created`,`modified_user`, `modified`, `status`, `description`, `participants`, `linked_page`,`time_until`, `time_from`, `location`) VALUES (NULL, :event_id, :title, :created_user, :created, :modified_user, :modified, :status, :description, :participants, :linked_page, :time_until, :time_from, :location);';
+
+			$query = $db->prepare($createStatement);
 			$query->closeCursor();
 			$query->execute($queryVars);
-			$this->id = $db->lastInsertId();
+			$this->id = (int) $db->lastInsertId();
 		} catch (\Exception $e) {
 			$this->error('The timespan could not be saved: ' . $e->getMessage());
 			return false;
@@ -430,8 +641,12 @@ class CalendarTimespan extends WireData {
 	public function ___getData() {
 		return [
 			'id' => $this->getID(),
+			'eventID' => $this->getEventID(),
 			'title' => $this->getTitle(),
-			'description' => $this->getDescription()
+			'description' => $this->getDescription(),
+			'participants' => $this->getParticipants(),
+			'timeFrom' => $this->getTimeFrom(),
+			'timeUntil' => $this->getTimeUntil()
 		];
 	}
 

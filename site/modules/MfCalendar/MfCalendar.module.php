@@ -9,7 +9,7 @@ require_once __DIR__ . '/classes/CalendarCategory.php';
 class MfCalendar extends Process implements Module {
 	const logName = 'mf_calendar';
 
-	const managePermission = 'mfcalendar_manage';
+	const managePermission = 'calendar-manage';
 
 	const tableEvents = 'mfcalendar_events';
 	const tableStatus = 'mfcalendar_status';
@@ -33,7 +33,7 @@ class MfCalendar extends Process implements Module {
 			'autoload' => true,
 			'singular' => true,
 			'permissions' => [
-				'mfcalendar_manage' => 'Manage Calendar'
+				'calendar-manage' => 'Manage Calendar'
 			],
 			'page' => [
 				'name' => 'mfcalendar',
@@ -53,13 +53,14 @@ class MfCalendar extends Process implements Module {
 	private function createDBTables() {
 		$statement = 'CREATE TABLE IF NOT EXISTS `' . self::tableEvents . '` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
-		`title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+		`title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
 		`created` datetime NOT NULL,
     `created_user` int(11),
 		`modified` datetime NOT NULL,
     `modified_user` int(11),
 		`status` varchar(128),
 		`description` mediumtext,
+		`project` int(11),
 		`linked_page` int(11),
     PRIMARY KEY (`id`),
 		KEY `created` (`created`),
@@ -75,13 +76,14 @@ class MfCalendar extends Process implements Module {
 		$statement .= 'CREATE TABLE IF NOT EXISTS `' . self::tableTimespans . '` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
 		`event_id` int(11) NOT NULL,
-		`title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+		`title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
 		`created` datetime NOT NULL,
     `created_user` int(11),
 		`modified` datetime NOT NULL,
     `modified_user` int(11),
 		`status` varchar(128),
 		`description` mediumtext,
+		`participants` mediumtext,
 		`linked_page` int(11),
 		`time_from` datetime,
 		`time_until` datetime,
@@ -133,15 +135,92 @@ class MfCalendar extends Process implements Module {
 			'calendar',
 			[
 				['OPTIONS', '', ['GET']],
-				['GET', '', SELF::class, 'apiCalendarEvents', [], [
-					'summary' => 'Get a list of current calendar events.',
-					'operationId' => 'getCurrentUser',
+				['GET', '', self::class, 'getApiCalendar', [], [
+					'summary' => 'Get a list of current calendar events, stati and categories.',
+					'operationId' => 'getCalendarEvents',
 					'tags' => ['Authentication'],
 					'security' => [
 						['apiKey' => []],
 						['bearerAuth' => []]
 					]
-				]]
+				]],
+
+				'stati' => [
+					['OPTIONS', '', ['GET']],
+					['GET', '', self::class, 'getApiCalendarStati', [], [
+						'summary' => 'Get a list of all possible calendar stati.',
+						'operationId' => 'getCalendarStati',
+						'tags' => ['Authentication'],
+						'security' => [
+							['apiKey' => []],
+							['bearerAuth' => []]
+						]
+					]]
+				],
+
+				'categories' => [
+					['OPTIONS', '', ['GET']],
+					['GET', '', self::class, 'getApiCalendarCategories', [], [
+						'summary' => 'Get a list of all possible calendar categories.',
+						'operationId' => 'getCalendarCategories',
+						'tags' => ['Authentication'],
+						'security' => [
+							['apiKey' => []],
+							['bearerAuth' => []]
+						]
+					]]
+				],
+
+				// Events-Api
+				'events' => [
+					['OPTIONS', '', ['GET', 'POST']],
+					['OPTIONS', '{id:\d+}', ['GET', 'POST', 'UPDATE', 'DELETE']],
+					['GET', '', self::class, 'getApiCalendarEvents', [], [
+						'summary' => 'Get a list of current calendar events.',
+						'operationId' => 'getCalendarEvents',
+						'tags' => ['Authentication'],
+						'security' => [
+							['apiKey' => []],
+							['bearerAuth' => []]
+						]
+					]],
+					['POST', '', self::class, 'saveApiCalendarEvent', [], [
+						'summary' => 'Create a new calendar event.',
+						'operationId' => 'setCalendarEvent',
+						'tags' => ['Authentication'],
+						'security' => [
+							['apiKey' => []],
+							['bearerAuth' => []]
+						]
+					]],
+					['GET', '{id:\d+}', self::class, 'getApiCalendarEvent', [], [
+						'summary' => 'Get data of a calendar event.',
+						'operationId' => 'getCalendarEvent',
+						'tags' => ['Authentication'],
+						'security' => [
+							['apiKey' => []],
+							['bearerAuth' => []]
+						]
+					]],
+					['POST', '{id:\d+}', self::class, 'saveApiCalendarEvent', [], [
+						'summary' => 'Update a calendar event.',
+						'operationId' => 'setCalendarEvent',
+						'tags' => ['Authentication'],
+						'security' => [
+							['apiKey' => []],
+							['bearerAuth' => []]
+						]
+					]],
+					['DELETE', '{id:\d+}', self::class, 'deleteApiCalendarEvent', [], [
+						'summary' => 'Delete a calendar event.',
+						'operationId' => 'deleteCalendarEvent',
+						'tags' => ['Authentication'],
+						'security' => [
+							['apiKey' => []],
+							['bearerAuth' => []]
+						]
+					]]
+				]
 			]
 		);
 	}
@@ -254,14 +333,29 @@ class MfCalendar extends Process implements Module {
 		return $templateParams;
 	}
 
-	public static function apiCalendarEvents() {
+	public static function getApiCalendar($data) {
 		$output = [
 			'events' => [],
 			'stati' => [],
 			'categories' => []
 		];
 
-		foreach (CalendarEvent::getAll() as $event) {
+		$queryParams = [];
+		if (isset($data->limit)) {
+			$limit = wire('sanitizer')->intUnsigned($data->limit);
+			if (!empty($limit)) {
+				$queryParams['limit'] = $limit;
+			}
+		}
+
+		if (isset($data->offset)) {
+			$offset = wire('sanitizer')->intUnsigned($data->offset);
+			if (!empty($offset)) {
+				$queryParams['offset'] = $offset;
+			}
+		}
+
+		foreach (CalendarEvent::getAll($queryParams) as $event) {
 			if (!$event) {
 				continue;
 			}
@@ -283,5 +377,146 @@ class MfCalendar extends Process implements Module {
 		}
 
 		return $output;
+	}
+
+	public static function getApiCalendarStati() {
+		$output = [
+			'stati' => []
+		];
+
+		foreach (CalendarStatus::getAll() as $status) {
+			if (!$status) {
+				continue;
+			}
+			$output['stati'][] = $status->getData();
+		}
+
+		return $output;
+	}
+
+	public static function getApiCategories() {
+		$output = [
+			'categories' => []
+		];
+
+		foreach (CalendarCategory::getAll() as $category) {
+			if (!$category) {
+				continue;
+			}
+			$output['categories'][] = $category->getData();
+		}
+
+		return $output;
+	}
+
+	public static function getApiCalendarEvents() {
+		$output = [
+			'events' => []
+		];
+
+		foreach (CalendarEvent::getAll() as $event) {
+			if (!$event) {
+				continue;
+			}
+			$output['events'][] = $event->getData();
+		}
+
+		return $output;
+	}
+
+	public static function getApiCalendarEvent($data) {
+		$id = wire('sanitizer')->intUnsigned($data->id);
+		if (empty($id)) {
+			throw new BadRequestException('No valid id provided', 400, [
+				'errorcode' => 'event_id_not_valid'
+			]);
+		}
+
+		$event = null;
+		try {
+			$event = CalendarEvent::getById($id);
+		} catch (\Exception $e) {
+		}
+
+		if (!($event instanceof CalendarEvent)) {
+			throw new NotFoundException('Event not found', 404, [
+				'errorcode' => 'event_not_found'
+			]);
+		}
+
+		$output = [
+			'event' => $event->getData(),
+		];
+
+		return $output;
+	}
+
+	public static function saveApiCalendarEvent($data) {
+		if (empty($data->event)) {
+			throw new BadRequestException('Event data not valid', 400, [
+				'errorcode' => 'event_data_not_valid'
+			]);
+		}
+
+		$id = null;
+		if (!empty($data->id)) {
+			$id = wire('sanitizer')->intUnsigned($data->id);
+		}
+
+		$event = new CalendarEvent();
+		if ($id) {
+			try {
+				$event = CalendarEvent::getById($id);
+			} catch (\Exception $e) {
+			}
+		}
+
+		if (!($event instanceof CalendarEvent)) {
+			throw new NotFoundException('Event not found', 404, [
+				'errorcode' => 'event_not_found'
+			]);
+		}
+
+		$event->importData($data->event);
+		$event->setStatus('published');
+		$success = $event->save();
+
+		return [
+			'success' => $success,
+			'event' => $event->getData()
+		];
+	}
+
+	public static function deleteApiCalendarEvent($data) {
+		$id = null;
+		if (!empty($data->id)) {
+			$id = wire('sanitizer')->intUnsigned($data->id);
+		}
+
+		if (empty($id)) {
+			throw new BadRequestException('ID not valid', 400, [
+				'errorcode' => 'id_not_valid'
+			]);
+		}
+
+		$event = new CalendarEvent();
+		if ($id) {
+			try {
+				$event = CalendarEvent::getById($id);
+			} catch (\Exception $e) {
+			}
+		}
+
+		if (!($event instanceof CalendarEvent)) {
+			throw new NotFoundException('Event not found', 404, [
+				'errorcode' => 'event_not_found'
+			]);
+		}
+
+		$success = $event->delete();
+
+		return [
+			'success' => $success
+		];
 	}
 }

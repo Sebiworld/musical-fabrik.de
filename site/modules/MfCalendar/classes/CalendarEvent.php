@@ -2,9 +2,9 @@
 namespace ProcessWire;
 
 class CalendarEvent extends WireData {
-	private $initiated = false;
+	private $initialized = false;
 
-	public function __construct(array $import = []) {
+	public function __construct(array $data = []) {
 		$this->set('id', null);
 		$this->set('title', '');
 		$this->set('created', time());
@@ -14,22 +14,25 @@ class CalendarEvent extends WireData {
 		$this->set('status', null);
 		$this->set('description', '');
 		$this->set('linkedPage', null);
+		$this->set('project', null);
+		$this->set('timespans', null);
 
-		if (is_array($import) && wireCount($import) > 0) {
-			$this->import($import);
+		if (is_array($data) && wireCount($data) > 0) {
+			$this->initializeWithArray($data);
 		}
+
 		if ($this->isNew()) {
 			$this->set('created', time());
 			$this->set('createdUser', $this->wire('user'));
 			$this->set('modified', time());
 			$this->set('modifiedUser', $this->wire('user'));
 		}
-		$this->initiated = true;
+		$this->initialized = true;
 	}
 
-	protected function import(array $values) {
+	protected function initializeWithArray(array $values) {
 		if (!isset($values['id'])) {
-			throw new \Exception('You cannot import an event without an id.');
+			throw new \Exception('You cannot initialize an event without an id.');
 		}
 		$this->id = (int)$values['id'];
 
@@ -62,17 +65,38 @@ class CalendarEvent extends WireData {
 		if (isset($values['linked_page'])) {
 			$this->___setLinkedPage($values['linked_page']);
 		}
+
+		if (isset($values['project'])) {
+			$this->___setProject($values['project']);
+		} else if (isset($values['project_id'])) {
+			$this->___setProject($values['project_id']);
+		}
 	}
 
-	public function ___isSaveable() {
-		if (!$this->isValid()) {
-			return false;
+	public function ___importData($data) {
+		if (is_object($data)) {
+			if (isset($data->title)) {
+				$this->setTitle($data->title);
+			}
+			if (isset($data->status)) {
+				$this->setStatus($data->status);
+			}
+			if (isset($data->description)) {
+				$this->setDescription($data->description);
+			}
+			if (isset($data->project)) {
+				$this->setProject($data->project);
+			} else if (isset($data->project_id)) {
+				$this->setProject($data->project_id);
+			}
+			if (isset($data->timespans) && is_array($data->timespans)) {
+				$this->setTimespans($data->timespans);
+			}
 		}
-		return true;
 	}
 
 	public function ___isValid() {
-		return $this->isIDValid() && $this->isTitleValid() && $this->isCreatedValid() && $this->isCreatedUserValid() && $this->isModifiedValid() && $this->isModifiedUserValid() && $this->isStatusValid() && $this->isDescriptionValid() && $this->isLinkedPageValid();
+		return $this->isIDValid() && $this->isTitleValid() && $this->isCreatedValid() && $this->isCreatedUserValid() && $this->isModifiedValid() && $this->isModifiedUserValid() && $this->isStatusValid() && $this->isDescriptionValid() && $this->isLinkedPageValid() && $this->isProjectValid() && $this->areTimespansValid();
 	}
 
 	public function ___isNew() {
@@ -92,14 +116,21 @@ class CalendarEvent extends WireData {
 
 	public function ___setTitle($title) {
 		$title = $this->sanitizer->text($title);
+
 		if (!$this->isTitleValid($title)) {
 			throw new \Exception('No valid title');
 		}
+
+		if ($this->title === $title) {
+			return $this->title;
+		}
+
 		$this->set('title', $title);
-		if ($this->initiated) {
+		if ($this->initialized) {
 			$this->set('modified', time());
 			$this->set('modifiedUser', $this->wire('user'));
 		}
+
 		return $this->title;
 	}
 
@@ -107,7 +138,7 @@ class CalendarEvent extends WireData {
 		if ($value === false) {
 			$value = $this->title;
 		}
-		return is_string($value) && strlen($value) > 0;
+		return is_string($value);
 	}
 
 	public function getTitle() {
@@ -121,6 +152,10 @@ class CalendarEvent extends WireData {
 
 		if (!$this->isCreatedValid($created)) {
 			throw new \Exception('No valid modified date');
+		}
+
+		if ($this->created === $created) {
+			return $this->created;
 		}
 
 		$this->set('created', $created);
@@ -142,9 +177,15 @@ class CalendarEvent extends WireData {
 		if (!$createdUser instanceof User || !$createdUser->id) {
 			$createdUser = wire('users')->get($createdUser);
 		}
+
 		if (!$this->isCreatedUserValid($createdUser)) {
 			throw new \Exception('No valid user');
 		}
+
+		if ($this->createdUser instanceof User && $this->createdUser->id && $this->createdUser->id === $createdUser->id) {
+			return $this->createdUser;
+		}
+
 		$this->set('createdUser', $createdUser);
 		return $this->createdUser;
 	}
@@ -181,6 +222,10 @@ class CalendarEvent extends WireData {
 			throw new \Exception('No valid modified date');
 		}
 
+		if ($this->modified === $modified) {
+			return $this->modified;
+		}
+
 		$this->set('modified', $modified);
 		return $this->modified;
 	}
@@ -200,9 +245,15 @@ class CalendarEvent extends WireData {
 		if (!$modifiedUser instanceof User || !$modifiedUser->id) {
 			$modifiedUser = wire('users')->get($modifiedUser);
 		}
+
 		if (!$this->isModifiedUserValid($modifiedUser)) {
 			throw new \Exception('No valid user');
 		}
+
+		if ($this->modifiedUser instanceof User && $this->modifiedUser->id && $this->modifiedUser->id === $modifiedUser->id) {
+			return $this->modifiedUser;
+		}
+
 		$this->set('modifiedUser', $modifiedUser);
 		return $this->modifiedUser;
 	}
@@ -231,8 +282,16 @@ class CalendarEvent extends WireData {
 	}
 
 	public function ___setStatus($status) {
+		if (!$this->isStatusValid($status)) {
+			throw new \Exception('No valid status');
+		}
+
+		if ($this->status === $status) {
+			return $this->status;
+		}
+
 		$this->set('status', $this->sanitizer->text($status));
-		if ($this->initiated) {
+		if ($this->initialized) {
 			$this->set('modified', time());
 			$this->set('modifiedUser', $this->wire('user'));
 		}
@@ -251,12 +310,18 @@ class CalendarEvent extends WireData {
 	}
 
 	public function ___setDescription($description) {
-		$description = $this->sanitizer->textarea($description);
+		$description = $this->sanitizer->purify($description);
+
 		if (!$this->isDescriptionValid($description)) {
 			throw new \Exception('No valid description');
 		}
+
+		if ($this->description === $description) {
+			return $this->description;
+		}
+
 		$this->set('description', $description);
-		if ($this->initiated) {
+		if ($this->initialized) {
 			$this->set('modified', time());
 			$this->set('modifiedUser', $this->wire('user'));
 		}
@@ -282,12 +347,15 @@ class CalendarEvent extends WireData {
 			throw new \Exception('No linked page');
 		}
 
-		if ($this->initiated) {
-			$this->set('modified', time());
-			$this->set('modifiedUser', $this->wire('user'));
+		if ($this->linkedPage instanceof Page && $this->linkedPage->id && $this->linkedPage->id === $linkedPage->id) {
+			return $this->linkedPage;
 		}
 
 		$this->set('linkedPage', $linkedPage);
+		if ($this->initialized) {
+			$this->set('modified', time());
+			$this->set('modifiedUser', $this->wire('user'));
+		}
 		return $this->linkedPage;
 	}
 
@@ -305,7 +373,107 @@ class CalendarEvent extends WireData {
 		return $this->linkedPage;
 	}
 
+	public function ___setProject($project) {
+		if (empty($project)) {
+			$project = null;
+		} else if (!$project instanceof Page || !$project->id || $project->template->name !== 'project') {
+			$project = wire('pages')->findOne('id=' . $project . ',template.name=project');
+		}
+
+		if (!$this->isProjectValid($project)) {
+			throw new \Exception('No valid project');
+		}
+
+		if ($this->project instanceof Page && $this->project->id && $this->project->id === $project->id) {
+			return $this->project;
+		}
+
+		$this->set('project', $project);
+		if ($this->initialized) {
+			$this->set('modified', time());
+			$this->set('modifiedUser', $this->wire('user'));
+		}
+		return $this->project;
+	}
+
+	public function isProjectValid($value = false) {
+		if ($value === false) {
+			$value = $this->project;
+		}
+		return $value === null || ($value instanceof Page && $value->id && $value->template->name === 'project');
+	}
+
+	public function getProject() {
+		if (!$this->isProjectValid()) {
+			return null;
+		}
+		return $this->project;
+	}
+
+	public function ___setTimespans($timespans) {
+		if (!($timespans instanceof WireArray)) {
+			$newTimespans = new WireArray();
+			if (is_array($timespans)) {
+				foreach ($timespans as $timespan) {
+					$id = null;
+					if (!empty($timespan->id)) {
+						$id = wire('sanitizer')->intUnsigned($timespan->id);
+					}
+
+					$item = new CalendarTimespan();
+					if ($id) {
+						try {
+							$item = CalendarTimespan::getById($id);
+						} catch (Exception $e) {
+							throw new NotFoundException('Timespan not found', 404, [
+								'errorcode' => 'timespan_not_found',
+								'data' => $timespan
+							]);
+						}
+					}
+					$item->importData($timespan);
+					$newTimespans->add($item);
+				}
+			}
+			$timespans = $newTimespans;
+		}
+
+		if (!$this->areTimespansValid($timespans)) {
+			throw new \Exception('No valid timespans');
+		}
+
+		$this->set('timespans', $timespans);
+		return $this->timespans;
+	}
+
+	public function ___areTimespansValid($values = false) {
+		if ($values === false) {
+			$values = $this->timespans;
+		}
+		if (!($values instanceof WireArray) || wireCount($values) <= 0) {
+			return false;
+		}
+
+		foreach ($values as $value) {
+			if (!($value instanceof CalendarTimespan)) {
+				return false;
+			}
+			if (!$value->isValid()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public function ___getTimespans() {
+		if (!$this->areTimespansValid()) {
+			return new WireArray();
+		}
+		return $this->timespans;
+	}
+
+	private function restoreTimespans() {
 		if ($this->isNew()) {
 			return new WireArray();
 		}
@@ -332,6 +500,8 @@ class CalendarEvent extends WireData {
 			} catch (\Exception $e) {
 			}
 		}
+
+		$this->timespans = $timespans;
 		return $timespans;
 	}
 
@@ -358,31 +528,47 @@ class CalendarEvent extends WireData {
 		return $timespan->delete();
 	}
 
-	/**
-	 * Deletes the event and all associated timespans
-	 * TODO delete permissions, status, ...
-	 *
-	 * @return boolean
-	 */
-	public function ___delete() {
-		if ($this->isNew()) {
-			return true;
-		}
-
-		try {
-			$db = wire('database');
-			$queryVars = [
-				':id' => $this->getID()
+		public function ___getData() {
+			$output =  [
+				'id' => $this->getID(),
+				'title' => $this->getTitle(),
+				'description' => $this->getDescription(),
+				'created' => $this->getCreated(),
+				'created_user' => AppApi::getAjaxOf($this->getCreatedUser()),
+				'modified' => $this->getModified(),
+				'modified_user' => AppApi::getAjaxOf($this->getModifiedUser()),
+				'status' => $this->getStatus(),
+				'project_id' => !empty($this->getProject()) ? $this->getProject()->id : null,
+				'timespans' => [],
+				'saveable' => $this->isSaveable(),
+				'deletable' => $this->isDeletable()
 			];
 
-			$preparedQuery = 'DELETE FROM `' . MfCalendar::tableTimespans . '` WHERE `event_id`=:id;';
-			$preparedQuery .= 'DELETE FROM `' . AppApi::tableEvents . '` WHERE `id`=:id;';
+			foreach ($this->getTimespans() as $timespan) {
+				if (!$timespan->isValid()) {
+					continue;
+				}
+				$output['timespans'][] = $timespan->getData();
+			}
 
-			$query = $db->prepare($preparedQuery);
-			$query->closeCursor();
-			$query->execute($queryVars);
-		} catch (\Exception $e) {
+			return $output;
+		}
+
+	public function ___saveAllowed() {
+		return $this->wire('user')->hasPermission(MfCalendar::managePermission);
+	}
+
+	public function ___isSaveable() {
+		if (!$this->isValid()) {
 			return false;
+		}
+
+		// Check user rights
+		if (!$this->saveAllowed()) {
+			return false;
+			// throw new ForbiddenException('Saving not allowed', 403, [
+			// 	'errorcode' => 'save_forbidden'
+			// ]);
 		}
 
 		return true;
@@ -403,6 +589,7 @@ class CalendarEvent extends WireData {
 			':status' => $this->getStatus(),
 			':description' => $this->getDescription(),
 			':linked_page' => $this->getLinkedPage(),
+			':project' => $this->getProject()
 		];
 
 		if (!$this->isNew()) {
@@ -411,11 +598,12 @@ class CalendarEvent extends WireData {
 			$queryVars[':id'] = $this->getID();
 
 			try {
-				$updateStatement = 'UPDATE `' . MfCalendar::tableEvents . '` SET `title`=:title, `created_user`=:created_user, `created`=:created, `modified_user`=:modified_user, `modified`=:modified, `status`=:status, `description`=:description, `linked_page`=:linked_page WHERE `id`=:id;';
+				$updateStatement = 'UPDATE `' . MfCalendar::tableEvents . '` SET `title`=:title, `created_user`=:created_user, `created`=:created, `modified_user`=:modified_user, `modified`=:modified, `status`=:status, `description`=:description, `linked_page`=:linked_page, `project`=:project WHERE `id`=:id;';
 
 				$query = $db->prepare($updateStatement);
 				$query->closeCursor();
 				$query->execute($queryVars);
+				return $this->saveTimespans();
 			} catch (\Exception $e) {
 				$this->error('The event [' . $this->getID() . '] could not be saved: ' . $e->getMessage());
 				return false;
@@ -426,12 +614,13 @@ class CalendarEvent extends WireData {
 
 		// New event should be saved into db:
 		try {
-			$createStatement = 'INSERT INTO `' . MfCalendar::tableEvents . '` (`id`, `title`, `created_user`, `created`,`modified_user`, `modified`, `status` , `description`, `linked_page`) VALUES (NULL, :title, :created_user, :created, :modified_user, :modified, :status, :description, :linked_page);';
+			$createStatement = 'INSERT INTO `' . MfCalendar::tableEvents . '` (`id`, `title`, `created_user`, `created`,`modified_user`, `modified`, `status` , `description`, `linked_page`, `project`) VALUES (NULL, :title, :created_user, :created, :modified_user, :modified, :status, :description, :linked_page, :project);';
 
 			$query = $db->prepare($createStatement);
 			$query->closeCursor();
 			$query->execute($queryVars);
-			$this->id = $db->lastInsertId();
+			$this->id = (int) $db->lastInsertId();
+			return $this->saveTimespans();
 		} catch (\Exception $e) {
 			$this->error('The event could not be saved: ' . $e->getMessage());
 			return false;
@@ -440,34 +629,93 @@ class CalendarEvent extends WireData {
 		return true;
 	}
 
-	public function ___getData() {
-		$output =  [
-			'id' => $this->getID(),
-			'title' => $this->getTitle(),
-			'description' => $this->getDescription(),
-			'created' => $this->getCreated(),
-			'created_user' => AppApi::getAjaxOf($this->getCreatedUser()),
-			'modified' => $this->getModified(),
-			'modified_user' => AppApi::getAjaxOf($this->getModifiedUser()),
-			'status' => $this->getStatus(),
-			'timespans' => []
-		];
-
-		foreach ($this->getTimespans() as $timespan) {
-			if (!$timespan->getID()) {
-				continue;
-			}
-			$output['timespans'][] = $timespan->getData();
+	public function ___saveTimespans() {
+		if (!$this->isIDValid()) {
+			throw new \Exception('You cannot save timespans without an event-id.');
 		}
 
-		return $output;
+		$success = true;
+		foreach ($this->timespans as $timespan) {
+			if (!($timespan instanceof CalendarTimespan)) {
+				continue;
+			}
+			$timespan->setEventID($this->id);
+			$result = $timespan->save();
+			if (!$result) {
+				$success = false;
+			}
+		}
+
+		return $success;
 	}
 
-	public static function getAll() {
-		$events = new WireArray();
+	public function ___deleteAllowed() {
+		return $this->wire('user')->hasPermission(MfCalendar::managePermission);
+	}
+
+	public function ___isDeletable() {
+		if (!$this->isIDValid()) {
+			return false;
+		}
+
+		// Check user rights
+		if (!$this->deleteAllowed()) {
+			return false;
+			// throw new ForbiddenException('Deleting not allowed', 403, [
+			// 	'errorcode' => 'delete_forbidden'
+			// ]);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Deletes the event and all associated timespans
+	 * TODO delete permissions, status, ...
+	 *
+	 * @return boolean
+	 */
+	public function ___delete() {
+		if ($this->isNew()) {
+			return true;
+		}
+
 		try {
 			$db = wire('database');
-			$query = $db->prepare('SELECT * FROM ' . MfCalendar::tableEvents . ';');
+			$queryVars = [
+				':id' => $this->getID()
+			];
+
+			$preparedQuery = 'DELETE FROM `' . MfCalendar::tableTimespans . '` WHERE `event_id`=:id;';
+			$preparedQuery .= 'DELETE FROM `' . MfCalendar::tableEvents . '` WHERE `id`=:id;';
+
+			$query = $db->prepare($preparedQuery);
+			$query->closeCursor();
+			$query->execute($queryVars);
+		} catch (\Exception $e) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public static function getAll($params = []) {
+		if (!is_array($params)) {
+			$params = [];
+		}
+
+		$events = new WireArray();
+		try {
+			$preparedQuery = 'SELECT * FROM ' . MfCalendar::tableEvents;
+			if (!empty($params['limit'])) {
+				$preparedQuery .= ' LIMIT ' . $params['limit'];
+			}
+			if (!empty($params['offset'])) {
+				$preparedQuery .= ' OFFSET ' . $params['offset'];
+			}
+
+			$db = wire('database');
+			$query = $db->prepare($preparedQuery);
 			$query->closeCursor();
 			$query->execute();
 			$queueRaw = $query->fetchAll(\PDO::FETCH_ASSOC);
@@ -479,6 +727,7 @@ class CalendarEvent extends WireData {
 
 				try {
 					$event = new CalendarEvent($queueItem);
+					$event->restoreTimespans();
 
 					if ($event->isValid()) {
 						$events->add($event);
@@ -496,7 +745,7 @@ class CalendarEvent extends WireData {
 		$eventID = wire('sanitizer')->int($id);
 		if (!empty($id)) {
 			$db = wire('database');
-			$query = $db->prepare('SELECT * FROM ' . MfCalendar::tableEvents . ' WHERE `id`=:id;');
+			$query = $db->prepare('SELECT * FROM `' . MfCalendar::tableEvents . '` WHERE `id`=:id');
 			$query->closeCursor();
 
 			$query->execute([
@@ -507,7 +756,9 @@ class CalendarEvent extends WireData {
 			if (!$queueRaw) {
 				throw new Wire404Exception();
 			}
+
 			$event = new CalendarEvent($queueRaw);
+			$event->restoreTimespans();
 		}
 
 		return $event;

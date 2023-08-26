@@ -3,7 +3,7 @@ namespace ProcessWire;
 
 class PageAccessReleasetime extends WireData implements Module, ConfigurableModule {
 
-	const module_tags = 'Page-Access';
+	const module_tags = 'Releasetime';
 	const fieldnames = array('releasetime_start_activate', 'releasetime_start', 'releasetime_end_activate', 'releasetime_end');
 	const permissionname = 'page-view-not-released';
 
@@ -14,12 +14,12 @@ class PageAccessReleasetime extends WireData implements Module, ConfigurableModu
 		return array(
 			'title' => __('Page Access Releasetime'),
 			'author' => 'Sebastian Schendel',
-			'version' => '1.1.0',
+			'version' => '1.0.4',
 			'summary' => __('Enables you to set a start- and end-time for the release of pages. Prevents unreleased pages from being displayed.'),
 			'singular' => true,
 			'autoload' => true,
 			'icon' => 'hourglass-half',
-			'requires' => array('PHP>=5.5.3', 'ProcessWire>=3.0.0'),
+			'requires' => array('PHP>=5.5.0', 'ProcessWire>=3.0.0'),
 			'href' => 'https://processwire.com/talk/topic/20852-module-page-access-releasetime/'
 		);
 	}
@@ -109,57 +109,57 @@ class PageAccessReleasetime extends WireData implements Module, ConfigurableModu
 
 	public static function getModuleConfigInputfields(array $data) {
 		$form  = new InputfieldWrapper();
-		// $moduleconfig = wire('modules')->getModuleConfigData('PageAccessReleasetime');
-		// $data = array_merge(self::$defaults, $data);
+		$moduleconfig = wire('modules')->getModuleConfigData('PageAccessReleasetime');
+		$data = array_merge(self::$defaults, $data);
 
-		// $f = new InputfieldCheckbox();
-		// $f->attr('id+name', 'autoAdd');
-		// $f->label =  __('Mode');
-		// $f->label2 =  __('Add to all templates automatically');
-		// $f->description =  __('Enabling this feature will add the fields to every page automatically.');
-		// $f->value = $data['autoAdd'];
-		// $checked = isset($data['autoAdd']) && $data['autoAdd'] == '' ?  '' : 'checked';
-		// $f->attr('checked', $checked);
-		// $form->add($f);
+		$f = new InputfieldCheckbox();
+		$f->attr('id+name', 'autoAdd');
+		$f->label =  __('Mode');
+		$f->label2 =  __('Add to all templates automatically');
+		$f->description =  __('Enabling this feature will add the fields to every page automatically.');
+		$f->value = $data['autoAdd'];
+		$checked = isset($data['autoAdd']) && $data['autoAdd'] == '' ?  '' : 'checked';
+		$f->attr('checked', $checked);
+		$form->add($f);
 
-		// $f = new InputfieldAsmSelect();
-		// $f->attr('id+name', 'templates');
-		// $f->label =  __('Templates');
-		// $f->description = __("Select all templates that should get the releasetime fields.");
-		// $f->showIf = 'autoAdd=0';
+		$f = new InputfieldAsmSelect();
+		$f->attr('id+name', 'templates');
+		$f->label =  __('Templates');
+		$f->description = __("Select all templates that should get the releasetime fields.");
+		$f->showIf = 'autoAdd=0';
 
-		// // Dynamically check which templates have all releasetime-fields and check them afterwards:
-		// $templatesWithFields = array();
+		// Dynamically check which templates have all releasetime-fields and check them afterwards:
+		$templatesWithFields = array();
 
-		// foreach(wire('templates') as $template) {
-		// 	// Exclude system templates:
-		// 	if($template->flags & Template::flagSystem) continue;
-		//     $f->addOption($template->id, $template->getLabel() . ' (' . $template->name . ')');
+		foreach(wire('templates') as $template) {
+			// Exclude system templates:
+			if($template->flags & Template::flagSystem) continue;
+		    $f->addOption($template->id, $template->getLabel() . ' (' . $template->name . ')');
 
-		//     // Check, if the template already has all releasetime-fields:
-		//     $allFieldsExistFlag = true;
-		//     foreach(self::fieldnames as $fieldname){
-		//     	if(!$template->hasField($fieldname)){
-		//     		$allFieldsExistFlag = false;
-		//     		break;
-		//     	}
-		//     }
+		    // Check, if the template already has all releasetime-fields:
+		    $allFieldsExistFlag = true;
+		    foreach(self::fieldnames as $fieldname){
+		    	if(!$template->hasField($fieldname)){
+		    		$allFieldsExistFlag = false;
+		    		break;
+		    	}
+		    }
 
-		//     if($allFieldsExistFlag){
-		//     	$templatesWithFields[] = $template->id;
-		//     }
-		// }
+		    if($allFieldsExistFlag){
+		    	$templatesWithFields[] = $template->id;
+		    }
+		}
 
-		// $data['templates'] = $templatesWithFields;
-		// $f->attr('value', $data['templates']);
+		$data['templates'] = $templatesWithFields;
+		$f->attr('value', $data['templates']);
 
-		// $form->add($f);
+		$form->add($f);
 
 		return $form;
 	}
 
 	public function init() {
-		// $this->addHookAfter("Modules::saveConfig", $this, "hookModulesSaveConfig");
+		$this->addHookAfter("Modules::saveConfig", $this, "hookModulesSaveConfig");
 
 		// Move releasetime-fields to settings-tab
 		$this->addHookAfter("ProcessPageEdit::buildForm", $this, "moveFieldToSettings");
@@ -351,7 +351,7 @@ class PageAccessReleasetime extends WireData implements Module, ConfigurableModu
 			$savedTemplates = $data['templates'];
 		}
 
-		foreach($this->wire('templates') as $template){
+		foreach(wire('templates') as $template){
 			if(array_search($template->id, $savedTemplates) !== false){
 
 				// Fields should be added
