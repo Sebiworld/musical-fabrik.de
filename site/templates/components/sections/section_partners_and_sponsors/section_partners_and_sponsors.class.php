@@ -33,4 +33,47 @@ class SectionPartnersAndSponsors extends TwackComponent {
 			$this->sponsors = $this->page->sponsors->sort('random');
 		}
 	}
+
+	public function getAjax($ajaxArgs = []) {
+		$output = [
+			'type' => 'partners-and-sponsors',
+			'id' => $this->page->id,
+			'section_name' => $this->page->section_name,
+			'title' => $this->title,
+			'hide_title' => !!$this->page->hide_title || empty($this->page->title),
+			'partners' => [],
+			'sponsors' => [],
+		];
+
+		if ($this->contents) {
+			$ajax = $this->contents->getAjax($ajaxArgs);
+			if (!empty($ajax)) {
+				$output = array_merge($output, $ajax);
+			}
+		}
+
+		if ($this->page->template->hasField('partners') && $this->page->partners) {
+			foreach ($this->page->partners->sort('name') as $listIndex => $page) {
+				$itemOutput = [
+					'id' => $page->id,
+					'title' => $page->title,
+					'image' => wire('twack')->getAjaxOf($page->main_image)
+				];
+				$output['partners'][] = $itemOutput;
+			}
+		}
+
+		if ($this->page->template->hasField('sponsors') && $this->page->sponsors) {
+			foreach ($this->page->sponsors->sort('name') as $listIndex => $page) {
+				$itemOutput = [
+					'id' => $page->id,
+					'title' => $page->title,
+					'image' => wire('twack')->getAjaxOf($page->main_image)
+				];
+				$output['sponsors'][] = $itemOutput;
+			}
+		}
+
+		return $output;
+	}
 }

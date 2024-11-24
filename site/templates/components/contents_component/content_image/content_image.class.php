@@ -1,26 +1,26 @@
 <?php
-
 namespace ProcessWire;
 
 class ContentImage extends TwackComponent {
-    public function __construct($args) {
-        parent::__construct($args);
-    }
+	public function __construct($args) {
+		parent::__construct($args);
+	}
 
-    public function getAjax($ajaxArgs = []) {
-        $output = array(
-            'type' => 'image',
-            'depth' => $this->page->depth,
-            'title' => $this->page->title,
-            'hide_title' => $this->page->hide_title,
-            'classes' => $this->page->classes,
-            'image' => $this->getAjaxOf($this->page->image)
-        );
+	public function getAjax($ajaxArgs = []) {
+		$output = [
+			'type' => 'image',
+			'id' => $this->page->id,
+			'depth' => $this->page->depth,
+			'title' => $this->page->title,
+			'hide_title' => $this->page->hide_title,
+			'classes' => $this->page->classes,
+			'image' => $this->getAjaxOf($this->page->image)
+		];
 
-        if($this->image instanceof Pageimage){
-            $output['caption'] = $this->page->image->caption;
-        }
+		if ($this->image instanceof Pageimage) {
+			$output['caption'] = $this->page->image->caption;
+		}
 
-        return $output;
-    }
+		return $output;
+	}
 }

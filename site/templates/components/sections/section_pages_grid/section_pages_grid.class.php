@@ -1,155 +1,225 @@
 <?php
-
 namespace ProcessWire;
 
 class SectionPagesGrid extends TwackComponent {
-    public function __construct($args) {
-        parent::__construct($args);
+	public function __construct($args) {
+		parent::__construct($args);
 
-        $this->imageService = $this->getService('ImageService');
-				$this->projectService = $this->getService('ProjectService');
+		$this->imageService = $this->getService('ImageService');
+		$this->projectService = $this->getService('ProjectService');
 
-        // Determine the ID of the one-page section:
-        $this->sectionId = '';
-        if ((string) $this->page->section_name) {
-            $this->sectionId = (string) $this->page->section_name;
-        }
+		// Determine the ID of the one-page section:
+		$this->sectionId = '';
+		if ((string) $this->page->section_name) {
+			$this->sectionId = (string) $this->page->section_name;
+		}
 
-        // The title can be set by $args or by field "title":
-        if (isset($args['title'])) {
-            $this->title = $args['title'];
-        } elseif ($this->page->template->hasField('title') && !empty($this->page->title)) {
-            $this->title = $this->page->title;
-        }
+		// The title can be set by $args or by field "title":
+		if (isset($args['title'])) {
+			$this->title = $args['title'];
+		} elseif ($this->page->template->hasField('title') && !empty($this->page->title)) {
+			$this->title = $this->page->title;
+		}
 
-        if ($this->page->template->hasField('contents')) {
-            $this->contents = $this->addComponent('ContentsComponent', ['directory' => '', 'page' => $this->page]);
-        }
+		if ($this->page->template->hasField('contents')) {
+			$this->contents = $this->addComponent('ContentsComponent', ['directory' => '', 'page' => $this->page]);
+		}
 
-        // If no special field was passed: Use field name "page_references"
-        if (!isset($args['useField'])) {
-            $args['useField'] = 'page_references';
-        }
+		// If no special field was passed: Use field name "page_references"
+		if (!isset($args['useField'])) {
+			$args['useField'] = 'page_references';
+		}
 
-        if (!$this->page->template->hasField($args['useField'])) {
-            throw new ComponentNotInitializedException('SectionPagesGrid', $this->_('No usable page field was passed.'));
-        }
+		if (!$this->page->template->hasField($args['useField'])) {
+			throw new ComponentNotInitializedException('SectionPagesGrid', $this->_('No usable page field was passed.'));
+		}
 
-        $this->pages = new PageArray();
+		$this->pages = new PageArray();
 
-        $this->cardClasses = '';
-        if ($this->page->template->hasField('card_overlay') && $this->page->card_overlay && $this->page->card_overlay->title) {
-            $this->cardClasses = 'overlay ' . $this->page->card_overlay->title;
-        }
+		$this->cardClasses = '';
+		if ($this->page->template->hasField('card_overlay') && $this->page->card_overlay && $this->page->card_overlay->title) {
+			$this->cardClasses = 'overlay ' . $this->page->card_overlay->title;
+		}
 
-        $this->imageRatio = '1-1';
-        if ($this->page->template->hasField('image_ratio') && $this->page->image_ratio && $this->page->image_ratio->title) {
-            $this->imageRatio = $this->page->image_ratio->title;
-        }
+		$this->imageRatio = '1-1';
+		if ($this->page->template->hasField('image_ratio') && $this->page->image_ratio && $this->page->image_ratio->title) {
+			$this->imageRatio = $this->page->image_ratio->title;
+		}
 
-        $this->imageFactor = 1;
-        $ratioParts = explode('-', $this->imageRatio);
-        if (is_array($ratioParts) && count($ratioParts) === 2) {
-            $this->imageFactor = floatval($ratioParts[1]) / floatval($ratioParts[0]);
-        }
+		$this->imageFactor = 1;
+		$ratioParts = explode('-', $this->imageRatio);
+		if (is_array($ratioParts) && count($ratioParts) === 2) {
+			$this->imageFactor = floatval($ratioParts[1]) / floatval($ratioParts[0]);
+		}
 
-        $this->determineGridClasses();
-        $this->importField($this->page->fields->get($args['useField']));
-    }
+		$this->determineGridClasses();
+		$this->importField($this->page->fields->get($args['useField']));
 
-    protected function determineGridClasses() {
-        // Determine bootstrap grid string:
-        $this->cardSize = '3';
-        if ($this->page->template->hasField('card_size') && $this->page->card_size && $this->page->card_size->title) {
-            $this->cardSize = $this->page->card_size->title;
-        }
+		$parameters = [];
+		if (!empty($args['cardClasses'])) {
+			$parameters['classes'] = $args['cardClasses'];
+		}
 
-        $this->gridClasses = '';
-        $cardSizes = [1, 2, 3, 4, 6, 12];
-        $bootstrapSizes = ['xl', 'lg', 'md', 'sm', 'xs'];
+		foreach ($this->pages as $page) {
+			$this->addComponent('PageCard', ['directory' => '', 'page' => $page, 'parameters' => $parameters, 'list' => 'cards']);
+		}
+	}
 
-        foreach ($cardSizes as $key => $size) {
-            if ($size < $this->cardSize) {
-                unset($cardSizes[$key]);
-                continue;
-            }
-            break;
-        }
+	protected function determineGridClasses() {
+		// Determine bootstrap grid string:
+		$this->cardSize = '3';
+		if ($this->page->template->hasField('card_size') && $this->page->card_size && $this->page->card_size->title) {
+			$this->cardSize = $this->page->card_size->title;
+		}
 
-        foreach ($bootstrapSizes as $key => $bootstrapSize) {
-            if ($bootstrapSize === 'md' && count($cardSizes) <= 1) {
-                $size = 6;
-            } else {
-                $size = array_shift($cardSizes);
-            }
+		$this->gridClasses = '';
+		$cardSizes = [1, 2, 3, 4, 6, 12];
+		$bootstrapSizes = ['xl', 'lg', 'md', 'sm', 'xs'];
 
-            if ($size === null) {
-                $this->gridClasses = 'col-12 ' . $this->gridClasses;
-                break;
-            }
+		foreach ($cardSizes as $key => $size) {
+			if ($size < $this->cardSize) {
+				unset($cardSizes[$key]);
+				continue;
+			}
+			break;
+		}
 
-            if (!empty($this->gridClasses)) {
-                $this->gridClasses = ' ' . $this->gridClasses;
-            }
+		foreach ($bootstrapSizes as $key => $bootstrapSize) {
+			if ($bootstrapSize === 'md' && count($cardSizes) <= 1) {
+				$size = 6;
+			} else {
+				$size = array_shift($cardSizes);
+			}
 
-            if ($bootstrapSize === 'xs') {
-                $this->gridClasses = 'col-' . $size . $this->gridClasses;
-            } else {
-                $this->gridClasses = 'col-' . $bootstrapSize . '-' . $size . $this->gridClasses;
-            }
+			if ($size === null) {
+				$this->gridClasses = 'col-12 ' . $this->gridClasses;
+				break;
+			}
 
-            unset($bootstrapSizes[$key]);
-        }
-    }
+			if (!empty($this->gridClasses)) {
+				$this->gridClasses = ' ' . $this->gridClasses;
+			}
 
-    protected function importField(Field $feld) {
-        if ($feld->type instanceof FieldtypeMulti) {
-            $values = $this->page->get($feld->name);
-            if ($values instanceof PageArray) {
-                $this->addPages($values);
-            } elseif ($values instanceof Page) {
-                $array = new PageArray();
-                $array->add($values);
-                $this->addPages($array);
-            } else {
-                Twack::devEcho('SectionPagesGrid->importField() could not read output pages.');
-            }
-        }
-    }
+			if ($bootstrapSize === 'xs') {
+				$this->gridClasses = 'col-' . $size . $this->gridClasses;
+			} else {
+				$this->gridClasses = 'col-' . $bootstrapSize . '-' . $size . $this->gridClasses;
+			}
 
-    /**
-     * Adds an array of pages
-     * @param  PageArray $pages
-     */
-    protected function addPages(PageArray $pages) {
-        foreach ($pages as $page) {
-            $this->addPage($page);
-        }
-    }
+			unset($bootstrapSizes[$key]);
+		}
+	}
 
-    /**
-     * Adds a single page
-     * @param  Page   $page
-     */
-    protected function addPage(Page $page) {
-        // Twack::devEcho($page->name, $page->viewable());
-        if (!$page->viewable()) {
-            return false;
-        }
+	protected function importField(Field $feld) {
+		if ($feld->type instanceof FieldtypeMulti) {
+			$values = $this->page->get($feld->name);
+			if ($values instanceof PageArray) {
+				$this->addPages($values);
+			} elseif ($values instanceof Page) {
+				$array = new PageArray();
+				$array->add($values);
+				$this->addPages($array);
+			} else {
+				Twack::devEcho('SectionPagesGrid->importField() could not read output pages.');
+			}
+		}
+	}
 
-        if ($page->hasField('logo_square')) {
-            $page->gridImage = $page->logo_square;
-        } else {
-            $page->gridImage = $page->main_image;
-        }
+	/**
+	 * Adds an array of pages
+	 * @param  PageArray $pages
+	 */
+	protected function addPages(PageArray $pages) {
+		foreach ($pages as $page) {
+			$this->addPage($page);
+		}
+	}
 
-        if ($page->hasField('short_description')) {
-            $page->desctext = $page->short_description;
-        } elseif ($page->hasField('freetext')) {
-            $page->desctext = $page->freetext;
-        }
+	/**
+	 * Adds a single page
+	 * @param  Page   $page
+	 */
+	protected function addPage(Page $page) {
+		if (!$page->viewable()) {
+			return false;
+		}
 
-        $this->pages->add($page);
-        return $page;
-    }
+		if ($page->hasField('logo_square')) {
+			$page->gridImage = $page->logo_square;
+		} else {
+			$page->gridImage = $page->main_image;
+		}
+
+		if ($page->hasField('short_description')) {
+			$page->desctext = $page->short_description;
+		} elseif ($page->hasField('freetext')) {
+			$page->desctext = $page->freetext;
+		}
+
+		$this->pages->add($page);
+		return $page;
+	}
+
+	public function getAjax($ajaxArgs = []) {
+		$output = [
+			'type' => 'pages-grid',
+			'id' => $this->page->id,
+			'section_name' => $this->page->section_name,
+			'title' => $this->title,
+			'hide_title' => !!$this->page->hide_title || empty($this->page->title),
+			'card_overlay' => wire('twack')->getAjaxOf($this->page->card_overlay),
+			'pages' => [],
+			'image_ratio' => $this->imageRatio,
+			'image_factor' => $this->imageFactor
+		];
+
+		if (!empty($this->page->gallery_type)) {
+			if ($this->page->gallery_type instanceof WireArray) {
+				$output['gallery_type'] = wire('twack')->getAjaxOf($this->page->gallery_type->first);
+			}
+		}
+
+		if ($this->contents) {
+			$ajax = $this->contents->getAjax($ajaxArgs);
+			if (!empty($ajax)) {
+				$output = array_merge($output, $ajax);
+			}
+		}
+
+		$cardList = $this->getComponentList('cards');
+		if (!empty($cardList)) {
+			$output['cards'] = [];
+
+			foreach ($cardList as $component) {
+				$ajax = $component->getAjax($ajaxArgs);
+				if (empty($ajax)) {
+					continue;
+				}
+				$output['cards'][] = $ajax;
+			}
+		}
+
+		// if ($this->pages) {
+		// 	foreach ($this->pages as $listindex => $page) {
+
+		// 		$itemOutput = [
+		// 			'id' => $page->id,
+		// 			'title' => $page->title,
+		// 			'color' => $page->color,
+		// 			'description' => $page->info_overlay,
+		// 			'has_detailsview' => !$page->template->hasField('no_details_view') || !$page->no_details_view,
+		// 			'image' => wire('twack')->getAjaxOf($page->gridImage)
+		// 		];
+
+		// 		if ($itemOutput['has_detailsview']) {
+		// 			$item['btn_text'] = $page->btn_text;
+		// 			$item['url'] = $page->url;
+		// 			$item['template'] = wire('twack')->getAjaxOf($page->template);
+		// 		}
+		// 		$output['pages'][] = $itemOutput;
+		// 	}
+		// }
+
+		return $output;
+	}
 }

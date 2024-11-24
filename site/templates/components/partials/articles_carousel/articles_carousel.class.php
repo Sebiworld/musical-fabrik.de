@@ -2,7 +2,6 @@
 namespace ProcessWire;
 
 class ArticlesCarousel extends TwackComponent {
-
 	public function __construct($args) {
 		parent::__construct($args);
 
@@ -11,9 +10,9 @@ class ArticlesCarousel extends TwackComponent {
 		$articlePages = $news->items;
 
 		$parameters = [];
-        if(!empty($args['cardClasses'])){
-            $parameters['classes'] = $args['cardClasses'];
-        }
+		if (!empty($args['cardClasses'])) {
+			$parameters['classes'] = $args['cardClasses'];
+		}
 
 		foreach ($articlePages as $page) {
 			$this->addComponent('PageCard', ['directory' => '', 'page' => $page, 'parameters' => $parameters]);
@@ -29,15 +28,33 @@ class ArticlesCarousel extends TwackComponent {
 
 		$this->articlesPage = $articlesService->getArticlesPage();
 
-		$this->addScript('swiper.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
+		$this->addScript('swiper.js', [
+			'path'     => wire('config')->urls->templates . 'assets/js/',
 			'absolute' => true,
 			'inline' => true
-        ));
-        $this->addScript('legacy/swiper.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
+		]);
+		$this->addScript('legacy/swiper.js', [
+			'path'     => wire('config')->urls->templates . 'assets/js/',
 			'absolute' => true,
 			'inline' => true
-        ));
+		]);
+	}
+
+	public function getAjax($ajaxArgs = []) {
+		$output = [
+			'items' => []
+		];
+
+		if ($this->childComponents) {
+			foreach ($this->childComponents as $component) {
+				$ajax = $component->getAjax($ajaxArgs);
+				if (empty($ajax)) {
+					continue;
+				}
+				$output['items'][] = $ajax;
+			}
+		}
+
+		return $output;
 	}
 }

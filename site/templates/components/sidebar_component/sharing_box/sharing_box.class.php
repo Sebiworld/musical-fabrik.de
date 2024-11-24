@@ -2,7 +2,6 @@
 namespace ProcessWire;
 
 class SharingBox extends TwackComponent {
-
 	protected $viaText = '';
 	protected $shareUrl = '';
 	protected $shareTitle = '';
@@ -14,18 +13,18 @@ class SharingBox extends TwackComponent {
 
 		$this->title = $this->_('Tell a friend!');
 		if (isset($args['title']) && !empty($args['title'])) {
-			$this->title = str_replace(array("\n", "\r"), '', $args['title']);
+			$this->title = str_replace(["\n", "\r"], '', $args['title']);
 		}
 
 		$this->shareUrl = urlencode($this->page->httpUrl);
 		$this->shareTitle = urlencode("'{$this->page->title}'");
 
 		$this->socialLinks = new WireArray();
-		$this->addSocialLink(
-			'ion-logo-twitter',
-			"https://twitter.com/intent/tweet?text={$this->shareTitle}-&amp;url={$this->shareUrl}&amp;via={$this->viaText}",
-			sprintf($this->_('Share "%1$s" on Twitter'), $this->page->title)
-		);
+		// $this->addSocialLink(
+		// 	'ion-logo-twitter',
+		// 	"https://twitter.com/intent/tweet?text={$this->shareTitle}-&amp;url={$this->shareUrl}&amp;via={$this->viaText}",
+		// 	sprintf($this->_('Share "%1$s" on Twitter'), $this->page->title)
+		// );
 
 		$this->addSocialLink(
 			'ion-logo-facebook',
@@ -47,7 +46,7 @@ class SharingBox extends TwackComponent {
 
 		$this->addSocialLink(
 			'ion-logo-whatsapp',
-			'whatsapp://send?text='.urlencode("Huhu! Ich habe hier eine tolle Seite gefunden: {$this->shareTitle} ") . $this->shareUrl,
+			'whatsapp://send?text=' . urlencode("Huhu! Ich habe hier eine tolle Seite gefunden: {$this->shareTitle} ") . $this->shareUrl,
 			sprintf($this->_('Share "%1$s" on WhatsApp'), $this->page->title)
 		);
 
@@ -63,5 +62,9 @@ class SharingBox extends TwackComponent {
 		$newLink->onclick = $onclick;
 
 		$this->socialLinks->add($newLink);
+	}
+
+	public function getAjax($ajaxArgs = []) {
+		return AppApi::getAjaxOf($this->socialLinks);
 	}
 }

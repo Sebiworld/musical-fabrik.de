@@ -12,13 +12,38 @@ class HomePage extends TwackComponent {
 		if ($this->page->hasField('onepage_elements') && $this->page->onepage_elements->count() > 0) {
 			$general = $this->getGlobalComponent('general');
 			foreach ($this->page->onepage_elements as $element) {
-				$general->addComponent($element->template->name, ['directory' => 'sections', 'page' => $element]);
+				$general->addComponent($element->template->name, ['directory' => 'sections', 'page' => $element, 'list' => 'sections']);
 			}
 		}
 
 		// $this->addStyle('home_page.css', array(
-        //     'path'     => wire('config')->urls->templates . 'assets/css/',
+    //     'path'     => wire('config')->urls->templates . 'assets/css/',
 		// 	'absolute' => true
-        // ));
+    // ));
+	}
+
+	public function getAjax($ajaxArgs = []) {
+		$output = [
+			'sections' => []
+		];
+
+		if ($this->childComponents) {
+			$titleIndex = 0;
+			foreach ($this->childComponents as $component) {
+				$ajax = $component->getAjax($ajaxArgs);
+				if (empty($ajax) || !is_array($ajax)) {
+					continue;
+				}
+
+				$ajax['title_index'] = $titleIndex;
+				if (isset($ajax['hide_title']) && !$ajax['hide_title']) {
+					$titleIndex = $titleIndex + 1;
+				}
+
+				$output['sections'][] = $ajax;
+			}
+		}
+
+		return $output;
 	}
 }

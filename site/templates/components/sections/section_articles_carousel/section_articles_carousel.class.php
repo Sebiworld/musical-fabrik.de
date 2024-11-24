@@ -2,7 +2,6 @@
 namespace ProcessWire;
 
 class SectionArticlesCarousel extends TwackComponent {
-
 	public function __construct($args) {
 		parent::__construct($args);
 
@@ -25,5 +24,35 @@ class SectionArticlesCarousel extends TwackComponent {
 		if ($this->page->template->hasField('contents')) {
 			$this->addComponent('ContentsComponent', ['directory' => '']);
 		}
+	}
+
+	public function getAjax($ajaxArgs = []) {
+		$output = [
+			'type' => 'articles-carousel',
+			'id' => $this->page->id,
+			'section_name' => $this->page->section_name,
+			'title' => $this->title,
+			'hide_title' => !!$this->page->hide_title || empty($this->page->title)
+		];
+
+		if ($this->getComponent('carousel')) {
+			$component = $this->getComponent('carousel');
+			$ajax = $component->getAjax($ajaxArgs);
+			if (!empty($ajax)) {
+				$output = array_merge($output, $ajax);
+			}
+		}
+
+		if ($this->childComponents) {
+			foreach ($this->childComponents as $component) {
+				$ajax = $component->getAjax($ajaxArgs);
+				if (empty($ajax)) {
+					continue;
+				}
+				$output = array_merge($output, $ajax);
+			}
+		}
+
+		return $output;
 	}
 }

@@ -21,7 +21,7 @@ class SectionForm extends TwackComponent {
 		if (!$this->page->template->hasField('form')) {
 			throw new ComponentParameterException('SectionForm', $this->_('No field for the container page has been defined on the one-page form.'));
 		}
-		
+
 		$containerPage = $this->page->get('form');
 		if (!($containerPage instanceof Page) || !$containerPage->id) {
 			throw new ComponentParameterException('SectionForm', $this->_('No valid container page was specified in the one-page form.'));
@@ -35,7 +35,39 @@ class SectionForm extends TwackComponent {
 				'directory' => '',
 				'page' => $this->page,
 				'parameters' => ['section' => true]
-				]);
+			]);
 		}
+	}
+
+	public function getAjax($ajaxArgs = []) {
+		$output = [
+			'type' => 'form',
+			'id' => $this->page->id,
+			'section_name' => $this->page->section_name,
+			'title' => $this->title,
+			'hide_title' => !!$this->page->hide_title || empty($this->page->title),
+			'intro' => $this->page->intro,
+			'form' => $this->form->getAjax($ajaxArgs),
+			'outro' => $this->page->freetext,
+		];
+
+		if ($this->contents) {
+			$ajax = $this->contents->getAjax($ajaxArgs);
+			if (!empty($ajax)) {
+				$output = array_merge($output, $ajax);
+			}
+		}
+
+		if ($this->childComponents) {
+			foreach ($this->childComponents as $component) {
+				$ajax = $component->getAjax($ajaxArgs);
+				if (empty($ajax)) {
+					continue;
+				}
+				$output = array_merge($output, $ajax);
+			}
+		}
+
+		return $output;
 	}
 }

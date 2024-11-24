@@ -28,4 +28,24 @@ class SectionHeroImage extends TwackComponent {
 			$this->mainImage = $this->page->main_image;
 		}
 	}
+
+	public function getAjax($ajaxArgs = []) {
+		$output = [
+			'type' => 'hero',
+			'id' => $this->page->id,
+			'section_name' => $this->page->section_name,
+			'title' => $this->title,
+			'hide_title' => !!$this->page->hide_title || empty($this->page->title),
+			'main_image' => wire('twack')->getAjaxOf($this->page->main_image),
+		];
+
+		if ($this->contents) {
+			$ajax = $this->contents->getAjax($ajaxArgs);
+			if (!empty($ajax)) {
+				$output = array_merge($output, $ajax);
+			}
+		}
+
+		return $output;
+	}
 }

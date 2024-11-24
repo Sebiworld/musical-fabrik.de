@@ -2,7 +2,6 @@
 namespace ProcessWire;
 
 class ContentCollapsible extends TwackComponent {
-
 	protected $idService;
 
 	public function __construct($args) {
@@ -50,17 +49,17 @@ class ContentCollapsible extends TwackComponent {
 	}
 
 	public function getAjax($ajaxArgs = []) {
-        $output = array(
-            'type' => 'collapsible',
+		$output = [
+			'type' => 'collapsible',
 			'depth' => $this->page->depth,
 			'id' => $this->id,
-            'title' => $this->title,
-            'hide_title' => $this->page->hide_title,
-            'classes' => $this->page->classes,
+			'title' => $this->title,
+			'hide_title' => $this->page->hide_title,
+			'classes' => $this->page->classes,
 			'tabs' => []
-		);
-		
-		foreach($this->tabs as $tab){
+		];
+
+		foreach ($this->tabs as $tab) {
 			$output['tabs'][] = [
 				'id' => $tab->id,
 				'title' => $tab->title,
@@ -68,6 +67,6 @@ class ContentCollapsible extends TwackComponent {
 			];
 		}
 
-        return $output;
-    }
+		return $output;
+	}
 }

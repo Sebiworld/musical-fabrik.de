@@ -12,7 +12,7 @@ $configPage = $this->configurationService->getConfigurationPage();
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
+
 	<?= $this->page->seo; ?>
 
 	<link rel="shortcut icon" href="<?= wire('config')->urls->templates; ?>assets/static_img/icons/favicon.ico" />
@@ -67,18 +67,24 @@ $configPage = $this->configurationService->getConfigurationPage();
 		<?= $this->component->getGlobalComponent('dev_output'); ?>
 
 		<?php
-        if ($this->childComponents) {
-            foreach ($this->childComponents as $component) {
-                echo $component;
-            }
-        }
-        ?>
+			if ($this->childComponents) {
+				foreach ($this->childComponents as $component) {
+					echo $component;
+				}
+			}
+
+			if(!empty($this->componentLists->sections)){
+				foreach ($this->componentLists->sections as $component) {
+					echo $component;
+				}
+			}
+		?>
 
 		<?= $this->component->getGlobalComponent('footer'); ?>
 	</div>
 
 	<div>
-		<!--   
+		<!--
 			,     ,
 			)\___/(
 			{(@)v(@)}    wuff wuff
@@ -104,7 +110,7 @@ $configPage = $this->configurationService->getConfigurationPage();
 			echo "\n\t<script type='module' src='$file'></script>";
 			continue;
         }
-		
+
         if (strpos($file, '.legacy.') !== false) {
             echo "\n\t<script async nomodule src='$file'></script>";
             continue;

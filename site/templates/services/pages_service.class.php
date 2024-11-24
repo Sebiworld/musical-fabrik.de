@@ -1,238 +1,246 @@
 <?php
-
 namespace ProcessWire;
 
 class PagesService extends TwackComponent {
-    public function __construct($args) {
-        parent::__construct($args);
-        $this->projectPage = $this->getService('ProjectService')->getProjectPageWithFallback();
-    }
+	public function __construct($args) {
+		parent::__construct($args);
+		$this->projectPage = $this->getService('ProjectService')->getProjectPageWithFallback();
+	}
 
-    /**
-     * Returns all pages that can be output on this page.
-     * @return PageArray
-     */
-    public function getResults($args = array(), $selector = array()) {
-        $output   = new \StdClass();
-        $results  = new PageArray();
+	/**
+	 * Returns all pages that can be output on this page.
+	 * @return PageArray
+	 */
+	public function getResults($args = [], $selector = [], $basePage = false) {
+		$output   = new \StdClass();
+		$results  = new PageArray();
 
-        if ($this->projectPage instanceof Page && $this->projectPage->id && $this->getService('ProjectService')->isProjectPage($this->projectPage)) {
-            // If project page: Include only sub-pages of the project
-            $selector[] = ['has_parent', $this->projectPage->id];
-        }
+		$projectPage = $this->projectPage;
+		if ($basePage instanceof Page && $basePage->id) {
+			$projectPage = $this->getService('ProjectService')->getProjectPageWithFallback($basePage);
+		}
 
-        if (isset($args['sort'])) {
-            $selector[] = ['sort', $args['sort']];
-        } else {
-            $selector[] = ['sort', '-datetime_from'];
-        }
+		if ($projectPage instanceof Page && $projectPage->id && $this->getService('ProjectService')->isProjectPage($projectPage)) {
+			// If project page: Include only sub-pages of the project
+			$selector[] = ['has_parent', $projectPage->id];
+		}
 
-        // Filtering by keywords:
-        if (isset($args['tags'])) {
-            if (is_string($args['tags'])) {
-                $args['tags'] = explode(',', $args['tags']);
-            }
+		if (isset($args['sort'])) {
+			$selector[] = ['sort', $args['sort']];
+		} else {
+			$selector[] = ['sort', '-datetime_from'];
+		}
 
-            if (is_array($args['tags'])) {
-                $selector[] = ['tags', $args['tags']];
-            }
-        }
+		// Filtering by keywords:
+		if (isset($args['tags'])) {
+			if (is_string($args['tags'])) {
+				$args['tags'] = explode(',', $args['tags']);
+			}
 
-        // Filtering by free text:
-        $results = new PageArray();
-        if (isset($args['query']) && is_string($args['query'])) {
-            // Sort query-matches in title and name higher than matches in other fields:
-            $titleSelector = $selector;
-            $titleSelector[] = ['title|name', '%=', $args['query'], 'text'];
-            $results = $this->wire('pages')->find($titleSelector);
+			if (is_array($args['tags'])) {
+				$selector[] = ['tags', $args['tags']];
+			}
+		}
 
-            $selector[] = ['title|name|intro|contents.text', '%=', $args['query'], 'text'];
-            $secondaryResults = $this->wire('pages')->find($selector);
-            $secondaryResults->removeItems($results);
-            $results->add($secondaryResults);
-        }else{
-            $results = $this->wire('pages')->find($selector);
-        }
+		// Filtering by free text:
+		$results = new PageArray();
+		if (isset($args['query']) && is_string($args['query'])) {
+			// Sort query-matches in title and name higher than matches in other fields:
+			$titleSelector = $selector;
+			$titleSelector[] = ['title|name', '%=', $args['query'], 'text'];
+			$results = $this->wire('pages')->find($titleSelector);
 
-        $pwProtectionModule = $this->wire('modules')->get('PageAccessPassword');
+			$selector[] = ['title|name|intro|contents.text', '%=', $args['query'], 'text'];
+			$secondaryResults = $this->wire('pages')->find($selector);
+			$secondaryResults->removeItems($results);
+			$results->add($secondaryResults);
+		} else {
+			$results = $this->wire('pages')->find($selector);
+		}
 
-        // Filter pages that are not viewable by the current user:
-        foreach($results as $resultPage){
-            if(!$resultPage->viewable()){
-                $results->remove($resultPage);
-                continue;
-            }
-            
-            if($pwProtectionModule && !$pwProtectionModule->isUnlocked($resultPage)){
-                $results->remove($resultPage);
-                continue;
-            }
-        }
+		$pwProtectionModule = $this->wire('modules')->get('PageAccessPassword');
 
-        // Store original number of articles without limit:
-        $output->totalNumber = $results->count;
+		// Filter pages that are not viewable by the current user:
+		foreach ($results as $resultPage) {
+			if (!$resultPage->viewable()) {
+				$results->remove($resultPage);
+				continue;
+			}
 
-        // The index of the last element:
-        $output->lastElementIndex = 0;
+			if ($pwProtectionModule && !$pwProtectionModule->isUnlocked($resultPage)) {
+				$results->remove($resultPage);
+				continue;
+			}
+		}
 
-        $sortSelector = [];
-        if (isset($args['start'])) {
-            $sortSelector[]                  = ['start', '=', $args['start'], 'int'];
-            $output->lastElementIndex    = intval($args['start']);
-        } elseif (isset($args['offset'])) {
-            $sortSelector[]                  = ['start', '=', $args['offset'], 'int'];
-            $output->lastElementIndex    = intval($args['offset']);
-        } else {
-            $sortSelector[] = ['start', 0];
-        }
+		// Store original number of articles without limit:
+		$output->totalNumber = $results->count;
 
-        if (isset($args['limit']) && $args['limit'] >= 0) {
-            $sortSelector[]                  = ['limit', '=', $args['limit'], 'int'];
-            $output->lastElementIndex    = $output->lastElementIndex + intval($args['limit']);
-        } elseif (!isset($args['limit'])) {
-            $sortSelector[]                  = ['limit', 12];
-            $output->lastElementIndex    = $output->lastElementIndex + 12;
-        }
+		// The index of the last element:
+		$output->lastElementIndex = 0;
 
-        $results = $results->find($sortSelector);
+		$sortSelector = [];
+		if (isset($args['start'])) {
+			$sortSelector[]                  = ['start', '=', $args['start'], 'int'];
+			$output->lastElementIndex    = intval($args['start']);
+		} elseif (isset($args['offset'])) {
+			$sortSelector[]                  = ['start', '=', $args['offset'], 'int'];
+			$output->lastElementIndex    = intval($args['offset']);
+		} else {
+			$sortSelector[] = ['start', 0];
+		}
 
-        // Are there any more posts that can be downloaded?
-        $output->moreAvailable = $output->lastElementIndex + 1 < $output->totalNumber;
+		if (isset($args['limit']) && $args['limit'] >= 0) {
+			$sortSelector[]                  = ['limit', '=', $args['limit'], 'int'];
+			$output->lastElementIndex    = $output->lastElementIndex + intval($args['limit']);
+		} elseif (!isset($args['limit'])) {
+			$sortSelector[]                  = ['limit', 12];
+			$output->lastElementIndex    = $output->lastElementIndex + 12;
+		}
 
-        // Prepare args for the overview pages service:
-        if (isset($args['charLimit'])) {
-            $args['limit'] = $args['charLimit'];
-        } else {
-            unset($args['limit']);
-        }
-        $results = $this->format($results, $args);
+		$results = $results->find($sortSelector);
 
-        $output->items = $results;
+		// Are there any more posts that can be downloaded?
+		$output->moreAvailable = $output->lastElementIndex + 1 < $output->totalNumber;
 
-        return $output;
-    }
+		// Prepare args for the overview pages service:
+		if (isset($args['charLimit'])) {
+			$args['limit'] = $args['charLimit'];
+		} else {
+			unset($args['limit']);
+		}
+		$results = $this->format($results, $args);
 
-    public function getAjax($ajaxArgs = array()) {
-        $ajaxOutput = array();
+		$output->items = $results;
 
-        $args = wire('input')->post('args');
-        if (!is_array($args)) {
-            $args = array();
-        }
+		return $output;
+	}
 
-        // Is a tag filter set?
-        if (wire('input')->get('tags')) {
-            $args['tags'] = wire('input')->get('tags');
-        }
+	public function getAjax($ajaxArgs = []) {
+		$ajaxOutput = [];
 
-        // Is something entered in the free text search?
-        if (wire('input')->get('q')) {
-            $args['query'] = wire('input')->get('q');
-        }
+		$args = wire('input')->post('args');
+		if (!is_array($args)) {
+			$args = [];
+		}
 
-        if (wire('input')->get('limit')) {
-            $args['limit'] = wire('input')->get('limit');
-        }
+		// Is a tag filter set?
+		if (wire('input')->get('tags')) {
+			$args['tags'] = wire('input')->get('tags');
+		}
 
-        if (wire('input')->get('start')) {
-            $args['start'] = wire('input')->get('start');
-        } elseif (wire('input')->get('offset')) {
-            $args['start'] = wire('input')->get('offset');
-        }
+		// Is something entered in the free text search?
+		if (wire('input')->get('q')) {
+			$args['query'] = wire('input')->get('q');
+		}
 
-        $selector = [];
-        if(isset($ajaxArgs['selector']) && is_array($ajaxArgs['selector'])){
-            $selector = $ajaxArgs['selector'];
-        }
+		if (wire('input')->get('limit')) {
+			$args['limit'] = wire('input')->get('limit');
+		}
 
-        $args['charLimit']                       = 150;
-        $result                                  = $this->getResults($args, $selector);
-        $ajaxOutput['totalNumber']               = $result->totalNumber;
-        $ajaxOutput['moreAvailable']             = $result->moreAvailable;
-        $ajaxOutput['lastElementIndex']          = $result->lastElementIndex;
+		if (wire('input')->get('start')) {
+			$args['start'] = wire('input')->get('start');
+		} elseif (wire('input')->get('offset')) {
+			$args['start'] = wire('input')->get('offset');
+		}
 
-        // Deliver HTML card for each post:
-        $ajaxOutput['items'] = array();
-        foreach ($result->items as $item) {
-            $component = $this->addComponent('PageCard', ['directory' => '', 'page' => $item]);
-            if ($component instanceof TwackNullComponent) {
-                continue;
-            }
+		$selector = [];
+		if (isset($ajaxArgs['selector']) && is_array($ajaxArgs['selector'])) {
+			$selector = $ajaxArgs['selector'];
+		}
 
-            $ajaxOutput['items'][] = $component->getAjax($ajaxArgs);
-        }
+		$args['charLimit']                       = 150;
+		$result                                  = $this->getResults($args, $selector);
+		$ajaxOutput['totalNumber']               = $result->totalNumber;
+		$ajaxOutput['moreAvailable']             = $result->moreAvailable;
+		$ajaxOutput['lastElementIndex']          = $result->lastElementIndex;
 
-        return $ajaxOutput;
-    }
+		// Deliver HTML card for each post:
+		$ajaxOutput['items'] = [];
+		foreach ($result->items as $item) {
+			$component = $this->addComponent('PageCard', ['directory' => '', 'page' => $item]);
+			if ($component instanceof TwackNullComponent) {
+				continue;
+			}
 
-    public function format(PageArray $pages, $args = array()) {
-        foreach ($pages as &$page) {
-            // Check whether the post is visible to the user:
-            if (!$page->viewable()) {
-                $pages->remove($page);
-            }
+			$ajaxOutput['items'][] = $component->getAjax($ajaxArgs);
+		}
 
-            $projectPage = $this->getService('ProjectService')->getProjectPage($page);
-            if ($projectPage instanceof Page && $projectPage->id) {
-                $page->projectPage = $projectPage;
+		return $ajaxOutput;
+	}
 
-                if ($page->projectPage->color) {
-                    $page->color = $page->projectPage->color;
-                }
-            }
+	public function format(PageArray $pages, $args = []) {
+		foreach ($pages as &$page) {
+			// Check whether the post is visible to the user:
+			if (!$page->viewable()) {
+				$pages->remove($page);
+			}
 
-            if (isset($args['limit']) && $page->template->hasField('intro')) {
-                $limit  = $args['limit'];
-                $endstr = '&nbsp;…';
-                if (isset($args['endstr'])) {
-                    $endstr = $args['endstr'];
-                }
-                $page->intro = Twack::wordLimiter($page->intro, $limit, $endstr);
-            }
+			$projectPage = $this->getService('ProjectService')->getProjectPage($page);
 
-            if ($page->template->hasField('authors') && $page->authors instanceof PageArray) {
-                $authors = array();
-                foreach ($page->authors as $author) {
-                    $authors[] = $author->first_name . ' ' . $author->surname;
-                }
-                $page->authors_readable = implode(' & ', $authors);
-            }
-        }
-        return $pages;
-    }
+			if ($projectPage instanceof Page && $projectPage->id) {
+				$page->projectPage = $projectPage;
 
-    public function formatPage(Page $page, $args = array()) {
-        // Check whether the post is visible to the user:
-        if (!$page->viewable()) {
-            return false;
-        }
+				if ($page->projectPage->color) {
+					$page->color = $page->projectPage->color;
+				}
+			}
 
-        $projectPage = $this->getService('ProjectService')->getProjectPage($page);
-        if ($projectPage instanceof Page && $projectPage->id) {
-            $page->projectPage = $projectPage;
+			if (isset($args['limit']) && $page->template->hasField('intro')) {
+				$limit  = $args['limit'];
+				$endstr = '&nbsp;…';
+				if (isset($args['endstr'])) {
+					$endstr = $args['endstr'];
+				}
+				$page->intro = Twack::wordLimiter($page->intro, $limit, $endstr);
+			}
 
-            if ($projectPage->color) {
-                $page->color = $projectPage->color;
-            }
-        }
+			if ($page->template->hasField('authors') && $page->authors instanceof PageArray) {
+				$authors = [];
 
-        if (isset($args['limit']) && $page->template->hasField('intro')) {
-            $limit  = $args['limit'];
-            $endstr = '&nbsp;…';
-            if (isset($args['endstr'])) {
-                $endstr = $args['endstr'];
-            }
-            $page->intro = Twack::wordLimiter($page->intro, $limit, $endstr);
-        }
+				foreach ($page->authors as $author) {
+					$authors[] = $author->first_name . ' ' . $author->surname;
+				}
 
-        if ($page->template->hasField('authors') && $page->authors instanceof PageArray) {
-            $authors = array();
-            foreach ($page->authors as $author) {
-                $authors[] = $author->first_name . ' ' . $author->surname;
-            }
-            $page->authors_readable = implode(' & ', $authors);
-        }
+				$page->authors_readable = implode(' & ', $authors);
+			}
+		}
 
-        return $page;
-    }
+		return $pages;
+	}
+
+	public function formatPage(Page $page, $args = []) {
+		// Check whether the post is visible to the user:
+		if (!$page->viewable()) {
+			return false;
+		}
+
+		$projectPage = $this->getService('ProjectService')->getProjectPage($page);
+		if ($projectPage instanceof Page && $projectPage->id) {
+			$page->projectPage = $projectPage;
+
+			if ($projectPage->color) {
+				$page->color = $projectPage->color;
+			}
+		}
+
+		if (isset($args['limit']) && $page->template->hasField('intro')) {
+			$limit  = $args['limit'];
+			$endstr = '&nbsp;…';
+			if (isset($args['endstr'])) {
+				$endstr = $args['endstr'];
+			}
+			$page->intro = Twack::wordLimiter($page->intro, $limit, $endstr);
+		}
+
+		if ($page->template->hasField('authors') && $page->authors instanceof PageArray) {
+			$authors = [];
+			foreach ($page->authors as $author) {
+				$authors[] = $author->first_name . ' ' . $author->surname;
+			}
+			$page->authors_readable = implode(' & ', $authors);
+		}
+
+		return $page;
+	}
 }
