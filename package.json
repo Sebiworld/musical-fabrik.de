@@ -105,7 +105,7 @@
     "postcss-short": "^5.0.0",
     "resolve-url-loader": "^5.0.0",
     "sass-loader": "^12.6.0",
-    "sqip": "^1.0.0-alpha.35",
+    "sqip": "^1.0.0-alpha.38",
     "sqip-plugin-blur": "^1.0.0-alpha.22",
     "sqip-plugin-data-uri": "^1.0.0-alpha.36",
     "sqip-plugin-primitive": "^1.0.0-alpha.37",
