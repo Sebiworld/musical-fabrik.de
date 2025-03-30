@@ -56,6 +56,7 @@ if (!empty($this->fields)) {
 				</div>
 
 				<?= wire('session')->CSRF->renderInput($this->formOrigin); ?>
+
 				<div class="alerts">
 					<?php
 						if(!empty($this->evaluationResponse['success']) && is_array($this->evaluationResponse['success'])){

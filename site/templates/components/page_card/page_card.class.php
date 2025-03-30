@@ -16,15 +16,16 @@ class PageCard extends TwackComponent {
 		$args['logging'] = false;
 		$args['throwErrors'] = false;
 
-		$cardComponent = false;
-		$cardComponent = $this->addComponent(
+		$this->cardComponent = false;
+		$this->cardComponent = $this->addComponent(
 			$this->viewType . '_card',
 			$args
 		);
 
-		if ($cardComponent instanceof TwackNullComponent) {
+		if ($this->cardComponent instanceof TwackNullComponent) {
 			$this->viewType = 'default';
-			$this->addComponent(
+
+			$this->cardComponent = $this->addComponent(
 				$this->viewType . '_card',
 				$args
 			);
@@ -60,6 +61,39 @@ class PageCard extends TwackComponent {
 	// external_link ?: string;
 
 	public function getAjax($ajaxArgs = []) {
+		$output = $this->getAjaxOf($this->page);
+		$output['viewtype'] = $this->viewType;
+
+		if ($this->page->template->hasField('external_type') && $this->page->external_type) {
+			$output['external_type'] = $this->page->external_type;
+		}
+
+		if ($this->page->template->hasField('external_link') && $this->page->external_link) {
+			$output['external_link'] = $this->page->external_link;
+		}
+
+		if ($this->cardComponent) {
+			$ajax = $this->cardComponent->getAjax($ajaxArgs);
+
+			if (!empty($ajax) && is_array($ajax)) {
+				$output = array_merge($output, $ajax);
+			}
+		}
+
+		// Project infos
+		$projectPage = $this->getService('ProjectService')->getProjectPage($this->page);
+		if ($projectPage instanceof Page && !!$projectPage->id) {
+			$output['project_id'] = $projectPage->id;
+		}
+
+		if ($this->wire('input')->get('htmlOutput')) {
+			$output['html'] = $this->renderView();
+		}
+
+		return $output;
+	}
+
+	public function getAjaxMore($ajaxArgs = []) {
 		$output = $this->getAjaxOf($this->page);
 		$output['datetime_from'] = $this->date;
 		$output['intro'] = $this->page->intro;

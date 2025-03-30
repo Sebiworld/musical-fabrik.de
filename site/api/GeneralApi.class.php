@@ -40,7 +40,6 @@ class GeneralApi {
 			throw new AppApiException('No new contents', 204, ['errorcode' => 'no_new_contents']);
 		}
 
-
 		return $output;
 	}
 

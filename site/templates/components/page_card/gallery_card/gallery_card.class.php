@@ -53,14 +53,31 @@ class GalleryCard extends TwackComponent {
 	}
 
 	public function getAjax($ajaxArgs = []) {
-		$output = [];
-		$output['datetime_from'] = $this->page->getUnformatted('datetime_from');
+		$output = [
+			'datetime_from' => $this->page->getUnformatted('datetime_from'),
+			'images' => []
+		];
 
-		if (wire('input')->get('htmlOutput')) {
-			$output['html'] = $this->renderView();
+		if ($this->page->template->hasField('gridImage') && $this->page->gridImage) {
+			$output['main_image'] = $this->getAjaxOf($this->page->gridImage);
+		} else if ($this->page->template->hasField('main_image') && $this->page->main_image) {
+			$output['main_image'] = $this->getAjaxOf($this->page->main_image->height(300));
 		}
 
-		if ($this->page->color) {
+		if ($this->page->template->hasField('card_image') && $this->page->card_image) {
+			$output['card_image'] = $this->getAjaxOf($this->page->card_image);
+		}
+
+		if ($this->images) {
+			foreach ($this->images as $image) {
+				if (!($image instanceof Pageimage)) {
+					continue;
+				}
+				$output['images'][] = $this->getAjaxOf($image);
+			}
+		}
+
+		if ($this->page->template->hasField('color') && $this->page->color) {
 			$output['color'] = $this->page->color;
 		}
 

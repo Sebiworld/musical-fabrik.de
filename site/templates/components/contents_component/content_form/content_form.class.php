@@ -31,21 +31,19 @@ class ContentForm extends TwackComponent {
 	}
 
 	public function getAjax($ajaxArgs = []) {
-		$output = [
-			'type' => 'form',
-			'id' => $this->page->id,
-			'depth' => $this->page->depth,
-			'title' => $this->page->title,
-			'hide_title' => $this->page->hide_title,
-			'classes' => $this->page->classes
-		];
+		try {
+			$output = [
+				'type' => 'form',
+				'id' => $this->page->id,
+				'depth' => $this->page->depth,
+				'title' => $this->page->title,
+				'hide_title' => $this->page->hide_title,
+				'classes' => $this->page->classes,
+				'form' => $this->form->getAjax()
+			];
 
-		echo "<pre>";
-		var_dump($this->form);
-		echo '</pre>';
-
-		die();
-
-		return $output;
+			return $output;
+		} catch (\Exception $e) {
+		}
 	}
 }

@@ -106,12 +106,14 @@ class General extends TwackComponent {
 			$field->sitemap_include = 0;
 			$field->save();
 		}
+
+		// $this->setSeoTags();
 	}
 
 	protected function setSeoTags() {
 		$configPage = $this->configurationService->getConfigurationPage();
 
-		$metas = [
+		$this->metaData = [
 			'title'       => 'Musical-Fabrik - ' . $this->page->title,
 			'site_name'   => '',
 			'author'      => '',
@@ -123,68 +125,70 @@ class General extends TwackComponent {
 			'type'        => 'website'
 		];
 
-		$metas['site_name'] = $configPage->short_text;
-		$metas['author']    = $configPage->short_text;
+		$this->metaData['site_name'] = $configPage->short_text;
+		$this->metaData['author']    = $configPage->short_text;
 
 		// Description aus Einleitungs-Feld erzeugen:
 		if ($this->page->hasField('intro') && !empty($this->page->intro)) {
-			$metas['description'] = Twack::wordLimiter($this->page->intro, 160);
+			$this->metaData['description'] = Twack::wordLimiter($this->page->intro, 160);
 		} elseif ($configPage->short_description && !empty($configPage->short_description)) {
-			$metas['description'] = $configPage->short_description;
+			$this->metaData['description'] = $configPage->short_description;
 		}
 
-		$metas['canonical'] = $this->page->httpUrl;
+		$this->metaData['canonical'] = $this->page->httpUrl;
 
 		// Use main image as image, if available:
 		if ($this->page->hasField('main_image') && $this->page->main_image && !empty($this->page->main_image)) {
-			$metas['image'] = $this->page->main_image->httpUrl;
+			$this->metaData['image'] = $this->page->main_image->httpUrl;
 		} elseif ($configPage->main_image && !empty($configPage->main_image)) {
-			$metas['image'] = $configPage->main_image->httpUrl;
+			$this->metaData['image'] = $configPage->main_image->httpUrl;
 		}
 
 		// Accept settings from the SEO module, if available:
 		if (is_object($this->page->seo)) {
+			var_dump($this->page->seo);
+			die();
 			$seo = $this->page->seo;
 			if (isset($seo->title) && is_string($seo->title) && !empty($seo->title)) {
-				$metas['title'] = $seo->title;
+				$this->metaData['title'] = $seo->title;
 			}
 			if (isset($seo->site_name) && is_string($seo->site_name) && !empty($seo->site_name)) {
-				$metas['site_name'] = $seo->site_name;
+				$this->metaData['site_name'] = $seo->site_name;
 			}
 			if (isset($seo->description) && is_string($seo->description) && !empty($seo->description)) {
-				$metas['description'] = $seo->description;
+				$this->metaData['description'] = $seo->description;
 			}
 			if (isset($seo->author) && is_string($seo->author) && !empty($seo->author)) {
-				$metas['author'] = $seo->author;
+				$this->metaData['author'] = $seo->author;
 			}
 			if (isset($seo->keywords) && is_string($seo->keywords) && !empty($seo->keywords)) {
-				$metas['keywords'] = $seo->keywords;
+				$this->metaData['keywords'] = $seo->keywords;
 			}
 			if (isset($seo->image) && is_string($seo->image) && !empty($seo->image)) {
-				$metas['image'] = $seo->image;
+				$this->metaData['image'] = $seo->image;
 			}
 			if (isset($seo->canonical) && is_string($seo->canonical) && !empty($seo->canonical)) {
-				$metas['canonical'] = $seo->canonical;
+				$this->metaData['canonical'] = $seo->canonical;
 			}
 			if (isset($seo->robots) && is_string($seo->robots) && !empty($seo->robots)) {
-				$metas['robots'] = $seo->robots;
+				$this->metaData['robots'] = $seo->robots;
 			}
 			if (isset($seo->generator) && is_string($seo->generator) && !empty($seo->generator)) {
-				$metas['generator'] = $seo->generator;
+				$this->metaData['generator'] = $seo->generator;
 			}
 			if (isset($seo->{'og:site_name'}) && is_string($seo->{'og:site_name'}) && !empty($seo->{'og:site_name'})) {
-				$metas['site_name'] = $seo->{'og:site_name'};
+				$this->metaData['site_name'] = $seo->{'og:site_name'};
 			}
 			if (isset($seo->{'twitter:site'}) && is_string($seo->{'twitter:site'}) && !empty($seo->{'twitter:site'})) {
-				$metas['twitter:site'] = $seo->{'twitter:site'};
+				$this->metaData['twitter:site'] = $seo->{'twitter:site'};
 			}
 			if (isset($seo->custom) && is_array($seo->custom) && !empty($seo->custom)) {
-				$metas = array_merge($metas, $seo->custom);
+				$this->metaData = array_merge($this->metaData, $seo->custom);
 			}
 		}
 
 		// Generate Meta-Tags:
-		foreach ($metas as $metaname => $metacontent) {
+		foreach ($this->metaData as $metaname => $metacontent) {
 			if (empty($metacontent)) {
 				continue;
 			}

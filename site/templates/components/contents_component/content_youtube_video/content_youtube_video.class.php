@@ -30,10 +30,11 @@ class ContentYoutubeVideo extends TwackComponent {
 			'type'       => 'youtube-video',
 			'id' => $this->page->id,
 			'depth'      => $this->page->depth,
-			'title'      => $this->title,
+			'title'      => $this->page->title,
 			'hide_title' => $this->page->hide_title,
 			'classes'    => $this->page->classes,
-			'video_id'   => $this->page->short_text
+			'video_id'   => $this->page->short_text,
+			'placeholder_image' => $this->getAjaxOf($this->page->image)
 		];
 
 		return $output;

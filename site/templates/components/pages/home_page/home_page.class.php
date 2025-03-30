@@ -11,6 +11,7 @@ class HomePage extends TwackComponent {
 		// Read Onepage Elements:
 		if ($this->page->hasField('onepage_elements') && $this->page->onepage_elements->count() > 0) {
 			$general = $this->getGlobalComponent('general');
+
 			foreach ($this->page->onepage_elements as $element) {
 				$general->addComponent($element->template->name, ['directory' => 'sections', 'page' => $element, 'list' => 'sections']);
 			}

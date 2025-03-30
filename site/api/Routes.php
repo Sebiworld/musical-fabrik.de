@@ -6,6 +6,7 @@ require_once wire('config')->paths->AppApi . 'classes/AppApiHelper.php';
 
 require_once __DIR__ . '/AppApiTest.class.php';
 require_once __DIR__ . '/GeneralApi.class.php';
+require_once __DIR__ . '/ConfigApi.class.php';
 require_once __DIR__ . '/ProjectApi.class.php';
 
 $routes = [
@@ -100,6 +101,16 @@ $routes = [
 				]
 			]
 		]],
+	],
+
+	'configuration' => [
+		['OPTIONS', '', ['GET'], [], []],
+		['GET', '', ConfigApi::class, 'getConfiguration'],
+	],
+
+	'menues' => [
+		['OPTIONS', '', ['GET'], [], []],
+		['GET', '', ConfigApi::class, 'getMenues'],
 	],
 
 	'projects' => [
