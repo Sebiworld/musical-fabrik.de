@@ -77,7 +77,7 @@ class FormTemplate extends TwackComponent {
 			throw new ComponentNotInitializedException('FormTemplate', 'No form template was defined on the container page.');
 		}
 
-		if ($this->template->hasField('antispam_code')) {
+		if ($this->template->hasField('antispam_code') && !$this->wire('twack')->isTwackAjaxCall()) {
 			if (empty($this->getAntispamCode())) {
 				$this->regenerateAntispamCode();
 			}
@@ -172,10 +172,23 @@ class FormTemplate extends TwackComponent {
 			$errorFlag             = false;
 			$values                = [];
 
+			// Honeypot:
+			$honeypot = wire('input')->post->bool('data');
+
+			if (!empty($honeypot)) {
+				$errorFlag                                 = true;
+				$output['fields']['data']['error'][] = $this->_('Wrong data');
+				$output['fields']['data']['isSuccessful'] = false;
+			}
+
 			foreach ($this->fields as $fieldParams) {
 				$field = $this->template->fieldgroup->getField($fieldParams->name, true);
 
 				if ($field->name === 'antispam_code') {
+					if ($this->wire('twack')->isTwackAjaxCall()) {
+						continue;
+					}
+
 					$antispamCode = wire('input')->post->int('antispam_code');
 
 					$output['fields'][$field->name] = [
@@ -244,7 +257,7 @@ class FormTemplate extends TwackComponent {
 			foreach ($this->fields as $fieldParams) {
 				$field = $this->template->fieldgroup->getField($fieldParams->name, true);
 
-				if ($field->name === 'antispam_code') {
+				if ($field->name === 'antispam_code' && $this->wire('twack')->isTwackAjaxCall()) {
 					continue;
 				}
 
@@ -334,6 +347,79 @@ class FormTemplate extends TwackComponent {
 			return $output;
 		}
 
+		if ($this->wire('modules')->isInstalled('AppApiFormProtection')) {
+			// Check if the form was already submitted:
+			try {
+				AppApiFormProtection::checkAndAddFormSubmission($values, [
+					'page' => $this->page->id,
+					'type' => 'form_template_submission'
+				], $newRequest->id, $this->page->id, 'test', [
+					'maxAge' => 60*60 // 1 hour
+				]);
+				// $submissionData = [
+				// 	'page' => $this->page->id,
+				// 	'type' => 'form_template_submission'
+				// ];
+
+				// $existingSubmission = AppApiFormProtection::getFormSubmission($values, $submissionData);
+
+				// if (!empty($existingSubmission)) {
+				// 	// If we found a submission with the same hash, we return false
+
+				// 	if (!empty($existingSubmission['created'])) {
+				// 		//  check created date of the submission, if it is older than 1 hour, we can allow the submission again
+				// 		$creationTime = strtotime($existingSubmission['created']);
+				// 		$lastHourTime = time() - 60*60;
+
+				// 		if ($creationTime>= $lastHourTime) {
+				// 			// If the submission is less than 1 hour old, we block the submission
+				// 			$output['error']['form_error'] = $this->_('This form was already submitted.');
+				// 			$output['submission_blocked']   = true;
+				// 			$output['status']               = false;
+
+				// 			if ($this->wire('twack')->isTwackAjaxCall()) {
+				// 				Twack::sendResponse($output, 400);
+				// 			}
+
+				// 			return $output;
+				// 		}
+				// 	}
+				// }
+
+				// // Save the form submission in the database:
+				// AppApiFormProtection::addFormSubmission($values, $submissionData, $newRequest->id);
+			} catch (AppApiException $e) {
+				$output['error']['form_error'] = $e->getMessage();
+				$output['data']  = $values;
+
+				if (isset($output['success']) && empty($output['success'])) {
+					unset($output['success']);
+				}
+
+				$additionalData = $e->getAdditionals();
+				if (!empty($additionalData) && is_array($additionalData)) {
+					$output = array_merge($output, $additionalData);
+				}
+
+				$output['status']               = $e->getCode();
+
+				if ($this->wire('twack')->isTwackAjaxCall()) {
+					Twack::sendResponse($output, 400);
+				}
+
+				return $output;
+			} catch (\Exception $e) {
+				$output['error']['form_error'] = $e->getMessage();
+				$output['status']               = $e->getCode();
+
+				if ($this->wire('twack')->isTwackAjaxCall()) {
+					Twack::sendResponse($output, 400);
+				}
+
+				return $output;
+			}
+		}
+
 		try {
 			$this->sendNotification($newRequest);
 		} catch (\Exception $e) {
@@ -348,6 +434,10 @@ class FormTemplate extends TwackComponent {
 		$output['submission_blocked']    = true;
 		$output['status']                = true;
 		$output['success']['finished']   = $this->_('Your request was processed successfully.');
+
+		if (isset($output['error']) && empty($output['error'])) {
+			unset($output['error']);
+		}
 
 		if ($this->wire('twack')->isTwackAjaxCall()) {
 			Twack::sendResponse($output, 200);
@@ -690,6 +780,11 @@ class FormTemplate extends TwackComponent {
 				if (empty($field->ajax)) {
 					continue;
 				}
+
+				if ($field->name === 'antispam_code' && $this->wire('twack')->isTwackAjaxCall()) {
+					continue;
+				}
+
 				$output['fields'][] = $field->ajax;
 			}
 		}

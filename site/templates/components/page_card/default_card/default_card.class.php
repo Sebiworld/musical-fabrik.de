@@ -13,7 +13,6 @@ class DefaultCard extends TwackComponent {
 
 	public function getAjax($ajaxArgs = []) {
 		$output = [
-			'TEST' => 42
 		];
 
 		$output['datetime_from'] = $this->date;

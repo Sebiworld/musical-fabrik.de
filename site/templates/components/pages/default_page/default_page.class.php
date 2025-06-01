@@ -2,7 +2,6 @@
 namespace ProcessWire;
 
 class DefaultPage extends TwackComponent {
-
 	public function __construct($args) {
 		parent::__construct($args);
 
@@ -33,7 +32,7 @@ class DefaultPage extends TwackComponent {
 		}
 
 		if ($this->page->template->hasField('authors') && $this->page->authors instanceof PageArray) {
-			$authors = array();
+			$authors = [];
 			foreach ($this->page->authors as $autor) {
 				$authors[] = $autor->first_name . ' ' . $autor->surname;
 			}
@@ -70,15 +69,15 @@ class DefaultPage extends TwackComponent {
 
 		$pwProtectionModule = $this->wire('modules')->get('PageAccessPassword');
 		$this->locked = !$pwProtectionModule->isUnlocked($this->page);
-		if($this->locked && !empty($this->wire('input')->post->text('pw_input'))){
+		if ($this->locked && !empty($this->wire('input')->post->text('pw_input'))) {
 			$this->locked = !$pwProtectionModule->validatePassword($this->page, $this->wire('input')->post->text('pw_input'));
 		}
 	}
 
 	public function getAjax($ajaxArgs = []) {
-		$output = array(
+		$output = [
 			'title' => $this->title
-		);
+		];
 
 		if (!empty($this->datetime_unformatted)) {
 			$output['datetime_from'] = $this->datetime_unformatted;
@@ -96,13 +95,23 @@ class DefaultPage extends TwackComponent {
 			$output['main_image'] = $this->getAjaxOf($this->page->main_image);
 		}
 
-		if (!empty($this->authors)) {
-			$output['authors'] = $this->authors;
+		if ($this->page->template->hasField('authors') && $this->page->authors instanceof PageArray) {
+			$authors = [];
+			foreach ($this->page->authors as $autor) {
+				$authors[] = [
+					'id' => $autor->id,
+					'first_name' => $autor->first_name,
+					'last_name' => $autor->last_name,
+					'nickname' => $autor->nickname,
+				];
+			}
+
+			$output['authors'] = $authors;
 		}
 
 		if ($this->tags && $this->tags instanceof TwackComponent) {
 			$tagAjax = $this->tags->getAjax($ajaxArgs);
-			if(!empty($tagAjax)){
+			if (!empty($tagAjax)) {
 				$output['tags'] = $tagAjax;
 			}
 		}
@@ -115,7 +124,9 @@ class DefaultPage extends TwackComponent {
 		if ($this->childComponents) {
 			foreach ($this->childComponents as $component) {
 				$ajax = $component->getAjax($ajaxArgs);
-				if(empty($ajax)) continue;
+				if (empty($ajax)) {
+					continue;
+				}
 				$output = array_merge($output, $ajax);
 			}
 		}
