@@ -98,4 +98,12 @@ class ProjectRole extends ProjectRoleBase {
 
 		return $portraits;
 	}
+
+	public function getAjax($ajaxArgs = []) {
+		$output = [
+			'test' => 123
+		];
+
+		return $output;
+	}
 }

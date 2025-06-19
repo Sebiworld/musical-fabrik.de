@@ -8,6 +8,7 @@ require_once __DIR__ . '/AppApiTest.class.php';
 require_once __DIR__ . '/GeneralApi.class.php';
 require_once __DIR__ . '/ConfigApi.class.php';
 require_once __DIR__ . '/ProjectApi.class.php';
+require_once __DIR__ . '/ProjectRolesApi.class.php';
 
 $routes = [
 	'auth' => [
@@ -118,6 +119,18 @@ $routes = [
 		['GET', '', ProjectApi::class, 'getProjects'],
 		['OPTIONS', '{id:\d+}', ['GET']],
 		['GET', '{id:\d+}', ProjectApi::class, 'getProjectDetail']
+	],
+
+	'project-roles' => [
+		['OPTIONS', '', ['GET'], [], []],
+		['GET', '', ProjectRolesApi::class, 'getProjectRoles'],
+		['OPTIONS', '{id:\d+}', ['GET']],
+		['GET', '{id:\d+}', ProjectRolesApi::class, 'getProjectRoles']
+	],
+
+	'project-portraits' => [
+		['OPTIONS', '', ['GET'], [], []],
+		['GET', '', ProjectRolesApi::class, 'getProjectPortraits']
 	],
 
 	'errorTest' => [

@@ -124,6 +124,7 @@ if (!class_exists('Processwire\FormOutputType')) {
 				foreach ($field->type->getOptions($field) as $option) {
 					$output['options'][] = [
 						'id' => $this->idService->getID($output['id'] . '-' . $option->id),
+						'value' => $option->id,
 						'checked' => !empty($currentValue) && is_array($currentValue) && in_array($option->id, $currentValue),
 						'title' => $option->title
 					];
