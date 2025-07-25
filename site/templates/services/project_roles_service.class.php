@@ -27,6 +27,275 @@ class ProjectRolesService extends TwackComponent {
 		$this->portraitsContainer = wire('pages')->find('template.name=portraits_container, include=hidden, has_parent=' . $this->projectPage->id);
 	}
 
+	public function getProjectCastAjax($page) {
+		if (!($page instanceof Page) || !$page->id) {
+			return null; // Skip if cast not found
+		}
+
+		if ($page->template->name != 'cast') {
+			return null; // Skip if not a cast
+		}
+
+		$castOutput = AppApi::getAjaxOf($page);
+		if (isset($castOutput['created'])) {
+			unset($castOutput['created']);
+		}
+		if (isset($castOutput['modified'])) {
+			unset($castOutput['modified']);
+		}
+		if (isset($castOutput['template'])) {
+			unset($castOutput['template']);
+		}
+
+		if (!empty($page['text'])) {
+			$castOutput['description'] = $page['text'];
+		}
+
+		$castOutput['hash'] = md5(json_encode($castOutput));
+
+		return $castOutput;
+	}
+
+	public function getProjectSeasonAjax($page) {
+		if (!($page instanceof Page) || !$page->id) {
+			return null; // Skip if season not found
+		}
+
+		if ($page->template->name != 'season') {
+			return null; // Skip if not a season
+		}
+
+		$seasonOutput = AppApi::getAjaxOf($page);
+		if (isset($seasonOutput['created'])) {
+			unset($seasonOutput['created']);
+		}
+		if (isset($seasonOutput['modified'])) {
+			unset($seasonOutput['modified']);
+		}
+		if (isset($seasonOutput['template'])) {
+			unset($seasonOutput['template']);
+		}
+
+		$seasonOutput['hash'] = md5(json_encode($seasonOutput));
+
+		return $seasonOutput;
+	}
+
+	public function getProjectPortraitAjax($page) {
+		if (!($page instanceof Page) || !$page->id) {
+			return null; // Skip if portrait not found
+		}
+
+		if ($page->template->name != 'portrait') {
+			return null; // Skip if not a portrait
+		}
+
+		$portraitOutput = AppApi::getAjaxOf($page);
+
+		if (isset($portraitOutput['created'])) {
+			unset($portraitOutput['created']);
+		}
+		if (isset($portraitOutput['modified'])) {
+			unset($portraitOutput['modified']);
+		}
+		if (isset($portraitOutput['template'])) {
+			unset($portraitOutput['template']);
+		}
+
+		if (!empty($page['main_image'])) {
+			$portraitOutput['main_image'] = AppApi::getAjaxOf($page['main_image']);
+		}
+
+
+		if (!empty($page['first_name'])) {
+			$portraitOutput['first_name'] = $page['first_name'];
+		}
+
+		if (!empty($page['last_name'])) {
+			$portraitOutput['last_name'] = $page['last_name'];
+		}
+
+		if (!empty($page['title_separable'])) {
+			$portraitOutput['title_separable'] = $page['title_separable'];
+		}
+
+		if (!empty($page['intro'])) {
+			$portraitOutput['intro'] = $page['intro'];
+		}
+
+		if (!empty($page['user_accounts'])) {
+			$portraitOutput['user_ids'] = [];
+			foreach ($page['user_accounts'] as $userAccount) {
+				$portraitOutput['user_ids'][] = $userAccount->id;
+			}
+		}
+
+		$portraitOutput['hash'] = md5(json_encode($portraitOutput));
+
+		return $portraitOutput;
+	}
+
+	public function getProjectRoleAjax($projectRole) {
+		if (!($projectRole instanceof Page) || !$projectRole->id) {
+			return null; // Skip if projectRole not found
+		}
+
+		if ($projectRole->template->name != 'project_role' && $projectRole->template->name != 'project_roles_container') {
+			return null; // Skip if not a projectRole
+		}
+
+		if (!$projectRole->viewable()) {
+			return null; // Skip roles that are not viewable
+		}
+
+		$output = [
+			'roles' => [],
+			'seasons' => [],
+			'casts' => [],
+			'portraits' => [],
+		];
+
+		$roleOutput = AppApi::getAjaxOf($projectRole);
+		if (isset($roleOutput['created'])) {
+			unset($roleOutput['created']);
+		}
+		if (isset($roleOutput['modified'])) {
+			unset($roleOutput['modified']);
+		}
+
+		if (!empty($projectRole['headline'])) {
+			$roleOutput['headline'] = $projectRole['headline'];
+		}
+
+		if (!empty($projectRole['main_image'])) {
+			$roleOutput['main_image'] = AppApi::getAjaxOf($projectRole['main_image']);
+		}
+
+		if (!empty($projectRole['dont_crop_main_image'])) {
+			$roleOutput['dont_crop_main_image'] = $projectRole['dont_crop_main_image'];
+		}
+
+		if (!empty($projectRole['text'])) {
+			$roleOutput['description'] = $projectRole['text'];
+		}
+
+		if (!empty($projectRole['amount'])) {
+			$roleOutput['amount'] = $projectRole['amount'];
+		}
+
+		if (!empty($projectRole['project_role_view_options']->name)) {
+			$roleOutput['view_type'] = $projectRole['project_role_view_options']->name;
+		} else {
+			$closestRoleWithViewType = $projectRole->closest('template.name=project_roles_container|project_role, project_role_view_options.name!=""');
+			if ($closestRoleWithViewType instanceof Page && $closestRoleWithViewType->id && $closestRoleWithViewType->template->hasField('project_role_view_options') && $closestRoleWithViewType->project_role_view_options->name) {
+				$roleOutput['view_type'] = $closestRoleWithViewType->project_role_view_options->name;
+			}
+		}
+
+		if ($projectRole->template->hasField('participants')) {
+			$roleOutput['participants'] = [];
+			foreach ($projectRole->participants as $participant) {
+				if (empty($projectRole->participants)) {
+					continue;
+				}
+
+				$participantOutput = [
+					'portrait_ids' => [],
+				];
+
+				foreach ($participant->portraits as $portrait) {
+					if (!($portrait instanceof Page) || !$portrait->id) {
+						continue; // Skip if portrait not found
+					}
+
+					$participantOutput['portrait_ids'][] = $portrait->id;
+
+					if (!isset($output['portraits'][$portrait->id])) {
+						$portraitOutput = $this->getProjectPortraitAjax($portrait);
+
+						if (empty($portraitOutput)) {
+							continue; // Skip if portrait not found
+						}
+
+						$output['portraits'][$portrait->id] = $portraitOutput;
+					}
+				}
+
+				if (!empty($participant->seasons)) {
+					$participantOutput['season_ids'] = [];
+
+					foreach ($participant->seasons as $season) {
+						if (!($season instanceof Page) || !$season->id) {
+							continue; // Skip if season not found
+						}
+
+						$participantOutput['season_ids'][] = $season->id;
+
+						if (!isset($output['seasons'][$season->id])) {
+							$seasonOutput = $this->getProjectSeasonAjax($season);
+							if (empty($seasonOutput)) {
+								continue; // Skip if season not found
+							}
+
+							$output['seasons'][$season->id] = $seasonOutput;
+						}
+					}
+				}
+
+				if (!empty($participant->casts)) {
+					$participantOutput['cast_ids'] = [];
+
+					foreach ($participant->casts as $cast) {
+						if (!($cast instanceof Page) || !$cast->id) {
+							continue; // Skip if cast not found
+						}
+
+						$participantOutput['cast_ids'][] = $cast->id;
+
+						if (!isset($output['casts'][$cast->id])) {
+							$castOutput = $this->getProjectCastAjax($cast);
+
+							if (empty($castOutput)) {
+								continue; // Skip if cast not found
+							}
+
+							$output['casts'][$cast->id] = $castOutput;
+						}
+					}
+				}
+
+				if (!empty($participant['amount_positions_available'])) {
+					$participantOutput['amount_positions_available'] = $participant['amount_positions_available'];
+				}
+
+
+				$roleOutput['participants'][] = $participantOutput;
+			}
+		}
+
+		$childRoles = $projectRole->children('template.name=project_role');
+		if (!empty($childRoles)) {
+			$roleOutput['child_ids'] = [];
+			foreach ($childRoles as $childRole) {
+				if (!($childRole instanceof Page) || !$childRole->id) {
+					continue; // Skip if cast not found
+				}
+
+				if (!$childRole->viewable()) {
+					continue; // Skip roles that are not viewable
+				}
+
+				$roleOutput['child_ids'][] = $childRole->id;
+			}
+		}
+
+		$roleOutput['hash'] = md5(json_encode($roleOutput));
+
+		$output['roles'][$projectRole->id] = $roleOutput;
+
+		return $output;
+	}
+
 	public function getProjectRoles($parentPage = false) {
 		if (!($parentPage instanceof Page) || !$parentPage->id) {
 			$parentPage = $this->projectPage;
@@ -40,127 +309,122 @@ class ProjectRolesService extends TwackComponent {
 			'roles' => [],
 			'seasons' => [],
 			'casts' => [],
+			'portraits' => [],
+			'child_ids' => []
 		];
+
+		$roleOutput = $this->getProjectRoleAjax($parentPage);
+		if (!empty($roleOutput)) {
+			if (is_array($roleOutput['roles'])) {
+				foreach ($roleOutput['roles'] as $id => $role) {
+					if (!empty($output['roles'][$id])) {
+						continue;
+					}
+
+					$output['roles'][$id] = $role;
+				}
+			}
+
+			if (is_array($roleOutput['casts'])) {
+				foreach ($roleOutput['casts'] as $id => $cast) {
+					if (!empty($output['casts'][$id])) {
+						continue;
+					}
+
+					$output['casts'][$id] = $cast;
+				}
+			}
+
+			if (is_array($roleOutput['seasons'])) {
+				foreach ($roleOutput['seasons'] as $id => $season) {
+					if (!empty($output['seasons'][$id])) {
+						continue;
+					}
+
+					$output['seasons'][$id] = $season;
+				}
+			}
+
+			if (is_array($roleOutput['portraits'])) {
+				foreach ($roleOutput['portraits'] as $id => $portrait) {
+					if (!empty($output['portraits'][$id])) {
+						continue;
+					}
+
+					$output['portraits'][$id] = $portrait;
+				}
+			}
+		} else {
+			$childRoles = $parentPage->children('template.name=project_role');
+			if (!empty($childRoles)) {
+				foreach ($childRoles as $childRole) {
+					if (!($childRole instanceof Page) || !$childRole->id) {
+						continue; // Skip if cast not found
+					}
+
+					if (!$childRole->viewable()) {
+						continue; // Skip roles that are not viewable
+					}
+
+					$output['child_ids'][] = $childRole->id;
+				}
+			}
+		}
+
 		foreach ($parentPage->find('template.name=project_role') as $projectRole) {
+			if (!($projectRole instanceof Page) || !$projectRole->id) {
+				return null; // Skip if projectRole not found
+			}
+
 			if (!$projectRole->viewable()) {
 				continue; // Skip roles that are not viewable
 			}
 
-			$roleOutput = AppApi::getAjaxOf($projectRole);
-			if (isset($roleOutput['created'])) {
-				unset($roleOutput['created']);
-			}
-			if (isset($roleOutput['modified'])) {
-				unset($roleOutput['modified']);
-			}
-			if (isset($roleOutput['template'])) {
-				unset($roleOutput['template']);
+			$roleOutput = $this->getProjectRoleAjax($projectRole);
+
+			if (empty($roleOutput)) {
+				continue; // Skip if role not found
 			}
 
-			if (!empty($projectRole['headline'])) {
-				$roleOutput['headline'] = $projectRole['headline'];
-			}
-
-			if (!empty($projectRole['main_image'])) {
-				$roleOutput['main_image'] = AppApi::getAjaxOf($projectRole['main_image']);
-			}
-
-			if (!empty($projectRole['dont_crop_main_image'])) {
-				$roleOutput['dont_crop_main_image'] = $projectRole['dont_crop_main_image'];
-			}
-
-			if (!empty($projectRole['text'])) {
-				$roleOutput['description'] = $projectRole['text'];
-			}
-
-			if (!empty($projectRole['project_role_view_options']->name)) {
-				$roleOutput['view_type'] = $projectRole['project_role_view_options']->name;
-			}
-
-			$roleOutput['participants'] = [];
-			foreach ($projectRole->participants as $participant) {
-				if (empty($projectRole->participants)) {
-					continue;
-				}
-
-				$participantOutput = [
-					'portrait_ids' => [],
-				];
-
-				foreach ($participant->portraits as $portrait) {
-					$participantOutput['portrait_ids'][] = $portrait->id;
-				}
-
-				if (!empty($participant->seasons)) {
-					$participantOutput['season_ids'] = [];
-					foreach ($participant->seasons as $season) {
-						$participantOutput['season_ids'][] = $season->id;
-
-						if (!isset($output['seasons'][$season->id])) {
-							$seasonOutput = AppApi::getAjaxOf($season);
-							if (isset($seasonOutput['created'])) {
-								unset($seasonOutput['created']);
-							}
-							if (isset($seasonOutput['modified'])) {
-								unset($seasonOutput['modified']);
-							}
-							if (isset($seasonOutput['template'])) {
-								unset($seasonOutput['template']);
-							}
-
-							$seasonOutput['hash'] = md5(json_encode($seasonOutput));
-
-							$output['seasons'][$season->id] = $seasonOutput;
-						}
-					}
-				}
-
-				if (!empty($participant->casts)) {
-					$participantOutput['cast_ids'] = [];
-					foreach ($participant->casts as $cast) {
-						$participantOutput['cast_ids'][] = $cast->id;
-
-						if (!isset($output['casts'][$cast->id])) {
-							$castOutput = AppApi::getAjaxOf($cast);
-							if (isset($castOutput['created'])) {
-								unset($castOutput['created']);
-							}
-							if (isset($castOutput['modified'])) {
-								unset($castOutput['modified']);
-							}
-							if (isset($castOutput['template'])) {
-								unset($castOutput['template']);
-							}
-
-							if (!empty($cast['text'])) {
-								$castOutput['description'] = $cast['text'];
-							}
-
-							$castOutput['hash'] = md5(json_encode($castOutput));
-
-							$output['casts'][$cast->id] = $castOutput;
-						}
-					}
-				}
-
-				$roleOutput['participants'][] = $participantOutput;
-			}
-
-			$childRoles = $projectRole->children('template.name=project_role');
-			if (!empty($childRoles)) {
-				$roleOutput['child_ids'] = [];
-				foreach ($childRoles as $childRole) {
-					if (!$projectRole->viewable()) {
-						continue; // Skip roles that are not viewable
+			if (is_array($roleOutput['roles'])) {
+				foreach ($roleOutput['roles'] as $id => $role) {
+					if (!empty($output['roles'][$id])) {
+						continue;
 					}
 
-					$roleOutput['child_ids'][] = $childRole->id;
+					$output['roles'][$id] = $role;
 				}
 			}
 
-			$roleOutput['hash'] = md5(json_encode($roleOutput));
+			if (is_array($roleOutput['casts'])) {
+				foreach ($roleOutput['casts'] as $id => $cast) {
+					if (!empty($output['casts'][$id])) {
+						continue;
+					}
 
-			$output['roles'][$projectRole->id] = $roleOutput;
+					$output['casts'][$id] = $cast;
+				}
+			}
+
+			if (is_array($roleOutput['seasons'])) {
+				foreach ($roleOutput['seasons'] as $id => $season) {
+					if (!empty($output['seasons'][$id])) {
+						continue;
+					}
+
+					$output['seasons'][$id] = $season;
+				}
+			}
+
+			if (is_array($roleOutput['portraits'])) {
+				foreach ($roleOutput['portraits'] as $id => $portrait) {
+					if (!empty($output['portraits'][$id])) {
+						continue;
+					}
+
+					$output['portraits'][$id] = $portrait;
+				}
+			}
 		}
 
 		return $output;
@@ -174,47 +438,11 @@ class ProjectRolesService extends TwackComponent {
 
 		foreach ($ids as $id) {
 			$portrait = wire('pages')->findOne('id=' . $id, ['template.name=portrait']);
-			if (!($portrait instanceof Page) || !$portrait->id) {
+			$portraitOutput = $this->getProjectPortraitAjax($portrait);
+
+			if (empty($portraitOutput)) {
 				continue; // Skip if portrait not found
 			}
-
-			$portraitOutput = AppApi::getAjaxOf($portrait);
-
-			if (isset($portraitOutput['created'])) {
-				unset($portraitOutput['created']);
-			}
-			if (isset($portraitOutput['modified'])) {
-				unset($portraitOutput['modified']);
-			}
-			if (isset($portraitOutput['template'])) {
-				unset($portraitOutput['template']);
-			}
-
-
-			if (!empty($portrait['first_name'])) {
-				$portraitOutput['first_name'] = $portrait['first_name'];
-			}
-
-			if (!empty($portrait['last_name'])) {
-				$portraitOutput['last_name'] = $portrait['last_name'];
-			}
-
-			if (!empty($portrait['title_separable'])) {
-				$portraitOutput['title_separable'] = $portrait['title_separable'];
-			}
-
-			if (!empty($portrait['intro'])) {
-				$portraitOutput['intro'] = $portrait['intro'];
-			}
-
-			if (!empty($portrait['user_accounts'])) {
-				$portraitOutput['user_ids'] = [];
-				foreach ($portrait['user_accounts'] as $userAccount) {
-					$portraitOutput['user_ids'][] = $userAccount->id;
-				}
-			}
-
-			$portraitOutput['hash'] = md5(json_encode($portraitOutput));
 
 			$output['portraits'][$portrait->id] = $portraitOutput;
 		}

@@ -13,7 +13,7 @@ if ($this->viewType && !empty($this->seasons) && !empty($this->portraits)) {
 				$counter++;
 				?>
 				<li class="nav-item">
-					<a class="nav-link <?= $counter >= $this->seasons->count ? 'active' : ''; ?>" id="<?= "{$elementId}_{$counter}_tab"; ?>" data-toggle="pill" href="#<?= "{$elementId}_{$counter}"; ?>" role="tab" aria-controls="<?= "{$elementId}_{$counter}"; ?>" aria-selected="<?= $counter >= $this->seasons->count ? 'true' : 'false'; ?>">
+					<a class="nav-link <?= $counter >= $this->seasons->count ? 'active' : ''; ?>" id="<?= "{$elementId}_{$counter}_tab"; ?>" data-bs-toggle="pill"  href="#<?= "{$elementId}_{$counter}"; ?>" role="tab" aria-controls="<?= "{$elementId}_{$counter}"; ?>" aria-selected="<?= $counter >= $this->seasons->count ? 'true' : 'false'; ?>">
 						<?= $season->title; ?>
 					</a>
 				</li>

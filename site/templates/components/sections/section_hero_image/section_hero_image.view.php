@@ -4,6 +4,7 @@ namespace ProcessWire;
 
 ?>
 <section class="container-fluid section section_hero_image <?= $this->page->highlight ? 'highlight' : ''; ?> <?= !empty($this->page->classes . '') ? $this->page->classes : ''; ?>" <?= $this->sectionId ? 'id="' . $this->sectionId . '"' : ''; ?>>
+
 	<h2 class="section-title visually-hidden visually-hidden-focusable"><?= $this->page->title; ?></h2>
 
 	<div class="hero-image-wrapper">
