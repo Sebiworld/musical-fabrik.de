@@ -52,15 +52,15 @@ class ContentCollapsible extends TwackComponent {
 		$output = [
 			'type' => 'collapsible',
 			'depth' => $this->page->depth,
-			'id' => $this->id,
+			'id' => $this->page->id,
 			'title' => $this->title,
 			'hide_title' => $this->page->hide_title,
 			'classes' => $this->page->classes,
-			'tabs' => []
+			'items' => []
 		];
 
 		foreach ($this->tabs as $tab) {
-			$output['tabs'][] = [
+			$output['items'][] = [
 				'id' => $tab->id,
 				'title' => $tab->title,
 				'content' => $tab->content
