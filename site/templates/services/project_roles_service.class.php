@@ -106,9 +106,35 @@ class ProjectRolesService extends TwackComponent {
 			$portraitOutput['main_image'] = AppApi::getAjaxOf($page['main_image']);
 		}
 
-
 		if (!empty($page['first_name'])) {
 			$portraitOutput['first_name'] = $page['first_name'];
+
+			include __DIR__ . '/../utils/names_male.php';
+			include __DIR__ . '/../utils/names_female.php';
+
+			if (!empty($namesMale) || !empty($namesFemale)) {
+				$firstNameParts = explode(' ', $page['first_name']);
+				foreach ($firstNameParts as $fmPart) {
+					if (empty($fmPart) || !is_string($fmPart)) {
+						continue;
+					}
+
+					$firstNamePartsDash = explode('-', $fmPart);
+					foreach ($firstNamePartsDash as $fmPartDash) {
+						if (empty($fmPartDash) || !is_string($fmPartDash)) {
+							continue;
+						}
+
+						if (is_array($namesMale) && in_array(strtolower($fmPartDash), $namesMale)) {
+							$portraitOutput['portrait_mode'] = 'male';
+							continue 2;
+						} else if (is_array($namesFemale) && in_array(strtolower($fmPartDash), $namesFemale)) {
+							$portraitOutput['portrait_mode'] = 'female';
+							continue 2;
+						}
+					}
+				}
+			}
 		}
 
 		if (!empty($page['last_name'])) {
