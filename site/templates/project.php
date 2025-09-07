@@ -6,6 +6,6 @@ $general = wire('twack')->getNewComponent('General');
 $content = wire('twack')->getComponent('mainContent');
 $content->mainImage = false;
 $content->hideTitle = true;
-$content->addComponent('ContentArticles', ['directory' => 'contents_component', 'title' => __('News & Events')]);
+$content->addComponent('ContentArticles', ['directory' => 'contents_component', 'title' => __('News & Events'), 'generateAjaxOutput' => false]);
 
 echo $general->render();

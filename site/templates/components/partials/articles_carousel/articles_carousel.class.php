@@ -5,8 +5,15 @@ class ArticlesCarousel extends TwackComponent {
 	public function __construct($args) {
 		parent::__construct($args);
 
+		$parentPage = $this->page;
+		if($this->projectPage instanceof Page && $this->projectPage->id){
+			$parentPage = $this->projectPage;
+		} else if(!empty($this->page->_pageTableParent)){
+			$parentPage = $this->page->_pageTableParent;
+		}
+
 		$articlesService = $this->getService('ArticlesService');
-		$news = $articlesService->getArticles(['charLimit' => 150, 'limit' => 15]);
+		$news = $articlesService->getArticles(['charLimit' => 150, 'limit' => 15], $parentPage);
 		$articlePages = $news->items;
 
 		$parameters = [];

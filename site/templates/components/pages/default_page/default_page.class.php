@@ -67,6 +67,12 @@ class DefaultPage extends TwackComponent {
 			$this->contents = $this->addComponent('ContentsComponent', ['directory' => '']);
 		}
 
+		if ($this->page->hasField('onepage_elements') && $this->page->onepage_elements->count() > 0) {
+			foreach ($this->page->onepage_elements as $element) {
+				$this->addComponent($element->template->name, ['directory' => 'sections', 'page' => $element, 'list' => 'sections']);
+			}
+		}
+
 		$pwProtectionModule = $this->wire('modules')->get('PageAccessPassword');
 		$this->locked = !$pwProtectionModule->isUnlocked($this->page);
 		if ($this->locked && !empty($this->wire('input')->post->text('pw_input'))) {
@@ -120,6 +126,14 @@ class DefaultPage extends TwackComponent {
 			$output['contents'] = $this->contents->getAjax($ajaxArgs);
 		}
 
+		if (!empty($this->componentLists->sections)) {
+			$output['sections'] = [];
+			foreach ($this->componentLists->sections as $component) {
+				$output['sections'][] = $component->getAjax($ajaxArgs);
+			}
+		}
+
+
 		// The component is registered under the global name "mainContent". From the template files some components are added manually.
 		if ($this->childComponents) {
 			foreach ($this->childComponents as $component) {
@@ -127,6 +141,7 @@ class DefaultPage extends TwackComponent {
 				if (empty($ajax)) {
 					continue;
 				}
+
 				$output = array_merge($output, $ajax);
 			}
 		}

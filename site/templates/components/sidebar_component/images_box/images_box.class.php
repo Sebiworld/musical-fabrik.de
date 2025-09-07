@@ -42,8 +42,11 @@ class ImagesBox extends TwackComponent {
 		$output = [
 			'galleries' => [],
 			'galleries_count' => $this->galleriesResponse->totalNumber,
-			'galleries_page' => AppApi::getAjaxOf($this->galleriesPage),
 		];
+
+		if ($this->galleriesPage instanceof Page && $this->galleriesPage->id && $this->galleriesPage->viewable()) {
+			$output['galleries_page_url'] = $this->galleriesPage->url;
+		}
 
 		if ($this->childComponents) {
 			foreach ($this->childComponents as $component) {

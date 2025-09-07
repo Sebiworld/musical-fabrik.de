@@ -25,9 +25,13 @@ class ContentArticles extends TwackComponent {
 		} elseif ($this->page->template->hasField('title') && !empty($this->page->title)) {
 			$this->title = $this->page->title;
 		}
+
+		$this->generateAjaxOutput = isset($args['generateAjaxOutput']) && $args['generateAjaxOutput']=== false ? false : true;
 	}
 
 	public function getAjax($ajaxArgs = []) {
+		if($this->generateAjaxOutput === false) return [];
+
 		$output = [
 			'id' => $this->page->id,
 		];

@@ -132,6 +132,18 @@ class ProjectService extends TwackComponent {
 			$output['sponsors'] = $component->getAjax([]);
 		}
 
+		if ($projectPage->template->hasField('main_navigation') && count($projectPage->main_navigation) > 0) {
+			$output['main_navigation'] = [];
+
+			foreach ($projectPage->main_navigation as $navItem) {
+				$item = SELF::getNavItemOutput($navItem);
+
+				if (!empty($item)) {
+					$output['main_navigation'][] = $item;
+				}
+			}
+		}
+
 		if (!empty($output['hash'])) {
 			unset($output['hash']);
 		}
@@ -268,5 +280,30 @@ class ProjectService extends TwackComponent {
 		$l = (int)round(255.0 * $l);
 
 		return (object) ['hue' => $h, 'saturation' => $s, 'lightness' => $l];
+	}
+
+	private static function getNavItemOutput($navItem) {
+		$item = [
+			'id' => $navItem->id,
+			'title' => $navItem->title,
+		];
+
+		if ($navItem->type === 'page_reference') {
+			if ($navItem->template->hasField('page_reference') && $navItem->page_reference->id) {
+				if (!$navItem->page_reference->viewable()) {
+					return null;
+				}
+
+				$item['page'] = AppApi::getAjaxOf($navItem->page_reference);
+			}
+
+			if ($navItem->template->hasField('section_name') && $navItem->section_name) {
+				$item['section'] = $navItem->section_name;
+			}
+		} elseif ($navItem->type === 'link') {
+			$item['link'] = $navItem->link;
+		}
+
+		return $item;
 	}
 }
