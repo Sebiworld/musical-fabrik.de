@@ -9,6 +9,7 @@ require_once __DIR__ . '/GeneralApi.class.php';
 require_once __DIR__ . '/ConfigApi.class.php';
 require_once __DIR__ . '/ProjectApi.class.php';
 require_once __DIR__ . '/ProjectRolesApi.class.php';
+require_once __DIR__ . '/PageListApi.class.php';
 
 $routes = [
 	'auth' => [
@@ -119,6 +120,15 @@ $routes = [
 		['GET', '', ProjectApi::class, 'getProjects'],
 		['OPTIONS', '{id:\d+}', ['GET']],
 		['GET', '{id:\d+}', ProjectApi::class, 'getProjectDetail']
+	],
+
+	'page-list' => [
+		'items' => [
+			['OPTIONS', '', ['GET'], [], []],
+			['GET', '', PageListApi::class, 'getPageListItems'],
+			['OPTIONS', '{id:\d+}', ['GET']],
+			['GET', '{id:\d+}', PageListApi::class, 'getPageListItems']
+		],
 	],
 
 	'project-roles' => [
