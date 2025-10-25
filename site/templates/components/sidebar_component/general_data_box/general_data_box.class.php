@@ -83,7 +83,7 @@ class GeneralDataBox extends TwackComponent {
 						$projectRole->title,
 						'',
 						'',
-						$projectRole->url,
+						AppApi::getUrlRelativeToRoot($projectRole->url),
 						$projectRole->title,
 						1
 					);

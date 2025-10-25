@@ -213,7 +213,7 @@ class SectionPagesGrid extends TwackComponent {
 
 		// 		if ($itemOutput['has_detailsview']) {
 		// 			$item['btn_text'] = $page->btn_text;
-		// 			$item['url'] = $page->url;
+		// 			$item['url'] = AppApi::getUrlRelativeToRoot($page->url);
 		// 			$item['template'] = wire('twack')->getAjaxOf($page->template);
 		// 		}
 		// 		$output['pages'][] = $itemOutput;

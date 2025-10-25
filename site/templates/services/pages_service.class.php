@@ -90,14 +90,20 @@ class PagesService extends TwackComponent {
 			$sortSelector[] = ['start', 0];
 		}
 
-		if (isset($args['limit']) && $args['limit'] >= 0) {
+		if (isset($args['limit']) && $args['limit'] > 0) {
 			$sortSelector[]                  = ['limit', '=', $args['limit'], 'int'];
 			$output->lastElementIndex    = $output->lastElementIndex + intval($args['limit']);
 		} elseif (!isset($args['limit'])) {
 			$sortSelector[]                  = ['limit', 12];
 			$output->lastElementIndex    = $output->lastElementIndex + 12;
+		} elseif(isset($args['limit']) && $args['limit'] == 0) {
+			// No limit
+			$output->lastElementIndex = $results->count - 1;
+			$output->items = [];
+			return $output;
 		}
 
+		// Apply limit and offset:
 		$results = $results->find($sortSelector);
 
 		// Are there any more posts that can be downloaded?
@@ -116,8 +122,18 @@ class PagesService extends TwackComponent {
 		return $output;
 	}
 
-	public function getAjax($ajaxArgs = []) {
+	public function getAjax($ajaxArgs = [], $basePage = false) {
 		$ajaxOutput = [];
+
+		$projectPage = $this->projectPage;
+		if ($basePage instanceof Page && $basePage->id) {
+			$projectPage = $this->getService('ProjectService')->getProjectPageWithFallback($basePage);
+		}
+
+		if ($projectPage instanceof Page && $projectPage->id && $this->getService('ProjectService')->isProjectPage($projectPage)) {
+			// If project page: Include only sub-pages of the project
+			$selector[] = ['has_parent', $projectPage->id];
+		}
 
 		$args = wire('input')->post('args');
 		if (!is_array($args)) {
@@ -134,7 +150,8 @@ class PagesService extends TwackComponent {
 			$args['query'] = wire('input')->get('q');
 		}
 
-		if (wire('input')->get('limit')) {
+		$limit = wire('input')->get('limit');
+		if (is_numeric($limit) && $limit >= 0) {
 			$args['limit'] = wire('input')->get('limit');
 		}
 
@@ -149,21 +166,45 @@ class PagesService extends TwackComponent {
 			$selector = $ajaxArgs['selector'];
 		}
 
+		$templates = wire('input')->get('templates');
+
+		if(is_string($templates)){
+			$templates = explode(',', $templates);
+		}
+
+		if(is_array($templates) && count($templates) > 0){
+			$templates = array_intersect($templates, ['article', 'gallery', 'event']);
+		}
+
+		if(is_array($templates) && count($templates) > 0){
+			$selector[] = ['template', $templates];
+		}else{
+			return $ajaxOutput; // No valid templates selected
+		}
+
 		$args['charLimit']                       = 150;
-		$result                                  = $this->getResults($args, $selector);
+		$result                                  = $this->getResults($args, $selector, $basePage);
 		$ajaxOutput['totalNumber']               = $result->totalNumber;
 		$ajaxOutput['moreAvailable']             = $result->moreAvailable;
 		$ajaxOutput['lastElementIndex']          = $result->lastElementIndex;
 
 		// Deliver HTML card for each post:
-		$ajaxOutput['items'] = [];
-		foreach ($result->items as $item) {
-			$component = $this->addComponent('PageCard', ['directory' => '', 'page' => $item]);
-			if ($component instanceof TwackNullComponent) {
-				continue;
-			}
+		if($ajaxArgs['include_items'] !== false){
+			$ajaxOutput['items'] = [];
 
-			$ajaxOutput['items'][] = $component->getAjax($ajaxArgs);
+			// TODO Look for GET param hashes and only deliver new or changed items
+
+			foreach ($result->items as $item) {
+				$component = $this->addComponent('PageCard', ['directory' => '', 'page' => $item]);
+				if ($component instanceof TwackNullComponent) {
+					continue;
+				}
+
+				$componentOutput = $component->getAjax($ajaxArgs);
+				$componentOutput['hash'] = md5(json_encode($componentOutput));
+
+				$ajaxOutput['items'][] = $componentOutput;
+			}
 		}
 
 		return $ajaxOutput;

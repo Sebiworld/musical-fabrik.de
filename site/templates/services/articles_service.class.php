@@ -38,6 +38,6 @@ class ArticlesService extends TwackComponent {
 	}
 
 	public function getAjax($ajaxArgs = []) {
-		return $this->getService('PagesService')->getAjax(['selector' => [['template', 'article']]]);
+		return $this->getService('PagesService')->getAjax(array_merge(['selector' => [['template', 'article']]], $ajaxArgs));
 	}
 }

@@ -16,6 +16,7 @@ class ArticlesTiles extends TwackComponent {
     $this->lastElementIndex = $articles->lastElementIndex;
     $this->totalNumber = $articles->totalNumber;
     $articlesPages = $articles->items;
+    $this->includeItems = isset($args['include_items']) ? $args['include_items'] : true;
 
     $parameters = [];
     if (!empty($args['cardClasses'])) {
@@ -27,7 +28,7 @@ class ArticlesTiles extends TwackComponent {
     }
 
     $this->articlesPage = $this->articlesService->getArticlesPage();
-    $this->requestUrl = '/api/page' . $this->articlesPage->url;
+    $this->requestUrl = '/api/page' . AppApi::getUrlRelativeToRoot($this->articlesPage->url);
 
     $this->addScript('ajaxmasonry.js', [
       'path' => wire('config')->urls->templates . 'assets/js/',
@@ -40,6 +41,6 @@ class ArticlesTiles extends TwackComponent {
   }
 
   public function getAjax($ajaxArgs = []) {
-    return $this->articlesService->getAjax($ajaxArgs);
+    return $this->articlesService->getAjax(array_merge($ajaxArgs, ['include_items' => $this->includeItems]));
   }
 }

@@ -37,7 +37,7 @@ class FooterComponent extends TwackComponent {
 				if ($navItem->type === 'page_reference') {
 					$navItem->link = '';
 					if ($navItem->template->hasField('page_reference') && $navItem->page_reference->id) {
-						$navItem->link .= $navItem->page_reference->url;
+						$navItem->link .= AppApi::getUrlRelativeToRoot($navItem->page_reference->url);
 					}
 					if ($navItem->template->hasField('section_name') && $navItem->section_name) {
 						$navItem->link .= '#' . $navItem->section_name;

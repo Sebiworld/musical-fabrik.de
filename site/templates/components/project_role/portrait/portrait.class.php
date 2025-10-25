@@ -147,8 +147,8 @@ class Portrait extends TwackComponent {
 		$output = [
 			'id' => $this->page->id,
 			'name' => $this->page->name,
-			'url' => $this->page->url,
-			'httpUrl' => $this->page->httpUrl,
+			'url' => AppApi::getUrlRelativeToRoot($this->page->url),
+			'httpUrl' => AppApi::getHttpUrlRelativeToRoot($this->page->httpUrl),
 			'first_name' => $this->page->first_name ?: '',
 			'last_name' => $this->page->last_name ?: '',
 			'title' => $this->page->title,

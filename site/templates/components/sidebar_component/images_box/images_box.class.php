@@ -45,7 +45,7 @@ class ImagesBox extends TwackComponent {
 		];
 
 		if ($this->galleriesPage instanceof Page && $this->galleriesPage->id && $this->galleriesPage->viewable()) {
-			$output['galleries_page_url'] = $this->galleriesPage->url;
+			$output['galleries_page_url'] = AppApi::getUrlRelativeToRoot($this->galleriesPage->url);
 		}
 
 		if ($this->childComponents) {

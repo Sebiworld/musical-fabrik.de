@@ -25,7 +25,7 @@ class HeaderComponent extends TwackComponent {
 						if (!$navItem->page_reference->viewable()) {
 							continue;
 						}
-						$navItem->link .= $navItem->page_reference->url;
+						$navItem->link .= AppApi::getUrlRelativeToRoot($navItem->page_reference->url);
 
 						if ($navItem->page_reference->id == $this->page->id) {
 							$navItem->active = true;

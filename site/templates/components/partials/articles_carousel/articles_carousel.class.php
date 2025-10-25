@@ -49,7 +49,8 @@ class ArticlesCarousel extends TwackComponent {
 
 	public function getAjax($ajaxArgs = []) {
 		$output = [
-			'items' => []
+			'items' => [],
+			'articles_page_url' => $this->articlesPage ? AppApi::getUrlRelativeToRoot($this->articlesPage->url) : null,
 		];
 
 		if ($this->childComponents) {

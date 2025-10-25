@@ -171,21 +171,21 @@ class EventsBox extends TwackComponent {
 					return [
 						'id' => $item->id,
 						'title' => $item->title,
-						'url' => $item->url
+						'url' => AppApi::getUrlRelativeToRoot($item->url)
 					];
 				}, $performance->seasons->getArray()),
 				'casts'       => array_map(function ($item) {
 					return [
 						'id' => $item->id,
 						'title' => $item->title,
-						'url' => $item->url
+						'url' => AppApi::getUrlRelativeToRoot($item->url)
 					];
 				}, $performance->casts_obj),
 				'categories' => array_map(function ($item) {
 					return [
 						'id' => $item->id,
 						'title' => $item->title,
-						'url' => $item->url
+						'url' => AppApi::getUrlRelativeToRoot($item->url)
 					];
 				}, $performance->categories->getArray()),
 			];
