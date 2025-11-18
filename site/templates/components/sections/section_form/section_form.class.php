@@ -37,6 +37,8 @@ class SectionForm extends TwackComponent {
 				'parameters' => ['section' => true]
 			]);
 		}
+
+		$this->addComponent('Alerts', ['directory' => 'partials', 'name' => 'alerts', 'useField' => 'alerts']);
 	}
 
 	public function getAjax($ajaxArgs = []) {
@@ -46,6 +48,7 @@ class SectionForm extends TwackComponent {
 			'section_name' => $this->page->section_name,
 			'title' => $this->title,
 			'hide_title' => !!$this->page->hide_title || empty($this->page->title),
+			'classes' => $this->page->classes,
 			'intro' => $this->page->intro,
 			'form' => $this->form->getAjax($ajaxArgs),
 			'outro' => $this->page->freetext,
@@ -66,6 +69,11 @@ class SectionForm extends TwackComponent {
 				}
 				$output = array_merge($output, $ajax);
 			}
+		}
+
+		$alertsComponent = $this->getComponent('alerts');
+		if ($alertsComponent) {
+				$output['alerts'] = $alertsComponent->getAjax();
 		}
 
 		return $output;

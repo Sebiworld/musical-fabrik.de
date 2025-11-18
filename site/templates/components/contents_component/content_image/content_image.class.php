@@ -18,7 +18,7 @@ class ContentImage extends TwackComponent {
 		];
 
 		if ($this->image instanceof Pageimage) {
-			$output['caption'] = $this->page->image->caption;
+			$output['caption'] = AppApi::replaceRootLinksInText($this->page->image->caption);
 		}
 
 		return $output;

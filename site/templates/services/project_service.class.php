@@ -144,6 +144,11 @@ class ProjectService extends TwackComponent {
 			}
 		}
 
+		$alertsComponent = $this->addComponent('Alerts', ['directory' => 'partials', 'useField' => 'global_alerts', 'page' => $page]);
+		if (!($alertsComponent instanceof TwackNullComponent)) {
+			$output['alerts'] = $alertsComponent->getAjax([]);
+		}
+
 		if (!empty($output['hash'])) {
 			unset($output['hash']);
 		}

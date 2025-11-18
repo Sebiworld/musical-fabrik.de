@@ -28,7 +28,7 @@ class ContentYoutubeVideo extends TwackComponent {
 	public function getAjax($ajaxArgs = []) {
 		$output = [
 			'type'       => 'youtube-video',
-			'id' => $this->page->id,
+			'id' 				 => $this->page->id,
 			'depth'      => $this->page->depth,
 			'title'      => $this->page->title,
 			'hide_title' => $this->page->hide_title,

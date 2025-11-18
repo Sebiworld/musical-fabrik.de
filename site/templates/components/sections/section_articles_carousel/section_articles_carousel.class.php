@@ -24,6 +24,8 @@ class SectionArticlesCarousel extends TwackComponent {
 		if ($this->page->template->hasField('contents')) {
 			$this->addComponent('ContentsComponent', ['directory' => '']);
 		}
+
+		$this->addComponent('Alerts', ['directory' => 'partials', 'name' => 'alerts', 'useField' => 'alerts']);
 	}
 
 	public function getAjax($ajaxArgs = []) {
@@ -32,7 +34,8 @@ class SectionArticlesCarousel extends TwackComponent {
 			'id' => $this->page->id,
 			'section_name' => $this->page->section_name,
 			'title' => $this->title,
-			'hide_title' => !!$this->page->hide_title || empty($this->page->title)
+			'hide_title' => !!$this->page->hide_title || empty($this->page->title),
+			'classes' => $this->page->classes,
 		];
 
 		if ($this->getComponent('carousel')) {
@@ -51,6 +54,11 @@ class SectionArticlesCarousel extends TwackComponent {
 				}
 				$output = array_merge($output, $ajax);
 			}
+		}
+
+		$alertsComponent = $this->getComponent('alerts');
+		if (!($alertsComponent instanceof TwackNullComponent)) {
+			$output['alerts'] = $alertsComponent->getAjax();
 		}
 
 		return $output;

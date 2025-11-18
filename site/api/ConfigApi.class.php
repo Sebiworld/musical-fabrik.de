@@ -4,10 +4,20 @@ namespace ProcessWire;
 class ConfigApi {
 	public static function getConfiguration($data) {
 		$output = [
-			'configuration' => [
-				'test' => 42
-			]
 		];
+
+		if(wire('modules')->isInstalled('MfAuth')) {
+			$mfAuthModule = wire('modules')->get('MfAuth');
+
+			$output['activate_login'] = (bool)$mfAuthModule->activate_login;
+			$output['activate_registration'] = (bool)$mfAuthModule->activate_registration;
+		}
+
+		if(!empty(wire('config')->apiConfig) && is_array(wire('config')->apiConfig)) {
+			foreach(wire('config')->apiConfig as $key => $value) {
+				$output[$key] = $value;
+			}
+		}
 
 		$output['hash'] = md5(json_encode($output));
 		if (!empty($data->hash) && $output['hash'] === $data->hash) {

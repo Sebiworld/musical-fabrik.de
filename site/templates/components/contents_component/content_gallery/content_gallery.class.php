@@ -80,7 +80,7 @@ class ContentGallery extends TwackComponent {
 			'depth' => $this->page->depth,
 			'title' => $this->title,
 			'hide_title' => $this->page->hide_title,
-			'text' => $this->description,
+			'text' => AppApi::replaceRootLinksInText($this->description),
 			'classes' => $this->page->classes,
 			'images' => $this->getAjaxOf($this->images),
 			'gallery_type' => $this->type

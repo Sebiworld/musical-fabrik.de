@@ -28,12 +28,15 @@ class SectionCustomHero extends TwackComponent {
 			'path'     => wire('config')->urls->templates . 'assets/js/',
 			'absolute' => true
 		]);
+
+		$this->addComponent('Alerts', ['directory' => 'partials', 'name' => 'alerts', 'useField' => 'alerts']);
 	}
 
 	public function getAjax($ajaxArgs = []) {
 		$output = [
 			'id' => $this->page->id,
 			'type' => 'hero',
+			'classes' => $this->page->classes,
 			// 'section_name' => $this->page->section_name,
 			// 'hide_title' => !!$this->page->hide_title || empty($this->page->title),
 			// 'background_image' => wire('twack')->getAjaxOf($this->page->background_image),
@@ -41,6 +44,11 @@ class SectionCustomHero extends TwackComponent {
 			// 'contents' => $this->contents->getAjax($ajaxArgs),
 			// 'domain_alternatives' => wire('twack')->getAjaxOf($this->page->domain_alternatives),
 		];
+
+		$alertsComponent = $this->getComponent('alerts');
+		if ($alertsComponent) {
+			$output['alerts'] = $alertsComponent->getAjax();
+		}
 
 		return $output;
 	}

@@ -61,7 +61,10 @@ class EventsBox extends TwackComponent {
 
 				$tmp             = new \StdClass();
 				$tmp->id = $period->id;
+				$tmp->title = $period->title;
+				$tmp->location_id = !empty($period->location->id) ? $period->location->id : null;
 				$tmp->timestamp  = $period->getUnformatted($args['useField']);
+				$tmp->timestamp_until  = $period->template->hasField('datetime_until') ? $period->getUnformatted('datetime_until') : '';
 				$tmp->date       = date('d.m.Y', $period->getUnformatted($args['useField']));
 				$tmp->time       = date('H:i', $period->getUnformatted($args['useField']));
 				$tmp->weekday    = $days[date('w', $period->getUnformatted($args['useField']))];
@@ -69,8 +72,22 @@ class EventsBox extends TwackComponent {
 				$tmp->cast       = '';
 				$tmp->casts_obj = [];
 				$tmp->categories = $period->event_categories;
+				$tmp->ticket_url = $period->template->hasField('link') ? $period->link : '';
 
-				if ($period->template->hasField('cast') && $period->cast instanceof Page && $period->cast->id) {
+				if($period->template->hasField('casts') && $period->casts->count) {
+					foreach ($period->casts as $castPage) {
+						if(!($castPage instanceof Page) || !$castPage->id) {
+							continue;
+						}
+
+						if(!empty($tmp->cast)) {
+							$tmp->cast .= ', ';
+						}
+
+						$tmp->cast .= $castPage->title;
+						$tmp->casts_obj[] = $castPage;
+					}
+				} else if ($period->template->hasField('cast') && $period->cast instanceof Page && $period->cast->id) {
 					$tmp->cast .= $period->cast->title;
 					$tmp->casts_obj[] = $period->cast;
 				}
@@ -157,16 +174,12 @@ class EventsBox extends TwackComponent {
 				continue;
 			}
 
-			// var_dump(array_map(function($v) {
-			// 	return [
-			// 		'id' => $v->id
-			// 	];
-			// }, $performance->seasons->getArray()));
-			// die();
-
 			$output['performances'][]=[
 				'id' => $performance->id,
+				'title' => $performance->title,
+				'location_id' => $performance->location_id,
 				'timestamp'  => $performance->timestamp,
+				'timestamp_until'  => $performance->timestamp_until,
 				'seasons'    => array_map(function ($item) {
 					return [
 						'id' => $item->id,
@@ -188,6 +201,7 @@ class EventsBox extends TwackComponent {
 						'url' => AppApi::getUrlRelativeToRoot($item->url)
 					];
 				}, $performance->categories->getArray()),
+				'ticket_url' => $performance->ticket_url,
 			];
 		}
 

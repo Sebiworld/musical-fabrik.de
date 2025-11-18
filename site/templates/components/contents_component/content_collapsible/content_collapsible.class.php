@@ -63,7 +63,7 @@ class ContentCollapsible extends TwackComponent {
 			$output['items'][] = [
 				'id' => $tab->id,
 				'title' => $tab->title,
-				'content' => $tab->content
+				'content' => AppApi::replaceRootLinksInText($tab->content)
 			];
 		}
 

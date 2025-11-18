@@ -32,6 +32,8 @@ class SectionPartnersAndSponsors extends TwackComponent {
 		if ($this->page->template->hasField('sponsors')) {
 			$this->sponsors = $this->page->sponsors->sort('random');
 		}
+
+		$this->addComponent('Alerts', ['directory' => 'partials', 'name' => 'alerts', 'useField' => 'alerts']);
 	}
 
 	public function getAjax($ajaxArgs = []) {
@@ -41,6 +43,7 @@ class SectionPartnersAndSponsors extends TwackComponent {
 			'section_name' => $this->page->section_name,
 			'title' => $this->title,
 			'hide_title' => !!$this->page->hide_title || empty($this->page->title),
+			'classes' => $this->page->classes,
 			'partners' => [],
 			'sponsors' => [],
 		];
@@ -72,6 +75,11 @@ class SectionPartnersAndSponsors extends TwackComponent {
 				];
 				$output['sponsors'][] = $itemOutput;
 			}
+		}
+
+		$alertsComponent = $this->getComponent('alerts');
+		if ($alertsComponent) {
+				$output['alerts'] = $alertsComponent->getAjax();
 		}
 
 		return $output;

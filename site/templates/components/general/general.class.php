@@ -108,6 +108,8 @@ class General extends TwackComponent {
 		}
 
 		// $this->setSeoTags();
+
+		$this->addComponent('Alerts', ['directory' => 'partials', 'name' => 'alerts', 'useField' => 'alerts']);
 	}
 
 	protected function setSeoTags() {
@@ -279,6 +281,11 @@ class General extends TwackComponent {
 		$projectPage = $this->getService('ProjectService')->getProjectPage($this->page);
 		if ($projectPage instanceof Page && !!$projectPage->id) {
 			$output['project_id'] = $projectPage->id;
+		}
+
+		$alertsComponent = $this->getComponent('alerts');
+		if ($alertsComponent) {
+			$output['alerts'] = $alertsComponent->getAjax();
 		}
 
 		$output['language'] = wire('user')->language->name;

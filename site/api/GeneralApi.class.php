@@ -6,8 +6,13 @@ class GeneralApi {
 		$output = [
 			'id' => wire('user')->id,
 			'name' => wire('user')->name,
+			'contact_email' => wire('user')->contact_email,
 			'isLoggedIn' => wire('user')->isLoggedIn(),
+		  'first_name' => wire('user')->first_name,
+			'last_name' => wire('user')->last_name,
 			'nickname' => wire('user')->short_description,
+			'birthdate' => wire('user')->birthdate,
+			'description' => wire('user')->description_text,
 			'roles' => [],
 			'permissions' => []
 		];
@@ -20,7 +25,8 @@ class GeneralApi {
 				'id' => $item->id,
 				'name' => $item->name,
 				'title' => $item->title,
-				'description' => $item->short_description
+				'description' => $item->short_description,
+				'project_id' => !empty($item->project->id) ? $item->project->id : null
 			];
 		}
 

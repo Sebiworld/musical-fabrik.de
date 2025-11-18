@@ -63,6 +63,8 @@ class SectionPagesGrid extends TwackComponent {
 		foreach ($this->pages as $page) {
 			$this->addComponent('PageCard', ['directory' => '', 'page' => $page, 'parameters' => $parameters, 'list' => 'cards']);
 		}
+
+		$this->addComponent('Alerts', ['directory' => 'partials', 'name' => 'alerts', 'useField' => 'alerts']);
 	}
 
 	protected function determineGridClasses() {
@@ -167,6 +169,7 @@ class SectionPagesGrid extends TwackComponent {
 			'section_name' => $this->page->section_name,
 			'title' => $this->title,
 			'hide_title' => !!$this->page->hide_title || empty($this->page->title),
+			'classes' => $this->page->classes,
 			'card_overlay' => wire('twack')->getAjaxOf($this->page->card_overlay),
 			'pages' => [],
 			'image_ratio' => $this->imageRatio,
@@ -219,6 +222,11 @@ class SectionPagesGrid extends TwackComponent {
 		// 		$output['pages'][] = $itemOutput;
 		// 	}
 		// }
+
+		$alertsComponent = $this->getComponent('alerts');
+		if ($alertsComponent) {
+				$output['alerts'] = $alertsComponent->getAjax();
+		}
 
 		return $output;
 	}

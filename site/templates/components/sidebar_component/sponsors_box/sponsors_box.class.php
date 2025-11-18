@@ -55,7 +55,7 @@ class SponsorsBox extends TwackComponent {
 			return [
 				'id' => $v->id,
 				'title' => $v->title,
-				'main_image' => AppApi::getAjaxOf($v->main_image)
+				// 'main_image' => AppApi::getAjaxOf($v->main_image)
 			];
 		}, $this->sponsorObjects);
 	}

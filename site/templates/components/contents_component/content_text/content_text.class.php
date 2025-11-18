@@ -13,7 +13,7 @@ class ContentText extends TwackComponent {
 			'depth' => $this->page->depth,
 			'title' => $this->page->title,
 			'hide_title' => $this->page->hide_title,
-			'text' => $this->page->text,
+			'text' => AppApi::replaceRootLinksInText($this->page->text),
 			'classes' => $this->page->classes
 		];
 

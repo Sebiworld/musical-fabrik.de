@@ -42,7 +42,7 @@ class ContentAudiofiles extends TwackComponent {
 			'depth' => $this->page->depth,
 			'title' => $this->title,
 			'hide_title' => $this->page->hide_title,
-			'description' => $this->description,
+			'description' => AppApi::replaceRootLinksInText($this->description),
 			'classes' => $this->page->classes,
 			'files' => $this->getAjaxOf($this->audiofiles)
 		];
