@@ -6,15 +6,43 @@ class ConfigApi {
 		$output = [
 		];
 
-		if(wire('modules')->isInstalled('MfAuth')) {
+		$configPage = wire('pages')->get('template.name=configuration');
+		if ($configPage instanceof Page && $configPage->id) {
+			if ($configPage->template->hasField('short_text')) {
+				$output['site_name'] = $configPage->short_text;
+				$output['author'] = $configPage->short_text;
+			}
+
+			if ($configPage->template->hasField('main_image')) {
+				$output['main_image'] = AppApi::getAjaxOf($configPage->main_image);
+			}
+
+			if ($configPage->template->hasField('logo_square')) {
+				$output['logo_square'] = AppApi::getAjaxOf($configPage->logo_square);
+			}
+
+			if ($configPage->template->hasField('images')) {
+				$output['placeholder_images'] = AppApi::getAjaxOf($configPage->images);
+			}
+
+			if ($configPage->template->hasField('seo_title')) {
+				$output['seo_title'] = $configPage->seo_title;
+			}
+
+			if ($configPage->template->hasField('seo_description')) {
+				$output['seo_description'] = $configPage->seo_description;
+			}
+		}
+
+		if (wire('modules')->isInstalled('MfAuth')) {
 			$mfAuthModule = wire('modules')->get('MfAuth');
 
 			$output['activate_login'] = (bool)$mfAuthModule->activate_login;
 			$output['activate_registration'] = (bool)$mfAuthModule->activate_registration;
 		}
 
-		if(!empty(wire('config')->apiConfig) && is_array(wire('config')->apiConfig)) {
-			foreach(wire('config')->apiConfig as $key => $value) {
+		if (!empty(wire('config')->apiConfig) && is_array(wire('config')->apiConfig)) {
+			foreach (wire('config')->apiConfig as $key => $value) {
 				$output[$key] = $value;
 			}
 		}

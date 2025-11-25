@@ -237,6 +237,25 @@ class General extends TwackComponent {
 		}
 	}
 
+	private function getSeoOutput() {
+		$output = [];
+
+		// SEO
+		if ($this->page->hasField('seo_title') && !empty($this->page->seo_title)) {
+			$output['title'] = $this->page->seo_title;
+		}
+
+		if ($this->page->hasField('seo_description') && !empty($this->page->seo_description)) {
+			$output['description'] = $this->page->seo_description;
+		}
+
+		if ($this->page->hasField('seo_canonical_url') && !empty($this->page->seo_canonical_url)) {
+			$output['canonical'] = $this->page->seo_canonical_url;
+		}
+
+		return $output;
+	}
+
 	public function getAjax($ajaxArgs = []) {
 		if (!empty($this->wire('input')->get->text('showOnly'))) {
 			$ajaxArgs['showOnly'] = $this->wire('input')->text('showOnly');
@@ -289,6 +308,8 @@ class General extends TwackComponent {
 		}
 
 		$output['language'] = wire('user')->language->name;
+
+		$output['seo'] = $this->getSeoOutput();
 
 		return $output;
 	}

@@ -53,9 +53,25 @@ class EventsService extends TwackComponent {
 
 		if ($projectPage instanceof Page && $projectPage->id) {
 			// If project page: Include all sub-dates of the project
-			// Search all global dates:
-			$projectsContainer = wire('pages')->get('template.name=projects_container');
-			$eventsSelectorParts[] = "(has_parent!={$projectsContainer->id}), (has_parent={$projectPage->id})";
+
+			if ($args['includeGlobalDates'] ?? false) {
+				// Also include global dates:
+				// + Search all global dates:
+				$projectContainerIds = [];
+				$projectsContainers = wire('pages')->find('template.name=projects_container');
+
+				foreach ($projectsContainers as $projectsContainer) {
+					if (empty($projectsContainer->id)) {
+						continue;
+					}
+					$projectContainerIds[] = $projectsContainer->id;
+				}
+				$projectContainerIdsString = implode('|', $projectContainerIds);
+
+				$eventsSelectorParts[] = "(has_parent!={$projectContainerIdsString}), (has_parent={$projectPage->id})";
+			} else {
+				$eventsSelectorParts[] = "has_parent={$projectPage->id}";
+			}
 		}
 
 		// Filtering by tags:
