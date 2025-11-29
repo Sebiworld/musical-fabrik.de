@@ -51,7 +51,7 @@ abstract class SeoDataBase extends WireData implements SeoDataInterface
         $value = $this->renderValue($name, $value);
 
         // Allow hooks to transform any rendered value.
-        return $this->seoMaestro->renderSeoDataValue($this->group, $name, $value);
+        return $this->seoMaestroEnhanced->renderSeoDataValue($this->group, $name, $value);
     }
 
     /**

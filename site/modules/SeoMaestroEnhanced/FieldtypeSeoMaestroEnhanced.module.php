@@ -78,7 +78,7 @@ class FieldtypeSeoMaestroEnhanced extends Fieldtype implements Module
      */
     public function getInputfield(Page $page, Field $field)
     {
-        $inputfield = $this->wire('modules')->get('InputfieldSeoMaestro');
+        $inputfield = $this->wire('modules')->get('InputfieldSeoMaestroEnhanced');
         $inputfield->setField($field);
 
         return $inputfield;

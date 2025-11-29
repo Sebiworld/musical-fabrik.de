@@ -132,7 +132,7 @@ class SitemapManager extends WireData
     /**
      * @return array
      */
-    private function getTemplatesWithSeoMaestroField()
+    private function getTemplatesWithSeoMaestroEnhancedField()
     {
         $templates = [];
         foreach ($this->wire('templates') as $template) {

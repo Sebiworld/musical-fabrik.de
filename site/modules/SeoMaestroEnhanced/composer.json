@@ -1,6 +1,6 @@
 {
-  "name": "wanze/seo-maestro",
-  "description": "Seo Maestro allows to easily manage your page's meta data and sitemap.",
+  "name": "wanze/seo-maestro-enhanced",
+  "description": "Seo Maestro Enhanced allows to easily manage your page's meta data and sitemap.",
   "type": "processwire-module",
   "extra": {
     "installer-name": "SeoMaestroEnhanced"
