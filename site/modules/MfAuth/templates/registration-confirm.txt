@@ -1,0 +1,17 @@
+Hallo und herzlich willkommen in unserer Musical-Fabrik App!
+
+Um deine E-Mail Adresse zu bestätigen kopiere bitte die folgende URL in die Adresszeile deines Browsers:
+{{url}}
+
+Schön, dass du dabei bist!
+
+Viele Grüße,
+dein Team der Musical-Fabrik
+
+--
+
+MUSICAL-FABRIK e.V.
+Bosfelder Weg 81
+33378 Rheda-Wiedenbrück
+
+info@musical-fabrik.de

@@ -84,6 +84,8 @@ class General extends TwackComponent {
 		$this->addComponent('HeaderComponent', ['globalName' => 'header']);
 		$this->addComponent('FooterComponent', ['globalName' => 'footer']);
 		$this->addComponent('SidebarComponent', ['globalName' => 'sidebar', 'directory' => '']);
+		$this->breadcrumbs = $this->addComponent('BreadcrumbsComponent', ['name' => 'breadcrumbs', 'directory' => 'partials']);
+
 
 		$this->addComponent('FormsComponent', ['globalName' => 'forms', 'directory' => '']);
 
@@ -305,6 +307,10 @@ class General extends TwackComponent {
 		$alertsComponent = $this->getComponent('alerts');
 		if ($alertsComponent) {
 			$output['alerts'] = $alertsComponent->getAjax();
+		}
+
+		if ($this->breadcrumbs && $this->breadcrumbs instanceof TwackComponent) {
+			$output = array_merge($output, $this->breadcrumbs->getAjax($ajaxArgs));
 		}
 
 		$output['language'] = wire('user')->language->name;

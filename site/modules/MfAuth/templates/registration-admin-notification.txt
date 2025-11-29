@@ -1,0 +1,14 @@
+Hurra!
+
+Ein neuer User hat sich für die Musical-Fabrik App registriert:
+{{first_name}} {{last_name}} ({{nickname}})
+{{email}}
+
+Diese Angaben wurden zu den Rollen gemacht:
+{{roles_text}}
+
+Hier kannst du den Nutzer direkt bearbeiten:
+{{edit_url}}
+
+Gruß,
+der Musical-Fabrik Roboter

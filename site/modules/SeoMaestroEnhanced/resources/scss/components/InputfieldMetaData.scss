@@ -1,0 +1,28 @@
+.seomaestroenhanced-inputfield-metadata {
+
+    > .InputfieldContent > .Inputfields {
+        padding-top: 1rem;
+    }
+
+    .seomaestroenhanced-inputfield-embed {
+        outline: 0;
+        margin-top: 0 !important;
+
+        > .InputfieldHeader,
+        > .InputfieldContent {
+            border: 0 !important;
+            padding-top: 0 !important;
+        }
+
+        > .InputfieldHeader {
+            display: none; // Needed to fix https://github.com/wanze/SeoMaestro/issues/9
+        }
+    }
+
+    .seomaestroenhanced-opengraph-image {
+        display: block;
+        width: 150px;
+        height: auto;
+        margin-bottom: 1em;
+    }
+}
