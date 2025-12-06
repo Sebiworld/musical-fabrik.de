@@ -13,7 +13,7 @@ A ProcessWire module helping you to manage SEO related tasks like a boss! 😎�
 * Map existing fields to meta data, reducing the need to duplicate content for content editors.
 * Live preview for content editors how the entered meta data appears on Google and Facebook.
 
-Here is an example of all rendered meta data you will get from a SeoMaestro field:
+Here is an example of all rendered meta data you will get from a SeoMaestroEnhanced field:
 
 ```html
 <title>Sed dictum eros quis massa semper rutrum. | acme.com</title>
@@ -89,16 +89,16 @@ The default name reduces the risk to accidentally overwrite an already existing 
 The meta data and the sitemap configuration of each page is managed with the included Fieldtype.
 Go ahead and create a new field of type *Seo Maestro*, a good name for the field is `seo` 😄.
 
-* Configure default meta data under _Details > Default Values_. For text based metatags, you may enter strings or placeholders to 
-map existing fields. For example, if your template contains a `lead_text` field which should be used for the 
-`description` meta tag by default, use the placeholder `{lead_text}`. It is also possible to combine strings and placeholders. 
+* Configure default meta data under _Details > Default Values_. For text based metatags, you may enter strings or placeholders to
+map existing fields. For example, if your template contains a `lead_text` field which should be used for the
+`description` meta tag by default, use the placeholder `{lead_text}`. It is also possible to combine strings and placeholders.
 The following example appends the company name after a page's title: `{title} | acme.com`.
 * The opengraph image tag supports placeholders as well: Simply reference an image field. If the field is holding multiple images, the first
-one is used. For example, `{images}` would pick the first image from the `images` field. 
+one is used. For example, `{images}` would pick the first image from the `images` field.
 * Each page inherits meta tag values and sitemap configuration by default, but may override them individually when editing a page.
 * Under the _Input_ tab, configure which meta data is displayed to the content editor when editing pages. Exclude any meta data you do not need
 or which should not be changed by content editors. You can also exclude meta groups, e.g. exclude the _Opengraph_ section entirely.
-* The _Webmaster Tools_ section allows you to enter Google and Bing verification codes, which are rendered as meta tags. 
+* The _Webmaster Tools_ section allows you to enter Google and Bing verification codes, which are rendered as meta tags.
 
 > ℹ️ Edit the field in the context of a template to override any of the default data per template.
 
@@ -113,10 +113,10 @@ been handled by ProcessWire.
 * It excludes pages not viewable for the guest user.
 
 Do not forget to [submit the sitemap to Google](https://support.google.com/webmasters/answer/183668?hl=en),
-either in the Search Console or by specifying the path in a `robots.txt` file. 
+either in the Search Console or by specifying the path in a `robots.txt` file.
 
 > ⚠ If your installation has lot of pages and the request takes too long to generate the sitemap, or if you run into
-memory problems, it is better disable the automatic generation. Use the `\SeoMaestro\SitemapManager` class to create
+memory problems, it is better disable the automatic generation. Use the `\SeoMaestroEnhanced\SitemapManager` class to create
 the sitemap on your own, e.g. via CLI script.
 
 ## Meta Data
@@ -236,7 +236,7 @@ Add, remove or modify the rendered metatags of a group.
 
 ```php
 // Remove the description and canonical URL.
-$wire->addHookAfter('SeoMaestro::renderMetatags', function (HookEvent $event) {
+$wire->addHookAfter('SeoMaestroEnhanced::renderMetatags', function (HookEvent $event) {
     $tags = $event->arguments(0);
     $group = $event->arguments(1);
 
@@ -253,12 +253,12 @@ $wire->addHookAfter('SeoMaestro::renderMetatags', function (HookEvent $event) {
 Modify the value of meta data after being rendered.
 
 ```php
-// Add the brand name after the title. 
-$wire->addHookAfter('SeoMaestro::renderSeoDataValue', function (HookEvent $event) {
+// Add the brand name after the title.
+$wire->addHookAfter('SeoMaestroEnhanced::renderSeoDataValue', function (HookEvent $event) {
     $group = $event->arguments(0);
     $name = $event->arguments(1);
     $value = $event->arguments(2);
-    
+
     if ($group === 'meta' && $name === 'title') {
         $event->return = $value . ' | acme.com';
     }
@@ -275,7 +275,7 @@ Specify pages that should never appear in the sitemap, regardless of sitemap set
 is excluded by default.
 
 ```php
-$wire->addHookAfter('SeoMaestro::sitemapAlwaysExclude', function (HookEvent $event) {
+$wire->addHookAfter('SeoMaestroEnhanced::sitemapAlwaysExclude', function (HookEvent $event) {
     $pageArray = $event->arguments(0);
     $pageArray->add($excludedPage);
 });
@@ -292,7 +292,7 @@ $item = (new SitemapItem())
     ->set('changefreq', 'changefreq-custom')
     ->addAlternate('de', '/de/my-custom-url-de');
 
-$wire->addHookAfter('SeoMaestro::sitemapItems', function (HookEvent $event) use ($item) {
+$wire->addHookAfter('SeoMaestroEnhanced::sitemapItems', function (HookEvent $event) use ($item) {
     $event->return = array_merge($event->return, [$item]);
 });
 ```
@@ -301,16 +301,16 @@ $wire->addHookAfter('SeoMaestro::sitemapItems', function (HookEvent $event) use 
 
 The module includes [PHPUnit](https://phpunit.de/) based tests cases, located in the `./tests` directory.
 
-* Make sure that the dev dependencies are installed by running `composer install` in `site/modules/SeoMaestro`.
+* Make sure that the dev dependencies are installed by running `composer install` in `site/modules/SeoMaestroEnhanced`.
 * The tests will create pages, fields and templates. Everything should get cleaned up properly, but you should *never ever* run them
 on a production environment 😉.
 * Some tests expect a multi language setup to exist. To make them pass, use the multi language site profile provided by
-ProcessWire. Check the [.travis.yml](.travis.yml) file for an automated setup.  
+ProcessWire. Check the [.travis.yml](.travis.yml) file for an automated setup.
 
 To run the tests:
 
 ```
-cd site/modules/SeoMaestro && vendor/bin/phpunit --bootstrap tests/bootstrap.php tests/src --colors
-```  
+cd site/modules/SeoMaestroEnhanced && vendor/bin/phpunit --bootstrap tests/bootstrap.php tests/src --colors
+```
 
 

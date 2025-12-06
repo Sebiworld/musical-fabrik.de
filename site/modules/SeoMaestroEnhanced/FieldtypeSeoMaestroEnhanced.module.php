@@ -13,7 +13,7 @@ class FieldtypeSeoMaestroEnhanced extends Fieldtype implements Module
     public static function getModuleInfo()
     {
         return [
-            'title' => 'Seo Maestro 2',
+            'title' => 'Seo Maestro Enhanced Fieldtype',
             'summary' => 'A fieldtype storing various meta tags (meta, opengraph, twitter etc.) and sitemap behaviour for pages.',
             'version' => '1.1.1',
             'author' => 'Stefan Wanzenried (Wanze)',

@@ -42,8 +42,12 @@ class DefaultCard extends TwackComponent {
 			$output['color'] = $this->page->color;
 		}
 
+		if ($this->page->template->hasField('short_description') && $this->page->short_description) {
+			$output['description'] = $this->page->short_description;
+		}
+
 		if ($this->page->template->hasField('info_overlay') && $this->page->info_overlay) {
-			$output['description'] = $this->page->info_overlay;
+			$output['info_overlay'] = $this->page->info_overlay;
 		}
 
 		return $output;
