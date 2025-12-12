@@ -59,6 +59,30 @@ class ContentGallery extends TwackComponent {
 				'absolute' => true
 			]);
 			$this->setView('ContentGalleryGrid');
+		} elseif ($this->page->template->hasField('gallery_type') && $this->page->gallery_type->id === 4) {
+			// Standard: Masonry-View
+			$this->type = 'featured_slider';
+			$this->setView('ContentGalleryMasonry');
+			$this->addScript('masonry.js', [
+				'path'     => wire('config')->urls->templates . 'assets/js/',
+				'absolute' => true
+			]);
+			$this->addScript('legacy/masonry.js', [
+				'path'     => wire('config')->urls->templates . 'assets/js/',
+				'absolute' => true
+			]);
+		} elseif ($this->page->template->hasField('gallery_type') && $this->page->gallery_type->id === 5) {
+			// Standard: Masonry-View
+			$this->type = 'panorama_slider';
+			$this->setView('ContentGalleryMasonry');
+			$this->addScript('masonry.js', [
+				'path'     => wire('config')->urls->templates . 'assets/js/',
+				'absolute' => true
+			]);
+			$this->addScript('legacy/masonry.js', [
+				'path'     => wire('config')->urls->templates . 'assets/js/',
+				'absolute' => true
+			]);
 		} else {
 			// Standard: Masonry-View
 			$this->setView('ContentGalleryMasonry');
