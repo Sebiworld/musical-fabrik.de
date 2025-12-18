@@ -310,6 +310,8 @@ class FormTemplate extends TwackComponent {
 				];
 				throw new FormException($this->_('The request could not be saved.'));
 			}
+
+			$output['request_id'] = $newRequest->id;
 		} catch (WireCSRFException $e) {
 			$output['error']['csrf_error']   = $this->_('This request was apparently forged and therefore aborted.');
 			$output['submission_blocked']    = true;
