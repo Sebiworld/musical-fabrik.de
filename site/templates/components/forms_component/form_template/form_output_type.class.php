@@ -83,9 +83,11 @@ if (!class_exists('Processwire\FormOutputType')) {
 				$output['required'] = true;
 				$output['type'] = 'antispam_code';
 				$output['code'] = $this->replacePlaceholders($page->get($field->name));
+
 			} elseif ($field->type instanceof \FieldtypeRuntimeMarkup) {
 				$output['type'] = 'markup';
-				$output['value'] = $this->replacePlaceholders($page->get($field->name));
+				$output['value'] = AppApi::replaceRootLinksInText($this->replacePlaceholders($page->get($field->name)));
+
 			} elseif ($field->type instanceof FieldtypeText || $field->type instanceof FieldtypeFloat || $field->type instanceof FieldtypeInteger) {
 				if (!empty($currentValue)) {
 					$output['value'] = $currentValue;

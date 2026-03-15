@@ -143,7 +143,7 @@ $routes = [
 		['GET', '', ProjectRolesApi::class, 'getProjectPortraits']
 	],
 
-	'errorTest' => [
+	'test' => [
 		['OPTIONS', '', ['GET'], [], []],
 		['GET', '', GeneralApi::class, 'errorTest']
 	]

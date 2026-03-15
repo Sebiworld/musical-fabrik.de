@@ -55,6 +55,7 @@ class MfAuth extends WireData implements Module {
 
 	public function init() {
 		$module = $this->wire('modules')->get('AppApi');
+
 		$module->registerRoute(
 			'auth',
 			[
