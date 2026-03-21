@@ -1,2 +1,3 @@
 User-agent: *
-Disallow: /suche/
+Disallow: /
+Allow: /sitemap.xml
