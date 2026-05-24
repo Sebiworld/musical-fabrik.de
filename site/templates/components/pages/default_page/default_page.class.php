@@ -34,7 +34,7 @@ class DefaultPage extends TwackComponent {
 		if ($this->page->template->hasField('authors') && $this->page->authors instanceof PageArray) {
 			$authors = [];
 			foreach ($this->page->authors as $autor) {
-				$authors[] = $autor->first_name . ' ' . $autor->surname;
+				$authors[] = $autor->first_name . ' ' . $autor->last_name;
 			}
 			if (count($authors) > 0) {
 				$this->authors = $authors;

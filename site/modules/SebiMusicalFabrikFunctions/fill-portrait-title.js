@@ -8,7 +8,7 @@
 	};
 
 	// Fields from which the title is to be formed:
-	var titleFields = ['first_name', 'surname'];
+	var titleFields = ['first_name', 'last_name'];
 
 	/**
 	* Replaces the contents of the Title field if the first name and/or last name have contents and the Title has not been changed.

@@ -27,7 +27,7 @@ class Alerts extends TwackComponent {
 				$output[] = [
 					'id'		=> $alert->id,
 					'title' => $alert->title,
-					'text'  => $alert->text,
+					'text'  => AppApi::replaceRootLinksInText($alert->text),
 					'color'  => $alert->theme_color->value,
 					'classes'	=> $alert->classes,
 					'icon' => $alert->ionicon,

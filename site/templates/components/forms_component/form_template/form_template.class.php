@@ -289,11 +289,11 @@ class FormTemplate extends TwackComponent {
 			if ($newRequest->first_name) {
 				$name .= $newRequest->first_name;
 			}
-			if ($newRequest->surname) {
+			if ($newRequest->last_name) {
 				if (!empty($name)) {
 					$name .= ' ';
 				}
-				$name .= $newRequest->surname;
+				$name .= $newRequest->last_name;
 			}
 			if (empty($newRequest->subject)) {
 				$newRequest->subject = $this->_('Request');

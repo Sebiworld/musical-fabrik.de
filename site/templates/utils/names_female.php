@@ -161,6 +161,7 @@ $namesFemale = [
 	'jessika',
 	'jill',
 	'joelle',
+	'joëlle',
 	'johanna',
 	'joleen',
 	'josephine',
