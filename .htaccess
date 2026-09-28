@@ -392,6 +392,9 @@ DirectoryIndex index.php index.html index.htm
   # Block access to any software identifying txt, markdown or textile files
   RewriteCond %{REQUEST_URI} (^|/)(COPYRIGHT|INSTALL|README|htaccess)\.(txt|md|textile)$ [NC,OR]
 
+  # Block access to Claude Code instruction files (.claude/ is already covered by the dot-path rule)
+  RewriteCond %{REQUEST_URI} (^|/)CLAUDE[^/]*\.md$ [NC,OR]
+
   # Block potential arbitrary backup files within site directories for things like config
   RewriteCond %{REQUEST_URI} (^|/)(site|site-[^/]+)/(config[^/]*/?|[^/]+\.php.*)$ [NC,OR]
 

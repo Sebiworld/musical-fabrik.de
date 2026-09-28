@@ -46,7 +46,6 @@ yarn.lock
 !/site/modules/FieldtypeProjectRoles
 !/site/modules/PageAccessApplications
 !/site/modules/PageAccessPermissions
-!/site/modules/PageAccessReleasetime
 !/site/modules/SeoMaestroEnhanced
 !/site/modules/MfAuth
 !/site/modules/MfCalendar
@@ -55,3 +54,8 @@ yarn.lock
 /*.html
 /site/templates/entwicklung/external/progressively
 /bin
+
+# Claude Code (never commit)
+CLAUDE*.md
+claude*.md
+.claude/
