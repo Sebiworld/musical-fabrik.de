@@ -69,28 +69,12 @@ class EventsBox extends TwackComponent {
 				$tmp->time       = date('H:i', $period->getUnformatted($args['useField']));
 				$tmp->weekday    = $days[date('w', $period->getUnformatted($args['useField']))];
 				$tmp->seasons    = $event->seasons;
-				$tmp->cast       = '';
-				$tmp->casts_obj = [];
 				$tmp->categories = $period->event_categories;
 				$tmp->ticket_url = $period->template->hasField('link') ? $period->link : '';
-
-				if($period->template->hasField('casts') && $period->casts->count) {
-					foreach ($period->casts as $castPage) {
-						if(!($castPage instanceof Page) || !$castPage->id) {
-							continue;
-						}
-
-						if(!empty($tmp->cast)) {
-							$tmp->cast .= ', ';
-						}
-
-						$tmp->cast .= $castPage->title;
-						$tmp->casts_obj[] = $castPage;
-					}
-				} else if ($period->template->hasField('cast') && $period->cast instanceof Page && $period->cast->id) {
-					$tmp->cast .= $period->cast->title;
-					$tmp->casts_obj[] = $period->cast;
-				}
+				$tmp->casts_obj  = $eventsService->getPerformanceCasts($period);
+				$tmp->cast       = implode(', ', array_map(function ($castPage) {
+					return $castPage->title;
+				}, $tmp->casts_obj));
 
 				$allPerformances[] = $tmp;
 				if ($period->getUnformatted($args['useField']) < time()) {
@@ -142,6 +126,7 @@ class EventsBox extends TwackComponent {
 			});
 		}
 
+		$this->eventsService   = $eventsService;
 		$this->allPerformances = $allPerformances;
 		$this->performances    = $performances;
 		$this->performancesOld = $performancesOld;
@@ -180,27 +165,9 @@ class EventsBox extends TwackComponent {
 				'location_id' => $performance->location_id,
 				'timestamp'  => $performance->timestamp,
 				'timestamp_until'  => $performance->timestamp_until,
-				'seasons'    => array_map(function ($item) {
-					return [
-						'id' => $item->id,
-						'title' => $item->title,
-						'url' => AppApi::getUrlRelativeToRoot($item->url)
-					];
-				}, $performance->seasons->getArray()),
-				'casts'       => array_map(function ($item) {
-					return [
-						'id' => $item->id,
-						'title' => $item->title,
-						'url' => AppApi::getUrlRelativeToRoot($item->url)
-					];
-				}, $performance->casts_obj),
-				'categories' => array_map(function ($item) {
-					return [
-						'id' => $item->id,
-						'title' => $item->title,
-						'url' => AppApi::getUrlRelativeToRoot($item->url)
-					];
-				}, $performance->categories->getArray()),
+				'seasons'    => $this->eventsService->getPageLinksAjax($performance->seasons),
+				'casts'      => $this->eventsService->getPageLinksAjax($performance->casts_obj),
+				'categories' => $this->eventsService->getPageLinksAjax($performance->categories),
 				'ticket_url' => $performance->ticket_url,
 			];
 		}

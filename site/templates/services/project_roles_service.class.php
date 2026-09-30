@@ -456,6 +456,76 @@ class ProjectRolesService extends TwackComponent {
 		return $output;
 	}
 
+	/**
+	 * Reduces the output of getProjectRoles() to the participants of one
+	 * performance. A participant entry stays if it names no casts or one of
+	 * $castIds, and no seasons or one of $seasonIds. An empty $castIds or
+	 * $seasonIds does not filter on that criterion. Roles stay in the tree
+	 * even without entries; portraits and seasons are reduced to the ones
+	 * still referenced, casts to the ones in $castIds.
+	 * @param array $output result of getProjectRoles()
+	 * @param int[] $castIds
+	 * @param int[] $seasonIds
+	 * @return array
+	 */
+	public function filterProjectRoles($output, $castIds = [], $seasonIds = []) {
+		$castIds = array_map('intval', is_array($castIds) ? $castIds : []);
+		$seasonIds = array_map('intval', is_array($seasonIds) ? $seasonIds : []);
+
+		$matches = function ($participant, $key, $allowedIds) {
+			if (empty($allowedIds) || empty($participant[$key])) {
+				return true;
+			}
+
+			return !empty(array_intersect(array_map('intval', $participant[$key]), $allowedIds));
+		};
+
+		$usedPortraitIds = [];
+		$usedSeasonIds = [];
+		$usedCastIds = [];
+
+		foreach ($output['roles'] as $roleId => $role) {
+			if (!isset($role['participants']) || !is_array($role['participants'])) {
+				continue;
+			}
+
+			$participants = [];
+			foreach ($role['participants'] as $participant) {
+				if (!$matches($participant, 'cast_ids', $castIds) || !$matches($participant, 'season_ids', $seasonIds)) {
+					continue;
+				}
+
+				$participants[] = $participant;
+				$usedPortraitIds = array_merge($usedPortraitIds, $participant['portrait_ids'] ?? []);
+				$usedSeasonIds = array_merge($usedSeasonIds, $participant['season_ids'] ?? []);
+				$usedCastIds = array_merge($usedCastIds, $participant['cast_ids'] ?? []);
+			}
+
+			if ($participants === $role['participants']) {
+				continue;
+			}
+
+			$role['participants'] = $participants;
+			unset($role['hash']);
+			$role['hash'] = md5(json_encode($role));
+			$output['roles'][$roleId] = $role;
+		}
+
+		$keepKeys = function ($map, $ids) {
+			if (!is_array($map)) {
+				return [];
+			}
+
+			return array_intersect_key($map, array_flip(array_map('intval', $ids)));
+		};
+
+		$output['portraits'] = $keepKeys($output['portraits'] ?? [], $usedPortraitIds);
+		$output['seasons'] = $keepKeys($output['seasons'] ?? [], $usedSeasonIds);
+		$output['casts'] = $keepKeys($output['casts'] ?? [], empty($castIds) ? $usedCastIds : $castIds);
+
+		return $output;
+	}
+
 	public function getProjectPortraits($ids = []) {
 		$output = [
 			'portraits' => [],
