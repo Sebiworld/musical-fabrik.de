@@ -46,7 +46,6 @@ yarn.lock
 !/site/modules/FieldtypeProjectRoles
 !/site/modules/PageAccessApplications
 !/site/modules/PageAccessPermissions
-!/site/modules/PageAccessReleasetime
 !/site/modules/SeoMaestroEnhanced
 !/site/modules/MfAuth
 !/site/modules/MfCalendar
@@ -55,3 +54,17 @@ yarn.lock
 /*.html
 /site/templates/entwicklung/external/progressively
 /bin
+
+# Claude Code (never commit)
+CLAUDE*.md
+claude*.md
+.claude/
+
+# PHPUnit test suite: dependencies and its cache are ignored, the lock file
+# is tracked (overrides the blanket composer.lock rule above).
+/tests/vendor/
+/tests/.phpunit.cache/
+!/tests/composer.lock
+
+# Local test tools and their settings, never committed.
+/tests/local/
