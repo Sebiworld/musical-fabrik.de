@@ -410,6 +410,12 @@ DirectoryIndex index.php index.html index.htm
   # If any conditions above match, issue a 403 forbidden
   RewriteRule ^.*$ - [F,L]
 
+  # Block access to the PHPUnit test suite. Matched as a RewriteRule pattern
+  # (not %{REQUEST_URI}) so it's anchored to the installation root regardless
+  # of subdirectory installs: a page named "tests" elsewhere in the site
+  # tree is unaffected, unlike the %{REQUEST_URI} conditions above.
+  RewriteRule ^tests($|/) - [F,L]
+
 
   # 15B. Block archive file types commonly used for backup purposes (O)
   # -----------------------------------------------------------------------------------------------

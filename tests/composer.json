@@ -1,0 +1,17 @@
+{
+	"name": "musical-fabrik/backend-tests",
+	"description": "PHPUnit test suite for the backend API",
+	"type": "project",
+	"require": {
+		"php": ">=8.2",
+		"phpunit/phpunit": "^11.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"Tests\\": "src/"
+		}
+	},
+	"config": {
+		"sort-packages": true
+	}
+}
