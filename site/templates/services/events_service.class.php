@@ -263,6 +263,54 @@ class EventsService extends TwackComponent {
 		return $ajaxOutput;
 	}
 
+	/**
+	 * Returns the casts playing a time period: the multi-page field "casts",
+	 * or the legacy single-page field "cast" if "casts" is empty.
+	 * @return Page[]
+	 */
+	public function getPerformanceCasts($period) {
+		$casts = [];
+		if (!($period instanceof Page) || !$period->id) {
+			return $casts;
+		}
+
+		if ($period->template->hasField('casts') && $period->casts->count) {
+			foreach ($period->casts as $castPage) {
+				if (!($castPage instanceof Page) || !$castPage->id) {
+					continue;
+				}
+
+				$casts[] = $castPage;
+			}
+		} elseif ($period->template->hasField('cast') && $period->cast instanceof Page && $period->cast->id) {
+			$casts[] = $period->cast;
+		}
+
+		return $casts;
+	}
+
+	/**
+	 * Converts pages to the short link form used for performances.
+	 * @return array list of ['id', 'title', 'url']
+	 */
+	public function getPageLinksAjax($pages) {
+		if ($pages instanceof PageArray) {
+			$pages = $pages->getArray();
+		}
+
+		if (!is_array($pages)) {
+			return [];
+		}
+
+		return array_map(function ($item) {
+			return [
+				'id' => $item->id,
+				'title' => $item->title,
+				'url' => AppApi::getUrlRelativeToRoot($item->url)
+			];
+		}, array_values($pages));
+	}
+
 	protected function startsWith($haystack, $needle) {
 		$length = strlen($needle);
 		return (substr($haystack, 0, $length) === $needle);

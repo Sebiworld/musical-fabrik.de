@@ -60,6 +60,7 @@ final class ProjectRoutesTest extends ApiTestCase {
 		$project = Fixtures::page(Fixtures::PROJECT_PATH);
 		$role1 = Fixtures::page(Fixtures::ROLE_1_PATH);
 		$role2 = Fixtures::page(Fixtures::ROLE_2_PATH);
+		$role3 = Fixtures::page(Fixtures::ROLE_3_PATH);
 		$portrait1 = Fixtures::page(Fixtures::PORTRAIT_1_PATH);
 		$portrait2 = Fixtures::page(Fixtures::PORTRAIT_2_PATH);
 
@@ -67,7 +68,7 @@ final class ProjectRoutesTest extends ApiTestCase {
 
 		self::assertSame(200, $response['status'], $response['raw']);
 		$json = $response['json'];
-		self::assertSame([$role1->id, $role2->id], $this->sortedKeys($json['roles']));
+		self::assertSame($this->sorted([$role1->id, $role2->id, $role3->id]), $this->sortedKeys($json['roles']));
 		self::assertSame('project_role', $json['roles'][$role1->id]['template']['name']);
 		self::assertSame('Test Fixture Role 1', $json['roles'][$role1->id]['title']);
 		self::assertSame(
