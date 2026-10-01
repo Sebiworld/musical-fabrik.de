@@ -110,6 +110,27 @@ final class PerformanceRoutesTest extends ApiTestCase {
 		self::assertStringContainsString('Test accessibility', (string) $response['json']['location']['accessibility_info']);
 	}
 
+	public function testParagraphsOfHtmlFieldsAreKept(): void {
+		$location = self::$pages['location'];
+		$location->of(false);
+		$before = $location->getUnformatted('directions');
+		$location->set('directions', "<p>First paragraph</p>\n\n<p>Second paragraph</p>");
+		wire('pages')->save($location, ['quiet' => true]);
+
+		try {
+			$response = $this->apiRequest('GET', 'performances/' . self::$pages['period_cast_a']->id);
+		} finally {
+			$location->set('directions', $before);
+			wire('pages')->save($location, ['quiet' => true]);
+		}
+
+		self::assertSame(200, $response['status'], $response['raw']);
+		self::assertSame("<p>First paragraph</p>\n\n<p>Second paragraph</p>", $response['json']['location']['directions']);
+		self::assertStringStartsWith('<p>Period description</p>', (string) $response['json']['description']);
+		self::assertStringStartsWith('<p>Period visitor info</p>', (string) $response['json']['visitor_info']);
+		self::assertStringStartsWith('<p>Test Street 1</p>', (string) $response['json']['location']['address']);
+	}
+
 	public function testLocationIsNullWithoutLocation(): void {
 		$response = $this->apiRequest('GET', 'performances/' . self::$pages['period_no_casts']->id);
 

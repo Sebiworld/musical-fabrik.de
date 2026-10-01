@@ -140,6 +140,8 @@ $routes = [
 	],
 
 	'performances' => [
+		['OPTIONS', 'next', ['GET']],
+		['GET', 'next', PerformanceApi::class, 'getNextPerformances'],
 		['OPTIONS', '{id:\d+}', ['GET']],
 		['GET', '{id:\d+}', PerformanceApi::class, 'getPerformance']
 	],

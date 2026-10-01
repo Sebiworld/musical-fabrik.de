@@ -170,6 +170,106 @@ final class Fixtures {
 		}
 	}
 
+	public const NEXT_PROJECT_NAME = 'test-fixture-next-project';
+	public const NEXT_OTHER_PROJECT_NAME = 'test-fixture-next-other-project';
+
+	/**
+	 * Creates two projects with performances for `performances/next`, with
+	 * times relative to $base. Returns the created pages by key. Remove them
+	 * again with deleteNextPerformanceTree().
+	 *
+	 * Project "next" (event with 45 admission minutes):
+	 * - next_main: visible, starts at $base + 2 h; tests move it
+	 * - next_later: visible, starts at $base + 2 days
+	 * - next_not_for_guests, next_unpublished, next_not_released,
+	 *   next_other_category: hidden or no performance, all start at $base + 30 min
+	 *   (inside the admission time of the event)
+	 *
+	 * Project "next other":
+	 * - other_soon: visible, starts at $base + 1 h
+	 *
+	 * @return array<string, Page>
+	 */
+	public static function createNextPerformanceTree(int $base): array {
+		self::deleteNextPerformanceTree();
+
+		$pages = wire('pages');
+		$p = [];
+		$performance = $pages->get('template.name=event_category, name=auffuehrung, include=all');
+		$otherCategory = $pages->get('template.name=event_category, name=generalprobe, include=all');
+		if (!$performance->id || !$otherCategory->id) {
+			throw new \RuntimeException('Event categories "auffuehrung" and "generalprobe" are required.');
+		}
+
+		$p['project'] = self::newPage('project', $pages->get('template=projects_container'), self::NEXT_PROJECT_NAME, 'Test Fixture Next Project');
+		$events = self::container('events_container', $p['project'], 'termine', 'Termine');
+		$p['event'] = self::newPage('event', $events, 'test-fixture-next-event', 'Test Next Event', [
+			'admission_minutes' => 45,
+			'datetime_from' => $base,
+		]);
+
+		$periods = [
+			'next_main' => ['datetime_from' => $base + 7200, 'datetime_until' => $base + 14400],
+			'next_later' => ['datetime_from' => $base + 172800],
+			'next_not_for_guests' => ['datetime_from' => $base + 1800, 'accessable_for_guests' => 0],
+			'next_unpublished' => ['datetime_from' => $base + 1800],
+			'next_not_released' => ['datetime_from' => $base + 1800, 'releasetime_start_activate' => 1, 'releasetime_start' => 4102444800],
+			'next_other_category' => ['datetime_from' => $base + 1800, 'event_categories' => $otherCategory],
+		];
+		foreach ($periods as $key => $values) {
+			$p[$key] = self::newPage('time_period', $p['event'], 'test-fixture-' . str_replace('_', '-', $key), 'Test ' . $key, array_merge([
+				'accessable_for_guests' => 1,
+				'event_categories' => $performance,
+			], $values), $key === 'next_unpublished');
+		}
+
+		$p['event']->of(false);
+		foreach (array_keys($periods) as $key) {
+			$p['event']->time_periods->add($p[$key]);
+		}
+		$pages->save($p['event'], ['quiet' => true]);
+
+		$p['other_project'] = self::newPage('project', $pages->get('template=projects_container'), self::NEXT_OTHER_PROJECT_NAME, 'Test Fixture Next Other Project');
+		$otherEvents = self::container('events_container', $p['other_project'], 'termine', 'Termine');
+		$p['other_event'] = self::newPage('event', $otherEvents, 'test-fixture-next-other-event', 'Test Next Other Event', [
+			'datetime_from' => $base + 3600,
+		]);
+		$p['other_soon'] = self::newPage('time_period', $p['other_event'], 'test-fixture-other-soon', 'Test other_soon', [
+			'datetime_from' => $base + 3600,
+			'accessable_for_guests' => 1,
+			'event_categories' => $performance,
+		]);
+		$p['other_event']->of(false);
+		$p['other_event']->time_periods->add($p['other_soon']);
+		$pages->save($p['other_event'], ['quiet' => true]);
+
+		return $p;
+	}
+
+	/**
+	 * Sets the times of a performance. A $until of null clears the end.
+	 */
+	public static function setPerformanceTimes(Page $period, int $from, ?int $until): void {
+		$period->of(false);
+		$period->set('datetime_from', $from);
+		$period->set('datetime_until', $until ?? '');
+		wire('pages')->save($period, ['quiet' => true]);
+	}
+
+	/**
+	 * Removes the pages of createNextPerformanceTree(), also leftovers of an
+	 * aborted earlier run.
+	 */
+	public static function deleteNextPerformanceTree(): void {
+		$pages = wire('pages');
+		foreach ([self::NEXT_PROJECT_NAME, self::NEXT_OTHER_PROJECT_NAME] as $name) {
+			// Saving a project creates a tag page with the project's name.
+			foreach ($pages->find('template=project|tag, name=' . $name . ', include=all') as $page) {
+				$pages->delete($page, true);
+			}
+		}
+	}
+
 	private static function newPage(string $template, Page $parent, string $name, string $title, array $values = [], bool $unpublished = false): Page {
 		if (!$parent->id) {
 			throw new \RuntimeException('Parent page for ' . $name . ' not found.');
