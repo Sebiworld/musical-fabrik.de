@@ -27,7 +27,7 @@
     "generate-db": "node ./bin/svg-db-generator.js",
     "generate-command": "node ./bin/svg-command-generator.js",
     "generate-placeholder-table": "node ./bin/svg-placeholder-table-generator.js",
-    "test": "php tests/vendor/bin/phpunit -c tests/phpunit.xml"
+    "test": "symfony php tests/vendor/bin/phpunit -c tests/phpunit.xml"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
