@@ -51,6 +51,9 @@ final class Fixtures {
 	 * - period_not_released: released for guests, but with a release time in the future
 	 * - period_for_trash: released for guests, for tests that move it to the trash
 	 *
+	 * Admission minutes: the project has 90 (foyer) and 15 (hall), the event
+	 * 45 (foyer) and no hall value, period_cast_a 20 (foyer) and 10 (hall).
+	 *
 	 * Roles:
 	 * - role_mixed: entries for cast A, cast B and one without cast
 	 * - role_cast_b: one entry for cast B only
@@ -64,7 +67,10 @@ final class Fixtures {
 		$pages = wire('pages');
 		$p = [];
 
-		$p['project'] = self::newPage('project', $pages->get('template=projects_container'), self::PERFORMANCE_PROJECT_NAME, 'Test Fixture Performance Project');
+		$p['project'] = self::newPage('project', $pages->get('template=projects_container'), self::PERFORMANCE_PROJECT_NAME, 'Test Fixture Performance Project', [
+			'admission_minutes' => 90,
+			'hall_admission_minutes' => 15,
+		]);
 
 		$casts = self::container('casts_container', $p['project'], 'besetzungen', 'Besetzungen');
 		$p['cast_a'] = self::newPage('cast', $casts, 'test-fixture-cast-a', 'Test Cast A');
@@ -117,6 +123,7 @@ final class Fixtures {
 			'link' => 'https://tickets.example.org/test',
 			'description_text' => '<p>Period description</p>',
 			'admission_minutes' => 20,
+			'hall_admission_minutes' => 10,
 			'visitor_info' => '<p>Period visitor info</p>',
 		]);
 		$p['period_no_casts'] = self::newPage('time_period', $p['event'], 'test-fixture-period-no-casts', 'Test Period No Casts', [
@@ -178,7 +185,8 @@ final class Fixtures {
 	 * times relative to $base. Returns the created pages by key. Remove them
 	 * again with deleteNextPerformanceTree().
 	 *
-	 * Project "next" (event with 45 admission minutes):
+	 * Project "next" (15 hall admission minutes, event with 45 foyer
+	 * admission minutes, see resetNextAdmissionMinutes()):
 	 * - next_main: visible, starts at $base + 2 h; tests move it
 	 * - next_later: visible, starts at $base + 2 days
 	 * - next_not_for_guests, next_unpublished, next_not_released,
@@ -201,7 +209,9 @@ final class Fixtures {
 			throw new \RuntimeException('Event categories "auffuehrung" and "generalprobe" are required.');
 		}
 
-		$p['project'] = self::newPage('project', $pages->get('template=projects_container'), self::NEXT_PROJECT_NAME, 'Test Fixture Next Project');
+		$p['project'] = self::newPage('project', $pages->get('template=projects_container'), self::NEXT_PROJECT_NAME, 'Test Fixture Next Project', [
+			'hall_admission_minutes' => 15,
+		]);
 		$events = self::container('events_container', $p['project'], 'termine', 'Termine');
 		$p['event'] = self::newPage('event', $events, 'test-fixture-next-event', 'Test Next Event', [
 			'admission_minutes' => 45,
@@ -254,6 +264,36 @@ final class Fixtures {
 		$period->set('datetime_from', $from);
 		$period->set('datetime_until', $until ?? '');
 		wire('pages')->save($period, ['quiet' => true]);
+	}
+
+	/**
+	 * Sets an integer field of a page. A $value of null clears it.
+	 */
+	public static function setInteger(Page $page, string $field, ?int $value): void {
+		$page->of(false);
+		$page->set($field, $value ?? '');
+		wire('pages')->save($page, ['quiet' => true]);
+	}
+
+	/**
+	 * Restores the admission minutes of createNextPerformanceTree(): 15 hall
+	 * minutes on the project, 45 foyer minutes on the event, no values on the
+	 * performances next_main and next_later.
+	 *
+	 * @param array<string, Page> $p
+	 */
+	public static function resetNextAdmissionMinutes(array $p): void {
+		$values = [
+			'project' => ['admission_minutes' => null, 'hall_admission_minutes' => 15],
+			'event' => ['admission_minutes' => 45, 'hall_admission_minutes' => null],
+			'next_main' => ['admission_minutes' => null, 'hall_admission_minutes' => null],
+			'next_later' => ['admission_minutes' => null, 'hall_admission_minutes' => null],
+		];
+		foreach ($values as $key => $fields) {
+			foreach ($fields as $field => $value) {
+				self::setInteger($p[$key], $field, $value);
+			}
+		}
 	}
 
 	/**

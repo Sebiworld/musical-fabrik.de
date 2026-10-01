@@ -11,6 +11,12 @@ class PerformancesService extends TwackComponent {
 	/** Number of candidates loaded per query of the performance search. */
 	const SEARCH_CHUNK_SIZE = 20;
 
+	/** Minutes before the beginning when the foyer opens. */
+	const FOYER_ADMISSION_FIELD = 'admission_minutes';
+
+	/** Minutes before the beginning when the hall opens. */
+	const HALL_ADMISSION_FIELD = 'hall_admission_minutes';
+
 	/**
 	 * Returns the performance page if it may be shown to everyone, otherwise null.
 	 * Visible means: a published time_period below a published event, released
@@ -103,9 +109,10 @@ class PerformancesService extends TwackComponent {
 	/**
 	 * Finds the current and the next visible performance (time_period of the
 	 * category "auffuehrung").
-	 * - current: admission has begun (beginning minus admission minutes) and the
-	 *   performance has not ended (end, or beginning + 3 h without end). With
-	 *   several, the one with the earliest beginning.
+	 * - current: admission has begun (beginning minus the longer of the foyer
+	 *   and the hall admission minutes) and the performance has not ended
+	 *   (end, or beginning + 3 h without end). With several, the one with the
+	 *   earliest beginning.
 	 * - next: the earliest performance beginning after $now that is not current.
 	 * @param Page|null $projectPage restricts the search to this project, null searches all projects
 	 * @param int $now unix timestamp of "now"
@@ -145,7 +152,7 @@ class PerformancesService extends TwackComponent {
 		$admissionLimit = $now + $this->getMaxAdmissionMinutes() * 60;
 		foreach ($this->iteratePerformances($baseSelector . ', datetime_from>' . $now . ', sort=datetime_from, sort=id') as $period) {
 			$begin = (int) $period->getUnformatted('datetime_from');
-			if ($result['current'] === null && $begin - (int) $this->getAdmissionMinutes($period, $period->parent) * 60 <= $now) {
+			if ($result['current'] === null && $begin - $this->getLongestAdmissionMinutes($period) * 60 <= $now) {
 				$result['current'] = $period;
 			} elseif ($result['next'] === null) {
 				$result['next'] = $period;
@@ -193,17 +200,25 @@ class PerformancesService extends TwackComponent {
 	}
 
 	/**
-	 * Returns the highest admission time of all performances and events, which
-	 * limits how far the search for a current performance has to look ahead.
+	 * Returns the highest foyer or hall admission time of all performances,
+	 * events and projects, which limits how far the search for a current
+	 * performance has to look ahead.
 	 * @return int
 	 */
 	protected function getMaxAdmissionMinutes() {
-		$page = wire('pages')->findOne('template.name=time_period|event, admission_minutes>0, include=all, sort=-admission_minutes');
-		if (!($page instanceof Page) || !$page->id) {
-			return 0;
+		$max = 0;
+		foreach ([self::FOYER_ADMISSION_FIELD, self::HALL_ADMISSION_FIELD] as $fieldName) {
+			if (!(wire('fields')->get($fieldName) instanceof Field)) {
+				continue;
+			}
+
+			$page = wire('pages')->findOne('template.name=time_period|event|project, ' . $fieldName . '>0, include=all, sort=-' . $fieldName);
+			if ($page instanceof Page && $page->id) {
+				$max = max($max, (int) $page->getUnformatted($fieldName));
+			}
 		}
 
-		return (int) $page->getUnformatted('admission_minutes');
+		return $max;
 	}
 
 	/**
@@ -227,6 +242,7 @@ class PerformancesService extends TwackComponent {
 			'timestamp' => $summary['timestamp'],
 			'timestamp_until' => $summary['timestamp_until'],
 			'admission_minutes' => $summary['admission_minutes'],
+			'hall_admission_minutes' => $summary['hall_admission_minutes'],
 			'ticket_url' => $summary['ticket_url'],
 			'description' => $this->getHtml($period, 'description_text'),
 			'visitor_info' => $this->getHtml($period, 'visitor_info') ?? $this->getHtml($event, 'visitor_info'),
@@ -254,13 +270,15 @@ class PerformancesService extends TwackComponent {
 		$eventsService = $this->getService('EventsService');
 		$event = $period->parent;
 		$projectPage = $this->getService('ProjectService')->getProjectPage($period);
+		$admission = $this->getAdmissionMinutes($period, $projectPage);
 
 		return [
 			'id' => $period->id,
 			'title' => $period->title,
 			'timestamp' => $this->getTimestamp($period, 'datetime_from'),
 			'timestamp_until' => $this->getTimestamp($period, 'datetime_until'),
-			'admission_minutes' => $this->getAdmissionMinutes($period, $event),
+			'admission_minutes' => $admission[self::FOYER_ADMISSION_FIELD],
+			'hall_admission_minutes' => $admission[self::HALL_ADMISSION_FIELD],
 			'ticket_url' => $this->getText($period, 'link'),
 			'event' => [
 				'id' => $event->id,
@@ -345,19 +363,48 @@ class PerformancesService extends TwackComponent {
 		];
 	}
 
-	protected function getAdmissionMinutes(Page $period, Page $event) {
-		foreach ([$period, $event] as $page) {
-			if (!$page->template->hasField('admission_minutes')) {
-				continue;
-			}
+	/**
+	 * Returns the foyer and the hall admission minutes of a performance, by
+	 * field name. Each field is taken from the performance, else from its
+	 * event, else from its project. An empty field falls back, 0 is a value
+	 * (no admission before the beginning). A field missing on a template
+	 * counts as empty. Null if the field is empty everywhere.
+	 * @param Page $period time_period page
+	 * @param Page|null $projectPage project of the performance, looked up if null
+	 * @return array<string, int|null>
+	 */
+	protected function getAdmissionMinutes(Page $period, $projectPage = null) {
+		if (!($projectPage instanceof Page)) {
+			$projectPage = $this->getService('ProjectService')->getProjectPage($period);
+		}
 
-			$value = $page->getUnformatted('admission_minutes');
-			if ($value !== '' && $value !== null) {
-				return (int) $value;
+		$output = [];
+		foreach ([self::FOYER_ADMISSION_FIELD, self::HALL_ADMISSION_FIELD] as $fieldName) {
+			$output[$fieldName] = null;
+			foreach ([$period, $period->parent, $projectPage] as $page) {
+				if (!($page instanceof Page) || !$page->id || !$page->template->hasField($fieldName)) {
+					continue;
+				}
+
+				$value = $page->getUnformatted($fieldName);
+				if ($value !== '' && $value !== null) {
+					$output[$fieldName] = (int) $value;
+					break;
+				}
 			}
 		}
 
-		return null;
+		return $output;
+	}
+
+	/**
+	 * Returns the longer of the foyer and the hall admission minutes of a
+	 * performance, 0 without any admission.
+	 * @param Page $period time_period page
+	 * @return int
+	 */
+	protected function getLongestAdmissionMinutes(Page $period) {
+		return (int) max($this->getAdmissionMinutes($period));
 	}
 
 	protected function getTimestamp(Page $page, $fieldName) {
