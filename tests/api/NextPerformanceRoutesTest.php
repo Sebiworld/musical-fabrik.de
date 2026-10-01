@@ -16,7 +16,7 @@ use function ProcessWire\wire;
  * with margins of several minutes.
  */
 final class NextPerformanceRoutesTest extends ApiTestCase {
-	private const ITEM_KEYS = ['id', 'title', 'timestamp', 'timestamp_until', 'admission_minutes', 'ticket_url', 'event', 'project', 'casts'];
+	private const ITEM_KEYS = ['id', 'title', 'timestamp', 'timestamp_until', 'admission_minutes', 'hall_admission_minutes', 'ticket_url', 'event', 'project', 'casts'];
 
 	/** @var array<string, Page> */
 	private static array $pages = [];
@@ -102,6 +102,7 @@ final class NextPerformanceRoutesTest extends ApiTestCase {
 		self::assertSame($now + 7200, $item['timestamp']);
 		self::assertSame($now + 14400, $item['timestamp_until']);
 		self::assertSame(45, $item['admission_minutes']);
+		self::assertSame(15, $item['hall_admission_minutes']);
 		self::assertNull($item['ticket_url']);
 		self::assertSame(['id' => $p['event']->id, 'title' => 'Test Next Event'], $item['event']);
 		self::assertSame(['id', 'title', 'url'], array_keys($item['project']));

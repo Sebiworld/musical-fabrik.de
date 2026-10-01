@@ -36,7 +36,7 @@ final class PerformanceRoutesTest extends ApiTestCase {
 		self::assertSame(200, $response['status'], $response['raw']);
 		$json = $response['json'];
 		self::assertSame(
-			['id', 'title', 'timestamp', 'timestamp_until', 'admission_minutes', 'ticket_url', 'description', 'visitor_info', 'event', 'project', 'seasons', 'casts', 'categories', 'location', 'roles', 'hash'],
+			['id', 'title', 'timestamp', 'timestamp_until', 'admission_minutes', 'hall_admission_minutes', 'ticket_url', 'description', 'visitor_info', 'event', 'project', 'seasons', 'casts', 'categories', 'location', 'roles', 'hash'],
 			array_keys($json)
 		);
 		self::assertSame($p['period_cast_a']->id, $json['id']);
@@ -66,6 +66,7 @@ final class PerformanceRoutesTest extends ApiTestCase {
 
 		self::assertSame(200, $response['status'], $response['raw']);
 		self::assertSame(20, $response['json']['admission_minutes']);
+		self::assertSame(10, $response['json']['hall_admission_minutes']);
 		self::assertStringContainsString('Period visitor info', (string) $response['json']['visitor_info']);
 	}
 
@@ -80,6 +81,15 @@ final class PerformanceRoutesTest extends ApiTestCase {
 		self::assertNull($json['description']);
 		self::assertNull($json['timestamp_until']);
 		self::assertSame([], $json['casts']);
+	}
+
+	public function testAdmissionMinutesFallBackPerField(): void {
+		// Foyer from the event, hall from the project (the event has none).
+		$response = $this->apiRequest('GET', 'performances/' . self::$pages['period_no_casts']->id);
+
+		self::assertSame(200, $response['status'], $response['raw']);
+		self::assertSame(45, $response['json']['admission_minutes']);
+		self::assertSame(15, $response['json']['hall_admission_minutes']);
 	}
 
 	public function testLocationIsDelivered(): void {

@@ -1,7 +1,7 @@
 {
   "name": "www.musical-fabrik.de",
   "description": "ProcessWire-Seite für die Musical-Fabrik",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "repository": {
     "type": "git",
     "url": "git@gitlab.com:musical-fabrik/musical-fabrik.de.git"
