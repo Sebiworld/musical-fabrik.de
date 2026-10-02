@@ -107,15 +107,28 @@ abstract class ApiTestCase extends TestCase {
 	}
 
 	/**
-	 * @return array{status: int, json: mixed, raw: string}
+	 * `headers` maps lower-case response header names to their values; a
+	 * header sent more than once keeps its last value. `$body` is sent as the
+	 * request body as given (e.g. an http_build_query() string).
+	 *
+	 * @return array{status: int, json: mixed, raw: string, headers: array<string, string>}
 	 */
-	protected function apiRequest(string $method, string $path, array $extraHeaders = []): array {
+	protected function apiRequest(string $method, string $path, array $extraHeaders = [], ?string $body = null): array {
 		$url = rtrim(self::$resolvedBaseUrl, '/') . '/' . ltrim($path, '/');
 
 		$headers = array_merge(['X-API-KEY: ' . self::$resolvedApiKey], $extraHeaders);
 
+		$responseHeaders = [];
 		$ch = curl_init($url);
 		curl_setopt_array($ch, [
+			CURLOPT_HEADERFUNCTION => static function ($ch, string $line) use (&$responseHeaders): int {
+				$parts = explode(':', $line, 2);
+				if (count($parts) === 2) {
+					$responseHeaders[strtolower(trim($parts[0]))] = trim($parts[1]);
+				}
+
+				return strlen($line);
+			},
 			CURLOPT_CUSTOMREQUEST => strtoupper($method),
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_SSL_VERIFYPEER => false,
@@ -125,6 +138,9 @@ abstract class ApiTestCase extends TestCase {
 			CURLOPT_HTTPHEADER => $headers,
 			CURLOPT_COOKIE => null,
 		]);
+		if ($body !== null) {
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+		}
 
 		$raw = curl_exec($ch);
 		$status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -135,6 +151,85 @@ abstract class ApiTestCase extends TestCase {
 			static::class . '::' . $this->name() . ' (' . strtoupper($method) . ' ' . $path . ')'
 		);
 
-		return ['status' => $status, 'json' => $json, 'raw' => (string) $raw];
+		return ['status' => $status, 'json' => $json, 'raw' => (string) $raw, 'headers' => $responseHeaders];
+	}
+
+	/**
+	 * Sends several requests at the same time and waits for all of them.
+	 * Each request is [method, path, headers, body]. Returns status and raw
+	 * body per request, in the given order.
+	 *
+	 * @param array<int, array{0: string, 1: string, 2?: array, 3?: ?string}> $requests
+	 * @return array<int, array{status: int, raw: string}>
+	 */
+	protected function apiRequestsInParallel(array $requests): array {
+		$multi = curl_multi_init();
+		$handles = [];
+		foreach ($requests as $index => $request) {
+			$ch = curl_init(rtrim(self::$resolvedBaseUrl, '/') . '/' . ltrim($request[1], '/'));
+			curl_setopt_array($ch, [
+				CURLOPT_CUSTOMREQUEST => strtoupper($request[0]),
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_SSL_VERIFYHOST => false,
+				CURLOPT_CONNECTTIMEOUT => 5,
+				CURLOPT_TIMEOUT => 60,
+				CURLOPT_HTTPHEADER => array_merge(['X-API-KEY: ' . self::$resolvedApiKey], $request[2] ?? []),
+				CURLOPT_COOKIE => null,
+				// One connection per request, so the server handles them in parallel.
+				CURLOPT_FORBID_REUSE => true,
+				CURLOPT_FRESH_CONNECT => true,
+			]);
+			if (isset($request[3])) {
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $request[3]);
+			}
+			curl_multi_add_handle($multi, $ch);
+			$handles[$index] = $ch;
+		}
+
+		do {
+			$result = curl_multi_exec($multi, $running);
+			if ($running) {
+				curl_multi_select($multi, 1.0);
+			}
+		} while ($running && $result === CURLM_OK);
+
+		$responses = [];
+		foreach ($handles as $index => $ch) {
+			$responses[$index] = [
+				'status' => (int) curl_getinfo($ch, CURLINFO_HTTP_CODE),
+				'raw' => (string) curl_multi_getcontent($ch),
+			];
+			curl_multi_remove_handle($multi, $ch);
+			curl_close($ch);
+		}
+		curl_multi_close($multi);
+
+		return $responses;
+	}
+
+	/**
+	 * Asserts that a client cannot tell two responses apart: same status,
+	 * same body (byte for byte) and the same headers. Only the `date` header
+	 * and the random session id in `set-cookie` may differ.
+	 */
+	protected static function assertIndistinguishable(array $expected, array $actual, string $message = ''): void {
+		self::assertSame($expected['status'], $actual['status'], $message . ' (status)');
+		self::assertSame($expected['raw'], $actual['raw'], $message . ' (body)');
+		self::assertSame(self::comparableHeaders($expected['headers']), self::comparableHeaders($actual['headers']), $message . ' (headers)');
+	}
+
+	/**
+	 * @param array<string, string> $headers
+	 * @return array<string, string>
+	 */
+	private static function comparableHeaders(array $headers): array {
+		unset($headers['date']);
+		if (isset($headers['set-cookie'])) {
+			$headers['set-cookie'] = preg_replace('/^([^=]+)=[^;]*/', '$1=<id>', $headers['set-cookie']);
+		}
+		ksort($headers);
+
+		return $headers;
 	}
 }

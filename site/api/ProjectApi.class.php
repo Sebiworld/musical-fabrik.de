@@ -37,10 +37,10 @@ class ProjectApi {
 		$data = AppApiHelper::checkAndSanitizeRequiredParameters($data, ['id|int']);
 		$page = wire('pages')->get('id=' . $data->id);
 
-		if (!($page instanceof Page) || !$page->id) {
+		// A page the user may not view gets the same answer as a missing one,
+		// so the response does not reveal that it exists.
+		if (!($page instanceof Page) || !$page->id || !$page->viewable()) {
 			throw new NotFoundException();
-		} elseif (!$page->viewable()) {
-			throw new ForbiddenException();
 		}
 
 		$twack = wire('modules')->get('Twack');

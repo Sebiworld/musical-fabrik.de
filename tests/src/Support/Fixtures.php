@@ -310,6 +310,171 @@ final class Fixtures {
 		}
 	}
 
+	public const FILE_PAGE_NAME = 'test-fixture-file-page';
+	public const FILE_UNPUBLISHED_PAGE_NAME = 'test-fixture-file-unpublished';
+	public const FILE_NOT_RELEASED_PAGE_NAME = 'test-fixture-file-not-released';
+	public const SMALL_IMAGE = 'test-fixture-small.jpg';
+	public const LARGE_IMAGE = 'test-fixture-large.jpg';
+	public const SMALL_IMAGE_SIZE = [600, 400];
+	public const LARGE_IMAGE_SIZE = [5000, 200];
+
+	/**
+	 * Creates two pages with generated JPEG images for the file endpoint:
+	 * - page: published, SMALL_IMAGE in main_image, LARGE_IMAGE in card_image
+	 * - unpublished: unpublished, SMALL_IMAGE in main_image
+	 * - not_released: published, release time in the future, SMALL_IMAGE in main_image
+	 * Remove them again with deleteFileTree().
+	 *
+	 * The test database shares site/assets/files with the development
+	 * database. If the files directory of a new page already holds files, the
+	 * page is renamed and left in place (deleting it would also delete that
+	 * directory) and the run stops.
+	 *
+	 * @return array<string, Page>
+	 */
+	public static function createFileTree(): array {
+		self::deleteFileTree();
+
+		$root = wire('pages')->get('/');
+		$tmp = sys_get_temp_dir() . '/mf-test-images-' . getmypid();
+		if (!is_dir($tmp) && !mkdir($tmp, 0777, true)) {
+			throw new \RuntimeException('Could not create ' . $tmp . '.');
+		}
+		$small = self::writeJpeg($tmp . '/' . self::SMALL_IMAGE, ...self::SMALL_IMAGE_SIZE);
+		$large = self::writeJpeg($tmp . '/' . self::LARGE_IMAGE, ...self::LARGE_IMAGE_SIZE);
+
+		$p = [];
+		$p['page'] = self::newPage('default_page', $root, self::FILE_PAGE_NAME, 'Test Fixture File Page');
+		$p['unpublished'] = self::newPage('default_page', $root, self::FILE_UNPUBLISHED_PAGE_NAME, 'Test Fixture File Unpublished', [], true);
+		$p['not_released'] = self::newPage('default_page', $root, self::FILE_NOT_RELEASED_PAGE_NAME, 'Test Fixture File Not Released', [
+			'releasetime_start_activate' => 1,
+			'releasetime_start' => 4102444800,
+		]);
+
+		foreach ($p as $page) {
+			self::assertFilesDirectoryIsFree($page);
+		}
+
+		self::addImage($p['page'], 'main_image', $small);
+		self::addImage($p['page'], 'card_image', $large);
+		self::addImage($p['unpublished'], 'main_image', $small);
+		self::addImage($p['not_released'], 'main_image', $small);
+
+		unlink($small);
+		unlink($large);
+		rmdir($tmp);
+
+		return $p;
+	}
+
+	/**
+	 * Removes the pages of createFileTree(), also leftovers of an aborted
+	 * earlier run.
+	 */
+	public static function deleteFileTree(): void {
+		$pages = wire('pages');
+		foreach ([self::FILE_PAGE_NAME, self::FILE_UNPUBLISHED_PAGE_NAME, self::FILE_NOT_RELEASED_PAGE_NAME] as $name) {
+			foreach ($pages->find('parent=1, name=' . $name . ', include=all') as $page) {
+				$pages->delete($page, true);
+			}
+		}
+	}
+
+	public const PORTRAITS_CONTAINER_PATH = '/projekte/test-fixture-project/mitwirkenden_portraits/';
+	public const PORTRAIT_FIXTURE_PREFIX = 'test-fixture-portrait-access-';
+
+	/**
+	 * Creates portraits in the seed project for access checks:
+	 * - visible: published, no release time
+	 * - unpublished: unpublished
+	 * - not_released: published, release time in the future
+	 * - expired: published, release end in the past
+	 * Remove them again with deletePortraitTree().
+	 *
+	 * @return array<string, Page>
+	 */
+	public static function createPortraitTree(): array {
+		self::deletePortraitTree();
+
+		$container = self::page(self::PORTRAITS_CONTAINER_PATH);
+		$p = [];
+		$p['visible'] = self::newPage('portrait', $container, self::PORTRAIT_FIXTURE_PREFIX . 'visible', 'Test Portrait Visible');
+		$p['unpublished'] = self::newPage('portrait', $container, self::PORTRAIT_FIXTURE_PREFIX . 'unpublished', 'Test Portrait Unpublished', [], true);
+		$p['not_released'] = self::newPage('portrait', $container, self::PORTRAIT_FIXTURE_PREFIX . 'not-released', 'Test Portrait Not Released', [
+			'releasetime_start_activate' => 1,
+			'releasetime_start' => 4102444800,
+		]);
+		$p['expired'] = self::newPage('portrait', $container, self::PORTRAIT_FIXTURE_PREFIX . 'expired', 'Test Portrait Expired', [
+			'releasetime_end_activate' => 1,
+			'releasetime_end' => 946684800,
+		]);
+
+		return $p;
+	}
+
+	/**
+	 * Removes the pages of createPortraitTree(), also leftovers of an aborted
+	 * earlier run.
+	 */
+	public static function deletePortraitTree(): void {
+		$pages = wire('pages');
+		foreach ($pages->find('template=portrait, name^=' . self::PORTRAIT_FIXTURE_PREFIX . ', include=all') as $page) {
+			$pages->delete($page, true);
+		}
+	}
+
+	public const UNPUBLISHED_PROJECT_NAME = 'test-fixture-unpublished-project';
+
+	/**
+	 * Creates an unpublished project. Remove it again with
+	 * deleteUnpublishedProject().
+	 */
+	public static function createUnpublishedProject(): Page {
+		self::deleteUnpublishedProject();
+
+		return self::newPage('project', wire('pages')->get('template=projects_container'), self::UNPUBLISHED_PROJECT_NAME, 'Test Fixture Unpublished Project', [], true);
+	}
+
+	/**
+	 * Removes the page of createUnpublishedProject(), also leftovers of an
+	 * aborted earlier run.
+	 */
+	public static function deleteUnpublishedProject(): void {
+		$pages = wire('pages');
+		// Saving a project creates a tag page with the project's name.
+		foreach ($pages->find('template=project|tag, name=' . self::UNPUBLISHED_PROJECT_NAME . ', include=all') as $page) {
+			$pages->delete($page, true);
+		}
+	}
+
+	private static function assertFilesDirectoryIsFree(Page $page): void {
+		$base = wire('config')->paths->files;
+		foreach ([$base . $page->id . '/', $base . '.' . $page->id . '/'] as $dir) {
+			if (is_dir($dir) && count(array_diff(scandir($dir), ['.', '..'])) > 0) {
+				$page->of(false);
+				$page->name = 'test-fixture-file-id-conflict-' . $page->id;
+				wire('pages')->save($page, ['quiet' => true]);
+				throw new \RuntimeException('The files directory ' . $dir . ' of the new test page ' . $page->id
+					. ' already holds files. The page was renamed and left in place so that the directory is not deleted.');
+			}
+		}
+	}
+
+	private static function writeJpeg(string $path, int $width, int $height): string {
+		$image = imagecreatetruecolor($width, $height);
+		imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, imagecolorallocate($image, 40, 120, 200));
+		imagejpeg($image, $path, 80);
+		imagedestroy($image);
+
+		return $path;
+	}
+
+	private static function addImage(Page $page, string $field, string $path): void {
+		$page->of(false);
+		$page->get($field)->add($path);
+		wire('pages')->save($page, ['quiet' => true]);
+	}
+
 	private static function newPage(string $template, Page $parent, string $name, string $title, array $values = [], bool $unpublished = false): Page {
 		if (!$parent->id) {
 			throw new \RuntimeException('Parent page for ' . $name . ' not found.');
