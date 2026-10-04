@@ -13,6 +13,7 @@ class FormTemplate extends TwackComponent {
 		parent::__construct($args);
 
 		require_once __DIR__ . '/../form_exception.class.php';
+		require_once __DIR__ . '/../form_submission_guard.class.php';
 
 		// Standardwerte für die Email:
 		$this->emailParams = [
@@ -156,10 +157,17 @@ class FormTemplate extends TwackComponent {
 			'success' => []
 		];
 
+		// The lock is held from the limit check until the submission is counted.
+		$guard = new FormSubmissionGuard($this->formOrigin, FormSubmissionGuard::clientIp($_SERVER));
+		if (!$guard->lock() || $guard->isLimitReached()) {
+			$guard->unlock();
+			return $this->rejectTooManySubmissions($guard, $output);
+		}
+
 		try {
 			// Check Honeypot:
 			if (!empty(wire('input')->post->information)) {
-				throw new FormException($this->_('Form could not be submitted.'));
+				throw new FormException($this->_('Form could not be submitted.'), 'form_rejected');
 			}
 
 			if (!$this->wire('twack')->isTwackAjaxCall()) {
@@ -250,7 +258,7 @@ class FormTemplate extends TwackComponent {
 
 			$messageIdent = md5(http_build_query($values));
 			if (!empty(wire('session')->get($this->formOrigin)) && wire('session')->get($this->formOrigin) === $messageIdent) {
-				throw new FormCriticalException($this->_('Form was already submitted.'));
+				throw new FormCriticalException($this->_('Form was already submitted.'), 'form_already_submitted');
 			}
 
 			// Check Required-If information (only possible when all POST information has been transferred to the page):
@@ -281,7 +289,17 @@ class FormTemplate extends TwackComponent {
 			}
 
 			if ($errorFlag) {
-				throw new FormException($this->_('One or more fields have errors.'));
+				throw new FormException($this->_('One or more fields have errors.'), 'form_validation_failed');
+			}
+
+			if (FormSubmissionGuard::isHoneypotFilled(wire('input')->post)) {
+				// Answer like a successful submission, but store and send nothing.
+				$guard->unlock();
+				wire('log')->save(FormSubmissionGuard::HONEYPOT_LOG, 'Honeypot filled, submission dropped. Form: ' . $this->formOrigin, [
+					'showUser' => false,
+					'showURL'  => false
+				]);
+				return $this->respondSuccess($output);
 			}
 
 			$newRequest->parent  = $this->containerPage;
@@ -308,45 +326,38 @@ class FormTemplate extends TwackComponent {
 					'text'   => $this->_('The request could not be saved.'),
 					'fields' => []
 				];
-				throw new FormException($this->_('The request could not be saved.'));
+				throw new FormException($this->_('The request could not be saved.'), 'form_save_failed');
 			}
 
 			$output['request_id'] = $newRequest->id;
+			$guard->recordSubmission();
+			$guard->unlock();
 		} catch (WireCSRFException $e) {
-			$output['error']['csrf_error']   = $this->_('This request was apparently forged and therefore aborted.');
+			$guard->unlock();
+			$message                         = $this->_('This request was apparently forged and therefore aborted.');
+			$output['error']['csrf_error']   = $message;
 			$output['submission_blocked']    = true;
 			$output['status']                = false;
-			if ($this->wire('twack')->isTwackAjaxCall()) {
-				Twack::sendResponse($output, 403);
-			}
-			return $output;
+			return $this->respondError($output, 403, 'csrf_failed', $message);
 		} catch (FormCriticalException $e) {
+			$guard->unlock();
 			$output['error']['form_error']      = $e->getMessage();
 			$output['submission_blocked']       = true;
 			$output['status']                   = false;
-
-			if ($this->wire('twack')->isTwackAjaxCall()) {
-				Twack::sendResponse($output, 400);
-			}
-			return $output;
+			return $this->respondError($output, 400, $e->getErrorcode(), $e->getMessage());
 		} catch (FormException $e) {
+			$guard->unlock();
 			$output['error']['form_error']      = $e->getMessage();
 			$output['submission_blocked']       = false;
 			$output['status']                   = false;
-
-			if ($this->wire('twack')->isTwackAjaxCall()) {
-				Twack::sendResponse($output, 400);
-			}
-			return $output;
+			return $this->respondError($output, 400, $e->getErrorcode(), $e->getMessage());
 		} catch (\Exception $e) {
-			$output['error']['form_error']      = $e->getMessage();
+			$guard->unlock();
+			$message                            = $this->logUnexpectedError($e);
+			$output['error']['form_error']      = $message;
 			$output['submission_blocked']       = false;
 			$output['status']                   = false;
-
-			if ($this->wire('twack')->isTwackAjaxCall()) {
-				Twack::sendResponse($output, 400);
-			}
-			return $output;
+			return $this->respondError($output, 400, 'form_error', $message);
 		}
 
 		if ($this->wire('modules')->isInstalled('AppApiFormProtection')) {
@@ -405,20 +416,13 @@ class FormTemplate extends TwackComponent {
 
 				$output['status']               = $e->getCode();
 
-				if ($this->wire('twack')->isTwackAjaxCall()) {
-					Twack::sendResponse($output, 400);
-				}
-
-				return $output;
+				return $this->respondError($output, 400, 'form_already_submitted', $e->getMessage());
 			} catch (\Exception $e) {
-				$output['error']['form_error'] = $e->getMessage();
+				$message                        = $this->logUnexpectedError($e);
+				$output['error']['form_error']  = $message;
 				$output['status']               = $e->getCode();
 
-				if ($this->wire('twack')->isTwackAjaxCall()) {
-					Twack::sendResponse($output, 400);
-				}
-
-				return $output;
+				return $this->respondError($output, 400, 'form_error', $message);
 			}
 		}
 
@@ -433,6 +437,10 @@ class FormTemplate extends TwackComponent {
 		wire('session')->CSRF->resetToken($this->formularName);
 		unset($_POST);
 
+		return $this->respondSuccess($output);
+	}
+
+	protected function respondSuccess(array $output) {
 		$output['submission_blocked']    = true;
 		$output['status']                = true;
 		$output['success']['finished']   = $this->_('Your request was processed successfully.');
@@ -442,10 +450,69 @@ class FormTemplate extends TwackComponent {
 		}
 
 		if ($this->wire('twack')->isTwackAjaxCall()) {
-			Twack::sendResponse($output, 200);
+			$this->sendJsonResponse($output, 200);
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Answers a failed submission. API responses use the AppApi error format
+	 * (`errorcode`, `error` as string) and keep the field results in `fields`.
+	 */
+	protected function respondError(array $output, int $status, string $errorcode, string $message) {
+		if ($this->wire('twack')->isTwackAjaxCall()) {
+			$body = $output;
+			// errorcode and error are set here only, never by merged exception data.
+			unset($body['error'], $body['success'], $body['errorcode']);
+			$this->sendJsonResponse(array_merge([
+				'errorcode' => $errorcode,
+				'error'     => $message
+			], $body), $status);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Unexpected exceptions may carry internals (SQL, paths). They are logged,
+	 * and the client gets a fixed text.
+	 */
+	protected function logUnexpectedError(\Throwable $e) {
+		wire('log')->save('forms', 'Form ' . $this->formOrigin . ': ' . get_class($e) . ': ' . $e->getMessage());
+		return $this->_('The form could not be submitted. Please try again later.');
+	}
+
+	protected function rejectTooManySubmissions(FormSubmissionGuard $guard, array $output) {
+		$message = $this->_('Too many submissions. Please try again later.');
+
+		if ($this->wire('twack')->isTwackAjaxCall()) {
+			header('Retry-After: ' . $guard->retryAfter());
+			$this->sendJsonResponse([
+				'errorcode' => 'too_many_requests',
+				'error'     => $message
+			], 429);
+		}
+
+		$output['error']['form_error'] = $message;
+		$output['submission_blocked']  = true;
+		$output['status']              = false;
+		return $output;
+	}
+
+	/**
+	 * Sends a JSON response and exits. Inside an AppApi route the output is
+	 * buffered and the buffer is discarded on shutdown, so it is cleared first
+	 * and the response is written outside of it.
+	 */
+	protected function sendJsonResponse(array $body, int $status) {
+		if (class_exists(Router::class) && method_exists(Router::class, 'clearOutputBuffer')) {
+			Router::clearOutputBuffer();
+		}
+		if (class_exists(AppApi::class)) {
+			AppApi::sendResponse($status, $body);
+		}
+		Twack::sendResponse($body, $status);
 	}
 
 	protected function sendNotification(Page $newRequestPage) {
@@ -461,7 +528,9 @@ class FormTemplate extends TwackComponent {
 					$this->emailParams['placeholders']['plain']['edit_url'] = $this->getEditUrl($newRequestPage);
 					$this->emailParams['placeholders']['html']['edit_url']  = "<a href='{$this->getEditUrl($newRequestPage)}'>{$this->getEditUrl($newRequestPage)}</a>";
 
-					$this->emailParams['placeholders']['title'] = $newRequestPage->title;
+					$this->emailParams['placeholders']['title']          = $newRequestPage->title;
+					$this->emailParams['placeholders']['plain']['title'] = $newRequestPage->title;
+					$this->emailParams['placeholders']['html']['title']  = $this->htmlMailValue($newRequestPage->title);
 
 					// Feldinhalte ablegen:
 					$this->emailParams['placeholders']['plain']['field_contents'] = '';
@@ -533,7 +602,7 @@ class FormTemplate extends TwackComponent {
 							}
 						}
 
-						$htmlValue = $value;
+						$htmlValue = $this->htmlMailValue($value);
 						if (empty($value)) {
 							$value     = $this->_('[no input]');
 							$htmlValue = '<i>' . $this->_('[no input]') . '</i>';
@@ -574,13 +643,13 @@ class FormTemplate extends TwackComponent {
 
 				// Set email recipient:
 				if (!empty($emailNotification->email_recipient)) {
-					$emailParams['recipient'] = $this->getEmailRecipients($emailNotification->get('email_recipient'));
+					$emailParams['recipient'] = $this->getEmailRecipients($emailNotification->get('email_recipient'), $newRequestPage);
 				}
 				if (!empty($emailNotification->email_recipient_cc)) {
-					$emailParams['recipientCC'] = $this->getEmailRecipients($emailNotification->get('email_recipient_cc'));
+					$emailParams['recipientCC'] = $this->getEmailRecipients($emailNotification->get('email_recipient_cc'), $newRequestPage);
 				}
 				if (!empty($emailNotification->email_recipient_bcc)) {
-					$emailParams['recipientBCC'] = $this->getEmailRecipients($emailNotification->get('email_recipient_bcc'));
+					$emailParams['recipientBCC'] = $this->getEmailRecipients($emailNotification->get('email_recipient_bcc'), $newRequestPage);
 				}
 
 				// Are the required values available?
@@ -629,6 +698,13 @@ class FormTemplate extends TwackComponent {
 		}
 	}
 
+	/**
+	 * Submitted values are plain text: mask HTML so it cannot change the mail markup.
+	 */
+	protected function htmlMailValue($value) {
+		return nl2br(wire('sanitizer')->entities((string) $value), false);
+	}
+
 	protected function getEditUrl($page) {
 		$protocol    = wire('config')->https ? 'https' : 'http';
 		$pageEditUrl = strpos($page->editUrl, $protocol) === 0 ? $page->editUrl : $protocol . '://' . wire('config')->httpHost . $page->editUrl;
@@ -674,7 +750,7 @@ class FormTemplate extends TwackComponent {
 		return $text;
 	}
 
-	protected function getEmailRecipients($recipientsField) {
+	protected function getEmailRecipients($recipientsField, ?Page $requestPage = null) {
 		$recipients = [];
 		foreach ($recipientsField as $recipient) {
 			if ($recipient->type == 'user') {
@@ -694,13 +770,39 @@ class FormTemplate extends TwackComponent {
 					$recipients[] = $recipient->email;
 				}
 			} elseif ($recipient->type == 'variable') {
-				// variable value
-				if (!empty($recipient->short_text)) {
-					$recipients[] = $this->replacePlaceholders($recipient->short_text, true);
+				// variable value: only the single address the sender entered in an email field
+				$address = $this->getSubmittedEmailAddress((string) $recipient->short_text, $requestPage);
+				if ($address !== '') {
+					$recipients[] = $address;
+				} else {
+					wire('log')->save('forms', 'Recipient skipped: the variable "' . $recipient->short_text . '" is not a single valid address from an email field.');
 				}
 			}
 		}
 		return implode(', ', $recipients);
+	}
+
+	/**
+	 * Returns the submitted address if $placeholder is exactly one {{field}} of an
+	 * email field and its value is exactly one valid address. Otherwise ''.
+	 * Senders choose this address, so it must never become a list of recipients.
+	 */
+	protected function getSubmittedEmailAddress(string $placeholder, ?Page $requestPage) {
+		if (!$requestPage || !preg_match('/^\s*\{\{(\w+)\}\}\s*$/', $placeholder, $match)) {
+			return '';
+		}
+
+		$field = $requestPage->template->fieldgroup->getField($match[1], true);
+		if (!($field instanceof Field) || !($field->type instanceof FieldtypeEmail)) {
+			return '';
+		}
+
+		$value = trim((string) $requestPage->getUnformatted($field->name));
+		if ($value === '' || preg_match('/[\s,;]/', $value)) {
+			return '';
+		}
+
+		return wire('sanitizer')->email($value) === $value ? $value : '';
 	}
 
 	protected function setTemplate(Template $template) {

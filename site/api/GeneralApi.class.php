@@ -48,8 +48,4 @@ class GeneralApi {
 
 		return $output;
 	}
-
-	public static function errorTest($data) {
-		throw new TestException('This is only an error test.');
-	}
 }

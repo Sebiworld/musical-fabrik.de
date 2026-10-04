@@ -47,14 +47,27 @@ final class PageRoutesTest extends ApiTestCase {
 		self::assertSame('not_found_exception', $response['json']['errorcode']);
 	}
 
-	public function testUnpublishedPageIsForbiddenForGuests(): void {
+	public function testUnpublishedPageIsNotFoundForGuestsLikeAnUnknownPath(): void {
 		$page = Fixtures::page(Fixtures::UNPUBLISHED_PATH);
 		self::assertTrue($page->isUnpublished(), 'The seed page is expected to be unpublished.');
 
-		$response = $this->apiRequest('GET', 'tpage/test-fixture-unpublished');
+		$hidden = $this->apiRequest('GET', 'tpage/test-fixture-unpublished');
+		$unknown = $this->apiRequest('GET', 'tpage/test-fixture-does-not-exist');
 
-		self::assertSame(403, $response['status'], $response['raw']);
-		self::assertSame('forbidden_exception', $response['json']['errorcode']);
-		self::assertArrayNotHasKey('title', $response['json']);
+		self::assertSame(404, $hidden['status'], $hidden['raw']);
+		self::assertSame('not_found_exception', $hidden['json']['errorcode']);
+		self::assertSame('Not Found.', $hidden['json']['error']);
+		self::assertArrayNotHasKey('title', $hidden['json']);
+		self::assertIndistinguishable($unknown, $hidden);
+	}
+
+	public function testUnpublishedPageByIdIsNotFoundForGuestsLikeAnUnknownId(): void {
+		$page = Fixtures::page(Fixtures::UNPUBLISHED_PATH);
+
+		$hidden = $this->apiRequest('GET', 'tpage/' . $page->id);
+		$unknown = $this->apiRequest('GET', 'tpage/2147483000');
+
+		self::assertSame(404, $hidden['status'], $hidden['raw']);
+		self::assertIndistinguishable($unknown, $hidden);
 	}
 }

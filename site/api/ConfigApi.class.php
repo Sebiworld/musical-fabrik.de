@@ -38,8 +38,10 @@ class ConfigApi {
 			$mfAuthModule = wire('modules')->get('MfAuth');
 
 			$output['activate_login'] = (bool)$mfAuthModule->activate_login;
-			$output['activate_registration'] = (bool)$mfAuthModule->activate_registration;
 		}
+
+		// Registration has been removed; the app hides its form while this is false.
+		$output['activate_registration'] = false;
 
 		if (!empty(wire('config')->apiConfig) && is_array(wire('config')->apiConfig)) {
 			foreach (wire('config')->apiConfig as $key => $value) {

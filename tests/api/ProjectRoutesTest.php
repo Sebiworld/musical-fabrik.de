@@ -47,13 +47,16 @@ final class ProjectRoutesTest extends ApiTestCase {
 		self::assertArrayHasKey('events', $json);
 	}
 
-	public function testProjectDetailOfUnpublishedPageIsForbidden(): void {
+	public function testProjectDetailOfUnpublishedPageIsNotFoundLikeAnUnknownId(): void {
 		$unpublished = Fixtures::page(Fixtures::UNPUBLISHED_PATH);
 
-		$response = $this->apiRequest('GET', 'projects/' . $unpublished->id);
+		$hidden = $this->apiRequest('GET', 'projects/' . $unpublished->id);
+		$unknown = $this->apiRequest('GET', 'projects/2147483000');
 
-		self::assertSame(403, $response['status'], $response['raw']);
-		self::assertSame('forbidden_exception', $response['json']['errorcode']);
+		self::assertSame(404, $hidden['status'], $hidden['raw']);
+		self::assertSame('not_found_exception', $hidden['json']['errorcode']);
+		self::assertSame('Not Found.', $hidden['json']['error']);
+		self::assertIndistinguishable($unknown, $hidden);
 	}
 
 	public function testProjectRolesListRolesAndTheirPortraits(): void {
@@ -81,13 +84,16 @@ final class ProjectRoutesTest extends ApiTestCase {
 		self::assertArrayHasKey('casts', $json);
 	}
 
-	public function testProjectRolesOfUnpublishedPageAreForbidden(): void {
+	public function testProjectRolesOfUnpublishedPageAreNotFoundLikeAnUnknownId(): void {
 		$unpublished = Fixtures::page(Fixtures::UNPUBLISHED_PATH);
 
-		$response = $this->apiRequest('GET', 'project-roles/' . $unpublished->id);
+		$hidden = $this->apiRequest('GET', 'project-roles/' . $unpublished->id);
+		$unknown = $this->apiRequest('GET', 'project-roles/2147483000');
 
-		self::assertSame(403, $response['status'], $response['raw']);
-		self::assertSame('forbidden_exception', $response['json']['errorcode']);
+		self::assertSame(404, $hidden['status'], $hidden['raw']);
+		self::assertSame('not_found_exception', $hidden['json']['errorcode']);
+		self::assertSame('Not Found.', $hidden['json']['error']);
+		self::assertIndistinguishable($unknown, $hidden);
 	}
 
 	public function testProjectRolesOfUnknownIdAreNotFound(): void {
