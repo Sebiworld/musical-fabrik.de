@@ -447,6 +447,238 @@ final class Fixtures {
 		}
 	}
 
+	public const SEO_MAINTAINED_NAME = 'test-fixture-seo-maintained';
+	public const SEO_PLAIN_NAME = 'test-fixture-seo-plain';
+	public const SEO_NO_IMAGE_NAME = 'test-fixture-seo-no-image';
+	public const SEO_IMAGE = 'test-fixture-seo-wide.jpg';
+	public const SEO_IMAGE_SIZE = [2000, 1000];
+
+	/**
+	 * Creates pages below the home page for the SEO output:
+	 * - maintained: own meta title, description, canonical URL and robots
+	 *   noindex in the SeoMaestro field `seo`
+	 * - plain: no meta values maintained in `seo`, but robots noindex and
+	 *   nofollow switched off and the sitemap switched on; an intro with HTML
+	 *   and entities and a wide main image (SEO_IMAGE)
+	 * - no_image: nothing maintained, no intro, no image
+	 * Remove them again with deleteSeoTree().
+	 *
+	 * @return array<string, Page>
+	 */
+	public static function createSeoTree(): array {
+		self::deleteSeoTree();
+
+		$root = wire('pages')->get('/');
+		$p = [];
+		$p['maintained'] = self::newPage('default_page', $root, self::SEO_MAINTAINED_NAME, 'Test Fixture SEO Maintained');
+		$p['plain'] = self::newPage('default_page', $root, self::SEO_PLAIN_NAME, 'Test Fixture SEO Plain', [
+			'intro' => '<p>Erster&nbsp;Satz &amp; <strong>zweiter</strong> Satz.</p>',
+		]);
+		$p['no_image'] = self::newPage('default_page', $root, self::SEO_NO_IMAGE_NAME, 'Test Fixture SEO No Image');
+
+		$maintained = $p['maintained'];
+		$maintained->of(false);
+		$maintained->seo->meta->title = 'Tom & Jerry „Grüße“';
+		$maintained->seo->meta->description = 'Eigene Beschreibung & mehr';
+		$maintained->seo->meta->canonicalUrl = '/eigener-pfad?x=1';
+		$maintained->seo->robots->noIndex = 1;
+		wire('pages')->save($maintained, ['quiet' => true]);
+
+		$plain = $p['plain'];
+		$plain->of(false);
+		$plain->seo->robots->noIndex = 0;
+		$plain->seo->robots->noFollow = 0;
+		$plain->seo->sitemap->include = 1;
+		wire('pages')->save($plain, ['quiet' => true]);
+
+		self::addGeneratedImage($p['plain'], 'main_image', self::SEO_IMAGE, ...self::SEO_IMAGE_SIZE);
+
+		return $p;
+	}
+
+	/**
+	 * Removes the pages of createSeoTree(), also leftovers of an aborted
+	 * earlier run.
+	 */
+	public static function deleteSeoTree(): void {
+		$pages = wire('pages');
+		foreach ([self::SEO_MAINTAINED_NAME, self::SEO_PLAIN_NAME, self::SEO_NO_IMAGE_NAME] as $name) {
+			foreach ($pages->find('parent=1, name=' . $name . ', include=all') as $page) {
+				$pages->delete($page, true);
+			}
+		}
+	}
+
+	public const RELEASE_PREFIX = 'test-fixture-release-';
+	public const RELEASE_PROJECT_IMAGE = 'test-fixture-release-project.jpg';
+
+	/**
+	 * Creates a project that is not released yet (release time in the
+	 * future), as a project in preparation, with pages below it:
+	 * - project: release time in the future, main image RELEASE_PROJECT_IMAGE
+	 * - info: page below the project
+	 * - article: article in the news container of the project
+	 * - gallery: gallery in the gallery container of the project
+	 * - event, period: event with a performance released for guests
+	 * - control: released page below the home page
+	 * All pages with the SeoMaestro field are switched into the sitemap and
+	 * not to noindex. Remove them again with deleteReleaseTree().
+	 *
+	 * @return array<string, Page>
+	 */
+	public static function createReleaseTree(): array {
+		self::deleteReleaseTree();
+
+		$pages = wire('pages');
+		$p = [];
+		$p['project'] = self::newPage('project', $pages->get('template=projects_container'), self::RELEASE_PREFIX . 'project', 'Test Fixture Release Project', [
+			'releasetime_start_activate' => 1,
+			'releasetime_start' => 4102444800,
+		]);
+		self::addGeneratedImage($p['project'], 'main_image', self::RELEASE_PROJECT_IMAGE, 1600, 900);
+
+		$p['info'] = self::newPage('default_page', $p['project'], self::RELEASE_PREFIX . 'info', 'Test Fixture Release Info');
+		$articles = self::container('articles_container', $p['project'], 'aktuelles', 'Aktuelles');
+		$p['article'] = self::newPage('article', $articles, self::RELEASE_PREFIX . 'article', 'Test Fixture Release Article');
+		$galleries = self::container('galleries_container', $p['project'], 'galerie', 'Galerie');
+		$p['gallery'] = self::newPage('gallery', $galleries, self::RELEASE_PREFIX . 'gallery', 'Test Fixture Release Gallery');
+
+		$events = self::container('events_container', $p['project'], 'termine', 'Termine');
+		$p['event'] = self::newPage('event', $events, self::RELEASE_PREFIX . 'event', 'Test Fixture Release Event', [
+			'datetime_from' => 1893484800,
+		]);
+		$p['period'] = self::newPage('time_period', $p['event'], self::RELEASE_PREFIX . 'period', 'Test Fixture Release Period', [
+			'datetime_from' => 1893484800,
+			'accessable_for_guests' => 1,
+			'event_categories' => $pages->get('template.name=event_category, name=auffuehrung, include=all'),
+		]);
+		$p['event']->of(false);
+		$p['event']->time_periods->add($p['period']);
+		$pages->save($p['event'], ['quiet' => true]);
+
+		$p['control'] = self::newPage('default_page', $pages->get('/'), self::RELEASE_PREFIX . 'control', 'Test Fixture Release Control');
+
+		foreach ($p as $page) {
+			if (!$page->template->hasField('seo')) {
+				continue;
+			}
+			$page->of(false);
+			// Set on the field value, since the group setters store 'inherit' as 0.
+			$page->seo->set('sitemap_include', '1');
+			$page->seo->set('robots_noIndex', '0');
+			$page->trackChange('seo');
+			$pages->save($page, ['quiet' => true]);
+		}
+
+		return $p;
+	}
+
+	/**
+	 * Removes the pages of createReleaseTree(), also leftovers of an aborted
+	 * earlier run.
+	 */
+	public static function deleteReleaseTree(): void {
+		$pages = wire('pages');
+		foreach ([
+			'template=project|default_page, name^=' . self::RELEASE_PREFIX . ', include=all',
+			// Saving a project creates a tag page with the project's name.
+			'template=tag, name=' . self::RELEASE_PREFIX . 'project, include=all',
+		] as $selector) {
+			foreach ($pages->find($selector) as $page) {
+				if ($pages->get('id=' . $page->id . ', include=all')->id) {
+					$pages->delete($page, true);
+				}
+			}
+		}
+	}
+
+	public const LINK_PREVIEW_PREFIX = 'test-fixture-link-preview-';
+	public const LINK_PREVIEW_SPECIAL_TITLE = 'Zitat "A" & B < C';
+	public const LINK_PREVIEW_SPECIAL_DESCRIPTION = 'Text "x" & y < z';
+
+	/**
+	 * Creates pages below the home page for link previews:
+	 * - special: published, title and SEO description with quotes, ampersand and less-than sign
+	 * - hidden: published and hidden (shown like in the frontend)
+	 * - not_released: published, release time in the future
+	 * - permissions: published, locked by PageAccessPermissions without any permission
+	 * - password: published, locked by a password
+	 * - hidden_child, password_child: published children of hidden and password
+	 * - unpublished_role: unpublished role in the seed project, with the
+	 *   published role role_child below it
+	 * Remove them again with deleteLinkPreviewTree().
+	 *
+	 * @return array<string, Page>
+	 */
+	public static function createLinkPreviewTree(): array {
+		self::deleteLinkPreviewTree();
+
+		$root = wire('pages')->get('/');
+		$p = [];
+		$p['special'] = self::newPage('default_page', $root, self::LINK_PREVIEW_PREFIX . 'special', self::LINK_PREVIEW_SPECIAL_TITLE);
+		$p['hidden'] = self::newPage('default_page', $root, self::LINK_PREVIEW_PREFIX . 'hidden', 'Test Link Preview Hidden');
+		$p['not_released'] = self::newPage('default_page', $root, self::LINK_PREVIEW_PREFIX . 'not-released', 'Test Link Preview Not Released', [
+			'releasetime_start_activate' => 1,
+			'releasetime_start' => 4102444800,
+		]);
+		$p['permissions'] = self::newPage('default_page', $root, self::LINK_PREVIEW_PREFIX . 'permissions', 'Test Link Preview Permissions', [
+			'pageaccess_permissions_activate' => 1,
+		]);
+		$p['password'] = self::newPage('default_page', $root, self::LINK_PREVIEW_PREFIX . 'password', 'Test Link Preview Password', [
+			'pageaccess_password_activate' => 1,
+			'pageaccess_password' => bin2hex(random_bytes(8)),
+		]);
+
+		$p['hidden_child'] = self::newPage('default_page', $p['hidden'], self::LINK_PREVIEW_PREFIX . 'hidden-child', 'Test Link Preview Hidden Child');
+		$p['password_child'] = self::newPage('default_page', $p['password'], self::LINK_PREVIEW_PREFIX . 'password-child', 'Test Link Preview Password Child');
+		$p['unpublished_role'] = self::newPage('project_role', self::page(dirname(self::ROLE_1_PATH) . '/'), self::LINK_PREVIEW_PREFIX . 'unpublished-role', 'Test Link Preview Unpublished Role', [], true);
+		$p['role_child'] = self::newPage('project_role', $p['unpublished_role'], self::LINK_PREVIEW_PREFIX . 'role-child', 'Test Link Preview Role Child');
+
+		$special = $p['special'];
+		$special->of(false);
+		$special->seo->meta->description = self::LINK_PREVIEW_SPECIAL_DESCRIPTION;
+		wire('pages')->save($special, ['quiet' => true]);
+
+		$hidden = $p['hidden'];
+		$hidden->of(false);
+		$hidden->addStatus(Page::statusHidden);
+		wire('pages')->save($hidden, ['quiet' => true]);
+
+		return $p;
+	}
+
+	/**
+	 * Removes the pages of createLinkPreviewTree(), also leftovers of an
+	 * aborted earlier run.
+	 */
+	public static function deleteLinkPreviewTree(): void {
+		$pages = wire('pages');
+		foreach ($pages->find('name^=' . self::LINK_PREVIEW_PREFIX . ', include=all, sort=id') as $page) {
+			// Children are removed together with their parent.
+			if ($pages->get('id=' . $page->id . ', include=all')->id) {
+				$pages->delete($page, true);
+			}
+		}
+	}
+
+	/**
+	 * Adds a generated JPEG of the given size to an image field of a test
+	 * page. Stops (see assertFilesDirectoryIsFree()) if the files directory
+	 * of the page already holds files of another page.
+	 */
+	public static function addGeneratedImage(Page $page, string $field, string $basename, int $width, int $height): void {
+		self::assertFilesDirectoryIsFree($page);
+
+		$tmp = sys_get_temp_dir() . '/mf-test-images-' . getmypid();
+		if (!is_dir($tmp) && !mkdir($tmp, 0777, true)) {
+			throw new \RuntimeException('Could not create ' . $tmp . '.');
+		}
+		$path = self::writeJpeg($tmp . '/' . $basename, $width, $height);
+		self::addImage($page, $field, $path);
+		unlink($path);
+		@rmdir($tmp);
+	}
+
 	private static function assertFilesDirectoryIsFree(Page $page): void {
 		$base = wire('config')->paths->files;
 		foreach ([$base . $page->id . '/', $base . '.' . $page->id . '/'] as $dir) {

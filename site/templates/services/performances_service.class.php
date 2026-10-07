@@ -167,6 +167,17 @@ class PerformancesService extends TwackComponent {
 	}
 
 	/**
+	 * Returns all performances that getPublicPerformancePage() would return
+	 * for the current user, past ones included, sorted by id.
+	 * @return Page[]
+	 */
+	public function getPublicPerformancePages() {
+		$selector = 'template.name=time_period, accessable_for_guests=1, include=all, status<' . Page::statusUnpublished . ', sort=id';
+
+		return iterator_to_array($this->iteratePerformances($selector), false);
+	}
+
+	/**
 	 * Yields the visible performances of a selector, loaded in chunks.
 	 * @param string $selector
 	 * @return \Generator<Page>
@@ -252,7 +263,8 @@ class PerformancesService extends TwackComponent {
 			'casts' => $summary['casts'],
 			'categories' => $eventsService->getPageLinksAjax($period->template->hasField('event_categories') ? $period->event_categories : []),
 			'location' => $this->getLocationAjax($period),
-			'roles' => $this->getRolesAjax($projectPage, $castPages, $seasonPages)
+			'roles' => $this->getRolesAjax($projectPage, $castPages, $seasonPages),
+			'seo' => $this->getService('SeoService')->getSeoAjax($period)
 		];
 
 		$output['hash'] = md5(json_encode($output));

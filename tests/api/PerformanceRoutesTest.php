@@ -36,7 +36,7 @@ final class PerformanceRoutesTest extends ApiTestCase {
 		self::assertSame(200, $response['status'], $response['raw']);
 		$json = $response['json'];
 		self::assertSame(
-			['id', 'title', 'timestamp', 'timestamp_until', 'admission_minutes', 'hall_admission_minutes', 'ticket_url', 'description', 'visitor_info', 'event', 'project', 'seasons', 'casts', 'categories', 'location', 'roles', 'hash'],
+			['id', 'title', 'timestamp', 'timestamp_until', 'admission_minutes', 'hall_admission_minutes', 'ticket_url', 'description', 'visitor_info', 'event', 'project', 'seasons', 'casts', 'categories', 'location', 'roles', 'seo', 'hash'],
 			array_keys($json)
 		);
 		self::assertSame($p['period_cast_a']->id, $json['id']);
@@ -190,6 +190,17 @@ final class PerformanceRoutesTest extends ApiTestCase {
 		);
 		// Without playing casts, the casts referenced by the roles stay.
 		self::assertSame($this->sorted([$p['cast_a']->id, $p['cast_b']->id]), $this->sortedKeys($roles['casts']));
+	}
+
+	public function testPerformanceHasTheSeoObject(): void {
+		$p = self::$pages;
+
+		$response = $this->apiRequest('GET', 'performances/' . $p['period_cast_a']->id);
+
+		self::assertSame(200, $response['status'], $response['raw']);
+		$seo = self::assertSeoShape($response['json']['seo'] ?? null, $p['project']->path . 'vorstellungen/' . $p['period_cast_a']->id . '/');
+		self::assertStringStartsWith('Test Period Cast A am Di., 1. Januar 2030 – Test Fixture Performance Project', $seo['title']);
+		self::assertSame('Period description', $seo['description']);
 	}
 
 	public function testUnchangedHashAnswersNoContent(): void {
