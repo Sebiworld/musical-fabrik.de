@@ -149,6 +149,8 @@ class ProjectService extends TwackComponent {
 			$output['alerts'] = $alertsComponent->getAjax([]);
 		}
 
+		$output['seo'] = $this->getService('SeoService')->getSeoAjax($projectPage);
+
 		if (!empty($output['hash'])) {
 			unset($output['hash']);
 		}

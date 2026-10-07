@@ -31,6 +31,14 @@ final class PageRoutesTest extends ApiTestCase {
 		self::assertSame('text', $json['sections'][0]['contents'][0]['type']);
 	}
 
+	public function testContentPageHasTheSeoObject(): void {
+		$response = $this->apiRequest('GET', 'tpage/test-fixture-content');
+
+		self::assertSame(200, $response['status'], $response['raw']);
+		$seo = self::assertSeoShape($response['json']['seo'] ?? null, Fixtures::CONTENT_PATH);
+		self::assertStringStartsWith('Test Fixture Content', $seo['title']);
+	}
+
 	public function testUnchangedHashAnswersWith204(): void {
 		$first = $this->apiRequest('GET', 'tpage/test-fixture-content');
 		self::assertSame(200, $first['status'], $first['raw']);

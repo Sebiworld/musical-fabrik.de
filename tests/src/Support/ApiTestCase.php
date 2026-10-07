@@ -209,6 +209,28 @@ abstract class ApiTestCase extends TestCase {
 	}
 
 	/**
+	 * Asserts the shape of the `seo` object: title, description, canonical
+	 * URL (absolute, frontend path with trailing slash, no query), image
+	 * (absolute URL or null) and noindex. Returns the object.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected static function assertSeoShape(mixed $seo, string $expectedPath): array {
+		self::assertIsArray($seo);
+		self::assertSame(['title', 'description', 'canonical', 'image', 'noindex'], array_keys($seo));
+		self::assertIsString($seo['title']);
+		self::assertNotSame('', $seo['title']);
+		self::assertIsString($seo['description']);
+		self::assertDoesNotMatchRegularExpression('/[<>]/', $seo['description']);
+		self::assertIsString($seo['canonical']);
+		self::assertMatchesRegularExpression('#^https://[^/?]+' . preg_quote($expectedPath, '#') . '$#', $seo['canonical']);
+		self::assertTrue($seo['image'] === null || (is_string($seo['image']) && preg_match('#^https?://#', $seo['image']) === 1), 'image');
+		self::assertIsBool($seo['noindex']);
+
+		return $seo;
+	}
+
+	/**
 	 * Asserts that a client cannot tell two responses apart: same status,
 	 * same body (byte for byte) and the same headers. Only the `date` header
 	 * and the random session id in `set-cookie` may differ.

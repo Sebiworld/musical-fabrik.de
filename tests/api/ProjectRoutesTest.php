@@ -47,6 +47,16 @@ final class ProjectRoutesTest extends ApiTestCase {
 		self::assertArrayHasKey('events', $json);
 	}
 
+	public function testProjectDetailHasTheSeoObject(): void {
+		$project = Fixtures::page(Fixtures::PROJECT_PATH);
+
+		$response = $this->apiRequest('GET', 'projects/' . $project->id);
+
+		self::assertSame(200, $response['status'], $response['raw']);
+		$seo = self::assertSeoShape($response['json']['seo'] ?? null, Fixtures::PROJECT_PATH);
+		self::assertStringStartsWith('Test Fixture Project', $seo['title']);
+	}
+
 	public function testProjectDetailOfUnpublishedPageIsNotFoundLikeAnUnknownId(): void {
 		$unpublished = Fixtures::page(Fixtures::UNPUBLISHED_PATH);
 
