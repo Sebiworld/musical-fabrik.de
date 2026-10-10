@@ -67,7 +67,8 @@ class PagesService extends TwackComponent {
 				continue;
 			}
 
-			if ($pwProtectionModule && !$pwProtectionModule->isUnlocked($resultPage)) {
+			// Locked pages are left out for everybody, also for users with access:
+			if ($pwProtectionModule && $pwProtectionModule->isLocked($resultPage)) {
 				$results->remove($resultPage);
 				continue;
 			}
