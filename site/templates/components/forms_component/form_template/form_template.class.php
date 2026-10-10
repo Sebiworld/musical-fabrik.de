@@ -662,7 +662,7 @@ class FormTemplate extends TwackComponent {
 					continue;
 				}
 				if (empty($emailParams['recipient'])) {
-					wire('log')->save('forms', 'No recipient. ' . json_encode($emailParams));
+					$this->logMailProblem('No recipient.', $newRequestPage);
 					continue;
 				}
 
@@ -693,9 +693,44 @@ class FormTemplate extends TwackComponent {
 					$email->bodyHTML($emailParams['html']['content']);
 				}
 
-				$email->send();
+				$sent = $email->send();
+				if (!$sent) {
+					$this->logMailProblem('Mail not sent.', $newRequestPage, $this->getMailerErrors($email));
+				}
 			}
 		}
+	}
+
+	/**
+	 * Writes a mail problem to the forms log. Only identifiers are logged:
+	 * never recipients, subject, body or submitted values.
+	 */
+	protected function logMailProblem(string $problem, Page $requestPage, string $detail = '') {
+		$message = $problem . ' form page: ' . (int) $this->containerPage->id
+			. ', template: ' . $this->containerPage->template->name
+			. ', request page: ' . (int) $requestPage->id;
+		if ($detail !== '') {
+			$message .= ', error: ' . $detail;
+		}
+		wire('log')->save('forms', $message);
+	}
+
+	/**
+	 * Error text of the mailer (if it offers one) with everything that looks
+	 * like an email address removed.
+	 */
+	protected function getMailerErrors($mailer): string {
+		if (!is_object($mailer) || !method_exists($mailer, 'getErrors')) {
+			return '';
+		}
+		try {
+			$errors = $mailer->getErrors();
+		} catch (\Throwable $e) {
+			return '';
+		}
+		$text = is_array($errors) ? implode(' | ', array_map('strval', $errors)) : (string) $errors;
+		$text = preg_replace('/[^\s<>"\',;()]+@[^\s<>"\',;()]+/', '[address removed]', $text);
+		return mb_substr(trim(preg_replace('/\s+/', ' ', $text)), 0, 300);
 	}
 
 	/**
