@@ -34,13 +34,19 @@ class FormSubmissionGuard {
 	protected $clientIp;
 	protected $limit;
 	protected $window;
+	protected $cachePrefix;
 	protected $locked = false;
 
-	public function __construct(int $formId, string $clientIp, int $limit = self::LIMIT, int $window = self::WINDOW) {
-		$this->formId   = $formId;
-		$this->clientIp = $clientIp;
-		$this->limit    = max(1, $limit);
-		$this->window   = max(1, $window);
+	/**
+	 * @param string|null $cachePrefix Counters with another prefix are separate from the form counters
+	 *                                 (e.g. failed attempts per page). Defaults to CACHE_PREFIX.
+	 */
+	public function __construct(int $formId, string $clientIp, int $limit = self::LIMIT, int $window = self::WINDOW, ?string $cachePrefix = null) {
+		$this->formId      = $formId;
+		$this->clientIp    = $clientIp;
+		$this->limit       = max(1, $limit);
+		$this->window      = max(1, $window);
+		$this->cachePrefix = $cachePrefix !== null && $cachePrefix !== '' ? $cachePrefix : static::CACHE_PREFIX;
 	}
 
 	/**
@@ -158,7 +164,7 @@ class FormSubmissionGuard {
 	 * Removes the counters of all clients for a form.
 	 */
 	public static function clearForm(int $formId): void {
-		wire('cache')->delete(self::CACHE_PREFIX . $formId . '-*');
+		wire('cache')->delete(static::CACHE_PREFIX . $formId . '-*');
 	}
 
 	protected function recentSubmissions(int $now): array {
@@ -174,7 +180,7 @@ class FormSubmissionGuard {
 	protected function cacheName(): string {
 		$salt = (string) wire('config')->userAuthSalt;
 		$hash = substr(hash_hmac('sha256', self::bucket($this->clientIp), $salt !== '' ? $salt : self::class), 0, 32);
-		return self::CACHE_PREFIX . $this->formId . '-' . $hash;
+		return $this->cachePrefix . $this->formId . '-' . $hash;
 	}
 
 	/**

@@ -50,6 +50,7 @@ yarn.lock
 !/site/modules/MfAuth
 !/site/modules/MfCalendar
 !/site/modules/MfFacebookImport
+!/site/modules/PageAccessPassword
 
 /*.html
 /site/templates/entwicklung/external/progressively

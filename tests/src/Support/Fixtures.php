@@ -661,6 +661,95 @@ final class Fixtures {
 		}
 	}
 
+	public const LOCKED_PREFIX = 'test-fixture-locked-';
+	public const LOCKED_PROJECT_COLOR = 'A1B2C3';
+	public const LOCKED_INTRO = 'Test Locked Intro';
+	public const LOCKED_MAIN_IMAGE = 'test-fixture-locked-main.jpg';
+	public const LOCKED_ITEM_IMAGE = 'test-fixture-locked-item.jpg';
+
+	/**
+	 * Creates password locked pages with the given passwords:
+	 * - project: published project with a color (not locked)
+	 * - page: published, locked with $password, below the project, with
+	 *   datetime_from, intro, LOCKED_MAIN_IMAGE in main_image and a content
+	 *   block of the type image with LOCKED_ITEM_IMAGE (a repeater page)
+	 * - item: the repeater page of that content block
+	 * - child: published, not locked, below page
+	 * - other: published, locked with $otherPassword, below the home page
+	 * - hidden: unpublished, locked with $otherPassword, below the home page
+	 * Remove them again with deleteLockedTree().
+	 *
+	 * @return array<string, Page>
+	 */
+	public static function createLockedTree(string $password, string $otherPassword): array {
+		self::deleteLockedTree();
+
+		$pages = wire('pages');
+		$root = $pages->get('/');
+		$p = [];
+
+		$p['project'] = self::newPage('project', $pages->get('template=projects_container'), self::LOCKED_PREFIX . 'project', 'Test Fixture Locked Project', [
+			'color' => self::LOCKED_PROJECT_COLOR,
+		]);
+		$p['page'] = self::newPage('default_page', $p['project'], self::LOCKED_PREFIX . 'page', 'Test Fixture Locked Page', [
+			'pageaccess_password_activate' => 1,
+			'pageaccess_password' => $password,
+			'datetime_from' => 1700000000,
+			'intro' => self::LOCKED_INTRO,
+		]);
+		$p['child'] = self::newPage('default_page', $p['page'], self::LOCKED_PREFIX . 'child', 'Test Fixture Locked Child');
+		$p['other'] = self::newPage('default_page', $root, self::LOCKED_PREFIX . 'other', 'Test Fixture Locked Other', [
+			'pageaccess_password_activate' => 1,
+			'pageaccess_password' => $otherPassword,
+		]);
+		$p['hidden'] = self::newPage('default_page', $root, self::LOCKED_PREFIX . 'hidden', 'Test Fixture Locked Hidden', [
+			'pageaccess_password_activate' => 1,
+			'pageaccess_password' => $otherPassword,
+		], true);
+
+		self::addGeneratedImage($p['page'], 'main_image', self::LOCKED_MAIN_IMAGE, 300, 200);
+
+		$page = $p['page'];
+		$page->of(false);
+		$item = $page->contents->getNew();
+		$item->setMatrixType('image');
+		$item->save();
+		$pages->save($page, ['quiet' => true]);
+		self::addGeneratedImage($item, 'image', self::LOCKED_ITEM_IMAGE, 300, 200);
+		$p['item'] = $item;
+
+		return $p;
+	}
+
+	/**
+	 * Sets the password of a page of createLockedTree().
+	 */
+	public static function setLockedPassword(Page $page, string $password): void {
+		$page->of(false);
+		$page->pageaccess_password = $password;
+		wire('pages')->save($page, ['quiet' => true]);
+	}
+
+	/**
+	 * Removes the pages of createLockedTree(), also leftovers of an aborted
+	 * earlier run.
+	 */
+	public static function deleteLockedTree(): void {
+		$pages = wire('pages');
+		foreach ([
+			'name^=' . self::LOCKED_PREFIX . ', include=all, sort=id',
+			// Saving a project creates a tag page with the project's name.
+			'template=tag, name=' . self::LOCKED_PREFIX . 'project, include=all',
+		] as $selector) {
+			foreach ($pages->find($selector) as $page) {
+				// Children are removed together with their parent.
+				if ($pages->get('id=' . $page->id . ', include=all')->id) {
+					$pages->delete($page, true);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Adds a generated JPEG of the given size to an image field of a test
 	 * page. Stops (see assertFilesDirectoryIsFree()) if the files directory

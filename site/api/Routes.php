@@ -11,6 +11,7 @@ require_once __DIR__ . '/ProjectApi.class.php';
 require_once __DIR__ . '/ProjectRolesApi.class.php';
 require_once __DIR__ . '/PageListApi.class.php';
 require_once __DIR__ . '/PerformanceApi.class.php';
+require_once __DIR__ . '/PageUnlockApi.class.php';
 
 // Route tpage (module Twack >= 2.4.0): answer pages the user may not view with 404 like missing pages.
 if (property_exists(TwackApiAccess::class, 'hideInaccessiblePages')) {
@@ -154,5 +155,10 @@ $routes = [
 	'project-portraits' => [
 		['OPTIONS', '', ['GET'], [], []],
 		['GET', '', ProjectRolesApi::class, 'getProjectPortraits']
+	],
+
+	'page-unlock' => [
+		['OPTIONS', '{id:\d+}', ['POST']],
+		['POST', '{id:\d+}', PageUnlockApi::class, 'unlockPage']
 	]
 ];

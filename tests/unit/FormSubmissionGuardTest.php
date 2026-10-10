@@ -128,6 +128,22 @@ final class FormSubmissionGuardTest extends TestCase {
 		self::assertTrue($guard->isLimitReached($now + 601));
 	}
 
+	public function testCountersWithAnotherPrefixAreSeparate(): void {
+		$now = 1_900_000_000;
+		$prefix = 'test-guard-prefix-';
+		$other = new FormSubmissionGuard(self::FORM, '203.0.113.7', 1, 600, $prefix);
+		try {
+			$other->recordSubmission($now);
+			self::assertTrue($other->isLimitReached($now));
+			self::assertFalse((new FormSubmissionGuard(self::FORM, '203.0.113.7', 1, 600))->isLimitReached($now), 'The form counter is not affected.');
+
+			FormSubmissionGuard::clearForm(self::FORM);
+			self::assertTrue($other->isLimitReached($now), 'Clearing the form counters keeps the other counters.');
+		} finally {
+			\ProcessWire\wire('cache')->delete($prefix . self::FORM . '-*');
+		}
+	}
+
 	public function testTheCacheNameDoesNotContainTheAddress(): void {
 		$now = time();
 		(new FormSubmissionGuard(self::FORM, '203.0.113.7'))->recordSubmission($now);

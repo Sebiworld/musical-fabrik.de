@@ -73,11 +73,7 @@ class DefaultPage extends TwackComponent {
 			}
 		}
 
-		$pwProtectionModule = $this->wire('modules')->get('PageAccessPassword');
-		$this->locked = !$pwProtectionModule->isUnlocked($this->page);
-		if ($this->locked && !empty($this->wire('input')->post->text('pw_input'))) {
-			$this->locked = !$pwProtectionModule->validatePassword($this->page, $this->wire('input')->post->text('pw_input'));
-		}
+		$this->locked = !$this->wire('modules')->get('PageAccessPassword')->hasAccess($this->page);
 	}
 
 	public function getAjax($ajaxArgs = []) {

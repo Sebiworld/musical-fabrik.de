@@ -98,6 +98,10 @@ ErrorDocument 404 /index.php
   # To prevent cross site scripting (IE8+ proprietary)
   Header set X-XSS-Protection "1; mode=block"
 
+  # do not reveal the CMS
+  Header always unset X-Powered-By
+  Header unset X-Powered-By
+
   # Optionally (O) prevent mime-based attacks via content sniffing (IE+Chrome)
   # Header set X-Content-Type-Options "nosniff"
 </IfModule>
