@@ -3,7 +3,10 @@
 declare(strict_types=1);
 namespace Tests\Support;
 
+use ProcessWire\Comment;
+use ProcessWire\HookEvent;
 use ProcessWire\Page;
+use ProcessWire\User;
 
 use function ProcessWire\wire;
 
@@ -305,6 +308,105 @@ final class Fixtures {
 		foreach ([self::NEXT_PROJECT_NAME, self::NEXT_OTHER_PROJECT_NAME] as $name) {
 			// Saving a project creates a tag page with the project's name.
 			foreach ($pages->find('template=project|tag, name=' . $name . ', include=all') as $page) {
+				$pages->delete($page, true);
+			}
+		}
+	}
+
+	public const CATEGORY_PROJECT_NAME = 'test-fixture-category-project';
+	public const CATEGORY_NAME_PREFIX = 'test-fixture-category-';
+
+	/**
+	 * Creates a project with an events container for the event categories of
+	 * the event list. Returns the created pages by key. Remove them again with
+	 * deleteCategoryTree().
+	 *
+	 * Own event categories, each used by exactly one time period:
+	 * - category_guest: on a period released for guests (event "event")
+	 * - category_members: on a period not released for guests (event "event"),
+	 *   and on a period released for guests below an unpublished event
+	 * - category_not_released: on a period released for guests, but with a
+	 *   release time in the future (event "event")
+	 * - category_hidden: on a hidden period released for guests (event "event")
+	 * - category_not_listed: on a period released for guests below the event,
+	 *   but not in its field time_periods (event "event")
+	 *
+	 * @return array<string, Page>
+	 */
+	public static function createCategoryTree(): array {
+		self::deleteCategoryTree();
+
+		$pages = wire('pages');
+		$p = [];
+
+		$categories = $pages->get('template=event_categories_container, include=all');
+		foreach (['guest', 'members', 'not_released', 'hidden', 'not_listed'] as $key) {
+			$p['category_' . $key] = self::newPage('event_category', $categories, self::CATEGORY_NAME_PREFIX . str_replace('_', '-', $key), 'Test Category ' . $key);
+		}
+
+		$p['project'] = self::newPage('project', $pages->get('template=projects_container'), self::CATEGORY_PROJECT_NAME, 'Test Fixture Category Project');
+		$p['events'] = self::container('events_container', $p['project'], 'termine', 'Termine');
+
+		$p['event'] = self::newPage('event', $p['events'], 'test-fixture-category-event', 'Test Category Event', [
+			'datetime_from' => 1893484800,
+		]);
+		$periods = [
+			'period_guest' => ['accessable_for_guests' => 1, 'event_categories' => $p['category_guest']],
+			'period_members' => ['accessable_for_guests' => 0, 'event_categories' => $p['category_members']],
+			'period_not_released' => [
+				'accessable_for_guests' => 1,
+				'event_categories' => $p['category_not_released'],
+				'releasetime_start_activate' => 1,
+				'releasetime_start' => 4102444800,
+			],
+			'period_hidden' => ['accessable_for_guests' => 1, 'event_categories' => $p['category_hidden']],
+		];
+		$p['event']->of(false);
+		foreach ($periods as $key => $values) {
+			$p[$key] = self::newPage('time_period', $p['event'], 'test-fixture-category-' . str_replace('_', '-', $key), 'Test ' . $key, array_merge([
+				'datetime_from' => 1893484800,
+			], $values));
+			$p['event']->time_periods->add($p[$key]);
+		}
+		$pages->save($p['event'], ['quiet' => true]);
+
+		$p['period_hidden']->of(false);
+		$p['period_hidden']->addStatus(Page::statusHidden);
+		$pages->save($p['period_hidden'], ['quiet' => true]);
+
+		$p['period_not_listed'] = self::newPage('time_period', $p['event'], 'test-fixture-category-period-not-listed', 'Test period_not_listed', [
+			'datetime_from' => 1893484800,
+			'accessable_for_guests' => 1,
+			'event_categories' => $p['category_not_listed'],
+		]);
+
+		$p['event_unpublished'] = self::newPage('event', $p['events'], 'test-fixture-category-event-unpublished', 'Test Category Event Unpublished', [
+			'datetime_from' => 1893484800,
+		], true);
+		$p['period_unpublished_event'] = self::newPage('time_period', $p['event_unpublished'], 'test-fixture-category-period-unpublished-event', 'Test period_unpublished_event', [
+			'datetime_from' => 1893484800,
+			'accessable_for_guests' => 1,
+			'event_categories' => $p['category_members'],
+		]);
+		$p['event_unpublished']->of(false);
+		$p['event_unpublished']->time_periods->add($p['period_unpublished_event']);
+		$pages->save($p['event_unpublished'], ['quiet' => true]);
+
+		return $p;
+	}
+
+	/**
+	 * Removes the pages of createCategoryTree(), also leftovers of an aborted
+	 * earlier run.
+	 */
+	public static function deleteCategoryTree(): void {
+		$pages = wire('pages');
+		foreach ([
+			// Saving a project creates a tag page with the project's name.
+			'template=project|tag, name=' . self::CATEGORY_PROJECT_NAME . ', include=all',
+			'template=event_category, name^=' . self::CATEGORY_NAME_PREFIX . ', include=all',
+		] as $selector) {
+			foreach ($pages->find($selector) as $page) {
 				$pages->delete($page, true);
 			}
 		}
@@ -747,6 +849,152 @@ final class Fixtures {
 					$pages->delete($page, true);
 				}
 			}
+		}
+	}
+
+	public const HTML_PREFIX = 'test-fixture-html-';
+	public const HTML_ADMIN_NAME = 'test-fixture-html-admin';
+
+	/**
+	 * Creates pages below the home page for page requests outside the API:
+	 * - locked: published, locked with a password
+	 * - not_released: published, release time in the future
+	 * - article: published article below /aktuelles/ with one approved
+	 *   comment (field `comments`, votes enabled)
+	 * Remove them again with deleteHtmlRequestTree().
+	 *
+	 * @return array<string, Page>
+	 */
+	public static function createHtmlRequestTree(string $password): array {
+		self::deleteHtmlRequestTree();
+
+		$pages = wire('pages');
+		$root = $pages->get('/');
+
+		$p = [
+			'locked' => self::newPage('default_page', $root, self::HTML_PREFIX . 'locked', 'Test Fixture Html Locked', [
+				'pageaccess_password_activate' => 1,
+				'pageaccess_password' => $password,
+			]),
+			'not_released' => self::newPage('default_page', $root, self::HTML_PREFIX . 'not-released', 'Test Fixture Html Not Released', [
+				'releasetime_start_activate' => 1,
+				'releasetime_start' => 4102444800,
+			]),
+			'article' => self::newPage('article', $pages->get('path=/aktuelles/, template=articles_container'), self::HTML_PREFIX . 'article', 'Test Fixture Html Article'),
+		];
+
+		$article = $p['article'];
+		$article->of(false);
+		$comment = new Comment();
+		$comment->text = 'Test Fixture Html Comment';
+		$comment->cite = 'Test Fixture';
+		$comment->email = 'test-fixture-html@example.invalid';
+		$article->comments->add($comment);
+		// Adding a comment mails the notification addresses of the field, and
+		// approving it may notify subscribers; test comments must not send
+		// mail. Besides the admin notification itself, WireMail::send() is
+		// replaced for every mailer meanwhile, so no other mail can leave this
+		// process either.
+		$noMail = wire()->addHookBefore('CommentNotifications::sendAdminNotificationEmail', function (HookEvent $event): void {
+			$event->replace = true;
+			$event->return = false;
+		});
+		$noWireMail = wire()->addHookBefore('WireMail::send', function (HookEvent $event): void {
+			$event->replace = true;
+			$event->return = 0;
+		});
+		try {
+			$pages->save($article, ['quiet' => true]);
+			if (!$comment->id) {
+				throw new \RuntimeException('The test comment was not saved.');
+			}
+			// New comments are stored as pending; approve it like the admin does.
+			$field = wire('fields')->get('comments');
+			$field->type->updateComment($article, $field, $comment, ['status' => Comment::statusApproved]);
+		} finally {
+			wire()->removeHook($noMail);
+			wire()->removeHook($noWireMail);
+		}
+
+		return $p;
+	}
+
+	/**
+	 * Ids of the comments on the article of createHtmlRequestTree().
+	 *
+	 * @return int[]
+	 */
+	public static function htmlArticleCommentIds(): array {
+		$article = wire('pages')->get('template=article, name=' . self::HTML_PREFIX . 'article, include=all');
+		if (!$article->id) {
+			return [];
+		}
+		$query = wire('database')->prepare('SELECT id FROM `' . wire('fields')->get('comments')->getTable() . '` WHERE pages_id=:id ORDER BY id');
+		$query->bindValue(':id', $article->id, \PDO::PARAM_INT);
+		$query->execute();
+
+		return array_map('intval', $query->fetchAll(\PDO::FETCH_COLUMN));
+	}
+
+	/**
+	 * Number of votes stored for the given comments.
+	 *
+	 * @param int[] $commentIds
+	 */
+	public static function commentVoteCount(array $commentIds): int {
+		if (!$commentIds) {
+			return 0;
+		}
+		$table = wire('fields')->get('comments')->getTable() . '_votes';
+
+		return (int) wire('database')->query('SELECT COUNT(*) FROM `' . $table . '` WHERE comment_id IN (' . implode(',', array_map('intval', $commentIds)) . ')')->fetchColumn();
+	}
+
+	/**
+	 * Removes the pages of createHtmlRequestTree(), also leftovers of an
+	 * aborted earlier run.
+	 */
+	public static function deleteHtmlRequestTree(): void {
+		$commentIds = self::htmlArticleCommentIds();
+		if ($commentIds) {
+			// Votes are not removed together with the page.
+			$table = wire('fields')->get('comments')->getTable() . '_votes';
+			wire('database')->exec('DELETE FROM `' . $table . '` WHERE comment_id IN (' . implode(',', $commentIds) . ')');
+		}
+
+		$pages = wire('pages');
+		foreach ($pages->find('template=default_page|article, name^=' . self::HTML_PREFIX . ', include=all') as $page) {
+			$pages->delete($page, true);
+		}
+	}
+
+	/**
+	 * Creates a superuser account (HTML_ADMIN_NAME) with the given password,
+	 * for logins through the admin login form. Remove it again with
+	 * deleteHtmlAdmin().
+	 */
+	public static function createHtmlAdmin(string $password): User {
+		self::deleteHtmlAdmin();
+
+		$users = wire('users');
+		$user = $users->add(self::HTML_ADMIN_NAME);
+		$user->of(false);
+		$user->pass = $password;
+		$user->addRole('superuser');
+		$users->save($user);
+
+		return $user;
+	}
+
+	/**
+	 * Removes the account of createHtmlAdmin(), also a leftover of an aborted
+	 * earlier run.
+	 */
+	public static function deleteHtmlAdmin(): void {
+		$users = wire('users');
+		$user = $users->get('name=' . self::HTML_ADMIN_NAME . ', include=all');
+		if ($user->id) {
+			$users->delete($user);
 		}
 	}
 

@@ -30,14 +30,6 @@ class ArticlesTiles extends TwackComponent {
     $this->articlesPage = $this->articlesService->getArticlesPage();
     $this->requestUrl = '/api/page' . AppApi::getUrlRelativeToRoot($this->articlesPage->url);
 
-    $this->addScript('ajaxmasonry.js', [
-      'path' => wire('config')->urls->templates . 'assets/js/',
-      'absolute' => true
-    ]);
-    $this->addScript('legacy/ajaxmasonry.js', [
-      'path' => wire('config')->urls->templates . 'assets/js/',
-      'absolute' => true
-    ]);
   }
 
   public function getAjax($ajaxArgs = []) {

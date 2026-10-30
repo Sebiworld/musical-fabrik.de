@@ -134,17 +134,6 @@ class EventsBox extends TwackComponent {
 		if ($projectPage->template->hasField('page_reference') && $projectPage->page_reference->id) {
 			$this->ticketPage = $projectPage->page_reference;
 		}
-
-		// if (($this->performances && count($this->performances) > 0) || ($this->performancesOld && count($this->performancesOld) > 0)) {
-		// $this->addScript('performances-box.js', array(
-		// 	'path'     => wire('config')->urls->templates . 'assets/js/',
-		// 	'absolute' => true
-		// ));
-		// $this->addScript('legacy/performances-box.js', array(
-		// 	'path'     => wire('config')->urls->templates . 'assets/js/',
-		// 	'absolute' => true
-		// ));
-		// }
 	}
 
 	public function getAjax($ajaxArgs = []) {

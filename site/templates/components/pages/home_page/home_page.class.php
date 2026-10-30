@@ -16,11 +16,6 @@ class HomePage extends TwackComponent {
 				$general->addComponent($element->template->name, ['directory' => 'sections', 'page' => $element, 'list' => 'sections']);
 			}
 		}
-
-		// $this->addStyle('home_page.css', array(
-    //     'path'     => wire('config')->urls->templates . 'assets/css/',
-		// 	'absolute' => true
-    // ));
 	}
 
 	public function getAjax($ajaxArgs = []) {

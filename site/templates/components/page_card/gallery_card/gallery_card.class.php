@@ -22,14 +22,6 @@ class GalleryCard extends TwackComponent {
 			$this->loop = true;
 		}
 
-		$this->addScript('swiper.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-		$this->addScript('legacy/swiper.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
 	}
 
 	protected function getImagesFromGallery() {

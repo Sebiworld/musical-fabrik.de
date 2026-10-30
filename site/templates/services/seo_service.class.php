@@ -374,6 +374,37 @@ class SeoService extends TwackComponent {
 	}
 
 	/**
+	 * Absolute URL of a page in the frontend (same host and path rule as the
+	 * canonical URL, without a path maintained in the SEO field).
+	 * @param Page $page
+	 * @return string
+	 */
+	public function getFrontendUrl(Page $page) {
+		return $this->getCanonicalUrl($this->getPagePath($page));
+	}
+
+	/**
+	 * Whether the frontend can show a page: not a page of the admin tree and
+	 * not a page in the trash.
+	 * @param Page $page
+	 * @return bool
+	 */
+	public function hasFrontendUrl(Page $page) {
+		return $page->id > 0
+			&& !$this->isAdminPage($page)
+			&& !$page->isTrash();
+	}
+
+	/**
+	 * Whether a page belongs to the admin tree, which the backend still serves.
+	 * @param Page $page
+	 * @return bool
+	 */
+	public function isAdminPage(Page $page) {
+		return $page->rootParent()->id === (int) $this->wire('config')->adminRootPageID;
+	}
+
+	/**
 	 * @param Page $page
 	 * @return string Path relative to the frontend root, with leading and trailing slash
 	 */
