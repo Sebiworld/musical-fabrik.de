@@ -107,6 +107,14 @@ abstract class ApiTestCase extends TestCase {
 	}
 
 	/**
+	 * The API key resolved for this run, for requests that do not go through
+	 * apiRequest() (e.g. to the endpoint without trailing slash).
+	 */
+	protected static function apiKey(): string {
+		return (string) self::$resolvedApiKey;
+	}
+
+	/**
 	 * `headers` maps lower-case response header names to their values; a
 	 * header sent more than once keeps its last value. `$body` is sent as the
 	 * request body as given (e.g. an http_build_query() string).

@@ -25,75 +25,13 @@ class ContentGallery extends TwackComponent {
 			$this->description = $this->page->text;
 		}
 
-		$this->addScript('content-gallery.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-		$this->addScript('legacy/content-gallery.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-
 		$this->type = 'masonry';
-		if ($this->page->template->hasField('gallery_type') && $this->page->gallery_type->id === 2) {
-			// Slider View
-			$this->type = 'slider';
-			$this->setView('ContentGallerySlider');
-
-			$this->sliderAlign = 'center';
-			if (isset($args['sliderAlign'])) {
-				$this->sliderAlign = $args['sliderAlign'];
-			} elseif (isset($this->section) && $this->section) {
-				// In sections the slides should be left-justified.
-				$this->sliderAlign = 'left';
+		if ($this->page->template->hasField('gallery_type')) {
+			$types = [2 => 'slider', 3 => 'grid', 4 => 'featured_slider', 5 => 'panorama_slider'];
+			$typeId = $this->page->gallery_type->id;
+			if (is_int($typeId) && isset($types[$typeId])) {
+				$this->type = $types[$typeId];
 			}
-		} elseif ($this->page->template->hasField('gallery_type') && $this->page->gallery_type->id === 3) {
-			// Grid view
-			$this->type = 'grid';
-			$this->addScript('masonry.js', [
-				'path'     => wire('config')->urls->templates . 'assets/js/',
-				'absolute' => true
-			]);
-			$this->addScript('legacy/masonry.js', [
-				'path'     => wire('config')->urls->templates . 'assets/js/',
-				'absolute' => true
-			]);
-			$this->setView('ContentGalleryGrid');
-		} elseif ($this->page->template->hasField('gallery_type') && $this->page->gallery_type->id === 4) {
-			// Standard: Masonry-View
-			$this->type = 'featured_slider';
-			$this->setView('ContentGalleryMasonry');
-			$this->addScript('masonry.js', [
-				'path'     => wire('config')->urls->templates . 'assets/js/',
-				'absolute' => true
-			]);
-			$this->addScript('legacy/masonry.js', [
-				'path'     => wire('config')->urls->templates . 'assets/js/',
-				'absolute' => true
-			]);
-		} elseif ($this->page->template->hasField('gallery_type') && $this->page->gallery_type->id === 5) {
-			// Standard: Masonry-View
-			$this->type = 'panorama_slider';
-			$this->setView('ContentGalleryMasonry');
-			$this->addScript('masonry.js', [
-				'path'     => wire('config')->urls->templates . 'assets/js/',
-				'absolute' => true
-			]);
-			$this->addScript('legacy/masonry.js', [
-				'path'     => wire('config')->urls->templates . 'assets/js/',
-				'absolute' => true
-			]);
-		} else {
-			// Standard: Masonry-View
-			$this->setView('ContentGalleryMasonry');
-			$this->addScript('masonry.js', [
-				'path'     => wire('config')->urls->templates . 'assets/js/',
-				'absolute' => true
-			]);
-			$this->addScript('legacy/masonry.js', [
-				'path'     => wire('config')->urls->templates . 'assets/js/',
-				'absolute' => true
-			]);
 		}
 	}
 

@@ -6,14 +6,6 @@ class ContentChart extends TwackComponent {
 	public function __construct($args) {
 		parent::__construct($args);
 
-		$this->addScript('content_chart.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
-        $this->addScript('legacy/content_chart.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
 
 		// The title can be set by $args or by field "title":
 		if (isset($args['title'])) {

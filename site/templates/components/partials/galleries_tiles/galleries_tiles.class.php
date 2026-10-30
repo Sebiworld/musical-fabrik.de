@@ -24,14 +24,6 @@ class GalleriesTiles extends TwackComponent {
         $this->galleriesPage = $this->galleriesService->getGalleriesPage();
         $this->requestUrl = '/api/page' . AppApi::getUrlRelativeToRoot($this->galleriesPage->url);
 
-        $this->addScript('ajaxmasonry.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
-        $this->addScript('legacy/ajaxmasonry.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
     }
 
     public function getAjax($ajaxArgs = []) {

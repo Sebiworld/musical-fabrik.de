@@ -25,67 +25,6 @@ class ProjectPage extends TwackComponent {
         if ($this->projectPage->template->hasField('info_overlay') && !empty($this->projectPage->info_overlay)) {
             $this->infoOverlay = $this->projectPage->info_overlay;
         }
-
-        if ($this->projectPage->main_image) {
-            $this->main_image      = $this->projectPage->main_image;
-            $this->main_image_html = $this->getService('ImageService')->getPictureHtml(array(
-                'image'          => $this->main_image,
-                'alt'            => sprintf($this->_('Logo of %1$s'), $this->projectPage->title),
-                'pictureclasses' => array('ar-content'),
-                'loadAsync'      => true,
-                'default'        => array(
-                    'width' => 800
-                ),
-                'media' => array(
-                    '(max-width: 500px)' => array(
-                        'width' => 500
-                    ),
-                    '(min-width: 1200px)' => array(
-                        'width' => 1200
-                    )
-                )
-            ));
-        }
-
-        // Sidebar components:
-        $sidebar = $this->getGlobalComponent('sidebar');
-
-        // General data:
-        $sidebar->addComponent('GeneralDataBox');
-
-        // Images slider:
-        $sidebar->addComponent('ImagesBox');
-
-        // Information about the performances:
-        $sidebar->addComponent('EventsBox');
-
-        // Share Buttons:
-        $sidebar->addComponent('SharingBox');
-
-        // Partners:
-        $sidebar->addComponent('SponsorsBox', ['title' => $this->_('Our Partners'), 'useField' => 'partners']);
-
-        //Sponsors:
-        $sidebar->addComponent('SponsorsBox', ['title' => $this->_('Our Sponsors'), 'useField' => 'sponsors']);
-
-        // Include CSS file for the project
-        $this->loadProjectCss($this->projectPage->name);
-    }
-
-    /**
-     * Includes a CSS file (if available)
-     */
-    public function loadProjectCss($cssName) {
-        $cssPath = 'assets/css/' . Twack::getManifestFilename($cssName . '.css');
-
-        if (file_exists(wire('config')->paths->templates . $cssPath)) {
-            $this->addStyle($cssName . '.css', array(
-                'path'     => wire('config')->urls->templates . 'assets/css/',
-                'absolute' => true
-            ));
-            return true;
-        }
-        return false;
     }
 
     public function getAjax($ajaxArgs = []) {

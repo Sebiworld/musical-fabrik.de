@@ -5,7 +5,6 @@ class SectionPagesGrid extends TwackComponent {
 	public function __construct($args) {
 		parent::__construct($args);
 
-		$this->imageService = $this->getService('ImageService');
 		$this->projectService = $this->getService('ProjectService');
 
 		// Determine the ID of the one-page section:

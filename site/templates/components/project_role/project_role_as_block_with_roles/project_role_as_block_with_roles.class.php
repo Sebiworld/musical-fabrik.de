@@ -50,13 +50,4 @@ class ProjectRoleAsBlockWithRoles extends ProjectRoleBase {
 
 		return $portraits;
 	}
-
-	/**
-	 * Returns an HTML string with the output of all subroles.
-	 * @return string
-	 */
-	public function renderSubroles(){
-		// No output of the subroles, since these are already included in the view.
-		return '';
-	}
 }

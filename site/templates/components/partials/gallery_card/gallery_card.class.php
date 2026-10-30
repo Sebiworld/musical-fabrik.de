@@ -18,14 +18,6 @@ class GalleryCard extends TwackComponent {
 			$this->loop = true;
 		}
 
-		$this->addScript('swiper.js', array(
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		));
-		$this->addScript('legacy/swiper.js', array(
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		));
 	}
 
 	protected function getImagesFromGallery(){
@@ -53,9 +45,6 @@ class GalleryCard extends TwackComponent {
 		$output['datetime_from'] = $this->page->getUnformatted('datetime_from');
 		$output['intro'] = $this->page->intro;
 
-		if(wire('input')->get('htmlOutput')){
-			$output['html'] = $this->renderView();
-		}
 
 		if($this->page->main_image){
 			$output['main_image'] = $this->getAjaxOf($this->page->main_image->height(300));

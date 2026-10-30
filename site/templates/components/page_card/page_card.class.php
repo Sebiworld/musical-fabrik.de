@@ -86,9 +86,6 @@ class PageCard extends TwackComponent {
 			$output['project_id'] = $projectPage->id;
 		}
 
-		if ($this->wire('input')->get('htmlOutput')) {
-			$output['html'] = $this->renderView();
-		}
 
 		return $output;
 	}
@@ -147,9 +144,6 @@ class PageCard extends TwackComponent {
 			}
 		}
 
-		if ($this->wire('input')->get('htmlOutput')) {
-			$output['html'] = $this->renderView();
-		}
 
 		return $output;
 	}

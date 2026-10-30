@@ -5,8 +5,6 @@ class SectionCustomHero extends TwackComponent {
 	public function __construct($args) {
 		parent::__construct($args);
 
-		$this->imageService = $this->getService('ImageService');
-
 		// Determine the ID of the one-page section:
 		$this->sectionId = '';
 		if ((string) $this->page->section_name) {
@@ -20,14 +18,6 @@ class SectionCustomHero extends TwackComponent {
 			$this->title = $this->page->title;
 		}
 
-		$this->addScript('custom-hero.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-		$this->addScript('legacy/custom-hero.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
 
 		$this->addComponent('Alerts', ['directory' => 'partials', 'name' => 'alerts', 'useField' => 'alerts']);
 	}

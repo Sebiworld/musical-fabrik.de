@@ -11,7 +11,6 @@ if (!class_exists('Processwire\ProjectRoleBase')) {
 			parent::__construct($args);
 
 			// Get services that need all the roles:
-			$this->imageService = $this->getService('ImageService');
 			$this->projectService = $this->getService('ProjectService');
 			$this->projectRolesService = $this->getService('ProjectRolesService');
 			$this->idService = $this->getService('IdService');
@@ -87,45 +86,6 @@ if (!class_exists('Processwire\ProjectRoleBase')) {
 			}
 
 			return $portraits;
-		}
-
-		/**
-		 * Generates a component for each subrole
-		 * @return WireArray<TwackComponent>
-		 */
-		public function getSubroleComponents() {
-			$components = new WireArray();
-			foreach ($this->unterrollen as $projectRole) {
-				$components->add($this->getNewComponent(
-					'project_role_' . $this->viewType,
-					[
-						'directory' => 'project_role',
-						'parameters' => $this->getArray(),
-						'season' => $this->season,
-						'portraits' => $this->portraits->find('season_' . $this->staffel->id . '_project_role_' . $projectRole->id . '=1')
-					]
-				));
-			}
-			return $components;
-		}
-
-		/**
-		 * Returns an HTML string with the output of all subrolls.
-		 * @return string
-		 */
-		public function renderSubroles() {
-			$output = '';
-
-			foreach ($this->getSubroleComponents() as $component) {
-				try {
-					$output .= $component->render();
-				} catch (\Exception $e) {
-				}
-			}
-
-			$output = '';
-
-			return $output;
 		}
 	}
 }

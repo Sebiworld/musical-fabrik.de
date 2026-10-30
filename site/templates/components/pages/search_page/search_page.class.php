@@ -55,14 +55,6 @@ class SearchPage extends TwackComponent {
             $this->addComponent('PageCard', ['directory' => '', 'page' => $page, 'parameters' => $parameters, 'attributes' => $attributes, 'hoverAutoplay' => true]);
         }
 
-        $this->addScript('ajaxmasonry.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
-        $this->addScript('legacy/ajaxmasonry.js', array(
-            'path'     => wire('config')->urls->templates . 'assets/js/',
-            'absolute' => true
-        ));
     }
 
     public function getAjax($ajaxArgs = []) {

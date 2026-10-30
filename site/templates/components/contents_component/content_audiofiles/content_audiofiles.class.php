@@ -25,14 +25,6 @@ class ContentAudiofiles extends TwackComponent {
 			$this->description = $this->page->text;
 		}
 
-		$this->addScript('mediaplayer.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-		$this->addScript('legacy/mediaplayer.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
 	}
 
 	public function getAjax($ajaxArgs = []) {
