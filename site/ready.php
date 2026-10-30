@@ -101,6 +101,32 @@ $wire->addHookAfter('SeoMaestro::sitemapAlwaysExclude', function (HookEvent $eve
 	$event->return = $excluded;
 });
 
+// The sitemap file follows every change of a page: the change marks it as
+// outdated, and the end of the next web request rewrites it (SitemapService).
+$markSitemapOutdated = function (HookEvent $event) {
+	$page = $event->arguments(0);
+	$sitemap = $event->wire('modules')->get('Twack')->getService('SitemapService');
+	if ($page instanceof Page && $sitemap->isRelevantChange($page)) {
+		$sitemap->markOutdated();
+	}
+};
+$wire->addHookAfter('Pages::saved', $markSitemapOutdated);
+$wire->addHookAfter('Pages::deleted', $markSitemapOutdated);
+
+// Runs after exit() as well, which ends API requests. SitemapService decides
+// whether this request may write the sitemap: after sending the response
+// (FastCGI), otherwise only in admin requests.
+register_shutdown_function(function () use ($wire) {
+	if (PHP_SAPI === 'cli') {
+		return;
+	}
+	try {
+		$wire->wire('modules')->get('Twack')->getService('SitemapService')->refreshAtEndOfRequest();
+	} catch (\Throwable $e) {
+		$wire->wire('log')->save('sitemap', 'Sitemap not refreshed: ' . $e->getMessage());
+	}
+});
+
 // Link preview services run no JavaScript and only see the shell of the
 // frontend. The web server sends their requests here with the frontend path
 // in `path`, and they get the title, description and image of that page.
@@ -108,4 +134,93 @@ $wire->addHook('/link-preview/', function (HookEvent $event) {
 	$service = $event->wire('modules')->get('Twack')->getService('LinkPreviewService');
 
 	return $service->renderResponse($event->wire('input')->get('path'));
+});
+
+// "View" in the admin opens the page in the frontend: the backend renders no
+// pages. Pages of the admin tree keep their own view, pages in the trash have
+// no frontend counterpart and get no view link. Page::url and friends stay
+// untouched, because API fields, sitemap and link previews depend on them.
+$frontendViewService = function (HookEvent $event) {
+	return $event->wire('modules')->get('Twack')->getService('SeoService');
+};
+
+$wire->addHookAfter('ProcessPageListActions::getActions', function (HookEvent $event) use ($frontendViewService) {
+	$page = $event->arguments(0);
+	$actions = $event->return;
+	if (!is_array($actions) || !isset($actions['view']) || !($page instanceof Page)) {
+		return;
+	}
+
+	$service = $frontendViewService($event);
+	if ($service->isAdminPage($page)) {
+		return;
+	}
+	if ($service->hasFrontendUrl($page)) {
+		$actions['view']['url'] = $service->getFrontendUrl($page);
+	} else {
+		unset($actions['view']);
+	}
+	$event->return = $actions;
+});
+
+// The view tab of the page editor.
+$wire->addHookBefore('ProcessPageEdit::buildFormView', function (HookEvent $event) use ($frontendViewService) {
+	$page = $event->object->getPage();
+	$service = $frontendViewService($event);
+	if ($service->isAdminPage($page)) {
+		return;
+	}
+	if ($service->hasFrontendUrl($page)) {
+		$event->arguments(0, $service->getFrontendUrl($page));
+	} else {
+		$event->replace = true;
+	}
+});
+
+// The entries of the view dropdown (panel, modal, new tab, exit and view).
+$wire->addHookAfter('ProcessPageEdit::getViewActions', function (HookEvent $event) use ($frontendViewService) {
+	$editor = $event->object;
+	$page = $editor->getPage();
+	$service = $frontendViewService($event);
+	if ($service->isAdminPage($page) || $event->arguments(1)) {
+		return;
+	}
+	if (!$service->hasFrontendUrl($page)) {
+		$event->return = [];
+		return;
+	}
+
+	$oldUrl = $editor->getViewUrl();
+	$newUrl = $service->getFrontendUrl($page);
+	$actions = [];
+	foreach ($event->return as $name => $action) {
+		// A draft page gets "?draft=1" appended to the view URL.
+		$actions[$name] = str_replace(["'" . $oldUrl . "?draft=1'", "'" . $oldUrl . "'"], ["'" . $newUrl . "'", "'" . $newUrl . "'"], $action);
+	}
+	$event->return = $actions;
+});
+
+// "Save + View" redirects to the frontend, and is not offered without one.
+$wire->addHookAfter('ProcessPageEdit::processSubmitAction', function (HookEvent $event) use ($frontendViewService) {
+	if ($event->arguments(0) !== 'view') {
+		return;
+	}
+	$editor = $event->object;
+	$page = $editor->getPage();
+	$service = $frontendViewService($event);
+	if ($service->isAdminPage($page) || !$service->hasFrontendUrl($page)) {
+		return;
+	}
+	$editor->setRedirectUrl($service->getFrontendUrl($page));
+});
+
+$wire->addHookAfter('ProcessPageEdit::getSubmitActions', function (HookEvent $event) use ($frontendViewService) {
+	$page = $event->object->getPage();
+	$actions = $event->return;
+	$service = $frontendViewService($event);
+	if (!isset($actions['view']) || $service->isAdminPage($page) || $service->hasFrontendUrl($page)) {
+		return;
+	}
+	unset($actions['view']);
+	$event->return = $actions;
 });

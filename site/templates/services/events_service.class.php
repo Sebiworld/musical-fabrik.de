@@ -250,17 +250,49 @@ class EventsService extends TwackComponent {
 
 			$locations->add(wire('pages')->find("template.name=location, location.owner.has_parent={$event->id}, check_access=0"));
 
-			$categorySelector = "template.name=event_category, event_categories.owner.has_parent={$event->id}, check_access=0";
 			if (wire('user')->isGuest()) {
-				$categorySelector .= ', fuer_gaeste_freigegeben=1';
+				$categories->add($this->getGuestCategoriesOfEvent($event));
+			} else {
+				$categories->add(wire('pages')->find("template.name=event_category, event_categories.owner.has_parent={$event->id}, check_access=0"));
 			}
-			$categories->add(wire('pages')->find($categorySelector));
 		}
 
 		$ajaxOutput['categories'] = $categories->explode(['id', 'name', 'title']);
 		$ajaxOutput['locations'] = $locations->explode(['id', 'name', 'title', 'adresse', 'map.lat', 'map.lng', 'map.zoom']);
 
 		return $ajaxOutput;
+	}
+
+	/**
+	 * Categories of an event that a guest may see: only those of the time
+	 * periods in its field time_periods that are released for guests,
+	 * published, not hidden and viewable as guest (release time and access
+	 * permissions of the period and its parents).
+	 * @return PageArray
+	 */
+	protected function getGuestCategoriesOfEvent(Page $event) {
+		$categoryIds = [];
+		foreach ($event->time_periods as $period) {
+			if (!($period instanceof Page) || !$period->id || $period->template->name !== 'time_period') {
+				continue;
+			}
+			if ($period->isUnpublished() || $period->isHidden() || $period->isTrash()) {
+				continue;
+			}
+			if (!$period->getUnformatted('accessable_for_guests') || !$period->viewable(false)) {
+				continue;
+			}
+
+			foreach ($period->getUnformatted('event_categories') as $category) {
+				$categoryIds[] = (int) $category->id;
+			}
+		}
+
+		if (empty($categoryIds)) {
+			return new PageArray();
+		}
+
+		return wire('pages')->find('template.name=event_category, id=' . implode('|', array_unique($categoryIds)) . ', check_access=0');
 	}
 
 	/**

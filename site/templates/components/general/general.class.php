@@ -7,86 +7,16 @@ class General extends TwackComponent {
 
 		$this->configurationService = $this->getService('ConfigurationService');
 
-		// Additional meta data is collected here:
-		$this->metas = new WireData();
-
 		// general should be globally available
 		wire('twack')->makeComponentGlobal($this, 'general');
 
-		// Add main scripts for all pages:
-		$this->addStyle('bootstrap.css', [
-			'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true
-		]);
-		$this->addStyle('swiper.css', [
-			'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true
-		]);
-		$this->addStyle('lightgallery.css', [
-			'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true
-		]);
-		$this->addStyle('starability.css', [
-			'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true
-		]);
-		$this->addStyle('ionicons.css', [
-			'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true
-		]);
-		$this->addStyle('hamburgers.css', [
-			'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true
-		]);
-		$this->addStyle('main.css', [
-			'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true
-		]);
-
-		$this->addScript('general.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-		$this->addScript('legacy/general.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-
-		// Add cookie scripts:
-		$this->addScript('cookies.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-		$this->addScript('legacy/cookies.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-
-		// Comment-Assets:
-		$this->addStyle('comments.css', [
-			'path'     => wire('config')->urls->templates . 'assets/css/',
-			'absolute' => true
-		]);
-		$this->addScript('comments.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-		$this->addScript('legacy/comments.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-
-		// Custom Dev output
+		// Collects Twack::devEcho() calls, which would otherwise be echoed into the response for superusers
 		$devOutput = $this->addComponent('DevOutput', ['globalName' => 'dev_output']);
 		wire('twack')->registerDevEchoComponent($devOutput);
 
-		// Create Layout Components:
-		$this->addComponent('HeaderComponent', ['globalName' => 'header']);
-		$this->addComponent('FooterComponent', ['globalName' => 'footer']);
-		$this->addComponent('SidebarComponent', ['globalName' => 'sidebar', 'directory' => '']);
 		$this->breadcrumbs = $this->addComponent('BreadcrumbsComponent', ['name' => 'breadcrumbs', 'directory' => 'partials']);
 
-
+		// Form sections and content blocks add their forms to this global component:
 		$this->addComponent('FormsComponent', ['globalName' => 'forms', 'directory' => '']);
 
 		$this->projectComponent = null;
@@ -146,16 +76,6 @@ class General extends TwackComponent {
 			$this->unlockKey = $passwordModule->createUnlockKey($this->page);
 		} else {
 			$this->locked = true;
-		}
-	}
-
-	/**
-	 * Adds an additional meta tag
-	 * @param string $metatag  	Metatag string (including html)
-	 */
-	public function addMeta($metaname, $metatag) {
-		if (is_string($metaname) && !empty($metaname) && is_string($metatag) && !empty($metatag)) {
-			$this->metas->{$metaname} = $metatag;
 		}
 	}
 

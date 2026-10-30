@@ -34,3 +34,8 @@ if ($actualDatabase !== $expectedDatabase) {
 	);
 	exit(1);
 }
+
+// Page saves of the tests mark the sitemap file as outdated (SitemapService).
+// The real file is shared with the development server, so the test process
+// uses a path of its own; tests that need the real file set it themselves.
+wire('modules')->get('Twack')->getService('SitemapService')->setPath(sys_get_temp_dir() . '/mf-test-sitemap-' . getmypid() . '.xml');

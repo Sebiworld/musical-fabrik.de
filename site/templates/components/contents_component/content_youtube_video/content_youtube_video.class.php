@@ -15,14 +15,6 @@ class ContentYoutubeVideo extends TwackComponent {
 			$this->videoHeight = $this->page->height;
 		}
 
-		$this->addScript('content-video.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-		$this->addScript('legacy/content-video.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
 	}
 
 	public function getAjax($ajaxArgs = []) {

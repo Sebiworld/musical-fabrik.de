@@ -6,7 +6,6 @@ class DefaultPage extends TwackComponent {
 		parent::__construct($args);
 
 		$this->configPage = $this->getService('ConfigurationService')->getConfigurationPage();
-		$this->imageService = $this->getService('ImageService');
 
 		// Content can be added to the global component 'mainContent':
 		wire('twack')->makeComponentGlobal($this, 'mainContent');
@@ -72,8 +71,6 @@ class DefaultPage extends TwackComponent {
 				$this->addComponent($element->template->name, ['directory' => 'sections', 'page' => $element, 'list' => 'sections']);
 			}
 		}
-
-		$this->locked = !$this->wire('modules')->get('PageAccessPassword')->hasAccess($this->page);
 	}
 
 	public function getAjax($ajaxArgs = []) {

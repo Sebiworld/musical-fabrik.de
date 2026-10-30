@@ -78,13 +78,6 @@ class FormTemplate extends TwackComponent {
 			throw new ComponentNotInitializedException('FormTemplate', 'No form template was defined on the container page.');
 		}
 
-		if ($this->template->hasField('antispam_code') && !$this->wire('twack')->isTwackAjaxCall()) {
-			if (empty($this->getAntispamCode())) {
-				$this->regenerateAntispamCode();
-			}
-			$this->placeholders['session_antispam_code'] = $this->getAntispamCode();
-		}
-
 		require_once __DIR__ . '/form_output_type.class.php';
 
 		// Determine form output. Later other possibilities than bootstrap should be possible:
@@ -105,7 +98,8 @@ class FormTemplate extends TwackComponent {
 		// When the template is set, it is run through and it is evaluated which fields must be generated and validated:
 		$this->setTemplate($this->template);
 
-		if (wire('input')->post->int('form-origin') === $this->formOrigin) {
+		// Submissions are only evaluated in JSON requests (API); they answer with JSON.
+		if ($this->wire('twack')->isTwackAjaxCall() && wire('input')->post->int('form-origin') === $this->formOrigin) {
 			$this->evaluationResponse = $this->evaluateRequest();
 		}
 
@@ -115,28 +109,6 @@ class FormTemplate extends TwackComponent {
 
 		// When the template is set, it is run through and it is evaluated which fields must be generated and validated:
 		// $this->setTemplate($this->template);
-
-		// The form script makes the form Ajax-enabled. An evaluation without Ajax is not intended.
-		$this->addScript('form-template.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-		$this->addScript('legacy/form-template.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true
-		]);
-	}
-
-	protected function regenerateAntispamCode() {
-		wire('session')->set('antispam_code_' . $this->formOrigin, mt_rand(1000, 9999));
-	}
-
-	protected function clearAntispamCode() {
-		wire('session')->remove('antispam_code_' . $this->formOrigin);
-	}
-
-	protected function getAntispamCode() {
-		return wire('session')->get('antispam_code_' . $this->formOrigin);
 	}
 
 	/**
@@ -170,11 +142,6 @@ class FormTemplate extends TwackComponent {
 				throw new FormException($this->_('Form could not be submitted.'), 'form_rejected');
 			}
 
-			if (!$this->wire('twack')->isTwackAjaxCall()) {
-				// Throws Exception if csrf validation fails:
-				wire('session')->CSRF->validate($this->formOrigin);
-			}
-
 			$newRequest            = new Page();
 			$newRequest->template  = $this->template;
 			$errorFlag             = false;
@@ -193,26 +160,6 @@ class FormTemplate extends TwackComponent {
 				$field = $this->template->fieldgroup->getField($fieldParams->name, true);
 
 				if ($field->name === 'antispam_code') {
-					if ($this->wire('twack')->isTwackAjaxCall()) {
-						continue;
-					}
-
-					$antispamCode = wire('input')->post->int('antispam_code');
-
-					$output['fields'][$field->name] = [
-						'name'           => $field->name,
-						'label'          => $field->label,
-						'currentValue'   => '',
-						'error'          => [],
-						'isSuccessful'   => true
-					];
-
-					if ($this->getAntispamCode() !== $antispamCode) {
-						$errorFlag                                 = true;
-						$output['fields'][$field->name]['error'][] = $this->_('Please fill in the code above.');
-						$output['fields'][$field->name]['isSuccessful'] = false;
-						// $this->regenerateAntispamCode();
-					}
 					continue;
 				}
 
@@ -265,7 +212,7 @@ class FormTemplate extends TwackComponent {
 			foreach ($this->fields as $fieldParams) {
 				$field = $this->template->fieldgroup->getField($fieldParams->name, true);
 
-				if ($field->name === 'antispam_code' && $this->wire('twack')->isTwackAjaxCall()) {
+				if ($field->name === 'antispam_code') {
 					continue;
 				}
 
@@ -332,13 +279,6 @@ class FormTemplate extends TwackComponent {
 			$output['request_id'] = $newRequest->id;
 			$guard->recordSubmission();
 			$guard->unlock();
-		} catch (WireCSRFException $e) {
-			$guard->unlock();
-			$message                         = $this->_('This request was apparently forged and therefore aborted.');
-			$output['error']['csrf_error']   = $message;
-			$output['submission_blocked']    = true;
-			$output['status']                = false;
-			return $this->respondError($output, 403, 'csrf_failed', $message);
 		} catch (FormCriticalException $e) {
 			$guard->unlock();
 			$output['error']['form_error']      = $e->getMessage();
@@ -432,9 +372,7 @@ class FormTemplate extends TwackComponent {
 			wire('log')->save('forms', 'An error occurred while sending the notification: ' . $e->getMessage());
 		}
 
-		$this->clearAntispamCode();
 		wire('session')->set($this->formOrigin, $messageIdent);
-		wire('session')->CSRF->resetToken($this->formularName);
 		unset($_POST);
 
 		return $this->respondSuccess($output);
@@ -864,23 +802,13 @@ class FormTemplate extends TwackComponent {
 					continue;
 				}
 
-				if (wire('modules')->isInstalled('AppApi') && wire('modules')->get('AppApi')->isApiCall()) {
-					// Do not output fields that do not have HTML output:
-					$ajaxOutput = $this->getFieldAjax($field, $newRequest);
-					if (empty($ajaxOutput)) {
-						continue;
-					}
-
-					$field->ajax = $ajaxOutput;
-				} else {
-					// Do not output fields that do not have HTML output:
-					$htmlOutput = $this->getFieldHtml($field, $newRequest);
-					if (empty($htmlOutput)) {
-						continue;
-					}
-
-					$field->inputHtml = $htmlOutput;
+				// Do not output fields that have no output:
+				$ajaxOutput = $this->getFieldAjax($field, $newRequest);
+				if (empty($ajaxOutput)) {
+					continue;
 				}
+
+				$field->ajax = $ajaxOutput;
 
 				$this->fields->add($field);
 			} catch (\Exception $e) {
@@ -909,9 +837,6 @@ class FormTemplate extends TwackComponent {
 			'form_origin' => $this->formOrigin,
 			'form_name' => $this->formularName,
 			'fields' => [],
-			// 'csrf_token' => wire('session')->CSRF->renderInput($this->formOrigin),
-			// 'csrf_tokenname' => wire('session')->CSRF->getTokenName($this->formOrigin),
-			// 'csrf_tokenvalue' => wire('session')->CSRF->getTokenValue($this->formOrigin)
 		];
 
 		if (!empty($this->fields)) {
@@ -920,7 +845,7 @@ class FormTemplate extends TwackComponent {
 					continue;
 				}
 
-				if ($field->name === 'antispam_code' && $this->wire('twack')->isTwackAjaxCall()) {
+				if ($field->name === 'antispam_code') {
 					continue;
 				}
 

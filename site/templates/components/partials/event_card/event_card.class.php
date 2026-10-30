@@ -20,9 +20,6 @@ class EventCard extends TwackComponent {
 		$output['timestamp_until'] = $this->page->getUnformatted('timestamp_until');
 		$output['intro'] = $this->page->intro;
 
-		if(wire('input')->get('htmlOutput')){
-			$output['html'] = $this->renderView();
-		}
 
 		if($this->page->main_image){
 			$output['main_image'] = $this->getAjaxOf($this->page->main_image->height(300));

@@ -14,7 +14,6 @@ class Portrait extends TwackComponent {
 			$this->root = true;
 		}
 
-		$this->imageService = $this->getService('ImageService');
 		$this->projectService = $this->getService('ProjectService');
 
 		// Read attributes from the page that can be used to sort the WireArray:

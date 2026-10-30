@@ -35,16 +35,6 @@ class ArticlesCarousel extends TwackComponent {
 
 		$this->articlesPage = $articlesService->getArticlesPage();
 
-		$this->addScript('swiper.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true,
-			'inline' => true
-		]);
-		$this->addScript('legacy/swiper.js', [
-			'path'     => wire('config')->urls->templates . 'assets/js/',
-			'absolute' => true,
-			'inline' => true
-		]);
 	}
 
 	public function getAjax($ajaxArgs = []) {
