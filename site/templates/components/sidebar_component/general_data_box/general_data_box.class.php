@@ -47,6 +47,7 @@ class GeneralDataBox extends TwackComponent {
 			// Of all roles for which no fixed number has been specified, the corresponding portraits are counted:
 			$this->numberOfParticipants = 0;
 			$portraits          = new PageArray();
+			$rolesService = $this->getService('ProjectRolesService');
 
 			foreach ($projectRolesPage->find('template.name=project_role') as $projectRole) {
 				if (!empty($projectRole->amount)) {
@@ -55,7 +56,17 @@ class GeneralDataBox extends TwackComponent {
 				}
 
 				foreach ($projectRole->participants as $participant) {
-					$portraits->add($participant->portraits);
+					// Entries for hidden casts or seasons only are left out, as in the roles:
+					if ($rolesService->isForHiddenReferencesOnly($participant)) {
+						continue;
+					}
+
+					foreach ($participant->portraits as $portrait) {
+						// Only portraits the current user may see are counted:
+						if ($rolesService->isVisibleReference($portrait)) {
+							$portraits->add($portrait);
+						}
+					}
 				}
 			}
 

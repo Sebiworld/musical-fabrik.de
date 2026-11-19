@@ -39,7 +39,14 @@ class EventCard extends TwackComponent {
 		// Should the periods of the appointment be displayed?
 		if (!wire('input')->get('hide_time_periods')) {
 			$output['time_periods'] = [];
+			$eventsService = $this->getService('EventsService');
+			$rolesService = $this->getService('ProjectRolesService');
+			$asGuest = wire('user')->isGuest();
 			foreach ($this->page->time_periods->sort('timestamp_from') as $period) {
+				if (!$eventsService->isListablePeriod($period, $asGuest)) {
+					continue;
+				}
+
 				$zr = [
 					'id' => $period->id,
 					'title' => $period->title,
@@ -55,7 +62,9 @@ class EventCard extends TwackComponent {
 				foreach ($period->project_roles as $projectRole) {
 					$rolleOutput = [
 						'id' => $projectRole->project_roles->id,
-						'besetzungen' => $projectRole->casts->explode('id')
+						'besetzungen' => array_map(function ($cast) {
+							return $cast->id;
+						}, $rolesService->filterVisibleReferences($projectRole->casts))
 					];
 
 					$zr['project_roles'][$projectRole->project_roles->id] = $rolleOutput;
@@ -65,7 +74,7 @@ class EventCard extends TwackComponent {
 				$zr['categories'] = $period->event_categories->explode('id');
 
 				// cast:
-				if ($period->cast instanceof Page && $period->cast->id) {
+				if ($period->cast instanceof Page && $period->cast->id && $rolesService->isVisibleReference($period->cast)) {
 					$zr['cast'] = [
 						'id' => $period->cast->id,
 						'title' => $period->cast->title,
