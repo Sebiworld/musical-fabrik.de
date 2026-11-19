@@ -106,13 +106,14 @@ class FieldtypeProjectRoleProjectRole extends WireData {
 	 */
 	public function __toString() {
 		$output = '<p>';
-		$output .= '<strong>'.$this->projectRole->title.'</strong>';
+		$sanitizer = wire('sanitizer');
+		$output .= '<strong>'.$sanitizer->entities((string) $this->projectRole->getUnformatted('title')).'</strong>';
 
 		if($this->casts && $this->casts instanceof PageArray && count($this->casts) > 0){
 			$output .= '<br/><em>';
 			foreach($this->casts as $key => $cast){
 				if($key > 0) $output .= ', ';
-				$output .= $cast->title;
+				$output .= $sanitizer->entities((string) $cast->getUnformatted('title'));
 			}
 			$output .= '</em>';
 		}

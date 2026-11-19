@@ -8,6 +8,13 @@ class ProjectRolesService extends TwackComponent {
 	protected $projectPage;
 	protected $portraitsContainer;
 
+	/**
+	 * Results of visibility checks within this request, by check, user and
+	 * page. Cleared whenever a page is saved or deleted.
+	 * @var array<string, bool>
+	 */
+	protected $visibilityCache = [];
+
 	public function __construct($args) {
 		parent::__construct($args);
 
@@ -25,6 +32,116 @@ class ProjectRolesService extends TwackComponent {
 		}
 
 		$this->portraitsContainer = wire('pages')->find('template.name=portraits_container, include=hidden, has_parent=' . $this->projectPage->id);
+
+		$this->wire('pages')->addHookAfter('savedPageOrField', $this, 'clearVisibilityCache');
+		$this->wire('pages')->addHookAfter('deleted', $this, 'clearVisibilityCache');
+	}
+
+	/**
+	 * Empties the cache of visibility checks (hooked to page saves and deletes).
+	 */
+	public function clearVisibilityCache($event = null) {
+		$this->visibilityCache = [];
+	}
+
+	/**
+	 * Runs a visibility check once per request for the same check, user and page.
+	 * @param string $check name of the check
+	 * @param Page $page
+	 * @param callable $callback returns the result
+	 * @return bool
+	 */
+	protected function cachedVisibility($check, Page $page, callable $callback) {
+		$key = $check . ':' . wire('user')->id . ':' . $page->id;
+		if (!array_key_exists($key, $this->visibilityCache)) {
+			$this->visibilityCache[$key] = (bool) $callback();
+		}
+
+		return $this->visibilityCache[$key];
+	}
+
+	/**
+	 * May the current user see a portrait, cast or season referenced by a
+	 * role or a performance? These templates have no template file, so
+	 * viewable() is checked without it. This applies release times and
+	 * permission locks of the page and its parents.
+	 * @param Page $page
+	 * @return bool
+	 */
+	public function isVisibleReference($page) {
+		if (!($page instanceof Page) || !$page->id || $page->isTrash()) {
+			return false;
+		}
+
+		return $this->cachedVisibility('reference', $page, function () use ($page) {
+			return $page->viewable(false);
+		});
+	}
+
+	/**
+	 * Keeps the pages of isVisibleReference(), e.g. for the cast and season
+	 * links of a performance.
+	 * @param PageArray|Page[] $pages
+	 * @return Page[]
+	 */
+	public function filterVisibleReferences($pages) {
+		if ($pages instanceof PageArray) {
+			$pages = $pages->getArray();
+		}
+
+		if (!is_array($pages)) {
+			return [];
+		}
+
+		return array_values(array_filter($pages, function ($page) {
+			return $this->isVisibleReference($page);
+		}));
+	}
+
+	/**
+	 * Is the participant entry (of a role) only for casts or only for seasons
+	 * that the current user may not see? Whether the entry names any is read
+	 * from the stored references, which also count unpublished pages (the
+	 * loaded field value leaves them out for guests); what counts as seen is
+	 * what the output shows (formatted value, visible pages only). Entries
+	 * without any cast or season are not, they apply to all.
+	 * @param Page $participant
+	 * @return bool
+	 */
+	public function isForHiddenReferencesOnly($participant) {
+		foreach (['seasons', 'casts'] as $fieldName) {
+			if (!$participant->hasField($fieldName) || $this->countStoredReferences($participant, $fieldName) === 0) {
+				continue;
+			}
+
+			$shown = $participant->get($fieldName);
+			if (!($shown instanceof PageArray) || empty($this->filterVisibleReferences($shown))) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Number of existing pages stored in a page reference field of a page,
+	 * whatever their status.
+	 * @param Page $page
+	 * @param string $fieldName
+	 * @return int
+	 */
+	protected function countStoredReferences(Page $page, $fieldName) {
+		$field = $this->wire('fields')->get($fieldName);
+		if (!($field instanceof Field) || !($field->type instanceof FieldtypePage)) {
+			return 0;
+		}
+
+		$table = $this->wire('database')->escapeTable($field->getTable());
+		$query = $this->wire('database')->prepare("SELECT COUNT(*) FROM `$table` AS f JOIN pages AS p ON p.id = f.data WHERE f.pages_id = :id");
+		$query->bindValue(':id', (int) $page->id, \PDO::PARAM_INT);
+		$query->execute();
+
+		return (int) $query->fetchColumn();
 	}
 
 	public function getProjectCastAjax($page) {
@@ -34,6 +151,10 @@ class ProjectRolesService extends TwackComponent {
 
 		if ($page->template->name != 'cast') {
 			return null; // Skip if not a cast
+		}
+
+		if (!$this->isVisibleReference($page)) {
+			return null;
 		}
 
 		$castOutput = AppApi::getAjaxOf($page);
@@ -65,6 +186,10 @@ class ProjectRolesService extends TwackComponent {
 			return null; // Skip if not a season
 		}
 
+		if (!$this->isVisibleReference($page)) {
+			return null;
+		}
+
 		$seasonOutput = AppApi::getAjaxOf($page);
 		if (isset($seasonOutput['created'])) {
 			unset($seasonOutput['created']);
@@ -88,6 +213,10 @@ class ProjectRolesService extends TwackComponent {
 
 		if ($page->template->name != 'portrait') {
 			return null; // Skip if not a portrait
+		}
+
+		if (!$this->isVisibleReference($page)) {
+			return null;
 		}
 
 		$portraitOutput = AppApi::getAjaxOf($page);
@@ -225,6 +354,12 @@ class ProjectRolesService extends TwackComponent {
 					continue;
 				}
 
+				// Empty cast_ids or season_ids mean "all casts" or "all seasons",
+				// so an entry for hidden casts or seasons only is left out:
+				if ($this->isForHiddenReferencesOnly($participant)) {
+					continue;
+				}
+
 				$participantOutput = [
 					'portrait_ids' => [],
 				];
@@ -234,17 +369,17 @@ class ProjectRolesService extends TwackComponent {
 						continue; // Skip if portrait not found
 					}
 
-					$participantOutput['portrait_ids'][] = $portrait->id;
-
 					if (!isset($output['portraits'][$portrait->id])) {
 						$portraitOutput = $this->getProjectPortraitAjax($portrait);
 
 						if (empty($portraitOutput)) {
-							continue; // Skip if portrait not found
+							continue; // Skip if portrait not found or not visible
 						}
 
 						$output['portraits'][$portrait->id] = $portraitOutput;
 					}
+
+					$participantOutput['portrait_ids'][] = $portrait->id;
 				}
 
 				if (!empty($participant->seasons)) {
@@ -255,16 +390,16 @@ class ProjectRolesService extends TwackComponent {
 							continue; // Skip if season not found
 						}
 
-						$participantOutput['season_ids'][] = $season->id;
-
 						if (!isset($output['seasons'][$season->id])) {
 							$seasonOutput = $this->getProjectSeasonAjax($season);
 							if (empty($seasonOutput)) {
-								continue; // Skip if season not found
+								continue; // Skip if season not found or not visible
 							}
 
 							$output['seasons'][$season->id] = $seasonOutput;
 						}
+
+						$participantOutput['season_ids'][] = $season->id;
 					}
 				}
 
@@ -276,17 +411,17 @@ class ProjectRolesService extends TwackComponent {
 							continue; // Skip if cast not found
 						}
 
-						$participantOutput['cast_ids'][] = $cast->id;
-
 						if (!isset($output['casts'][$cast->id])) {
 							$castOutput = $this->getProjectCastAjax($cast);
 
 							if (empty($castOutput)) {
-								continue; // Skip if cast not found
+								continue; // Skip if cast not found or not visible
 							}
 
 							$output['casts'][$cast->id] = $castOutput;
 						}
+
+						$participantOutput['cast_ids'][] = $cast->id;
 					}
 				}
 
@@ -463,6 +598,8 @@ class ProjectRolesService extends TwackComponent {
 	 * $seasonIds does not filter on that criterion. Roles stay in the tree
 	 * even without entries; portraits and seasons are reduced to the ones
 	 * still referenced, casts to the ones in $castIds.
+	 * Entries for hidden casts or seasons only are already left out by
+	 * getProjectRoleAjax().
 	 * @param array $output result of getProjectRoles()
 	 * @param int[] $castIds
 	 * @param int[] $seasonIds

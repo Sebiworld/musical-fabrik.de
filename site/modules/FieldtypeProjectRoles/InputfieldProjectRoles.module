@@ -71,7 +71,7 @@ class InputfieldProjectRoles extends Inputfield {
         $thead .= '<th class="beschriftungs-zelle">&nbsp;</th>';
         $thead .= '<th data-spalte="0" class="checkbox-zelle spalte-0 alle">Alle Besetzungen</th>';
         foreach ($this->casts as $index => $cast) {
-            $thead .= '<th data-spalte="' . ($index + 1) . '" class="checkbox-zelle spalte-' . ($index + 1) . '">' . $cast->title . '</th>';
+            $thead .= '<th data-spalte="' . ($index + 1) . '" class="checkbox-zelle spalte-' . ($index + 1) . '">' . $this->titleText($cast) . '</th>';
         }
         $thead .= '</tr>';
 
@@ -96,7 +96,7 @@ class InputfieldProjectRoles extends Inputfield {
         $projectRolesInput = $values->get('projectRole.id=' . $projectRole->id);
 
         $output = '<tr data-ebene="' . $depth . '" class="reihe ebene-' . $depth . '">';
-        $output .= '<td class="beschriftungs-zelle"><span>' . $projectRole->title . '</span></td>';
+        $output .= '<td class="beschriftungs-zelle"><span>' . $this->titleText($projectRole) . '</span></td>';
         $output .= '<td data-spalte="0" class="checkbox-zelle alle spalte-0">' . $this->renderCheckbox($fieldname, $projectRole->id . '_a') . '</td>';
 
         foreach ($this->casts as $index => $cast) {
@@ -117,6 +117,13 @@ class InputfieldProjectRoles extends Inputfield {
         }
 
         return $output;
+    }
+
+    /**
+     * The title of a page as text for the markup of the table.
+     */
+    protected function titleText(Page $page) {
+        return $this->wire('sanitizer')->entities((string) $page->getUnformatted('title'));
     }
 
     protected function renderCheckbox($name, $value = 'on', $checked = false, $label = '') {

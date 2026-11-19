@@ -5,7 +5,25 @@ namespace ProcessWire;
  * Provides methods for reading events.
  */
 class EventsService extends TwackComponent {
+	/** Sort values of the event list. Other values fall back to DEFAULT_SORT. */
+	const SORT_VALUES = ['-datetime_from', 'datetime_from'];
+
+	const DEFAULT_SORT = '-datetime_from';
+
+	/** Number of events per request without a limit. */
+	const DEFAULT_LIMIT = 12;
+
+	/** Upper bound of the limit, so that a request cannot load every event at once. */
+	const MAX_LIMIT = 100;
+
 	protected $projectPage = false;
+
+	/**
+	 * Results of visibility checks within this request, by check, user and
+	 * page. Cleared whenever a page is saved or deleted.
+	 * @var array<string, bool>
+	 */
+	protected $visibilityCache = [];
 
 	public function __construct($args) {
 		parent::__construct($args);
@@ -17,6 +35,9 @@ class EventsService extends TwackComponent {
 		}
 
 		$this->overviewPagesService = $this->getService('OverviewPagesService');
+
+		$this->wire('pages')->addHookAfter('savedPageOrField', $this, 'clearVisibilityCache');
+		$this->wire('pages')->addHookAfter('deleted', $this, 'clearVisibilityCache');
 	}
 
 	public function getEventsContainer() {
@@ -32,7 +53,9 @@ class EventsService extends TwackComponent {
 
 	/**
 	 * Returns all appointments whose periods match a selector.
-	 * @return PageArray
+	 * The selector is built as an array, so values from the request cannot
+	 * add selector parts of their own.
+	 * @return \StdClass totalNumber, lastElementIndex, moreAvailable, events (PageArray)
 	 */
 	public function getEvents($args = [], $basePage = false) {
 		$output = new \StdClass();
@@ -42,8 +65,8 @@ class EventsService extends TwackComponent {
 			$args = [];
 		}
 
-		$eventsSelectorParts = [
-			'template.name=event'
+		$selector = [
+			['template.name', 'event']
 		];
 
 		$projectPage = $this->projectPage;
@@ -55,124 +78,130 @@ class EventsService extends TwackComponent {
 			// If project page: Include all sub-dates of the project
 
 			if ($args['includeGlobalDates'] ?? false) {
-				// Also include global dates:
-				// + Search all global dates:
-				$projectContainerIds = [];
-				$projectsContainers = wire('pages')->find('template.name=projects_container');
-
-				foreach ($projectsContainers as $projectsContainer) {
-					if (empty($projectsContainer->id)) {
-						continue;
-					}
-					$projectContainerIds[] = $projectsContainer->id;
+				// Also include global dates (outside of all projects), as an OR-group:
+				$orGroup = ['has_parent' => $projectPage->id];
+				$projectContainerIds = wire('pages')->find('template.name=projects_container')->explode('id');
+				if (!empty($projectContainerIds)) {
+					$orGroup['has_parent!='] = $projectContainerIds;
 				}
-				$projectContainerIdsString = implode('|', $projectContainerIds);
-
-				$eventsSelectorParts[] = "(has_parent!={$projectContainerIdsString}), (has_parent={$projectPage->id})";
+				$selector[] = $orGroup;
 			} else {
-				$eventsSelectorParts[] = "has_parent={$projectPage->id}";
+				$selector[] = ['has_parent', $projectPage->id];
 			}
 		}
 
 		// Filtering by tags:
 		if (isset($args['tags'])) {
-			if (is_string($args['tags'])) {
-				$args['tags'] = explode(',', $args['tags']);
-			}
-
-			if (is_array($args['tags'])) {
-				$eventsSelectorParts[] = 'tags=' . implode('|', $args['tags']);
+			$tags = is_string($args['tags']) ? explode(',', $args['tags']) : $args['tags'];
+			if (is_array($tags)) {
+				$tags = array_values(array_filter(array_map(function ($tag) {
+					return is_scalar($tag) ? trim((string) $tag) : '';
+				}, $tags), 'strlen'));
+				if (!empty($tags)) {
+					$selector[] = ['tags', $tags];
+				}
 			}
 		}
 
 		// Filtering by free text:
-		if (isset($args['query'])) {
-			if (is_string($args['query'])) {
-				$query = wire('sanitizer')->text($args['query']);
-				$eventsSelectorParts[] = "title|name|intro|contents.text%={$query}";
-			}
+		if (isset($args['query']) && is_string($args['query']) && $args['query'] !== '') {
+			$selector[] = ['title|name|intro|contents.text', '%=', $args['query'], 'text'];
 		}
 
-		if (!empty($args['start_date'])) {
-			if (strtolower((string)$args['start_date']) === 'TODAY') {
+		if (!empty($args['start_date']) && is_scalar($args['start_date'])) {
+			if (strtolower((string) $args['start_date']) === 'today') {
 				$startDatetime = time();
 			} else {
-				$startDatetime = wire('sanitizer')->date($args['start_date']);
+				$startDatetime = (int) wire('sanitizer')->date($args['start_date']);
 			}
 
 			if ($startDatetime > 0) {
-				$eventsSelectorParts[] = "datetime_from>={$startDatetime}";
+				$selector[] = ['datetime_from', '>=', $startDatetime];
 			}
 		}
 
-		// Criteria for subperiods:
-		$timeperiodSelectorParts = ['template.name=time_period'];
-		if (!empty($args['guestuser']) && $args['guestuser'] || wire('user')->isGuest()) {
-			$timeperiodSelectorParts[] = 'accessable_for_guests=1';
+		// Criteria for subperiods. "guestuser" asks for the periods a guest
+		// may see, also when a logged-in user makes the request:
+		$asGuest = !empty($args['guestuser']) || wire('user')->isGuest();
+		$periodSelector = [
+			['template.name', 'time_period']
+		];
+		if ($asGuest) {
+			$periodSelector[] = ['accessable_for_guests', 1];
 		}
 
+		$categoryIds = [];
 		if (!empty($args['categories']) && is_array($args['categories'])) {
 			// Categories have an AND connection:
 			foreach ($args['categories'] as $category) {
-				$timeperiodSelectorParts[] = 'event_categories=' . $category;
+				$categoryId = is_scalar($category) ? (int) $category : 0;
+				if ($categoryId > 0) {
+					$categoryIds[] = $categoryId;
+					$periodSelector[] = ['event_categories', $categoryId];
+				}
 			}
 		}
 
 		// Only allow appointments to which the period selector applies:
-		$timeperiodSelector = false;
-		if (count($timeperiodSelectorParts) > 1) {
-			$timeperiodSelector = implode(', ', $timeperiodSelectorParts);
-			$eventsSelectorParts[] = "time_periods=[{$timeperiodSelector}]";
+		$filterByPeriods = count($periodSelector) > 1;
+		if ($filterByPeriods) {
+			$selector[] = ['field' => 'time_periods', 'find' => $periodSelector];
 		}
 
-		// Should the dates be sorted specially?
-		if (isset($args['sort'])) {
-			$eventsSelectorParts[] = 'sort=' . $args['sort'];
-		} else if (isset($args['sort_by'])) {
-			$eventsSelectorParts[] = 'sort=' . $args['sort_by'];
-		} else {
-			$eventsSelectorParts[] = 'sort=-datetime_from';
+		// Should the dates be sorted specially? Only known sort values are used.
+		$sort = $args['sort'] ?? ($args['sort_by'] ?? self::DEFAULT_SORT);
+		if (!is_string($sort) || !in_array($sort, self::SORT_VALUES, true)) {
+			$sort = self::DEFAULT_SORT;
 		}
-		$eventsSelector = implode(', ', $eventsSelectorParts);
+		$selector[] = ['sort', $sort];
 
-		// Store original number of articles without limit:
-		$output->totalNumber = wire('pages')->count($eventsSelector);
+		// The events the current user may see. The number is taken from these,
+		// so that it does not reveal events the user may not see:
+		$visibleEvents = new PageArray();
+		$candidates = wire('pages')->find($selector);
+		$this->preloadPeriods($candidates);
+		foreach ($candidates as $event) {
+			if (!$this->isVisibleEvent($event)) {
+				continue;
+			}
 
-		// The index of the last element:
-		$output->lastElementIndex = 0;
+			// With a period filter, an event is listed for its periods only. For
+			// the count one listable period is enough; all of them are read below
+			// for the events that are delivered:
+			if ($filterByPeriods && !$this->hasListablePeriod($event, $asGuest, $categoryIds)) {
+				continue;
+			}
+
+			$visibleEvents->add($event);
+		}
+		$output->totalNumber = $visibleEvents->count();
 
 		// Include Limit and Offset:
-		if (isset($args['start'])) {
-			$eventsSelectorParts[] = 'start=' . $args['start'];
-			$output->lastElementIndex = intval($args['start']);
-		} elseif (isset($args['offset'])) {
-			$eventsSelectorParts[] = 'start=' . $args['offset'];
-			$output->lastElementIndex = intval($args['offset']);
-		} else {
-			$eventsSelectorParts[] = 'start=0';
+		$start = 0;
+		if (isset($args['start']) && is_scalar($args['start'])) {
+			$start = max(0, (int) $args['start']);
+		} elseif (isset($args['offset']) && is_scalar($args['offset'])) {
+			$start = max(0, (int) $args['offset']);
 		}
 
-		if (isset($args['limit']) && $args['limit'] >= 0) {
-			$eventsSelectorParts[] = 'limit=' . $args['limit'];
-			$output->lastElementIndex = $output->lastElementIndex + intval($args['limit']);
-		} elseif (!isset($args['limit'])) {
-			$eventsSelectorParts[] = 'limit=12';
-			$output->lastElementIndex = $output->lastElementIndex + 12;
+		$limit = self::DEFAULT_LIMIT;
+		if (isset($args['limit']) && is_scalar($args['limit']) && (int) $args['limit'] > 0) {
+			$limit = min((int) $args['limit'], self::MAX_LIMIT);
 		}
+
+		// The index of the last element:
+		$output->lastElementIndex = $start + $limit;
 
 		// Are there any more posts that can be downloaded?
 		$output->moreAvailable = $output->lastElementIndex + 1 < $output->totalNumber;
 
-		$eventsSelector = implode(', ', $eventsSelectorParts);
-		foreach (wire('pages')->find($eventsSelector) as $event) {
-			// Only play the periods that match the period selector (if specified):
-			if ($timeperiodSelector) {
-				$event->time_periods = $event->time_periods->filter($timeperiodSelector);
-			}
+		foreach ($visibleEvents->slice($start, $limit) as $event) {
+			// Only play the periods that may be listed and match the categories:
+			$event->time_periods = $this->getListablePeriods($event, $asGuest, $categoryIds);
 
 			$options = [];
 			if (!empty($args['characterLimit'])) {
-				$options['limit'] = $args['characterLimit'];
+				$options['limit'] = (int) $args['characterLimit'];
 			}
 
 			$event = $this->overviewPagesService->formatPage($event, $options);
@@ -183,6 +212,176 @@ class EventsService extends TwackComponent {
 		$output->events = $events;
 
 		return $output;
+	}
+
+	/**
+	 * May the current user see the event in the event list? Events locked by
+	 * a password are left out for everybody, also for users with access.
+	 * @param Page $event
+	 * @return bool
+	 */
+	public function isVisibleEvent(Page $event) {
+		if (!$event->id || $event->template->name !== 'event' || $event->isTrash()) {
+			return false;
+		}
+
+		return $this->cachedVisibility('event', $event, function () use ($event) {
+			if (!$event->viewable()) {
+				return false;
+			}
+
+			$passwordModule = wire('modules')->get('PageAccessPassword');
+
+			return !($passwordModule && $passwordModule->isLocked($event));
+		});
+	}
+
+	/**
+	 * The periods in the field time_periods of an event that may be listed
+	 * (see isListablePeriod()) and have all of the given categories.
+	 * @param Page $event
+	 * @param bool $asGuest
+	 * @param int[] $categoryIds
+	 * @return PageArray
+	 */
+	public function getListablePeriods(Page $event, $asGuest, $categoryIds = []) {
+		$periods = new PageArray();
+		foreach ($event->time_periods as $period) {
+			if ($this->isListablePeriodWithCategories($period, $asGuest, $categoryIds)) {
+				$periods->add($period);
+			}
+		}
+
+		return $periods;
+	}
+
+	/**
+	 * Loads the periods below the given events with one query, so that
+	 * reading the field time_periods of each event takes them from the page
+	 * cache instead of one query per event. Only loads, decides nothing.
+	 * @param PageArray $events
+	 */
+	protected function preloadPeriods(PageArray $events) {
+		if (!$events->count()) {
+			return;
+		}
+
+		wire('pages')->find([
+			['template.name', 'time_period'],
+			['parent_id', $events->explode('id')],
+			['include', 'hidden']
+		]);
+	}
+
+	/**
+	 * Has the event at least one period of getListablePeriods()? Stops at the
+	 * first one.
+	 * @param Page $event
+	 * @param bool $asGuest
+	 * @param int[] $categoryIds
+	 * @return bool
+	 */
+	public function hasListablePeriod(Page $event, $asGuest, $categoryIds = []) {
+		foreach ($event->time_periods as $period) {
+			if ($this->isListablePeriodWithCategories($period, $asGuest, $categoryIds)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	protected function isListablePeriodWithCategories($period, $asGuest, $categoryIds) {
+		if (!$this->isListablePeriod($period, $asGuest)) {
+			return false;
+		}
+
+		$periodCategoryIds = $period->getUnformatted('event_categories')->explode('id');
+
+		return empty(array_diff($categoryIds, $periodCategoryIds));
+	}
+
+	/**
+	 * May the time period be listed (event list, event cards, performances
+	 * of a project)? Hidden periods are never listed; they stay reachable by
+	 * their own route. In the guest view the rule of isGuestVisiblePeriod()
+	 * applies, otherwise the current user has to be allowed to view the
+	 * period.
+	 * @param Page $period
+	 * @param bool $asGuest true for the guest view, also for a logged-in user
+	 * @return bool
+	 */
+	public function isListablePeriod($period, $asGuest) {
+		if (!($period instanceof Page) || !$period->id || $period->template->name !== 'time_period') {
+			return false;
+		}
+
+		if ($period->isHidden() || $period->isTrash()) {
+			return false;
+		}
+
+		if ($asGuest) {
+			return $this->isGuestVisiblePeriod($period);
+		}
+
+		// time_period has no template file, so viewable() is checked without it.
+		return $this->cachedVisibility('period', $period, function () use ($period) {
+			return $period->viewable(false);
+		});
+	}
+
+	/**
+	 * May a guest see the time period? It has to be released for guests and
+	 * viewable as guest (release times and permission locks of the period
+	 * and its parents), and neither the period nor one of its parents may be
+	 * unpublished or locked by a password. Checked as guest, also when a
+	 * logged-in user makes the request.
+	 * @param Page $period
+	 * @return bool
+	 */
+	public function isGuestVisiblePeriod(Page $period) {
+		if (!$period->id || $period->template->name !== 'time_period' || $period->isTrash() || !$period->getUnformatted('accessable_for_guests')) {
+			return false;
+		}
+
+		$passwordModule = wire('modules')->get('PageAccessPassword');
+
+		return $this->cachedVisibility('guest-period', $period, fn () => $this->getService('PublicVisibilityService')->asGuest(function () use ($period, $passwordModule) {
+			if (!$period->viewable(false)) {
+				return false;
+			}
+
+			foreach ($period->parents()->add($period) as $item) {
+				if ($item->isUnpublished() || ($passwordModule && $passwordModule->isLocked($item))) {
+					return false;
+				}
+			}
+
+			return true;
+		}));
+	}
+
+	/**
+	 * Empties the cache of visibility checks (hooked to page saves and deletes).
+	 */
+	public function clearVisibilityCache($event = null) {
+		$this->visibilityCache = [];
+	}
+
+	/**
+	 * Runs a visibility check once per request for the same check, user and page.
+	 * @param string $check name of the check
+	 * @param Page $page
+	 * @param callable $callback returns the result
+	 * @return bool
+	 */
+	protected function cachedVisibility($check, Page $page, callable $callback) {
+		$key = $check . ':' . wire('user')->id . ':' . $page->id;
+		if (!array_key_exists($key, $this->visibilityCache)) {
+			$this->visibilityCache[$key] = (bool) $callback();
+		}
+
+		return $this->visibilityCache[$key];
 	}
 
 	public function getAjax($ajaxArgs = []) {
@@ -237,7 +436,7 @@ class EventsService extends TwackComponent {
 		// Deliver HTML card for each post:
 		$ajaxOutput['events'] = [];
 		foreach ($result->events as $event) {
-			if (!$event->viewable()) {
+			if (!$this->isVisibleEvent($event)) {
 				continue;
 			}
 
@@ -265,21 +464,14 @@ class EventsService extends TwackComponent {
 
 	/**
 	 * Categories of an event that a guest may see: only those of the time
-	 * periods in its field time_periods that are released for guests,
-	 * published, not hidden and viewable as guest (release time and access
-	 * permissions of the period and its parents).
+	 * periods in its field time_periods that may be listed for guests
+	 * (isListablePeriod()).
 	 * @return PageArray
 	 */
 	protected function getGuestCategoriesOfEvent(Page $event) {
 		$categoryIds = [];
 		foreach ($event->time_periods as $period) {
-			if (!($period instanceof Page) || !$period->id || $period->template->name !== 'time_period') {
-				continue;
-			}
-			if ($period->isUnpublished() || $period->isHidden() || $period->isTrash()) {
-				continue;
-			}
-			if (!$period->getUnformatted('accessable_for_guests') || !$period->viewable(false)) {
+			if (!$this->isListablePeriod($period, true)) {
 				continue;
 			}
 

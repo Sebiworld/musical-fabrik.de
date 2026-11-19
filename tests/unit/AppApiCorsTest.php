@@ -13,7 +13,9 @@ use function ProcessWire\wire;
 /**
  * AppApi only sends Access-Control-* headers to origins on the configured
  * list (wildcards allowed within one host label). An empty list mirrors every
- * origin as before, and disabling the automatic headers wins over the list.
+ * valid origin as before (never "null"). Every response that may carry these
+ * headers sends "Vary: Origin". Disabling the automatic headers wins over the
+ * list.
  * The "authorization" query parameter can be switched off.
  */
 final class AppApiCorsTest extends TestCase {
@@ -74,6 +76,7 @@ final class AppApiCorsTest extends TestCase {
 			$headers = Router::getCorsHeaders('https://evil.example', $emptyList);
 
 			$this->assertSame([
+				'Vary: Origin',
 				'Access-Control-Allow-Origin: https://evil.example',
 				'Access-Control-Allow-Headers: Content-Type, AUTHORIZATION, X-API-KEY',
 				'Access-Control-Allow-Credentials: true'
@@ -82,8 +85,17 @@ final class AppApiCorsTest extends TestCase {
 	}
 
 	public function testNoOriginNoAccessControlHeaders(): void {
-		$this->assertSame([], Router::getCorsHeaders(null, ''));
+		$this->assertSame(['Vary: Origin'], Router::getCorsHeaders(null, ''));
 		$this->assertSame(['Vary: Origin'], Router::getCorsHeaders(null, self::PATTERN));
+	}
+
+	public function testNullOriginIsNeverMirrored(): void {
+		foreach (['', self::PATTERN] as $list) {
+			$this->assertSame(['Vary: Origin'], Router::getCorsHeaders('null', $list));
+			$this->assertSame(['Vary: Origin'], Router::getCorsHeaders('not an origin', $list));
+		}
+		$this->assertFalse(AppApiHelper::isValidOrigin('null'));
+		$this->assertTrue(AppApiHelper::isValidOrigin('http://localhost:5173'));
 	}
 
 	public function testPreflightOnlyForAllowedOrigins(): void {
