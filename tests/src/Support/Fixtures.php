@@ -525,6 +525,172 @@ final class Fixtures {
 		}
 	}
 
+	public const GUEST_PREFIX = 'test-fixture-sec-';
+
+	/**
+	 * Creates pages for the guest visibility of lists and cards. Remove them
+	 * again with deleteGuestVisibilityTree(). Permission locks are set
+	 * without any permission, so nobody but a superuser may see those pages.
+	 *
+	 * Project "project" with:
+	 * - event: published, datetime_from 2030, title with "Qzvisible", seasons
+	 *   season_visible and season_not_released, with the periods (time_period,
+	 *   category auffuehrung): period_guest (released for guests, casts
+	 *   cast_visible and cast_not_released, legacy field cast
+	 *   cast_not_released),
+	 *   period_members (not released for
+	 *   guests), period_not_released (release time in the future),
+	 *   period_hidden (hidden), period_permlocked (permission lock)
+	 * - event_early: published, datetime_from 2029, title with "Aearly",
+	 *   with one period for guests (period_early)
+	 * - event_unpublished ("Qzunpublished"), event_not_released
+	 *   ("Qzunreleased", release time in the future) and event_permlocked
+	 *   ("Qzlocked", permission lock), each with one period for guests
+	 * - portrait_visible, portrait_not_released, portrait_permlocked
+	 * - cast_visible, cast_not_released, season_visible, season_not_released
+	 * - role with three entries: all three portraits; cast_visible and
+	 *   cast_not_released with portrait_visible; season_visible and
+	 *   season_not_released with portrait_visible
+	 * - cast_unpublished (unpublished)
+	 * - role_hidden_only with three entries for portrait_member (published):
+	 *   one only in cast_not_released, one only in season_not_released, one
+	 *   only in cast_unpublished
+	 *
+	 * Below the home page: "locked" (password locked page), "open" (control
+	 * page) and "grid_host", whose section "grid" (pages grid) references
+	 * both.
+	 *
+	 * @return array<string, Page>
+	 */
+	public static function createGuestVisibilityTree(): array {
+		self::deleteGuestVisibilityTree();
+
+		$pages = wire('pages');
+		$prefix = self::GUEST_PREFIX;
+		$notReleased = ['releasetime_start_activate' => 1, 'releasetime_start' => 4102444800];
+		$permLocked = ['pageaccess_permissions_activate' => 1];
+		$p = [];
+
+		// Saving a project creates a tag page named after its title, which
+		// gives it the same name as the project here.
+		$p['project'] = self::newPage('project', $pages->get('template=projects_container'), $prefix . 'project', 'Test Fixture Sec Project');
+
+		$casts = self::container('casts_container', $p['project'], 'besetzungen', 'Besetzungen');
+		$p['cast_visible'] = self::newPage('cast', $casts, $prefix . 'cast-visible', 'Test Cast Visible');
+		$p['cast_not_released'] = self::newPage('cast', $casts, $prefix . 'cast-not-released', 'Test Cast Not Released', $notReleased);
+		$p['cast_unpublished'] = self::newPage('cast', $casts, $prefix . 'cast-unpublished', 'Test Cast Unpublished', [], true);
+
+		$seasons = self::container('seasons_container', $p['project'], 'staffeln', 'Staffeln');
+		$p['season_visible'] = self::newPage('season', $seasons, $prefix . 'season-visible', 'Test Season Visible');
+		$p['season_not_released'] = self::newPage('season', $seasons, $prefix . 'season-not-released', 'Test Season Not Released', $notReleased);
+
+		$portraits = self::container('portraits_container', $p['project'], 'portraits', 'Portraits');
+		$p['portrait_visible'] = self::newPage('portrait', $portraits, $prefix . 'portrait-visible', 'Test Portrait Visible');
+		$p['portrait_not_released'] = self::newPage('portrait', $portraits, $prefix . 'portrait-not-released', 'Test Portrait Not Released', $notReleased);
+		$p['portrait_permlocked'] = self::newPage('portrait', $portraits, $prefix . 'portrait-permlocked', 'Test Portrait Permlocked', $permLocked);
+
+		$roles = self::container('project_roles_container', $p['project'], 'rollen', 'Rollen');
+		$p['roles_container'] = $roles;
+		$p['role'] = self::newPage('project_role', $roles, $prefix . 'role', 'Test Role');
+		$allPortraits = new \ProcessWire\PageArray();
+		$allPortraits->add([$p['portrait_visible'], $p['portrait_not_released'], $p['portrait_permlocked']]);
+		self::addParticipant($p['role'], 'portraits', ['portraits' => $allPortraits]);
+		$bothCasts = new \ProcessWire\PageArray();
+		$bothCasts->add([$p['cast_visible'], $p['cast_not_released']]);
+		self::addParticipant($p['role'], 'cast', ['casts' => $bothCasts, 'portraits' => $p['portrait_visible']]);
+		$bothSeasons = new \ProcessWire\PageArray();
+		$bothSeasons->add([$p['season_visible'], $p['season_not_released']]);
+		self::addParticipant($p['role'], 'season', ['seasons' => $bothSeasons, 'portraits' => $p['portrait_visible']]);
+		$p['portrait_member'] = self::newPage('portrait', $portraits, $prefix . 'portrait-member', 'Test Portrait Member');
+		$p['role_hidden_only'] = self::newPage('project_role', $roles, $prefix . 'role-hidden-only', 'Test Role Hidden Only');
+		self::addParticipant($p['role_hidden_only'], 'cast', ['casts' => $p['cast_not_released'], 'portraits' => $p['portrait_member']]);
+		self::addParticipant($p['role_hidden_only'], 'season', ['seasons' => $p['season_not_released'], 'portraits' => $p['portrait_member']]);
+		self::addParticipant($p['role_hidden_only'], 'cast', ['casts' => $p['cast_unpublished'], 'portraits' => $p['portrait_member']]);
+
+		$events = self::container('events_container', $p['project'], 'termine', 'Termine');
+		$p['events'] = $events;
+		$category = $pages->get('template.name=event_category, name=auffuehrung, include=all');
+
+		$eventSeasons = new \ProcessWire\PageArray();
+		$eventSeasons->add([$p['season_visible'], $p['season_not_released']]);
+		$p['event'] = self::newPage('event', $events, $prefix . 'event', 'Test Event Qzvisible', ['datetime_from' => 1893484800, 'seasons' => $eventSeasons]);
+		$periodCasts = new \ProcessWire\PageArray();
+		$periodCasts->add([$p['cast_visible'], $p['cast_not_released']]);
+		$periods = [
+			'period_guest' => [
+				'accessable_for_guests' => 1,
+				'casts' => $periodCasts,
+				'cast' => $p['cast_not_released'],
+			],
+			'period_members' => ['accessable_for_guests' => 0],
+			'period_not_released' => ['accessable_for_guests' => 1] + $notReleased,
+			'period_hidden' => ['accessable_for_guests' => 1],
+			'period_permlocked' => ['accessable_for_guests' => 1] + $permLocked,
+		];
+		$offset = 0;
+		foreach ($periods as $key => $values) {
+			$p[$key] = self::newPage('time_period', $p['event'], $prefix . str_replace('_', '-', $key), 'Test ' . $key, [
+				'datetime_from' => 1893484800 + 3600 * $offset++,
+				'event_categories' => $category,
+			] + $values);
+		}
+		$p['period_hidden']->of(false);
+		$p['period_hidden']->addStatus(Page::statusHidden);
+		$pages->save($p['period_hidden'], ['quiet' => true]);
+		self::addPeriods($p['event'], array_map(fn ($key) => $p[$key], array_keys($periods)));
+
+		foreach ([
+			'event_early' => ['Test Event Aearly', 1861948800, [], false],
+			'event_unpublished' => ['Test Event Qzunpublished', 1893484800, [], true],
+			'event_not_released' => ['Test Event Qzunreleased', 1893484800, $notReleased, false],
+			'event_permlocked' => ['Test Event Qzlocked', 1893484800, $permLocked, false],
+		] as $key => [$title, $from, $values, $unpublished]) {
+			$p[$key] = self::newPage('event', $events, $prefix . str_replace('_', '-', $key), $title, ['datetime_from' => $from] + $values, $unpublished);
+			$periodKey = $key === 'event_early' ? 'period_early' : $key . '_period';
+			$p[$periodKey] = self::newPage('time_period', $p[$key], $prefix . str_replace('_', '-', $periodKey), 'Test ' . $periodKey, [
+				'datetime_from' => $from,
+				'accessable_for_guests' => 1,
+				'event_categories' => $category,
+			]);
+			self::addPeriods($p[$key], [$p[$periodKey]]);
+		}
+
+		$root = $pages->get('/');
+		$p['locked'] = self::newPage('default_page', $root, $prefix . 'locked', 'Test Fixture Sec Locked', [
+			'pageaccess_password_activate' => 1,
+			'pageaccess_password' => bin2hex(random_bytes(12)),
+			'intro' => 'Test Locked Grid Intro',
+		]);
+		$p['open'] = self::newPage('default_page', $root, $prefix . 'open', 'Test Fixture Sec Open', ['intro' => 'Test Open Grid Intro']);
+		$sectionsParent = $pages->get((int) wire('fields')->get('onepage_elements')->parent_id);
+		$p['grid'] = self::newPage('section_pages_grid', $sectionsParent, $prefix . 'grid', 'Test Grid');
+		$p['grid']->of(false);
+		$p['grid']->page_references->add($p['locked']);
+		$p['grid']->page_references->add($p['open']);
+		$pages->save($p['grid'], ['quiet' => true]);
+		$p['grid_host'] = self::newPage('default_page', $root, $prefix . 'grid-host', 'Test Fixture Sec Grid Host');
+		$p['grid_host']->of(false);
+		$p['grid_host']->onepage_elements->add($p['grid']);
+		$pages->save($p['grid_host'], ['quiet' => true]);
+
+		return $p;
+	}
+
+	/**
+	 * Removes the pages of createGuestVisibilityTree(), also leftovers of an
+	 * aborted earlier run. The tag page of the project has the same name
+	 * prefix.
+	 */
+	public static function deleteGuestVisibilityTree(): void {
+		$pages = wire('pages');
+		foreach ($pages->find('name^=' . self::GUEST_PREFIX . ', include=all, sort=id') as $page) {
+			// Children are removed together with their parent.
+			if ($pages->get('id=' . $page->id . ', include=all')->id) {
+				$pages->delete($page, true);
+			}
+		}
+	}
+
 	public const UNPUBLISHED_PROJECT_NAME = 'test-fixture-unpublished-project';
 
 	/**
@@ -1080,6 +1246,19 @@ final class Fixtures {
 		}
 
 		return self::newPage($template, $parent, $name, $title);
+	}
+
+	/**
+	 * Adds time periods to the field time_periods of an event.
+	 *
+	 * @param Page[] $periods
+	 */
+	private static function addPeriods(Page $event, array $periods): void {
+		$event->of(false);
+		foreach ($periods as $period) {
+			$event->time_periods->add($period);
+		}
+		wire('pages')->save($event, ['quiet' => true]);
 	}
 
 	private static function addParticipant(Page $role, string $matrixType, array $values): void {

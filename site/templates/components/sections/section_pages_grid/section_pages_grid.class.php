@@ -145,6 +145,12 @@ class SectionPagesGrid extends TwackComponent {
 			return false;
 		}
 
+		// Locked pages are left out for everybody, also for users with access:
+		$passwordModule = $this->wire('modules')->get('PageAccessPassword');
+		if ($passwordModule && $passwordModule->isLocked($page)) {
+			return false;
+		}
+
 		if ($page->hasField('logo_square')) {
 			$page->gridImage = $page->logo_square;
 		} else {

@@ -259,7 +259,7 @@ class PerformancesService extends TwackComponent {
 			'visitor_info' => $this->getHtml($period, 'visitor_info') ?? $this->getHtml($event, 'visitor_info'),
 			'event' => $summary['event'],
 			'project' => $summary['project'],
-			'seasons' => $eventsService->getPageLinksAjax($seasonPages),
+			'seasons' => $eventsService->getPageLinksAjax($this->getService('ProjectRolesService')->filterVisibleReferences($seasonPages)),
 			'casts' => $summary['casts'],
 			'categories' => $eventsService->getPageLinksAjax($period->template->hasField('event_categories') ? $period->event_categories : []),
 			'location' => $this->getLocationAjax($period),
@@ -301,7 +301,7 @@ class PerformancesService extends TwackComponent {
 				'title' => $projectPage->title,
 				'url' => AppApi::getUrlRelativeToRoot($projectPage->url)
 			],
-			'casts' => $eventsService->getPageLinksAjax($eventsService->getPerformanceCasts($period))
+			'casts' => $eventsService->getPageLinksAjax($this->getService('ProjectRolesService')->filterVisibleReferences($eventsService->getPerformanceCasts($period)))
 		];
 	}
 

@@ -40,6 +40,7 @@ class EventsBox extends TwackComponent {
 		}
 
 		$eventsService       = $this->getService('EventsService');
+		$rolesService        = $this->getService('ProjectRolesService');
 		$eventsResult        = $eventsService->getEvents([
 			'guestuser'  => true,
 			'categories' => [$performanceCategory->id]
@@ -55,6 +56,11 @@ class EventsBox extends TwackComponent {
 		$performancesOld = [];
 		foreach ($eventsResult->events as $event) {
 			foreach ($event->time_periods->sort('-datetime_from') as $period) {
+				// The box shows the periods a guest may see, also to logged-in users:
+				if (!$eventsService->isListablePeriod($period, true)) {
+					continue;
+				}
+
 				if (!$period->template->hasField($args['useField']) || $period->getUnformatted($args['useField']) == 0) {
 					continue;
 				}
@@ -68,10 +74,10 @@ class EventsBox extends TwackComponent {
 				$tmp->date       = date('d.m.Y', $period->getUnformatted($args['useField']));
 				$tmp->time       = date('H:i', $period->getUnformatted($args['useField']));
 				$tmp->weekday    = $days[date('w', $period->getUnformatted($args['useField']))];
-				$tmp->seasons    = $event->seasons;
+				$tmp->seasons    = $rolesService->filterVisibleReferences($event->seasons);
 				$tmp->categories = $period->event_categories;
 				$tmp->ticket_url = $period->template->hasField('link') ? $period->link : '';
-				$tmp->casts_obj  = $eventsService->getPerformanceCasts($period);
+				$tmp->casts_obj  = $rolesService->filterVisibleReferences($eventsService->getPerformanceCasts($period));
 				$tmp->cast       = implode(', ', array_map(function ($castPage) {
 					return $castPage->title;
 				}, $tmp->casts_obj));
